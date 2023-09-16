@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
@@ -234,7 +233,6 @@ class GroupDetailActivity : BaseActivity(){
         mHandler = Handler(Looper.getMainLooper())
         mRunnable = Runnable {
             mHintText.alphaAnim(mHintText.alpha,0f,200).start()
-            mHintText.gone()
         }
         mHandler!!.postDelayed(mRunnable!!,2000)
     }

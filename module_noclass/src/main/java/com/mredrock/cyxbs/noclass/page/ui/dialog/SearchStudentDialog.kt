@@ -73,9 +73,9 @@ class SearchStudentDialog: BaseBottomSheetDialogFragment() {
     dialog.findViewById<RecyclerView>(R.id.rv_noclass_search_container).apply {
       adapter = SearchStudentAdapter().apply {
         setOnAddClick {
-          onAddClick?.invoke(it)
           deleteStudent(it)
           dismiss()
+          onAddClick?.invoke(it)
         }
         submitList(students)
       }

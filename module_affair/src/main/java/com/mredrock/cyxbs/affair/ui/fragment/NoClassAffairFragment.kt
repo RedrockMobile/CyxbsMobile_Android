@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.affair.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -28,7 +27,6 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
 
     companion object {
         fun newInstance(noClassBean: NoClassBean): NoClassAffairFragment {
-            Log.d("lx", "newInstance:${noClassBean} ")
             return NoClassAffairFragment().apply {
                 arguments = bundleOf(this::mNoClassBean.name to noClassBean)
             }
@@ -50,13 +48,17 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
     private val mPageManager = NoClassPageManager(this)
 
     /**
+     * 是否选择二者其一
+     */
+    private var isChooseLeftOrRight = false
+
+    /**
      * 需要发送通知的
      */
     private var mWaitSubmit : ArrayList<String>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("lx", "noclassfragment:${mNoClassBean}: ")
         initRv()
         initObserve()
         initClickChoose()
@@ -76,36 +78,34 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
      * 点击空闲人员和全体人员之后的操作
      */
     private fun initClickChoose() {
-        //所有空闲人员
+        fun TextView.setDefault(){
+            setBackgroundResource(R.drawable.affair_shape_noclass_default_bg)
+            setTextColor(R.color.affair_noclass_text_un_choose_color.color)
+        }
+        fun TextView.setChoose(){
+            setBackgroundResource(R.drawable.affair_shape_noclass_choose_bg)
+            setTextColor(R.color.affair_noclass_text_choose_color.color)
+        }
+        // 所有空闲人员
         val spareList = mNoClassBean.mStuList.filter { it.second }.map { it.first }
-        Log.d("lx", "sparedpeople: $spareList")
-        //全体人员
+        // 全体人员
         val allList = mNoClassBean.mStuList.map { it.first }
-        Log.d("lx", "allpeople: $allList")
         // 点击空闲人员，右边的选择所有要白底黑字，空闲人员要白字紫底
         mTvLeftSpare.setOnClickListener {
+            isChooseLeftOrRight = true
             mWaitSubmit = ArrayList()
             mWaitSubmit!!.addAll(spareList)
-            mTvLeftSpare.apply{
-                setBackgroundResource(R.drawable.affair_shape_noclass_choose_bg)
-                setTextColor(R.color.affair_noclass_text_choose_color.color)
-            }
-            mTvRightAll.apply {
-                setBackgroundResource(R.drawable.affair_shape_noclass_default_bg)
-                setTextColor(R.color.affair_noclass_text_un_choose_color.color)
-            }
+            mTvLeftSpare.setChoose()
+            mTvRightAll.setDefault()
+            mActivityViewModel.setBtnBg(5)
         }
         mTvRightAll.setOnClickListener {
+            isChooseLeftOrRight = true
             mWaitSubmit = ArrayList()
             mWaitSubmit!!.addAll(allList)
-            mTvLeftSpare.apply{
-                setBackgroundResource(R.drawable.affair_shape_noclass_default_bg)
-                setTextColor(R.color.affair_noclass_text_un_choose_color.color)
-            }
-            mTvRightAll.apply {
-                setBackgroundResource(R.drawable.affair_shape_noclass_choose_bg)
-                setTextColor(R.color.affair_noclass_text_choose_color.color)
-            }
+            mTvLeftSpare.setDefault()
+            mTvRightAll.setChoose()
+            mActivityViewModel.setBtnBg(5)
         }
     }
 
@@ -183,16 +183,20 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
                 mViewModel.getHotLoc()
                 mPageManager.loadNextPage()
             }else if (mPageManager.isChooseLoc()){
-                //如果是选择地点界面，那么这次点击相当于进入通知界面
+                // 如果是选择地点界面，那么这次点击相当于进入通知界面
                 // 改变按钮为发送通知
-                mActivityViewModel.setBtnBg(2)
+                // 如果没有选择左边或者右边，那么就是消极的背景
+                if (!isChooseLeftOrRight){
+                    mActivityViewModel.setBtnBg(2)
+                }else{
+                    // 如果选择了，那么下次进来的时候就直接有选中
+                    mActivityViewModel.setBtnBg(5)
+                }
                 mPageManager.loadNextPage()
             }else if (mPageManager.isEndPage()) {
                 // 如果是发送通知界面，这次点击相当于发送通知
-                Log.d("lx", "mWaitSubmit = ${mWaitSubmit}: ")
                 if (mWaitSubmit != null && mWaitSubmit!!.isNotEmpty()){
                     val notificationBean = NotificationBean(mWaitSubmit!!,mNoClassBean.dateJson,mPageManager.getTitle(),mPageManager.getLoc())
-                    Log.d("lx", "notificationBean = ${notificationBean}: ")
                     mViewModel.sendNotification(notificationBean)
                 }else{
                     toast("掌友，人员不能为空哦")

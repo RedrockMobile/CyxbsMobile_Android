@@ -94,8 +94,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
         content?.let { mHintText.text = it }
         mHandler = Handler(Looper.getMainLooper())
         mRunnable = Runnable {
-            mHintText.alphaAnim(mHintText.alpha,0f,200).start()
-            mHintText.gone()
+            mHintText.alphaAnim(mHintText.alpha,0f,500).start()
         }
         mHandler!!.postDelayed(mRunnable!!,2000)
     }
@@ -156,12 +155,17 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                         searchAllDialog = SearchAllDialog.newInstance(it.data).apply {
                             setOnClickClass { cls ->
                                 val clsList = mAdapter.currentList.toMutableSet()
-                                clsList.addAll(cls.members)
+                                val ids = clsList.map {stu -> stu.id }
+                                cls.members.forEach {stu ->
+                                    if (stu.id !in ids){
+                                        clsList.add(stu)
+                                    }
+                                }
                                 mAdapter.submitList(clsList.toList())
                             }
                             setOnClickStudent { stu ->
                                 val stuList = mAdapter.currentList.toMutableSet()
-                                val ids = stuList.map { it.id }
+                                val ids = stuList.map {stu1 -> stu1.id }
                                 if (stu.id !in ids){
                                     stuList.add(stu)
                                 }
@@ -169,7 +173,12 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                             }
                             setOnClickGroup { group ->
                                 val groupList = mAdapter.currentList.toMutableSet()
-                                groupList.addAll(group.members)
+                                val ids = groupList.map {stu -> stu.id }
+                                group.members.forEach {stu ->
+                                    if (stu.id !in ids){
+                                        groupList.add(stu)
+                                    }
+                                }
                                 mAdapter.submitList(groupList.toList())
                             }
                         }

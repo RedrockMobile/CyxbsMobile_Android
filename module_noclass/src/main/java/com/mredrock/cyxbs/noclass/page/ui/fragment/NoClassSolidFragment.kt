@@ -172,21 +172,21 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     }
 
     private fun initObserver() {
-        var searchStudentDialog: SearchStudentDialog?
-        var addToGroupDialog : AddToGroupDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (it.isSuccess()){
                     if (it.data.isNotEmpty()) {
                         if (childFragmentManager.findFragmentByTag("SearchStudentDialog") == null){
-                            searchStudentDialog = SearchStudentDialog.newInstance(it.data).apply {
+                            SearchStudentDialog.newInstance(it.data).apply {
                                 setOnAddClick { stu ->
                                     //点击加号之后的逻辑，需要弹窗选择分组加入
-                                    addToGroupDialog = AddToGroupDialog.newInstance(mAdapter.currentList, stu)
-                                    addToGroupDialog!!.show(childFragmentManager, "AddToGroupDialog")
+                                    AddToGroupDialog.newInstance(mAdapter.currentList, stu).apply {
+                                        setAddCallBack {
+                                            mParentViewModel.getAllGroup()
+                                        }
+                                    }.show(requireActivity().supportFragmentManager, "AddToGroupDialog")
                                 }
-                            }
-                            searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
+                            }.show(childFragmentManager, "SearchStudentDialog")
                         }
                     } else {
                         SearchNoExistDialog(requireContext()).show()

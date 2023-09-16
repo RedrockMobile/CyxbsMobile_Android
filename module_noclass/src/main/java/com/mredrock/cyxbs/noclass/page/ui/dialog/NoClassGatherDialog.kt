@@ -123,7 +123,7 @@ class NoClassGatherDialog (
         dialog.findViewById<View>(R.id.noclass_dialog_gathering_line).gone()
         val constrain = dialog.findViewById<ConstraintLayout>(R.id.noclass_gather_dialog_constraint)
         val lp = constrain.layoutParams
-        lp.height = 175.dp2px
+        lp.height = 180.dp2px
         constrain.layoutParams = lp
         requestLayout()
       }else{

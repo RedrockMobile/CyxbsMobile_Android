@@ -50,9 +50,18 @@ class AddToGroupDialog: BaseBottomSheetDialogFragment() {
     private val mSolidViewModel by viewModels<SolidViewModel>()
 
     /**
-     * 剩余人员数量
+     * 剩余人员数量，生命周期结束时网络请求也会被取消
      */
     private var restNum: Int = 0
+
+    /**
+     * 添加到分组之后的操作，由solidFragment给出
+     */
+    private var addCallBack : (() -> Unit)? = null
+
+    fun setAddCallBack(addCallBack : () -> Unit){
+        this.addCallBack = addCallBack
+    }
 
     /**
      * 传过来
@@ -76,6 +85,7 @@ class AddToGroupDialog: BaseBottomSheetDialogFragment() {
                 toast("添加失败")
             } else if (restNum == 0) {
                 toast("添加成功")
+                addCallBack?.invoke()
                 dismiss()
             }
             restNum--
@@ -113,7 +123,7 @@ class AddToGroupDialog: BaseBottomSheetDialogFragment() {
         // 完成按钮
         mBtnDone = dialog.findViewById<Button>(R.id.noclass_add_to_group_done).apply {
             setOnClickListener {
-                restNum = (chooseGroup!!.size - 2).coerceAtLeast(0)
+                restNum = (chooseGroup!!.size - 1).coerceAtLeast(0)
                 chooseGroup!!.forEach {
                     //每一个被选中的分组添加成员
                     mSolidViewModel.addMembers(it.id, setOf(student))
