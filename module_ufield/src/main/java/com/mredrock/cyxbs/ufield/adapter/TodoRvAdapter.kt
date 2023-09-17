@@ -133,9 +133,7 @@ class TodoRvAdapter :
             return oldItem == newItem
         }
 
-        /**
-         * 通过数据类中的一些特征值来比较
-         */
+
         override fun areContentsTheSame(oldItem: TodoBean, newItem: TodoBean): Boolean {
             return oldItem.activityId == newItem.activityId && oldItem.activityCreator == newItem.activityCreator && oldItem.activityStartAt == newItem.activityStartAt
         }
