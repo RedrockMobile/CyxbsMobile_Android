@@ -80,7 +80,7 @@
                 android:layout_height="17dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/config_alpha_level_two_font_color"
+                android:textColor="@color/uField_activity_style_color"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uField_all_lin" />
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/config_level_one_font_color"
+                    android:textColor="@color/uField_activity_time_color"
                     android:textSize="12sp" />
 
             </LinearLayout>
