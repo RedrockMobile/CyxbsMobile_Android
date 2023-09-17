@@ -54,14 +54,14 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="11dp"
-                android:text="@string/ufield_todo_ac_name"
+                android:text="@string/ufield_todo_ac_p_name"
                 android:textSize="14sp"
                 android:textColor="@color/config_alpha_forty_level_two_font_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uField_done_activity_name" />
 
             <TextView
-                android:id="@+id/uField_done_activity_type"
+                android:id="@+id/uField_done_activity_author"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
@@ -77,14 +77,14 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/ufield_todo_ac_p_name"
+                android:text="@string/ufield_ac_phone"
                 android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ufieldTextview" />
 
             <TextView
-                android:id="@+id/uField_done_activity_author"
+                android:id="@+id/uField_done_activity_phone"
                 android:layout_width="63dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"

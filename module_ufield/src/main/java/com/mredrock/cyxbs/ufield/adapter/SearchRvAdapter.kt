@@ -18,7 +18,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
- *  description :
+ *  description : 负责展示搜索活动数据的Rv adapter
  *  author : lytMoon
  *  date : 2023/8/22 14:49
  *  email : yytds@foxmail.com
@@ -111,9 +111,7 @@ class SearchRvAdapter :
             return oldItem == newItem
         }
 
-        /**
-         * 通过数据类中的一些特征值来比较
-         */
+
         override fun areContentsTheSame(
             oldItem: ItemActivityBean.ItemAll,
             newItem: ItemActivityBean.ItemAll
