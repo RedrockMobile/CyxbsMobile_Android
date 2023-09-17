@@ -19,4 +19,5 @@
     <string name="ufield_search_more">查看更多活动...</string>
     <string name="ufield_search_name">搜索</string>
     <string name="ufield_check_text">审核中心</string>
+    <string name="ufield_ac_phone">联系方式：</string>
 </resources>
