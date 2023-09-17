@@ -52,6 +52,7 @@ class NoClassActivity : BaseActivity() {
     //由于课表不止这一个界面要显示，所以做成了单独的ViewModel，方便调用
     private val mCourseViewModel by viewModels<CourseViewModel>()
 
+
     /**
      * 返回图标
      */

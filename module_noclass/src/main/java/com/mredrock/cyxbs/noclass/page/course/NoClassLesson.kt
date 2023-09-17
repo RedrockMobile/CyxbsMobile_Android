@@ -100,9 +100,9 @@ class NoClassLesson(
               else -> "${beginLesson}-${beginLesson + duration - 1}"
             }
 
-            val textTime = "${month} $timeText ${beginTime}-${endTime}"
+            val textTime = "$month $timeText ${beginTime}-${endTime}"
             val dateJson = DateJson(specialBeginLesson,data.weekNum,duration,mWeek)
-            NoClassGatherDialog(dateJson,mNumNameIsSpare, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
+            NoClassGatherDialog.newInstance(dateJson,mNumNameIsSpare, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }
       }
