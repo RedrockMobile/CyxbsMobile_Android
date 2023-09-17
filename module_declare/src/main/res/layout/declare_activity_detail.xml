@@ -54,7 +54,7 @@
                     app:layout_constraintHorizontal_bias="0.036"
                     app:layout_constraintStart_toEndOf="@+id/declare_detail_iv_toolbar_arrow_left"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.2345" />
+                    app:layout_constraintVertical_bias="0.2045" />
 
                 <TextView
                     android:id="@+id/declare_detail_title"

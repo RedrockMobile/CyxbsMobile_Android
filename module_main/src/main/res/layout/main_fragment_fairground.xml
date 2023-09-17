@@ -3,14 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/config_window_background"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<!--    视觉要求的渐变-->
-<!--    <View-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="350px"-->
-<!--        android:background="@drawable/main_shape_fairgroundback"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainConstraintlayout"
@@ -75,10 +70,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintHorizontal_bias="0.112"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="40dp"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.1"
         app:layout_constraintTop_toBottomOf="@+id/mainConstraintlayout">
 
         <ImageView
@@ -109,8 +103,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="180dp"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintStart_toEndOf="@+id/main_fairground_food"
         app:layout_constraintTop_toBottomOf="@+id/mainConstraintlayout">
 
@@ -142,10 +135,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/main_fairground_square"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintHorizontal_bias="1"
-        android:layout_marginTop="180dp"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintTop_toBottomOf="@+id/main_fairground_food">
 
         <ImageView
