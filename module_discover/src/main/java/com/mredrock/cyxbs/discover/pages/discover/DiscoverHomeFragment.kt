@@ -48,6 +48,7 @@ import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.discover.utils.NotificationSp
 import com.mredrock.cyxbs.discover.widget.IndicatorView
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.ndhzs.slideshow.SlideShow
@@ -68,6 +69,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     private val fl_discover_home_jwnews by R.id.fl_discover_home_jwnews.view<FrameLayout>()
     private val tv_day by R.id.tv_day.view<AppCompatTextView>()
     private val iv_discover_msg by R.id.iv_discover_msg.view<ImageView>()
+    private val iv_discover_msg_red_dot by R.id.iv_discover_msg_red_dot.view<ImageView>()
     private val rv_discover_more_function by R.id.rv_discover_more_function.view<RecyclerView>()
     private val ll_discover_feeds by R.id.ll_discover_feeds.view<LinearLayoutCompat>()
     private val indicator_view_discover by R.id.indicator_view_discover.view<IndicatorView>()
@@ -136,10 +138,16 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             val shouldShowRedDots = requireActivity().NotificationSp.getBoolean(IS_SWITCH1_SELECT,true)
             if (it == true && shouldShowRedDots) {
                 //将msg View设置为有消息的状态
+                iv_discover_msg_red_dot.visible()
+                /*
                 iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
+                */
             } else {
                 //将msg View设置为没有消息的状态
+                iv_discover_msg_red_dot.gone()
+                /*
                 iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
+                 */
             }
         }
     }

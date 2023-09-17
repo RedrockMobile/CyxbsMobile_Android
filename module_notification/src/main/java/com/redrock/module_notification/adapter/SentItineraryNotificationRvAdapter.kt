@@ -73,7 +73,7 @@ class SentItineraryNotificationRvAdapter(
 
         init {
             onCancelReminderClick?.apply {
-                cancelReminder.setOnSingleClickListener(2000) {
+                cancelReminder.setOnSingleClickListener(1000) {
                     // 取消该行程的提醒
                     val position = bindingAdapterPosition
                     this.invoke(getItem(position).id, position)

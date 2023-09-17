@@ -104,15 +104,17 @@
             app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_received_generate_time">
 
             <ImageView
+                android:id="@+id/notification_itinerary_iv_add_affair"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/notification_ic_add_affair"
+                android:src="@drawable/notification_ic_add_affair"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tool:layout_editor_absoluteX="166dp" />
 
             <TextView
+                android:id="@+id/notification_itinerary_tv_add_affair"
                 android:layout_width="wrap_content"
                 android:layout_height="21dp"
                 android:layout_gravity="center_vertical"

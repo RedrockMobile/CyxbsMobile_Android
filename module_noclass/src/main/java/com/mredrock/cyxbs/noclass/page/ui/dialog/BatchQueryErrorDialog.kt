@@ -54,7 +54,10 @@ class BatchQueryErrorDialog(context: Context, private val errList: List<String>)
         } else {
             if (errMessageHead.length > 5)
                 errMessageHead = "${errMessageHead.substring(0..4)}.."
-            errMessage = "“${errMessageHead}”等${errList.size}人信息有误\n请重新输入"
+            errMessage = if (errList.size > 1)
+                "“${errMessageHead}”等${errList.size}人信息有误\n请重新输入"
+            else
+                "“${errMessageHead}”信息有误\n请重新输入"
         }
         findViewById<TextView>(R.id.noclass_batch_tv_query_err_hint).text = errMessage
     }

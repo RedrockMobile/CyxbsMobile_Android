@@ -82,7 +82,7 @@
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
             android:scrollbarSize="4dp"
-            android:lineSpacingExtra="13dp"
+            android:lineSpacingExtra="8dp"
             android:fadeScrollbars="true"
             android:textColor="@color/noclass_batch_edit_text"
             android:textSize="14sp"

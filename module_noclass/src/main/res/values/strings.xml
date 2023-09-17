@@ -8,4 +8,6 @@
     <string name="noclass_batch_edit_hint_example_input_2" translatable="false"><font color="#6B89B7">样例输入2：2022213333\n&#12288;&#12288;&#12288;&#12288;&#8194;&#12288;2011118888</font></string>
     <string name="noclass_batch_edit_hint_err_input_1" translatable="false"><font color="#EFB7AB">错误输入1：卷卷，卷娘\n&#12288;&#12288;&#12288;&#12288;&#8194;&#12288;卷卷，卷娘</font></string>
     <string name="noclass_batch_edit_hint_err_input_2" translatable="false"><font color="#EFB7AB">错误输入2：卷卷\n&#12288;&#12288;&#12288;&#12288;&#8194;&#12288;2022222222</font></string>
+
+    <string name="noclass_batch_same_name_student_info" translatable="false">%1$s %2$s</string>
 </resources>
