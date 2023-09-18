@@ -70,6 +70,11 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private val mCourseViewModel by activityViewModels<CourseViewModel>()
 
     /**
+     * 是否重建
+     */
+    private var isRebuild = false
+
+    /**
      * 设置两秒后消失得runnable和handler，注意及时释放
      */
     private var mRunnable : Runnable? = null
@@ -77,6 +82,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isRebuild = savedInstanceState != null
         initUserInfo()
         initRv()
         initObserver()
@@ -147,48 +153,52 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private fun initObserver() {
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
-            if (it != null && it.isSuccess()){
-                //搜索只要成功就清空搜索框框
-                mEditTextView.setText("")
-                if (it.data.types != null && it.data.types!!.isNotEmpty()) {
-                    if (childFragmentManager.findFragmentByTag("SearchAllDialog") == null){
-                        searchAllDialog = SearchAllDialog.newInstance(it.data).apply {
-                            setOnClickClass { cls ->
-                                val clsList = mAdapter.currentList.toMutableSet()
-                                val ids = clsList.map {stu -> stu.id }
-                                cls.members.forEach {stu ->
-                                    if (stu.id !in ids){
-                                        clsList.add(stu)
+            if (it != null){
+                if (it.isSuccess()){
+                    //搜索只要成功就清空搜索框框
+                    mEditTextView.setText("")
+                    if (it.data.types != null && it.data.types!!.isNotEmpty()) {
+                        if (childFragmentManager.findFragmentByTag("SearchAllDialog") == null && !isRebuild){
+                            searchAllDialog = SearchAllDialog.newInstance(it.data).apply {
+                                setOnClickClass { cls ->
+                                    val clsList = mAdapter.currentList.toMutableSet()
+                                    val ids = clsList.map {stu -> stu.id }
+                                    cls.members.forEach {stu ->
+                                        if (stu.id !in ids){
+                                            clsList.add(stu)
+                                        }
                                     }
+                                    mAdapter.submitList(clsList.toList())
                                 }
-                                mAdapter.submitList(clsList.toList())
-                            }
-                            setOnClickStudent { stu ->
-                                val stuList = mAdapter.currentList.toMutableSet()
-                                val ids = stuList.map {stu1 -> stu1.id }
-                                if (stu.id !in ids){
-                                    stuList.add(stu)
-                                }
-                                mAdapter.submitList(stuList.toList())
-                            }
-                            setOnClickGroup { group ->
-                                val groupList = mAdapter.currentList.toMutableSet()
-                                val ids = groupList.map {stu -> stu.id }
-                                group.members.forEach {stu ->
+                                setOnClickStudent { stu ->
+                                    val stuList = mAdapter.currentList.toMutableSet()
+                                    val ids = stuList.map {stu1 -> stu1.id }
                                     if (stu.id !in ids){
-                                        groupList.add(stu)
+                                        stuList.add(stu)
                                     }
+                                    mAdapter.submitList(stuList.toList())
                                 }
-                                mAdapter.submitList(groupList.toList())
+                                setOnClickGroup { group ->
+                                    val groupList = mAdapter.currentList.toMutableSet()
+                                    val ids = groupList.map {stu -> stu.id }
+                                    group.members.forEach {stu ->
+                                        if (stu.id !in ids){
+                                            groupList.add(stu)
+                                        }
+                                    }
+                                    mAdapter.submitList(groupList.toList())
+                                }
                             }
+                            searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
+                        }else{
+                            isRebuild = false
                         }
-                        searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
+                    } else {
+                        SearchNoExistDialog(requireContext()).show()
                     }
-                } else {
-                    SearchNoExistDialog(requireContext()).show()
+                }else{
+                    initHintText("网络异常请检查网络")
                 }
-            }else{
-                initHintText("网络异常请检查网络")
             }
         }
     }

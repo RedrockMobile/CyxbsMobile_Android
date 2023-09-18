@@ -122,6 +122,7 @@ class AddToGroupDialog: BaseBottomSheetDialogFragment() {
         }
         // 完成按钮
         mBtnDone = dialog.findViewById<Button>(R.id.noclass_add_to_group_done).apply {
+            isClickable = false
             setOnClickListener {
                 restNum = (chooseGroup!!.size - 1).coerceAtLeast(0)
                 chooseGroup!!.forEach {

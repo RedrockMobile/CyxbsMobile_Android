@@ -30,7 +30,7 @@ import com.mredrock.cyxbs.noclass.util.BaseBottomSheetDialogFragment
 class SearchAllDialog : BaseBottomSheetDialogFragment() {
 
     private var searchResult by arguments<NoClassTemporarySearch>()
-    private var groupId: String = "-1"
+    private var groupId by arguments<String>()
 
     // 仅在组内管理界面添加人员需要用到
     private val mViewModel by viewModels<SearchAllDialogViewModel>()
@@ -251,7 +251,6 @@ class SearchAllDialog : BaseBottomSheetDialogFragment() {
     fun setOnClickGroupDetailAdd(onClickGroupDetailAdd: ((stuList: List<Student>) -> Unit)) {
         this.onClickGroupDetailAdd = onClickGroupDetailAdd
     }
-
     companion object{
         fun newInstance(searchResult: NoClassTemporarySearch, groupId: String = "-1") = SearchAllDialog().apply {
             arguments = bundleOf(

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -47,6 +46,7 @@ class NoClassGatherDialog: BaseBottomSheetDialogFragment() {
 
   private lateinit var mIndicator : MyVpIndicatorView
 
+  private var indicatorNum = 1
 
   /**
    * 点击空白处，取消当前dialog之后回调的方法
@@ -64,6 +64,7 @@ class NoClassGatherDialog: BaseBottomSheetDialogFragment() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     super.onCreateDialog(savedInstanceState)
+    if (savedInstanceState != null) { dismiss() }  //重建直接消失
     val dialog = super.onCreateDialog(savedInstanceState)
     dialog.setContentView(R.layout.noclass_dialog_noclass_gather)
     initView(dialog)
@@ -107,15 +108,16 @@ class NoClassGatherDialog: BaseBottomSheetDialogFragment() {
         dialog.findViewById<View>(R.id.noclass_dialog_gathering_line).gone()
         val constrain = dialog.findViewById<ConstraintLayout>(R.id.noclass_gather_dialog_constraint)
         val lp = constrain.layoutParams
-        lp.height = 180.dp2px
+        lp.height = 200.dp2px
         constrain.layoutParams = lp
         requestLayout()
       }else{
         fun getFillCallback(): (List<String>) -> Unit {
           return { newBusyNames ->
             if (newBusyNames.isNotEmpty()) {
-              Log.d("lx", "getFillCallback:${newBusyNames} ")
               mAdapter.add{NoClassBusyPageFragment.newInstance(newBusyNames).apply {setFillCallback {getFillCallback().invoke(it)}}}
+              indicatorNum ++
+              mIndicator.setAllDot(indicatorNum)
             }
           }
         }

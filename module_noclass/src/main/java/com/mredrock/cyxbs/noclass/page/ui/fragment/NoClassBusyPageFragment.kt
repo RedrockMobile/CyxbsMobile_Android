@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +60,6 @@ class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) 
         myFlexLayout = view.findViewById(R.id.noclass_gl_container)
         myFlexLayout.setOnFillCallback(object : MyFlexLayout.OnFillCallback{
             override fun onFill(itemsSize: Int) {
-                Log.d("lx", "$id pageFg onFill itemSize = $itemsSize ")
                 val list = mBusyNameList.subList(itemsSize,mBusyNameList.size)
                 mBusyNameList = mBusyNameList.take(itemsSize) as ArrayList<String>
                 if (list.isNotEmpty()){
@@ -98,7 +96,7 @@ class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) 
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(12, 10, 12, 10)
+                setMargins(12, 12, 12, 12)
             }
         }
     }

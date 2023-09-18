@@ -96,6 +96,11 @@ class NoClassActivity : BaseActivity() {
     private var mStuList: MutableSet<String>? = null
 
     /**
+     * activity是否处于重建状态
+     */
+    private var isRebuild : Boolean = false
+
+    /**
      * 获取批量添加界面的返回值
      */
     private val startForResult =
@@ -117,6 +122,7 @@ class NoClassActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isRebuild = savedInstanceState != null
         setContentView(R.layout.noclass_activity_no_class)
         initBack()
         initObserve()
@@ -248,7 +254,9 @@ class NoClassActivity : BaseActivity() {
                         }
                     }
 
-                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> { //折叠操作
+                    BottomSheetBehavior.STATE_COLLAPSED -> { //折叠操作
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> { //每次隐藏清空查询列表中的数据
                     }
 
                     else -> {}
@@ -264,8 +272,12 @@ class NoClassActivity : BaseActivity() {
     private fun initObserve() {
         //在滑动下拉课表容器中添加整个课表,等待fragment中请求数据
         mCourseViewModel.noclassData.observe(this) {
-            mStuList = it[0]!!.mIdToNameMap.keys
-            mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            if (!isRebuild){
+                mStuList = it[0]!!.mIdToNameMap.keys
+                mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }else{
+                isRebuild = false
+            }
         }
     }
 

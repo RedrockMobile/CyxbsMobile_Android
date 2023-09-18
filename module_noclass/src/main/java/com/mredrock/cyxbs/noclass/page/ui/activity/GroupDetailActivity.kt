@@ -178,28 +178,30 @@ class GroupDetailActivity : BaseActivity(){
         //观察搜索结果出来就弹窗
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(this){
-            if (it != null && it.isSuccess()){
-                //搜索只要成功就清空搜索框框
-                mEditTextView.setText("")
-                if (it.data.types != null) {
-                    if (supportFragmentManager.findFragmentByTag("SearchAllDialog") == null){
-                        searchAllDialog = SearchAllDialog.newInstance(
-                            searchResult = it.data,
-                            groupId = mCurrentNoclassGroup.id
-                        ).apply {
-                            setOnClickGroupDetailAdd { students ->
-                                val stuList = mAdapter.currentList.toMutableSet()
-                                stuList.addAll(students)
-                                mAdapter.submitList(stuList.toList())
+            if (it != null){
+                if (it.isSuccess()){
+                    //搜索只要成功就清空搜索框框
+                    mEditTextView.setText("")
+                    if (it.data.types != null) {
+                        if (supportFragmentManager.findFragmentByTag("SearchAllDialog") == null){
+                            searchAllDialog = SearchAllDialog.newInstance(
+                                searchResult = it.data,
+                                groupId = mCurrentNoclassGroup.id
+                            ).apply {
+                                setOnClickGroupDetailAdd { students ->
+                                    val stuList = mAdapter.currentList.toMutableSet()
+                                    stuList.addAll(students)
+                                    mAdapter.submitList(stuList.toList())
+                                }
                             }
+                            searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
                         }
-                        searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
+                    } else {
+                        SearchNoExistDialog(this).show()
                     }
-                } else {
-                    SearchNoExistDialog(this).show()
+                }else{
+                    initHintText("网络异常请检查网络")
                 }
-            }else{
-                initHintText("网络异常请检查网络")
             }
         }
         // 监听删除是否成功决定本地是否删除
