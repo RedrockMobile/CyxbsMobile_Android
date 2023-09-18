@@ -7,18 +7,10 @@
     tools:ignore="HardcodedText"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_noclass_gather"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.618" />
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/csl_noclass_gather_dialog"
         android:layout_width="match_parent"
-        android:layout_height="282dp"
+        android:layout_height="300dp"
         android:background="@drawable/noclass_shape_sheet_dialog_bg"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -89,6 +81,7 @@
             android:text="完成"
             android:textColor="@color/config_white_black"
             android:textSize="18sp"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

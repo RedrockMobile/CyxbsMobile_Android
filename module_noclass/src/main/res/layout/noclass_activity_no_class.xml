@@ -41,6 +41,7 @@
                     android:layout_marginStart="16dp"/>
 
                 <TextView
+                    android:id="@+id/iv_noclass_tv_noclass"
                     android:textColor="@color/config_level_one_font_color"
                     android:textSize="22sp"
                     android:text="没课约"

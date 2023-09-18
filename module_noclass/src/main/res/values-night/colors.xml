@@ -40,12 +40,11 @@
     <color name="noclass_course_all_busy_lesson_bg">#F9E3E4</color>
     <color name="noclass_course_all_busy_lesson_color">#FF6262</color>
     <!--    忙碌大于空闲-->
-    <color name="noclass_course_more_busy_lesson_bg">#FFF1E5</color>
-    <color name="noclass_course_more_busy_lesson_color">#F69F55</color>
+    <color name="noclass_course_more_busy_lesson_bg">#F9E7D8</color>
+    <color name="noclass_course_more_busy_lesson_color">#FF8015</color>
     <!--    空闲大于忙碌-->
     <color name="noclass_course_more_spare_lesson_bg">#DDE3F8</color>
     <color name="noclass_course_more_spare_lesson_color">#4066EA</color>
-
     <!--点击空白处的灰色-->
     <color name="noclass_course_click_spare_lesson_bg">#808080</color>
 

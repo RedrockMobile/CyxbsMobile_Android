@@ -4,6 +4,6 @@
     tools:ignore="ResourceName">
   <corners android:radius="34dp"/>
 
-  <gradient android:startColor="#FF4741E0" android:endColor="#FF5D5EF7"/>
+  <gradient android:startColor="#C3D4EE" android:endColor="#C3D4EE"/>
 
 </shape>

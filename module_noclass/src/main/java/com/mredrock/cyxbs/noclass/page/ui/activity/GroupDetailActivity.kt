@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
@@ -127,6 +126,7 @@ class GroupDetailActivity : BaseActivity(){
         initEditText()
         initCourseContainer()
         initQuery()
+        initHintText("试试左滑删除列表")
     }
 
     /**
@@ -178,24 +178,30 @@ class GroupDetailActivity : BaseActivity(){
         //观察搜索结果出来就弹窗
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(this){
-            if (it != null && it.isSuccess()){
-                if (it.data.types != null) {
-                    searchAllDialog = SearchAllDialog(
-                        searchResult = it.data,
-                        groupId = mCurrentNoclassGroup.id
-                    ).apply {
-                        setOnClickGroupDetailAdd { students ->
-                            val stuList = mAdapter.currentList.toMutableSet()
-                            stuList.addAll(students)
-                            mAdapter.submitList(stuList.toList())
+            if (it != null){
+                if (it.isSuccess()){
+                    //搜索只要成功就清空搜索框框
+                    mEditTextView.setText("")
+                    if (it.data.types != null) {
+                        if (supportFragmentManager.findFragmentByTag("SearchAllDialog") == null){
+                            searchAllDialog = SearchAllDialog.newInstance(
+                                searchResult = it.data,
+                                groupId = mCurrentNoclassGroup.id
+                            ).apply {
+                                setOnClickGroupDetailAdd { students ->
+                                    val stuList = mAdapter.currentList.toMutableSet()
+                                    stuList.addAll(students)
+                                    mAdapter.submitList(stuList.toList())
+                                }
+                            }
+                            searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
                         }
+                    } else {
+                        SearchNoExistDialog(this).show()
                     }
-                    searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
-                } else {
-                    SearchNoExistDialog(this).show()
+                }else{
+                    initHintText("网络异常请检查网络")
                 }
-            }else{
-                initHintText("网络异常请检查网络")
             }
         }
         // 监听删除是否成功决定本地是否删除
@@ -229,7 +235,6 @@ class GroupDetailActivity : BaseActivity(){
         mHandler = Handler(Looper.getMainLooper())
         mRunnable = Runnable {
             mHintText.alphaAnim(mHintText.alpha,0f,200).start()
-            mHintText.gone()
         }
         mHandler!!.postDelayed(mRunnable!!,2000)
     }
@@ -301,5 +306,10 @@ class GroupDetailActivity : BaseActivity(){
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         mEditTextView.setText("")
         mViewModel.getSearchAllResult(content)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mRunnable?.let { mHandler?.removeCallbacks(it) }
     }
 }

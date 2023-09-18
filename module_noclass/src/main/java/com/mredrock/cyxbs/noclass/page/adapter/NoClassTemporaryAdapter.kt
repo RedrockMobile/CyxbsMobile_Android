@@ -39,7 +39,8 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
                 oldItem: Student,
                 newItem: Student
             ): Boolean {
-                return oldItem == newItem
+                // 查课表只用到学号
+                return true
             }
         }
     }

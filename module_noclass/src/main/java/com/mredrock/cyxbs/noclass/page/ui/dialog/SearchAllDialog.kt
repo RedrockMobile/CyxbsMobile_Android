@@ -4,12 +4,12 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.CLASS_TYPE
@@ -22,16 +22,15 @@ import com.mredrock.cyxbs.noclass.bean.STUDENT_TYPE
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.TemporarySearchAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.dialog.SearchAllDialogViewModel
+import com.mredrock.cyxbs.noclass.util.BaseBottomSheetDialogFragment
 
 /**
  * 搜索所有，包括学生，分组，班级
- * @param searchResult 用于展示结果
- * @param groupId 用来判断是临时分组还是组内管理，组内管理的添加需要网络请求才能添加成功！
  */
-class SearchAllDialog(
-    private val searchResult: NoClassTemporarySearch,
-    private val groupId: String = "-1"
-) : BottomSheetDialogFragment() {
+class SearchAllDialog : BaseBottomSheetDialogFragment() {
+
+    private var searchResult by arguments<NoClassTemporarySearch>()
+    private var groupId by arguments<String>()
 
     // 仅在组内管理界面添加人员需要用到
     private val mViewModel by viewModels<SearchAllDialogViewModel>()
@@ -92,7 +91,7 @@ class SearchAllDialog(
                             break
                         }
                         // 此时绝对只有一条数据
-                        when (searchResult.types[0]) {
+                        when (searchResult.types!![0]) {
                             STUDENT_TYPE -> dismiss()
                             CLASS_TYPE -> dismiss()
                             GROUP_TYPE -> {
@@ -251,5 +250,13 @@ class SearchAllDialog(
     private var onClickGroupDetailAdd: ((stuList: List<Student>) -> Unit)? = null
     fun setOnClickGroupDetailAdd(onClickGroupDetailAdd: ((stuList: List<Student>) -> Unit)) {
         this.onClickGroupDetailAdd = onClickGroupDetailAdd
+    }
+    companion object{
+        fun newInstance(searchResult: NoClassTemporarySearch, groupId: String = "-1") = SearchAllDialog().apply {
+            arguments = bundleOf(
+                this::searchResult.name to searchResult,
+                this::groupId.name to groupId
+            )
+        }
     }
 }

@@ -91,7 +91,7 @@ class NoClassTouchAffairItem(
         nameMap.forEach { (id, name) ->
             mNumNameIsSpare[id to name] = true
         }
-        NoClassGatherDialog(
+        NoClassGatherDialog.newInstance(
             dateJson,
             mNumNameIsSpare,
             textTime

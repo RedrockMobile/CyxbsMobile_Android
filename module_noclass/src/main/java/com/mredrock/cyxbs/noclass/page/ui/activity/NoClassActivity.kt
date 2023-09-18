@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -51,10 +52,16 @@ class NoClassActivity : BaseActivity() {
     //由于课表不止这一个界面要显示，所以做成了单独的ViewModel，方便调用
     private val mCourseViewModel by viewModels<CourseViewModel>()
 
+
     /**
      * 返回图标
      */
     private val mImgReturn: ImageView by R.id.iv_noclass_return.view()
+
+    /**
+     * 没课越文字
+     */
+    private val mTvNoClass : TextView by R.id.iv_noclass_tv_noclass.view()
 
     /**
      * 批量添加文字
@@ -89,6 +96,11 @@ class NoClassActivity : BaseActivity() {
     private var mStuList: MutableSet<String>? = null
 
     /**
+     * activity是否处于重建状态
+     */
+    private var isRebuild : Boolean = false
+
+    /**
      * 获取批量添加界面的返回值
      */
     private val startForResult =
@@ -110,6 +122,7 @@ class NoClassActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isRebuild = savedInstanceState != null
         setContentView(R.layout.noclass_activity_no_class)
         initBack()
         initObserve()
@@ -148,6 +161,9 @@ class NoClassActivity : BaseActivity() {
         }
         // 返回的点击事件
         mImgReturn.setOnClickListener {
+            finish()
+        }
+        mTvNoClass.setOnClickListener {
             finish()
         }
     }
@@ -238,7 +254,9 @@ class NoClassActivity : BaseActivity() {
                         }
                     }
 
-                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> { //折叠操作
+                    BottomSheetBehavior.STATE_COLLAPSED -> { //折叠操作
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> { //每次隐藏清空查询列表中的数据
                     }
 
                     else -> {}
@@ -254,8 +272,12 @@ class NoClassActivity : BaseActivity() {
     private fun initObserve() {
         //在滑动下拉课表容器中添加整个课表,等待fragment中请求数据
         mCourseViewModel.noclassData.observe(this) {
-            mStuList = it[0]!!.mIdToNameMap.keys
-            mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            if (!isRebuild){
+                mStuList = it[0]!!.mIdToNameMap.keys
+                mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }else{
+                isRebuild = false
+            }
         }
     }
 

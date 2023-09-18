@@ -6,9 +6,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.activityViewModels
+import androidx.core.os.bundleOf
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.affair.DateJson
 import com.mredrock.cyxbs.api.affair.IAffairService
@@ -20,7 +19,7 @@ import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassBusyPageFragment
-import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
+import com.mredrock.cyxbs.noclass.util.BaseBottomSheetDialogFragment
 import com.mredrock.cyxbs.noclass.widget.MyVpIndicatorView
 
 /**
@@ -34,21 +33,20 @@ import com.mredrock.cyxbs.noclass.widget.MyVpIndicatorView
  * @Version:        1.0
  * @Description:
  */
-class NoClassGatherDialog (
-  private val mDateJson: DateJson,
-  private val mNumNameIsSpare : HashMap<Pair<String,String>,Boolean>,
-  private val mTextTime : String
-) : BottomSheetDialogFragment() {
+class NoClassGatherDialog: BaseBottomSheetDialogFragment() {
+
+  private val mDateJson: DateJson by arguments()
+  private val mNumNameIsSpare : HashMap<Pair<String,String>,Boolean> by arguments()
+  private val mTextTime : String by arguments()
 
   private val mAdapter by lazy { FragmentVpAdapter(this) }
 
-  private val mParentViewModel by activityViewModels<NoClassViewModel>()
 
   private lateinit var mViewPager2 : ViewPager2
 
   private lateinit var mIndicator : MyVpIndicatorView
 
-  private var indicatorNum : Int = 1
+  private var indicatorNum = 1
 
   /**
    * 点击空白处，取消当前dialog之后回调的方法
@@ -62,34 +60,20 @@ class NoClassGatherDialog (
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setStyle(STYLE_NORMAL, R.style.noclass_sheet_dialog_style)
-    initObserve()
-  }
-
-  private fun initObserve() {
-    // 记录上一次的list的size，方便比较
-    var beforeSize = mNumNameIsSpare.filter { !it.value }.size
-    mParentViewModel.busyNameList.observe(this){
-      // 如果不等，就说明页面已经满了
-      if (it.isNotEmpty() && it.size != beforeSize){
-        beforeSize = it.size
-        mAdapter.add(NoClassBusyPageFragment::class.java)
-        indicatorNum++
-        mIndicator.setAllDot(indicatorNum)
-      }
-    }
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     super.onCreateDialog(savedInstanceState)
+    if (savedInstanceState != null) { dismiss() }  //重建直接消失
     val dialog = super.onCreateDialog(savedInstanceState)
     dialog.setContentView(R.layout.noclass_dialog_noclass_gather)
     initView(dialog)
     return dialog
   }
-  
+
   private fun initView(dialog: Dialog){
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
-      val describe = "共计 ${mNumNameIsSpare.size} 人"
+      val describe = "共计${mNumNameIsSpare.size} 人"
       text = describe
     }
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_busy_total).apply {
@@ -115,6 +99,7 @@ class NoClassGatherDialog (
     }
     mIndicator = dialog.findViewById(R.id.noclass_indicator_gathering)
     mViewPager2 = dialog.findViewById<ViewPager2>(R.id.noclass_vp_gather_container).apply {
+      offscreenPageLimit = 2
       // 忙碌的人名
       val busyNames = mNumNameIsSpare.filter { !it.value }.map { it.key }.map { it.second }
       if (busyNames.isEmpty()){
@@ -123,12 +108,20 @@ class NoClassGatherDialog (
         dialog.findViewById<View>(R.id.noclass_dialog_gathering_line).gone()
         val constrain = dialog.findViewById<ConstraintLayout>(R.id.noclass_gather_dialog_constraint)
         val lp = constrain.layoutParams
-        lp.height = 175.dp2px
+        lp.height = 200.dp2px
         constrain.layoutParams = lp
         requestLayout()
       }else{
-        mParentViewModel.setBusyNameList(busyNames)
-        adapter = mAdapter.add(NoClassBusyPageFragment::class.java)
+        fun getFillCallback(): (List<String>) -> Unit {
+          return { newBusyNames ->
+            if (newBusyNames.isNotEmpty()) {
+              mAdapter.add{NoClassBusyPageFragment.newInstance(newBusyNames).apply {setFillCallback {getFillCallback().invoke(it)}}}
+              indicatorNum ++
+              mIndicator.setAllDot(indicatorNum)
+            }
+          }
+        }
+        adapter = mAdapter.add{NoClassBusyPageFragment.newInstance(busyNames).apply {setFillCallback{getFillCallback().invoke(it)}}}
       }
     }
     mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
@@ -141,7 +134,20 @@ class NoClassGatherDialog (
 
   override fun onDestroy() {
     super.onDestroy()
-    mParentViewModel.setBusyNameList(listOf())
     mClickBlankCancel?.invoke()
+  }
+
+  companion object{
+    fun newInstance(
+      mDateJson: DateJson,
+      mNumNameIsSpare : HashMap<Pair<String,String>,Boolean>,
+      mTextTime : String
+    ) = NoClassGatherDialog().apply {
+      arguments = bundleOf(
+        this::mDateJson.name to mDateJson,
+        this::mNumNameIsSpare.name to mNumNameIsSpare,
+        this::mTextTime.name to mTextTime
+      )
+    }
   }
 }

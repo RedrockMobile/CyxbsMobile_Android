@@ -7,7 +7,8 @@
     tools:ignore="HardcodedText"
     android:layout_height="46dp"
     android:layout_marginTop="1dp"
-    android:layout_marginBottom="1dp">
+    android:layout_marginBottom="1dp"
+    android:id="@+id/noclass_item_group_item_frame">
 
     <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
         android:background="@drawable/noclass_selector_item_selected_bg"
@@ -47,7 +48,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+
+            >
 
             <ImageView
                 app:layout_constraintHorizontal_bias="0"
