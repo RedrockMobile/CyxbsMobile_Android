@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    tools:background="@color/common_window_background">
+    tools:background="@color/common_window_background"
+    tools:ignore="ContentDescription">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,12 +46,21 @@
             android:id="@+id/iv_discover_msg"
             android:layout_width="24dp"
             android:layout_height="20dp"
-            android:layout_marginEnd="73dp"
-            android:background="@drawable/discover_ic_home_has_msg"
+            android:layout_marginEnd="33.87dp"
+            android:background="@drawable/discover_ic_home_msg"
             app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_dis"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintEnd_toStartOf="@+id/iv_check_in"
+            app:layout_constraintTop_toTopOf="@+id/tv_dis" />
+
+        <ImageView
+            android:id="@+id/iv_discover_msg_red_dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/discover_ic_red_dot"
+            android:layout_marginBottom="19dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_msg"
+            app:layout_constraintStart_toEndOf="@+id/iv_discover_msg" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_check_in"

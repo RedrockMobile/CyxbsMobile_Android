@@ -20,7 +20,7 @@ data class NoClassBatchResponseInfo(
     val normal: List<Normal>?,
     @SerializedName("repeat")
     val repeat: List<Student>?
-){
+): Serializable {
     data class Normal(
         @SerializedName("stu_num")
         val id: String,
@@ -29,18 +29,15 @@ data class NoClassBatchResponseInfo(
     )
     data class Student(
         @SerializedName("stunum")
-        val id: String,
+        val id: String,             // 学号
         @SerializedName("name")
-        val name:String,
+        val name:String,            // 姓名
         @SerializedName("major")
-        val major: String,
+        val major: String,          // 专业名称
+        @SerializedName("depart")
+        val depart: String,         // 学院名称
         @SerializedName("classnum")
-        val classNum: String,
+        val classNum: String,       // 班级号
         var isSelected: Boolean = false
     )
 }
-
-data class UploadBatchInfoToBean(
-    @SerializedName("content")
-    val content: List<String>
-): Serializable

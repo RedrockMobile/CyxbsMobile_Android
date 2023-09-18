@@ -118,6 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="21dp"
                 android:layout_gravity="center_vertical"
+                android:paddingTop="0.75dp"
                 android:layout_marginStart="5dp"
                 android:letterSpacing="0.075"
                 android:text="取消提醒"

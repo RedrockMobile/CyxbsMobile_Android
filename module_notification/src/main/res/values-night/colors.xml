@@ -24,6 +24,9 @@
     <color name="notification_home_item_tv_time">#F0F0F0</color>
     <color name="notification_home_page_tabLayout_shadow">#E6000000</color>
 
+    <color name="notification_itinerary_item_title_text">#F0F0F0</color>
+    <color name="notification_itinerary_item_content_text">#E4E1E1</color>
+
     <color name="notification_delete_dialog_tv_tips">#F0F0F2</color>
     <color name="notification_delete_dialog_btn_negative">#4E4E4E</color>
     <color name="notification_delete_dialog_btn_positive">#4A44E4</color>
@@ -32,6 +35,5 @@
     <color name="notification_ufield_notification_background">#111111</color>
     <color name="notification_activity_name">#59759E</color>
     <color name="notification_itinerary_tl_shadow_source">#2D2D2D</color>
-    <color name="notification_itinerary_item_content_text">#FFFFFF</color>
     <color name="notification_itinerary_item_canceled_title_text">#8F9CAF</color>
 </resources>
