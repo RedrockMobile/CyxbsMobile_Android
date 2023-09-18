@@ -178,10 +178,11 @@ class CreateActivity : BaseActivity() {
 
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH) + 1
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
+        val month = String.format("%02d", calendar.get(Calendar.MONTH) + 1)
+        val day = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH))
+        val hour = String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY))
+        val minute = String.format("%02d", calendar.get(Calendar.MINUTE))
+
         startText.text = "${year}年${month}月${day}日${hour}点${minute}分"
         endText.text = "${year}年${month}月${day}日${hour}点${minute}分"
     }
@@ -551,14 +552,7 @@ class CreateActivity : BaseActivity() {
     @SuppressLint("SimpleDateFormat")
     private fun getDate(date: Date): String {
         val format = SimpleDateFormat("yyyy年MM月dd日HH点mm分")
-        val formattedDate = format.format(date)
-
-        val pattern = "(?<=\\D|^)0" // 匹配以0开头的单个数字
-        val regex = Regex(pattern)
-
-        return formattedDate.replace(regex) { matchResult ->
-            matchResult.value.substring(1) // 移除开头的0
-        }
+        return format.format(date)
     }
 
     private fun initTextListener() {
