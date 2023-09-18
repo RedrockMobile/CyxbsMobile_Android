@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.food.ui.activity
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.util.Size
 import android.widget.Button
 import android.widget.ImageView
@@ -317,7 +318,7 @@ class FoodMainActivity : BaseActivity() {
                                 context,
                                 R.drawable.food_shape_btn_normal
                             )
-                        setTextColor(getColor(R.color.food_btn_pressed_text))
+                        setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_alpha_level_two_font_color))
                     }
                 }
         }

@@ -20,4 +20,6 @@
     <!--按钮渐变颜色-->
     <color name="affair_button_gradient_start_color">#2921D1</color>
     <color name="affair_button_gradient_end_color">#5D5DF7</color>
+    <color name="affair_noclass_un_choose_bg" >#1F1F1F</color>
+    <color name="affair_noclass_text_un_choose_color" >#FFFFFF</color>
 </resources>

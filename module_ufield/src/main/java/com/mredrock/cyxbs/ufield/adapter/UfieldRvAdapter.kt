@@ -115,9 +115,7 @@ class UfieldRvAdapter :
             return oldItem == newItem
         }
 
-        /**
-         * 通过数据类中的一些特征值来比较
-         */
+
         override fun areContentsTheSame(
             oldItem: ItemActivityBean.ItemAll,
             newItem: ItemActivityBean.ItemAll

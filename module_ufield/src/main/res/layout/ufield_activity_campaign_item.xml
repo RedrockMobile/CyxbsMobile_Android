@@ -42,7 +42,7 @@
             android:letterSpacing="0.05"
             android:maxLines="1"
             android:text="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
-            android:textColor="@color/ufield_fragment_head_title"
+            android:textColor="@color/config_level_one_font_color"
             android:textSize="16sp" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:lineHeight="19.6dp"
             android:maxLines="2"
             android:text="呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜"
-            android:textColor="@color/ufield_fragment_detail"
+            android:textColor="@color/config_alpha_forty_level_two_font_color"
             android:textSize="14sp" />
 
         <ImageView
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="111dp"
             android:layout_marginTop="80dp"
-            android:src="@drawable/ufield_ic_activity_campaign_time" />
+            android:src="@drawable/ufield_ic_time" />
 
         <TextView
             android:id="@+id/ufield_fragment_tv_time"
@@ -73,7 +73,7 @@
             android:layout_marginTop="79.5dp"
             android:lineHeight="16.8dp"
             android:text="2023年8月23日"
-            android:textColor="@color/ufield_fragment_time_color"
+            android:textColor="@color/config_level_four_font_color"
             android:textSize="12sp" />
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

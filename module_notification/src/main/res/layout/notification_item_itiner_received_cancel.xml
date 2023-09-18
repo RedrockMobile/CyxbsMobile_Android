@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:background="@color/notification_white"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp">
@@ -21,6 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/notification_white"
             android:orientation="vertical"
             android:padding="17dp">
 
@@ -93,7 +93,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/notification_white"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp">
@@ -102,6 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:background="@color/notification_white"
             android:padding="17dp">
 
             <RelativeLayout

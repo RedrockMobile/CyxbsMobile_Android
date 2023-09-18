@@ -78,7 +78,7 @@
 
     <style name="notification_itinerary_item_title_text_style" tools:ignore="ResourceName">
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/notification_itinerary_item_title_text</item>
+        <item name="android:textColor">@color/config_level_three_font_color</item>
         <item name="android:textStyle">bold</item>
     </style>
 

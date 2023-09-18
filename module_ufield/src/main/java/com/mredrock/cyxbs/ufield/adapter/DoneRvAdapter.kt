@@ -57,8 +57,8 @@ class DoneRvAdapter :
 
         private val actName: TextView = itemView.findViewById(R.id.uField_done_activity_name)
         private val actTime: TextView = itemView.findViewById(R.id.uField_done_activity_time)
-        private val actType: TextView = itemView.findViewById(R.id.uField_done_activity_type)
         private val actAuthor: TextView = itemView.findViewById(R.id.uField_done_activity_author)
+        private val actPhone: TextView = itemView.findViewById(R.id.uField_done_activity_phone)
         private val actImage: ImageView = itemView.findViewById(R.id.uField_todo_activity_isPass)
 
 
@@ -76,7 +76,7 @@ class DoneRvAdapter :
         fun bind(itemData: DoneBean) {
             actName.text = itemData.activityTitle
             actTime.text = timeFormat(itemData.activityCreateTimestamp)
-            actType.text = itemData.activityType
+            actPhone.text = itemData.activityPhone
             actAuthor.text = itemData.activityCreator
 
             when (itemData.state) {
@@ -104,9 +104,7 @@ class DoneRvAdapter :
             return oldItem == newItem
         }
 
-        /**
-         * 通过数据类中的一部分特征值来比较
-         */
+
         override fun areContentsTheSame(oldItem: DoneBean, newItem: DoneBean): Boolean {
             return oldItem.activityId == newItem.activityId && oldItem.activityCreator==newItem.activityCreator && oldItem.activityPhone==newItem.activityPhone
         }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/food_background"
+    android:background="@color/config_white_black"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:overScrollMode="never"
@@ -25,6 +25,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/food_main_cl"
                 android:layout_width="match_parent"
+                android:background="@color/config_white_black"
                 android:layout_height="100dp">
 
                 <ImageView
@@ -42,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="37dp"
                     android:text="美食咨询处"
-                    android:textColor="@color/food_text_title"
+                    android:textColor="@color/config_level_three_font_color"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="@id/food_main_img_return"
                     app:layout_constraintStart_toStartOf="parent"
@@ -69,6 +70,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:background="@color/food_welcome_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/food_main_cd" />
@@ -80,7 +82,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="33dp"
             android:text="就餐区域"
-            android:textColor="@color/food_text_color_white"
+            android:textColor="@color/config_level_three_font_color"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/food_main_img_picture" />
@@ -130,7 +132,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="21dp"
             android:text="就餐人数"
-            android:textColor="@color/food_text_color_white"
+            android:textColor="@color/config_level_three_font_color"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/food_main_rv_canteen_region" />
@@ -180,7 +182,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="21dp"
             android:text="餐饮特征"
-            android:textColor="@color/food_text_color_white"
+            android:textColor="@color/config_level_three_font_color"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/food_main_rv_canteen_number" />
@@ -289,7 +291,7 @@
             android:layout_marginBottom="82dp"
             android:background="@drawable/food_shape_btn_determine"
             android:text="随机生成"
-            android:textColor="@color/food_background"
+            android:textColor="@android:color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -306,7 +308,7 @@
             android:layout_marginBottom="82dp"
             android:background="@drawable/food_shape_btn_determine"
             android:text="查看详情"
-            android:textColor="@color/food_background"
+            android:textColor="@android:color/white"
             android:textSize="14sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
