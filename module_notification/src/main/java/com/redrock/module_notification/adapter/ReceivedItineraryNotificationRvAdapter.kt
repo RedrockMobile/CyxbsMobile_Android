@@ -74,6 +74,8 @@ class ReceivedItineraryNotificationRvAdapter(
             itemView.findViewById(R.id.notification_itinerary_tv_start_status_hint)
         val addAffairArea: LinearLayout =
             itemView.findViewById(R.id.notification_itinerary_ll_add_affair)
+        val addAffairIcon: ImageView = itemView.findViewById(R.id.notification_itinerary_iv_add_affair)
+        val addAffairText: TextView = itemView.findViewById(R.id.notification_itinerary_tv_add_affair)
         val addedHint: TextView = itemView.findViewById(R.id.notification_itinerary_tv_added_hint)
 
         init {
@@ -214,6 +216,11 @@ class ReceivedItineraryNotificationRvAdapter(
                         // 行程已结束
                         // 按照逻辑，行程已结束之后再添加进入日程没有意义，故移除点击添加到日程的回调
                         holder.addAffairArea.setOnClickListener(null)
+                        // 按照视觉要求，行程已结束之后addAffairArea需要变色
+                        holder.apply {
+                            addAffairIcon.setColorFilter(R.color.notification_itinerary_item_canceled_hint_text.color)
+                            addAffairText.setTextColor(R.color.notification_itinerary_item_canceled_hint_text.color)
+                        }
                         holder.startStatusHint.apply {
                             setText(R.string.notification_hasOvered)
                             setTextColor(R.color.notification_itinerary_item_has_overed_hint_text.color)

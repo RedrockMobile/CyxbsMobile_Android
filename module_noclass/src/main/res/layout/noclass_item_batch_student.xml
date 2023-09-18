@@ -18,7 +18,7 @@
         tools:text="田所浩二" />
 
     <TextView
-        android:id="@+id/noclass_batch_tv_student_id"
+        android:id="@+id/noclass_batch_tv_student_other_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_student_name"
         app:layout_constraintVertical_bias="0"
-        tools:text="20xx114514" />
+        tools:text="生物工程学院 20xx114514" />
 
     <CheckBox
         android:id="@+id/noclass_batch_cb_student_select_status"
