@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/config_common_background_color" /> <!-- 设置默认背景颜色 -->
+    <corners android:radius="8dp" /> <!-- 设置圆角半径 -->
+</shape>

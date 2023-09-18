@@ -25,7 +25,7 @@
         android:background="@drawable/food_shape_btn_normal"
         android:stateListAnimator="@null"
         android:textSize="12sp"
-        android:textColor="@color/food_btn_pressed_text"
+        android:textColor="@color/config_alpha_level_two_font_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

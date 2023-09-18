@@ -32,7 +32,7 @@
                 android:layout_height="25dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="22dp"
-                android:textColor="@color/uField_15315b"
+                android:textColor="@color/config_level_three_font_color"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +43,7 @@
                 android:layout_height="20dp"
                 android:layout_marginTop="27dp"
                 android:layout_marginEnd="27dp"
-                android:textColor="@color/ufield_todo_time_color"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -54,20 +54,20 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="11dp"
-                android:text="@string/ufield_todo_ac_name"
+                android:text="@string/ufield_todo_ac_p_name"
                 android:textSize="14sp"
-                android:textColor="@color/uField_6615315b"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uField_done_activity_name" />
 
             <TextView
-                android:id="@+id/uField_done_activity_type"
+                android:id="@+id/uField_done_activity_author"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="58dp"
                 android:textSize="14sp"
-                android:textColor="@color/uField_9915315b"
+                android:textColor="@color/config_alpha_level_two_font_color"
                 app:layout_constraintStart_toEndOf="@+id/ufieldTextview"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,19 +77,19 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/ufield_todo_ac_p_name"
-                android:textColor="@color/uField_6615315b"
+                android:text="@string/ufield_ac_phone"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ufieldTextview" />
 
             <TextView
-                android:id="@+id/uField_done_activity_author"
+                android:id="@+id/uField_done_activity_phone"
                 android:layout_width="63dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="86dp"
-                android:textColor="@color/uField_9915315b"
+                android:textColor="@color/config_alpha_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/ufieldTextview2"
                 app:layout_constraintTop_toTopOf="parent" />

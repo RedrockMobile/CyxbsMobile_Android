@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/main_shape_fairgroundback"
+    android:background="@color/config_window_background"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="Hi. tutu"
-            android:textColor="#15315B"
+            android:textColor="@color/main_fairground_nickname_color"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="这是你来到邮乐园的第 1 天"
-            android:textColor="#8015315B"
+            android:textColor="@color/main_fairground_describe_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -69,10 +70,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintHorizontal_bias="0.112"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="40dp"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.1"
         app:layout_constraintTop_toBottomOf="@+id/mainConstraintlayout">
 
         <ImageView
@@ -103,8 +103,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="180dp"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintStart_toEndOf="@+id/main_fairground_food"
         app:layout_constraintTop_toBottomOf="@+id/mainConstraintlayout">
 
@@ -136,10 +135,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/main_fairground_square"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintHorizontal_bias="1"
-        android:layout_marginTop="180dp"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintTop_toBottomOf="@+id/main_fairground_food">
 
         <ImageView

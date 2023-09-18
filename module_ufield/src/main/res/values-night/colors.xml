@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="uField_white_black_111111">#111111</color>
+    <color name="uField_text_phone">#ED535C</color>
+    <color name="uField_text_time">#ECEEF2</color>
+    <color name="uField_text_see">#994A44E4</color>
+    <color name="uField_check_tabText">#A1ABBA</color>
+    <color name="uField_tab_selected">#4F4AE9</color>
+    <color name="uField_tab_background_color">#2D2D2D</color>
+    <color name="uField_check_button_reject">#646382</color>
+    <color name="uField_background">#111111</color>
+    <color name="uField_white_black_333333">#333333</color>
+    <color name="uField_alpha_level_three_font_color">#4A5A73</color>
+    <color name="uField_check_edit">#333333</color>
+    <color name="uField_search_background">#3D7889A3</color>
+    <color name="uField_search_shape_background">#3D7889A3</color>
+    <color name="uField_create_textfield">#2D2D2D</color>
+    <color name="uField_activity_time_color">#ECEEF2</color>
+    <color name="uField_activity_style_color">#5A5A5A</color>
+    <color name="uField_activity_hint_color">#5A5A5A</color>
+
+
+</resources>

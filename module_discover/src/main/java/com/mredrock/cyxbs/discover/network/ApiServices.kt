@@ -36,9 +36,9 @@ interface ApiServices {
 
     // 获取notification模块中的发送的行程
     @GET("/magipoke-jwzx/itinerary/allMsg")
-    suspend fun getSentItinerary(@Query("typ") type: String = "sent"): ApiWrapper<List<ItineraryMsgBean>>
+    suspend fun getSentItinerary(@Query("typ") type: String = "sent"): ApiWrapper<List<ItineraryMsgBean>?>
 
     // 获取notification模块中的接收的行程
     @GET("/magipoke-jwzx/itinerary/allMsg")
-    suspend fun getReceivedItinerary(@Query("typ") type: String = "received"): ApiWrapper<List<ItineraryMsgBean>>
+    suspend fun getReceivedItinerary(@Query("typ") type: String = "received"): ApiWrapper<List<ItineraryMsgBean>?>
 }

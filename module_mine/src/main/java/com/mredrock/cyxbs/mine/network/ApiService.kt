@@ -319,11 +319,11 @@ interface ApiService {
 
     // 获取发送的行程的数量
     @GET("/magipoke-jwzx/itinerary/allMsg")
-    suspend fun getSentItinerary(@Query("typ") type: String = "sent"): ApiWrapper<List<ItineraryMsgBean>>
+    suspend fun getSentItinerary(@Query("typ") type: String = "sent"): ApiWrapper<List<ItineraryMsgBean>?>
 
     // 获取接收的行程的数量
     @GET("/magipoke-jwzx/itinerary/allMsg")
-    suspend fun getReceivedItinerary(@Query("typ") type: String = "received"): ApiWrapper<List<ItineraryMsgBean>>
+    suspend fun getReceivedItinerary(@Query("typ") type: String = "received"): ApiWrapper<List<ItineraryMsgBean>?>
 
 }
 

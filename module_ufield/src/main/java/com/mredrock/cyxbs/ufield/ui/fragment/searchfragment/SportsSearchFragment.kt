@@ -12,7 +12,6 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.adapter.SearchRvAdapter
 import com.mredrock.cyxbs.ufield.bean.ItemActivityBean
-import com.mredrock.cyxbs.ufield.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.viewmodel.SearchViewModel
 
@@ -52,11 +51,7 @@ class SportsSearchFragment : BaseFragment() {
                     intent.putExtra("actID", mDataList[it].activityId)
                     startActivity(intent)
                 }
-                addItemDecoration(GridSpacingItemDecoration(1))
-
             }
         }
-
     }
-
 }

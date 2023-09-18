@@ -11,7 +11,7 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="我想看"
-        android:textColor="@color/ufield_home_tabLayout_text_selected"
+        android:textColor="@color/config_level_one_font_color"
         android:textSize="18sp"
         tools:ignore="HardcodedText" />
 

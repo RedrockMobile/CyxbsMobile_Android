@@ -54,6 +54,7 @@
     <color name="notification_activity_time">#9915315B</color>
     <color name="notification_activity_detail">#CC6E69E9</color>
     <color name="notification_textview_pass">#18D19A</color>
-    <color name="notification_textview_no_pass">#E5FF4646
-    </color>
+    <color name="notification_textview_no_pass">#E5FF4646</color>
+    <color name="notification_ufield_notification_background">#F8F9FC</color>
+    <color name="notification_itinerary_tl_shadow_source">#EBF0F5</color>
 </resources>

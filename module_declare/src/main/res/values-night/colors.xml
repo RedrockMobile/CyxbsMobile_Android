@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="declare_post_item_cardView_bg">#813A3A3A</color>
+    <color name="declare_post_text_light">#ffffff</color>
+    <color name="declare_home_item_title">#514DCD</color>
+    <color name="declare_voted_text">#DC7979</color>
+    <color name="declare_novoted_text">#80C59797</color>
 </resources>

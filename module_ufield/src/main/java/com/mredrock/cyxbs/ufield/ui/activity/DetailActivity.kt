@@ -83,7 +83,7 @@ class DetailActivity : BaseActivity() {
                 toast("想看成功")
                 tvSee.apply {
                     text = "已想看"
-                    setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.seecolor))
+                    setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.uField_text_see))
                     tvSee.layoutParams = getConstrainLayoutParams()
                     ivAdd.gone()
                 }
@@ -159,7 +159,7 @@ class DetailActivity : BaseActivity() {
             if (it.wantToWatch) {
                 //在将文本替换为“已想看”后，修改文本位置，使其位于中心
                 tvSee.text = "已想看"
-                tvSee.setTextColor(ContextCompat.getColor(this, R.color.seecolor))
+                tvSee.setTextColor(ContextCompat.getColor(this, R.color.uField_text_see))
                 tvSee.layoutParams = getConstrainLayoutParams()
                 layout.setBackgroundResource(R.drawable.ufield_shape_haveseen)
                 ivAdd.gone()

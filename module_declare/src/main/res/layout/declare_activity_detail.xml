@@ -20,7 +20,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/declare_detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="226dp"
+                android:layout_height="200dp"
                 android:background="@drawable/declare_ic_detail_header_bg"
                 android:fitsSystemWindows="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
 
                 <TextView
                     android:id="@+id/declare_detail_bar"
-                    android:layout_width="67dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="31dp"
                     android:gravity="center_vertical"
                     android:text="@string/declare_home_toolbar"
@@ -51,10 +51,10 @@
                     android:textSize="22sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.126"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.036"
+                    app:layout_constraintStart_toEndOf="@+id/declare_detail_iv_toolbar_arrow_left"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.2345" />
+                    app:layout_constraintVertical_bias="0.2045" />
 
                 <TextView
                     android:id="@+id/declare_detail_title"
@@ -70,15 +70,25 @@
                     tools:text="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/declare_detail_recyclerview"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="-10dp"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/declare_detail_toolbar"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/declare_detail_recyclerview"
+                    android:background="@color/config_common_background_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </androidx.cardview.widget.CardView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout

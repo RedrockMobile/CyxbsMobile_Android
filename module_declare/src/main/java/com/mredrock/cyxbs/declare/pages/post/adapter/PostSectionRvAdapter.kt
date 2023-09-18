@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.core.widget.addTextChangedListener
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.mredrock.cyxbs.declare.databinding.DeclareItemAddSectionBinding
@@ -43,9 +40,9 @@ class PostSectionRvAdapter(
                     }
                     onItemUpdate(list)
                 }
-                binding.et.setOnTouchListener { _, _ ->
+                binding.et.isFocusable = false
+                binding.et.setOnClickListener {
                     onItemTouch(list, bindingAdapterPosition, binding.et)
-                    true
                 }
             } else if (binding is DeclareItemAddSectionBinding) {
                 binding.sivAdd.setOnClickListener {

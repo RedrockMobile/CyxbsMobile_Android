@@ -3,5 +3,5 @@
     <corners
         android:bottomLeftRadius="16dp"
         android:bottomRightRadius="16dp" />
-    <solid android:color="@color/ufield_white_background" />
+    <solid android:color="@color/uField_white_black_333333" />
 </shape>

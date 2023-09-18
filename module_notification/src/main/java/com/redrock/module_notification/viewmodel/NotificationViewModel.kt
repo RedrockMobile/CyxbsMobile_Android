@@ -202,35 +202,48 @@ class NotificationViewModel : BaseViewModel() {
      * 获取所有行程消息
      */
     fun getAllItineraryMsg() {
-        /* // 朴素但有效的写法
-        retrofit.getReceivedItinerary()
-            .subscribeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .mapOrInterceptException{  }
-            .unsafeSubscribeBy(
-                onError = {
-                    Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 failed of ${it.message}")
-                },
-                onSuccess = {received->
-                    retrofit.getSentItinerary()
-                        .subscribeOn(Schedulers.io())
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .mapOrInterceptException{  }
-                        .unsafeSubscribeBy(
-                            onError = {
-                                _itineraryMsgIsSuccessfulState.postValue(false)
-                                getMsgSuccessful.postValue(false)
-                            },
-                            onSuccess = {sent->
-                                _itineraryMsg.postValue(ItineraryAllMsg(sent, received))
-                                getItineraryIsSuccessful = true
-                                _itineraryMsgIsSuccessfulState.postValue(true)
-                                getMsgSuccessful.postValue(true)
-                            }
-                        ).lifeCycle()
-                }
-            ).lifeCycle()
-        */
+        // 朴素但有效的写法
+//        retrofit.getReceivedItinerary()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .unsafeSubscribeBy(
+//                onError = {
+//                    "获取行程消息失败".toast()
+//                    getMsgSuccessful.postValue(false)
+//                },
+//                onSuccess = {received->
+//                    if (!received.isSuccess()) {
+//                        "获取行程消息失败".toast()
+//                        getMsgSuccessful.postValue(false)
+//                        return@unsafeSubscribeBy
+//                    }
+//                    retrofit.getSentItinerary()
+//                        .subscribeOn(Schedulers.io())
+//                        .subscribeOn(AndroidSchedulers.mainThread())
+//                        .unsafeSubscribeBy(
+//                            onError = {
+//                                "获取行程消息失败".toast()
+//                                getMsgSuccessful.postValue(false)
+//                            },
+//                            onSuccess = {sent->
+//                                if (!sent.isSuccess()) {
+//                                    "获取行程消息失败".toast()
+//                                    getMsgSuccessful.postValue(false)
+//                                    return@unsafeSubscribeBy
+//                                }
+//                                val tempItineraryMsg = ItineraryAllMsg(emptyList(), emptyList())
+//                                if (!sent.data.isNullOrEmpty())
+//                                    tempItineraryMsg.sentItineraryList = sent.data
+//                                if (!received.data.isNullOrEmpty())
+//                                    tempItineraryMsg.receivedItineraryList = received.data
+//                                _itineraryMsg.postValue(tempItineraryMsg)
+//                                getItineraryIsSuccessful = true
+//                                getMsgSuccessful.postValue(true)
+//                            }
+//                        ).lifeCycle()
+//                }
+//            ).lifeCycle()
+
         val tempList = ItineraryAllMsg(emptyList(), emptyList())
         retrofit.getReceivedItinerary()
             .mapOrInterceptException {
@@ -254,6 +267,7 @@ class NotificationViewModel : BaseViewModel() {
             }
             .unsafeSubscribeBy(
                 onError = {
+                    "获取行程消息失败".toast()
                     LogUtils.d("H57-err","getAllItineraryMsg fair")
                     getMsgSuccessful.postValue(false)
                 },
