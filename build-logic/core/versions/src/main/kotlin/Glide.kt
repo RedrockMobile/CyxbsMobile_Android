@@ -1,6 +1,7 @@
 
 
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 
 /**
@@ -16,11 +17,18 @@ object Glide {
   
   const val glide = "com.github.bumptech.glide:glide:$glide_version"
 
-  // 该注解用于 Glide 生成自定义 API，类似于 kt 的扩展函数，不如直接使用 kt 的扩展函数
-//  const val `glide-compiler` = "com.github.bumptech.glide:compiler:$glide_version"
+  // Glide注解处理器
+  const val `glide-compiler` = "com.github.bumptech.glide:compiler:$glide_version"
 }
 
-fun Project.dependGlide() {
+fun Project.dependGlide(isNeedProcessAnnotation:Boolean=false) {
+  //kapt 按需引入
+  if (isNeedProcessAnnotation){
+    apply(plugin = "org.jetbrains.kotlin.kapt")
+    dependencies{
+      "kapt"(Glide.`glide-compiler`)
+    }
+  }
   dependencies {
     "implementation"(Glide.glide)
   }
