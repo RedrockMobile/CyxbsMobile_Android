@@ -50,7 +50,7 @@ object Android {
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxfragmentapp
     const val `fragment-ktx` = "androidx.fragment:fragment-ktx:1.6.1"
 
-    // // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxactivity
+    // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxactivity
     const val `activity-ktx` = "androidx.activity:activity-ktx:1.7.2"
 }
 
