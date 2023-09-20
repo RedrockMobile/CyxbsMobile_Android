@@ -146,6 +146,7 @@
 
     <style name="notification_itinerary_item_affair_added_hint_style" tools:ignore="ResourceName">
         <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/notification_itinerary_item_affair_added_hint_text
         </item>
     </style>

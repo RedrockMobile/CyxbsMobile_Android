@@ -37,9 +37,6 @@ class MainViewModel : BaseViewModel() {
   private val _hasUnReadNotification = MutableLiveData<Boolean>()
 
 
-  init {
-    getNotificationUnReadStatus()
-  }
   /**
    * 用携程异步获取未读的(新的)notification数量
    */
