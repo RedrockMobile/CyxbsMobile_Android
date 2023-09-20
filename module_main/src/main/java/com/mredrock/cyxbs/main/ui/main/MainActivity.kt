@@ -64,8 +64,10 @@ class MainActivity : BaseActivity() {
 
   override fun onResume() {
     super.onResume()
+    if(mIsLogin){
     // 获取（远端消息数据可能发生更新后）最新的未读消息数量，一般认为在从其他Activity返回后调用
-    mViewModel.getNotificationUnReadStatus()
+      mViewModel.getNotificationUnReadStatus()
+    }
   }
   
   private fun checkIsLogin(): Boolean? {
@@ -82,7 +84,7 @@ class MainActivity : BaseActivity() {
     }
     return false
   }
-  
+
   /**
    * 在没有跳转到登录界面时调用，用于初始化 UI
    *

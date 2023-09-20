@@ -46,7 +46,7 @@
     <color name="notification_itinerary_item_cancel_reminder_text">#ABBCD8</color>
     <color name="notification_itinerary_item_canceled_hint_text">#ABBCD8</color>
     <color name="notification_itinerary_item_add_affair_text">#4741E0</color>
-    <color name="notification_itinerary_item_affair_added_hint_text">#00B982</color>
+    <color name="notification_itinerary_item_affair_added_hint_text">#7FDBC0</color>
 
     <color name="notification_popup_ripple">#777777</color>
 

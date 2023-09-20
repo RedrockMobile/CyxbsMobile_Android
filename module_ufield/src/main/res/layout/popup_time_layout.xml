@@ -26,7 +26,7 @@
             android:id="@+id/year"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.1"
             android:background="@color/config_window_background" />
 
         <com.contrarywind.view.WheelView
