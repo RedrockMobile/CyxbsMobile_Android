@@ -52,6 +52,7 @@
         android:layout_marginTop="198dp"
         android:background="@drawable/ufield_shape_activity_rank_bottom"
         android:paddingTop="22dp"
+        android:clipToPadding="false"
         android:paddingBottom="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ufield_activity_rl_bk"

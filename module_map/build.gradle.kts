@@ -3,7 +3,7 @@ plugins {
 }
 
 
-dependGlide()
+dependGlide(true)
 dependRxjava()
 dependNetwork()
 dependLPhotoPicker()

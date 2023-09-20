@@ -4,10 +4,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
@@ -15,16 +15,14 @@ import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassAddToGroupAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
+import com.mredrock.cyxbs.noclass.util.BaseBottomSheetDialogFragment
 import com.mredrock.cyxbs.noclass.widget.SeekBarView
 
 /**
  * 将该学生添加到指定的分组中
  */
 
-class AddToGroupDialog(
-    private val groupList: List<NoClassGroup>,
-    private val student: Student
-) : BottomSheetDialogFragment() {
+class AddToGroupDialog: BaseBottomSheetDialogFragment() {
 
     /**
      * 分组文字的recyclerView
@@ -52,12 +50,26 @@ class AddToGroupDialog(
     private val mSolidViewModel by viewModels<SolidViewModel>()
 
     /**
-     * 剩余人员数量
+     * 剩余人员数量，生命周期结束时网络请求也会被取消
      */
     private var restNum: Int = 0
 
+    /**
+     * 添加到分组之后的操作，由solidFragment给出
+     */
+    private var addCallBack : (() -> Unit)? = null
+
+    fun setAddCallBack(addCallBack : () -> Unit){
+        this.addCallBack = addCallBack
+    }
+
+    /**
+     * 传过来
+     */
+    private val groupList by arguments<List<NoClassGroup>>()
+    private val student by arguments<Student>()
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        super.onCreateDialog(savedInstanceState)
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.noclass_dialog_add_to_group)
         initView(dialog)
@@ -73,6 +85,7 @@ class AddToGroupDialog(
                 toast("添加失败")
             } else if (restNum == 0) {
                 toast("添加成功")
+                addCallBack?.invoke()
                 dismiss()
             }
             restNum--
@@ -109,8 +122,9 @@ class AddToGroupDialog(
         }
         // 完成按钮
         mBtnDone = dialog.findViewById<Button>(R.id.noclass_add_to_group_done).apply {
+            isClickable = false
             setOnClickListener {
-                restNum = (chooseGroup!!.size - 2).coerceAtLeast(0)
+                restNum = (chooseGroup!!.size - 1).coerceAtLeast(0)
                 chooseGroup!!.forEach {
                     //每一个被选中的分组添加成员
                     mSolidViewModel.addMembers(it.id, setOf(student))
@@ -146,6 +160,15 @@ class AddToGroupDialog(
             if (mRv.width >= resources.displayMetrics.widthPixels) {
                 mSb.visible()
             }
+        }
+    }
+
+    companion object{
+        fun newInstance(groupList: List<NoClassGroup>, student: Student) = AddToGroupDialog().apply {
+            arguments = bundleOf(
+                this::groupList.name to groupList,
+                this::student.name to student
+            )
         }
     }
 }

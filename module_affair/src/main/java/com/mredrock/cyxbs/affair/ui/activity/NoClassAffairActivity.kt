@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.affair.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.activity.viewModels
@@ -24,7 +23,6 @@ class NoClassAffairActivity : BaseActivity() {
          *  @param noClassBean : 学号：是否空闲
          */
         fun startForNoClass(noClassBean: NoClassBean) {
-            Log.d("lx", "startForNoClass:${noClassBean} ")
             appContext.startActivity(
                 Intent(appContext, NoClassAffairActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -64,7 +62,7 @@ class NoClassAffairActivity : BaseActivity() {
 
                 2 -> {
                     mBtnNoClassNext.apply {
-                        setBackgroundResource(R.drawable.affair_ic_send_notification)
+                        setBackgroundResource(R.drawable.affair_ic_send_notification_negative)
                         text = "发送通知"
                     }
                 }
@@ -81,6 +79,13 @@ class NoClassAffairActivity : BaseActivity() {
                     mBtnNoClassNext.apply {
                         setBackgroundResource(R.drawable.affair_ic_next_process_positive)
                         text = "下一步"
+                    }
+                }
+
+                5 -> {
+                    mBtnNoClassNext.apply{
+                        setBackgroundResource(R.drawable.affair_ic_send_notification)
+                        text = "发送通知"
                     }
                 }
             }

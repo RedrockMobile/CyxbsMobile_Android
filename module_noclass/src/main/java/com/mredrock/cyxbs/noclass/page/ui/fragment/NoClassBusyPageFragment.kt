@@ -7,10 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.fragment.app.activityViewModels
+import androidx.core.os.bundleOf
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import com.mredrock.cyxbs.noclass.widget.MyFlexLayout
 
 /**
@@ -29,40 +28,45 @@ import com.mredrock.cyxbs.noclass.widget.MyFlexLayout
  */
 class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) {
 
-    private val mParentViewModel by activityViewModels<NoClassViewModel>()
 
     private lateinit var myFlexLayout: MyFlexLayout
 
-    companion object{
-        fun newInstance() : NoClassBusyPageFragment{
-            return NoClassBusyPageFragment()
-        }
+    private var mBusyNameList by arguments<ArrayList<String>>()
 
+    private var mFillCallback : ((List<String>) -> Unit)? = null
+
+    fun setFillCallback(mFillCallback : ((List<String>) -> Unit)){
+        this.mFillCallback = mFillCallback
+    }
+
+    companion object{
+        fun newInstance(busyNameList : List<String>) : NoClassBusyPageFragment{
+            return NoClassBusyPageFragment().apply {
+                arguments = bundleOf(
+                    this::mBusyNameList.name to busyNameList.toMutableList(),
+                )
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 流式布局
         initView(view)
-        initObserve()
+        setView(requireContext(),mBusyNameList)
     }
 
     private fun initView(view: View) {
         myFlexLayout = view.findViewById(R.id.noclass_gl_container)
         myFlexLayout.setOnFillCallback(object : MyFlexLayout.OnFillCallback{
             override fun onFill(itemsSize: Int) {
-                mParentViewModel.removeBusyName(itemsSize)
+                val list = mBusyNameList.subList(itemsSize,mBusyNameList.size)
+                mBusyNameList = mBusyNameList.take(itemsSize) as ArrayList<String>
+                if (list.isNotEmpty()){
+                    mFillCallback?.invoke(list)
+                }
             }
         })
-    }
-
-    private fun initObserve() {
-        mParentViewModel.busyNameList.observe{
-            // 每次观察的时候判断，当前有没有子view，如果没有就添加进去
-            if (it.isNotEmpty() && myFlexLayout.childCount == 0){
-                setView(requireContext(),it)
-            }
-        }
     }
 
     /**
@@ -92,7 +96,7 @@ class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) 
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(12, 10, 12, 10)
+                setMargins(12, 12, 12, 12)
             }
         }
     }

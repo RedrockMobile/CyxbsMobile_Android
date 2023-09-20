@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="为你的行程添加"
         android:textColor="@color/affair_add_affair_title_tv"
-        android:textSize="34sp"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="一个标题"
         android:textColor="@color/affair_add_affair_title_tv"
-        android:textSize="34sp"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="@id/affair_tv_no_class_affair_text_2"
         app:layout_constraintTop_toBottomOf="@id/affair_tv_no_class_affair_text_2"
         tools:ignore="HardcodedText" />
