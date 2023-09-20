@@ -66,7 +66,7 @@ class SearchStudentAdapter : ListAdapter<Student,SearchStudentAdapter.VH>(studen
     with(holder){
       tvName.text = item.name
       tvNum.text = item.id
-      tvMajor.text = item.major
+      tvMajor.text = setAdapterString( item.major,17)
     }
   }
 
@@ -74,5 +74,17 @@ class SearchStudentAdapter : ListAdapter<Student,SearchStudentAdapter.VH>(studen
     val stuList = currentList.toMutableList()
     stuList.remove(student)
     submitList(stuList)
+  }
+
+  /**
+   * 设置合适长度的String，当超过对应的长度之后就会在最后加...
+   */
+  private fun setAdapterString(str : String?, maxLength : Int) : String?{
+    if (str == null) return null
+    return if (str.length < maxLength){
+      str
+    }else{
+      "${str.substring(0,maxLength)}..."
+    }
   }
 }
