@@ -73,7 +73,7 @@ class NoClassGatherDialog: BaseBottomSheetDialogFragment() {
 
   private fun initView(dialog: Dialog){
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
-      val describe = "共计${mNumNameIsSpare.size} 人"
+      val describe = "共计 ${mNumNameIsSpare.size} 人"
       text = describe
     }
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_busy_total).apply {
