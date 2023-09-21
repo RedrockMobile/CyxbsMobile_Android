@@ -139,7 +139,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                             null,
                             tips = "确认要删除所有已读消息吗",
                             onPositiveClick = {
-                               /* sysFragment.deleteAllReadMsg() */
+                                /* sysFragment.deleteAllReadMsg() */
                                 dismiss()
                             },
                             onNegativeClick = {
@@ -291,10 +291,10 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             }
         }
 
-        viewModel.ufieldActivityMsg.observe{
-            for (value in it){
-                if (!value.clicked){
-                    changeTabRedDotsVisibility(0, View.VISIBLE)
+        viewModel.ufieldActivityMsg.observe {
+            for (value in it) {
+                if (!value.clicked) {
+                    viewModel.changeActiveDotStatus(true)
                     break
                 }
                 viewModel.changeActiveDotStatus(false)
@@ -351,7 +351,6 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initMsgData() {
-        viewModel.getAllMsg()
         viewModel.getAllItineraryMsg()
     }
 
@@ -372,7 +371,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         shouldShowRedDots = NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
         var msgType: Int
         intent.apply {
-            msgType = getIntExtra("MsgType",-1)
+            msgType = getIntExtra("MsgType", -1)
         }
         if (msgType > -1 && msgType < notification_home_tl.tabCount) {
             notification_home_tl.getTabAt(msgType)?.select()
@@ -400,7 +399,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         if ((visibility != View.INVISIBLE) and (visibility != View.VISIBLE))
             throw Exception("参数只可以是View.INVISIBLE 或者 View.VISIBLE！！！")
         var vis = visibility
-        if (!shouldShowRedDots || position == whichPageIsIn)
+        //由于没课约和活动界面的红点实现逻辑不同所以增加了语句 position！=0
+        if (!shouldShowRedDots || (position == whichPageIsIn && position != 0))
             vis = View.INVISIBLE
         when (position) {
             0 -> {
