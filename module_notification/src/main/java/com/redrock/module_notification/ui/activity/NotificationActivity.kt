@@ -399,6 +399,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         if ((visibility != View.INVISIBLE) and (visibility != View.VISIBLE))
             throw Exception("参数只可以是View.INVISIBLE 或者 View.VISIBLE！！！")
         var vis = visibility
+
+        //由于没课约和活动界面的红点实现逻辑不同所以增加了语句 position！=0
         if (!shouldShowRedDots || (position == whichPageIsIn && position != 0))
             vis = View.INVISIBLE
         when (position) {
