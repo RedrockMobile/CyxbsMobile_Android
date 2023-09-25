@@ -75,27 +75,31 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/noclassLinearlayout2" />
 
-            <ImageView
-                android:id="@+id/noclass_cb_remind_next"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="25dp"
-                android:src="@drawable/noclass_ic_check_box_unchoose"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.356"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:text="下次不再提醒"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="24dp"
-                android:textColor="@color/noclass_search_student_color"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/noclass_cb_remind_next" />
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/noclass_cb_remind_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="1.5dp"
+                    android:src="@drawable/noclass_ic_check_box_unchoose" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="下次不再提醒"
+                    android:textColor="@color/noclass_search_student_color"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

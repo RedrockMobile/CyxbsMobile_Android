@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/noclass_main"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="28dp"
             app:layout_constraintBottom_toTopOf="@+id/noclass_solid_btn_create"
             app:layout_constraintEnd_toEndOf="parent"

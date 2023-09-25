@@ -398,7 +398,7 @@ object ApiGenerator {
                 END_POINT_REDROCK_PROD -> {
                     val url = getBackupUrl()
                     mBackupUrl = url
-                    useBackupUrl(url, chain)
+                    response = useBackupUrl(url, chain)
                 }
 
                 else -> throw RuntimeException("未知请求头！")

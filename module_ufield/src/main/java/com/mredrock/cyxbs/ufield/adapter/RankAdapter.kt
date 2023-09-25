@@ -35,6 +35,7 @@ class RankAdapter : ListAdapter<RankBean, RankAdapter.ViewHolder>(
         }
     }
 ) {
+    var realPosition = 0
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val clClick: ConstraintLayout
@@ -59,7 +60,7 @@ class RankAdapter : ListAdapter<RankBean, RankAdapter.ViewHolder>(
                 getItemId(absoluteAdapterPosition).run {
                     val intent = Intent(view.context, DetailActivity::class.java)
                     intent.putExtra("actID", currentList[absoluteAdapterPosition].activityId)
-                    startActivity(view.context,intent,null)
+                    startActivity(view.context, intent, null)
                 }
             }
 
@@ -79,6 +80,7 @@ class RankAdapter : ListAdapter<RankBean, RankAdapter.ViewHolder>(
             if (position < 3) {
                 numberTextView.visibility = View.GONE
                 numberImageView.visibility = View.VISIBLE
+                fireImageView.visibility = View.VISIBLE
             } else {
                 numberImageView.visibility = View.GONE
                 numberTextView.visibility = View.VISIBLE
@@ -87,7 +89,7 @@ class RankAdapter : ListAdapter<RankBean, RankAdapter.ViewHolder>(
             titleTextView.text = currentList[position].activityTitle
             headImageView.setImageFromUrl(currentList[position].activityCoverUrl)
             fireTextView.text = currentList[position].activityWatchNumber.toString()
-            val realPosition= position+1
+            realPosition = absoluteAdapterPosition + 1
             when (position) {
                 0 -> {
                     numberImageView.setImageFromId(R.drawable.ufield_ic_activity_rank_number1)

@@ -74,7 +74,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
                     this as StudentHolder
                     tvName.text = itemData.name
                     tvStuNum.text = itemData.id
-                    tvMajor.text = itemData.major
+                    tvMajor.text = setAdapterString(itemData.major,17)
                     if (isDisplay){
                         imgUser.visible()
                     }
@@ -154,5 +154,17 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
         val list = currentList.toMutableList()
         list.remove(student)
         submitList(list)
+    }
+
+    /**
+     * 设置合适长度的String，当超过对应的长度之后就会在最后加...
+     */
+    private fun setAdapterString(str : String?, maxLength : Int) : String?{
+        if (str == null) return null
+        return if (str.length < maxLength){
+            str
+        }else{
+            "${str.substring(0,maxLength)}..."
+        }
     }
 }
