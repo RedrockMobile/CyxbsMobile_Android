@@ -232,7 +232,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 mIvSecurityChangePasswordLine1Eye.setImageResource(R.drawable.mine_ic_close_eye)
                 mEtSecuritySecondInputPassword.transformationMethod =
                     PasswordTransformationMethod.getInstance()//不显示密码
-                mEtSecurityFirstInputPassword.text?.let {
+                mEtSecuritySecondInputPassword.text?.let {
                     mEtSecuritySecondInputPassword.setSelection(it.length)
                 }
                 isLine1ShowPassword = false
@@ -240,7 +240,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 mIvSecurityChangePasswordLine1Eye.setImageResource(R.drawable.mine_ic_open_eye)
                 mEtSecuritySecondInputPassword.transformationMethod =
                     HideReturnsTransformationMethod.getInstance()//显示密码
-                mEtSecurityFirstInputPassword.text?.let {
+                mEtSecuritySecondInputPassword.text?.let {
                     mEtSecuritySecondInputPassword.setSelection(it.length)
                 }
                 isLine1ShowPassword = true
