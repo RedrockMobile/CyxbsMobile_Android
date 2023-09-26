@@ -2,7 +2,7 @@
 <shape xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="ResourceName">
-  <corners android:radius="34dp"/>
+  <corners android:radius="64dp"/>
 
   <gradient android:startColor="#C3D4EE" android:endColor="#C3D4EE"/>
 

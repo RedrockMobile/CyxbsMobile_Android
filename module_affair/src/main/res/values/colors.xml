@@ -31,4 +31,12 @@
     <color name="affair_noclass_choose_bg" tools:ignore="MissingDefaultResource">#E8E8FE</color>
     <!--选中文字-->
     <color name="affair_noclass_text_choose_color" tools:ignore="MissingDefaultResource">#4A44E4</color>
+
+    <!--没课约的事务的下一步的开始颜色和结束颜色    -->
+    <color name="affair_noclass_next_start_color" tools:ignore="MissingDefaultResource">#4741E0</color>
+    <color name="affair_noclass_next_end_color" tools:ignore="MissingDefaultResource">#5D5EF7</color>
+
+    <!--没课约下一步不可选中的颜色    -->
+    <color name="affair_noclass_next_un_choose_color" tools:ignore="MissingDefaultResource">#C3D4EE</color>
+
 </resources>

@@ -11,19 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/affair_btn_noclass_affair_next"
+        <TextView
+            android:id="@+id/affair_tv_noclass_affair_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="57dp"
             android:text="下一步"
             android:textColor="@color/config_white_black"
             android:textSize="18sp"
-            android:paddingStart="12sp"
-            android:paddingEnd="12sp"
+            android:paddingStart="29sp"
+            android:paddingEnd="29sp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:background="@drawable/affair_ic_next_process"
+            android:background="@drawable/affair_shape_noclass_next_process"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

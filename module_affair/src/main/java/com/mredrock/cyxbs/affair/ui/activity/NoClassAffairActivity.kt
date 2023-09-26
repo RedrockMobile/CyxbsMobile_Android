@@ -1,9 +1,10 @@
 package com.mredrock.cyxbs.affair.ui.activity
 
+import android.app.ActionBar.LayoutParams
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.activity.viewModels
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.fragment.NoClassAffairFragment
@@ -40,7 +41,7 @@ class NoClassAffairActivity : BaseActivity() {
     private val mBtnBack: ImageButton by R.id.affair_btn_edit_affair_back.view()
 
     // 没课越设置的下一项
-    private val mBtnNoClassNext: Button by R.id.affair_btn_noclass_affair_next.view()
+    private val mTvNoClassNext: TextView by R.id.affair_tv_noclass_affair_next.view()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +58,12 @@ class NoClassAffairActivity : BaseActivity() {
         mViewModel.changeBtn.collectLaunch {
             when (it) {
                 1 -> {
-                    mBtnNoClassNext.setBackgroundResource(R.drawable.affair_ic_next_process_positive)
+                    mTvNoClassNext.setBackgroundResource(R.drawable.affair_shape_noclass_next_process_positive)
                 }
 
                 2 -> {
-                    mBtnNoClassNext.apply {
-                        setBackgroundResource(R.drawable.affair_ic_send_notification_negative)
+                    mTvNoClassNext.apply {
+                        setBackgroundResource(R.drawable.affair_shape_send_notification_negative)
                         text = "发送通知"
                     }
                 }
@@ -76,18 +77,26 @@ class NoClassAffairActivity : BaseActivity() {
                 }
 
                 4 -> {
-                    mBtnNoClassNext.apply {
-                        setBackgroundResource(R.drawable.affair_ic_next_process_positive)
+                    mTvNoClassNext.apply {
+                        setBackgroundResource(R.drawable.affair_shape_noclass_next_process_positive)
                         text = "下一步"
                     }
                 }
 
                 5 -> {
-                    mBtnNoClassNext.apply{
-                        setBackgroundResource(R.drawable.affair_ic_send_notification)
+                    mTvNoClassNext.apply{
+                        setBackgroundResource(R.drawable.affair_shape_send_notification)
                         text = "发送通知"
                     }
                 }
+            }
+
+            // 文字改变也要相对的改变，视觉要求的圆角不变
+            mTvNoClassNext.apply {
+                val lp = layoutParams
+                lp.height = LayoutParams.WRAP_CONTENT
+                lp.width = LayoutParams.WRAP_CONTENT
+                layoutParams = lp
             }
         }
     }
@@ -95,7 +104,7 @@ class NoClassAffairActivity : BaseActivity() {
 
     private fun initClick() {
         // 如果是没课越的事务界面
-        mBtnNoClassNext.setOnSingleClickListener {
+        mTvNoClassNext.setOnSingleClickListener {
             mViewModel.clickNextBtn()
         }
         mBtnBack.setOnSingleClickListener {
