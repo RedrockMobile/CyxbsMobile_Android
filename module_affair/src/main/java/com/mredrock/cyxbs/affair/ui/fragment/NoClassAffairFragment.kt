@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -129,7 +130,7 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
         // 上一次选中的索引
         var lastIndex : Int? = null
         mRvTitleCandidate.apply {
-            layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
+            layoutManager = GridLayoutManager(requireContext(),5,RecyclerView.VERTICAL,false)
             adapter = mRvTitleCandidateAdapter.apply {
                 setClickListener {
                     // 记录下来

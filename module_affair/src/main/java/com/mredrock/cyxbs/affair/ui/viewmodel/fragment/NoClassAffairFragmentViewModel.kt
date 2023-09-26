@@ -41,7 +41,7 @@ class NoClassAffairFragmentViewModel : BaseViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
                 // 网络请求失败就发送这个默认显示
-                emitter.onSuccess(listOf("二教", "三教", "四教", "五教", "八教", "九教", "风华运动场", "太极运动场", "风雨运动场", "校外"))
+                emitter.onSuccess(listOf("二教", "三教", "四教", "五教", "八教", "风华运动场", "太极运动场", "风雨运动场", "灯光篮球场","校外"))
             }.safeSubscribeBy {
                 _hotLocation.value = it
             }
