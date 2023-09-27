@@ -151,14 +151,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 mBtnSecurityFindNext.setOnSingleClickListener {
                     viewModel.confirmCode(
                         onSuccess = {
-                            if (isFromLogin) {
-                                ChangePasswordActivity.startFormLogin(this, stuNumber, it)
-                            } else {
-                                ChangePasswordActivity.actionStart(
-                                    this,
-                                    ChangePasswordActivity.TYPE_START_FROM_OTHERS
-                                )
-                            }
+                            ChangePasswordActivity.startFormLogin(this, stuNumber, it)
                             finish()
                         },
                         onField = {
