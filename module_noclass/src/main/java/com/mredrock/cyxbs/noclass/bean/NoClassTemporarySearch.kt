@@ -29,5 +29,5 @@ data class Cls(
     override val id: String,
     override val members: List<Student>,
     val name: String,
-) : Group
+) : Group,Serializable
 
