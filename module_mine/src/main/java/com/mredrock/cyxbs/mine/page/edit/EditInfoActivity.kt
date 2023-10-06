@@ -576,26 +576,17 @@ class EditInfoActivity
     /*下面是上传头像部分的代码*/
 
     private fun changeAvatar() {
-        //获取权限
-        doPermissionAction(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) {
-            reason = "读取图片需要访问您的存储空间哦~"
-            doAfterGranted {
-                //选择
-                MaterialDialog(this@EditInfoActivity).show {
-                    listItems(items = listOf("拍照", "从相册中选择")) { dialog, index, text ->
-                        if (index == 0) {
-                            getImageFromCamera()
-                        } else {
-                            getImageFromAlbum()
-                        }
-                    }
-                    cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
-
+        //选择
+        MaterialDialog(this@EditInfoActivity).show {
+            listItems(items = listOf("拍照", "从相册中选择")) { dialog, index, text ->
+                if (index == 0) {
+                    getImageFromCamera()
+                } else {
+                    getImageFromAlbum()
                 }
             }
+            cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
+
         }
     }
 
