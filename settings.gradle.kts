@@ -55,7 +55,7 @@ rootDir.walk()
     //对module进行过滤
     "(api_.+)|(module_.+)|(lib_.+)".toRegex().matches(it.name)
       && it.name !in excludeList
-      && it.parentFile.name !in excludeList // 如果只是写了忽略掉 module_test，那么里面的 api_test 也得一起忽略掉才能彻底忽略
+      && it.parentFile.name !in excludeList // 如果父模块被忽略，则子模块同步忽略
   }
   .map {
     //将file映射到相对路径

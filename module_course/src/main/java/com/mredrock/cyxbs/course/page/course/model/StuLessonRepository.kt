@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.course.page.course.model
 
 import androidx.annotation.WorkerThread
 import androidx.collection.ArrayMap
+import androidx.core.content.edit
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.course.page.course.bean.StuLessonBean
@@ -11,6 +12,7 @@ import com.mredrock.cyxbs.course.page.course.network.CourseApiServices
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
+import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.*
@@ -18,6 +20,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.rx3.asObservable
+import java.util.concurrent.TimeUnit
 
 /**
  * ...
@@ -29,6 +32,22 @@ import kotlinx.coroutines.rx3.asObservable
 object StuLessonRepository {
   
   private val mStuDB by lazyUnlock { LessonDataBase.INSTANCE.getStuLessonDao() }
+
+  // 上一次更新的天数差
+  private var mLastUpdateDay: Int
+    get() {
+      val current = System.currentTimeMillis()
+      val timestamp = defaultSp.getLong("上一次更新课表的时间戳", current)
+      return TimeUnit.DAYS.convert(current - timestamp, TimeUnit.MILLISECONDS).toInt()
+    }
+    set(value) {
+      defaultSp.edit {
+        putLong(
+          "上一次更新课表的时间戳",
+          System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(value.toLong(), TimeUnit.DAYS)
+        )
+      }
+    }
   
   /**
    * 观察当前登录人的课
@@ -38,8 +57,14 @@ object StuLessonRepository {
    * - 没登录时发送 emptyList()
    * - 没有连接网络并且不允许使用本地缓存时会一直不发送数据给下游
    * - 不会抛出异常给下游
+   *
+   * @param isForce 是否强制获取数据，如果不强制的话，将使用临时缓存
+   * @param isToast 是否提示课表正在使用缓存数据
    */
-  fun observeSelfLesson(isForce: Boolean = false): Observable<List<StuLessonEntity>> {
+  fun observeSelfLesson(
+    isForce: Boolean = false,
+    isToast: Boolean = false,
+  ): Observable<List<StuLessonEntity>> {
     return IAccountService::class.impl
       .getUserService()
       .observeStuNumState()
@@ -52,7 +77,18 @@ object StuLessonRepository {
               .observeLesson(stuNum)
               .doOnSubscribe {
                 // 在开始订阅时异步请求一次云端数据，所以下游会先拿到本地数据库中的数据，如果远端数据更新了，整个流会再次通知
-                refreshLesson(stuNum, isForce).unsafeSubscribeBy()
+                refreshLesson(stuNum, isForce).doOnError {
+                  if (isToast) {
+                    val lastUpdateDay = mLastUpdateDay
+                    if (lastUpdateDay < 1) {
+                      toastLong("课表正在使用缓存\n不能保证数据正确性")
+                    } else {
+                      toastLong("已 $lastUpdateDay 天未更新课表\n建议联网更新")
+                    }
+                  }
+                }.unsafeSubscribeBy {
+                  mLastUpdateDay = 0
+                }
               }.distinctUntilChanged() // 去重
               .subscribeOn(Schedulers.io())
           } else {
