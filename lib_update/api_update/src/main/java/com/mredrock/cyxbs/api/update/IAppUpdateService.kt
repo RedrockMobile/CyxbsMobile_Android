@@ -15,7 +15,7 @@ interface IAppUpdateService : IProvider {
     // 通知用户有更新
     fun noticeUpdate(activity: FragmentActivity)
     // 尝试通知用户更新，内部有时间和状态判断
-    fun tryNoticeUpdate(activity: FragmentActivity)
+    fun tryNoticeUpdate(activity: FragmentActivity, isForce: Boolean = false)
     
     
     /**

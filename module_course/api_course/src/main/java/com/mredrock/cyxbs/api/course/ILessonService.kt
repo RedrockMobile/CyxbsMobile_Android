@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.api.course
 
-import androidx.core.content.edit
 import com.alibaba.android.arouter.facade.template.IProvider
-import com.mredrock.cyxbs.config.sp.defaultSp
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import java.io.Serializable
@@ -25,11 +23,12 @@ interface ILessonService : IProvider {
      *
      * 目前逻辑为课表数据仍会保存至数据库，但在网络请求失败时会直接返回空数据
      *
-     * 注意：请不要私自修改该变量 !!!!!
+     * 23 年 10 月，恢复课表缓存
+     * we 重邮都有缓存，为什么我们不能用呢?
+     * 经过跟 wyh 商讨，我们最终决定恢复课表缓存
      */
-    var isUseLocalSaveLesson
-      get() = defaultSp.getBoolean("是否使用本地课表数据", false)
-      set(value) = defaultSp.edit { putBoolean("是否使用本地课表数据", value) }
+    val isUseLocalSaveLesson
+      get() = true
   }
 
   /**

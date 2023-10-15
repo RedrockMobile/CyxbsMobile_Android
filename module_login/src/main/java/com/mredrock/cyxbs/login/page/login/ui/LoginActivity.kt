@@ -303,7 +303,7 @@ class LoginActivity : BaseActivity() {
   }
 
   private fun initUpdate() {
-    IAppUpdateService::class.impl.tryNoticeUpdate(this)
+    IAppUpdateService::class.impl.tryNoticeUpdate(this, true)
   }
   
   private fun initCheckNetWork() {

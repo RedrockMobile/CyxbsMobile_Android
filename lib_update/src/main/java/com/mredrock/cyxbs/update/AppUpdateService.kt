@@ -52,12 +52,17 @@ internal class AppUpdateService : IAppUpdateService {
         }
     }
     
-    override fun tryNoticeUpdate(activity: FragmentActivity) {
+    override fun tryNoticeUpdate(activity: FragmentActivity, isForce: Boolean) {
         checkUpdate()
         getUpdateStatus().observe(activity) {
             if (it == AppUpdateStatus.DATED) {
                 val sp = activity.getSharedPreferences("更新记录", Context.MODE_PRIVATE)
                 val nowTime = System.currentTimeMillis()
+                if (isForce) {
+                    noticeUpdate(activity)
+                    sp.edit { putLong("上次提醒更新时间", nowTime) }
+                    return@observe
+                }
                 val lastTime = sp.getLong("上次提醒更新时间", 0L)
                 val diff = TimeUnit.HOURS.convert(nowTime - lastTime, TimeUnit.MILLISECONDS)
                 if (diff >= 12) {

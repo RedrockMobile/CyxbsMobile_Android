@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.ILessonService
+import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.data.toAffairData
@@ -15,6 +16,7 @@ import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
 import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.service.CourseServiceImpl
+import com.mredrock.cyxbs.course.service.toLesson
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
@@ -26,10 +28,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
-import java.util.concurrent.TimeUnit
 
 /**
- * ...
+ * 注意：整个课表采用了观察者模式。数据库对应的数据改变，会自动修改视图内容
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -94,7 +95,7 @@ class HomeCourseViewModel : BaseViewModel() {
    */
   private fun initObserve(): Disposable {
     // 自己课的观察流
-    val selfLessonObservable = StuLessonRepository.observeSelfLesson(true)
+    val selfLessonObservable = StuLessonRepository.observeSelfLesson(isForce = true, isToast = true)
 
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
@@ -112,6 +113,8 @@ class HomeCourseViewModel : BaseViewModel() {
             .flatMap {
               // 在没有连接网络时 StuLessonRepository.getLesson() 方法会抛出异常
               StuLessonRepository.getLesson(entity.linkNum).toObservable()
+            }.onErrorReturn {
+              emptyList()
             }
         }
       }
@@ -126,6 +129,9 @@ class HomeCourseViewModel : BaseViewModel() {
       linkLessonObservable,
       affairObservable
     ) { self, link, affair ->
+      // 刷新小组件
+      IWidgetService::class.impl
+        .notifyWidgetRefresh(self.toLesson(), link.toLesson(), affair)
       // 装换为 data 数据类
       HomePageResultImpl.flatMap(
         self.toStuLessonData(),
