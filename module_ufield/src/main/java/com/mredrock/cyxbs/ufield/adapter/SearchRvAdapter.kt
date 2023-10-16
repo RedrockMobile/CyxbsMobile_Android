@@ -79,7 +79,7 @@ class SearchRvAdapter :
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: ItemActivityBean.ItemAll) {
             actName.text = itemData.activityTitle
-            actHint.text = itemData.activityDetail
+            actHint.text = itemData.activityDetail.trimStart()
             actTime.text = timeFormat(itemData.activityStartAt)
             actPic.setImageFromUrl(itemData.activityCoverUrl)
             when (itemData.ended) {

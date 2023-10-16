@@ -112,10 +112,9 @@ class SearchActivity : BaseActivity() {
                 setHintTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_alpha_forty_level_two_font_color))
                 textSize = 16F
             }
+            //把SearchView输入文字后自带的删除图标设置为null
             findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).apply {
-                // 移除删除按钮的点击事件
-                isClickable = false
-                isFocusable = false
+                setImageDrawable(null)
             }
             queryHint = "点我开始搜索吧"
             setOnQueryTextListener(object :
