@@ -85,7 +85,7 @@
 
             <TextView
                 android:id="@+id/uField_done_activity_phone"
-                android:layout_width="63dp"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="86dp"

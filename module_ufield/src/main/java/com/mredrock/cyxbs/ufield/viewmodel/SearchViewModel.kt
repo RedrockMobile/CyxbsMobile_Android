@@ -49,10 +49,10 @@ class SearchViewModel : BaseViewModel() {
         SearchRepository
             .receiveSearchData("all", 50, "start_timestamp_but_ongoing_first", keyword)
             .mapOrInterceptException {
-                toast("网络似乎有点问题~")
+                Log.d("searchAll", "测试结果: $it")
             }
             .doOnError {
-                toast("网络似乎有点问题~")
+                Log.d("searchAll", "测试结果: $it")
             }
             .safeSubscribeBy {
                 if (it.isEmpty()) {
