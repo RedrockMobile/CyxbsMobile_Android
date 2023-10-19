@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/mine_et_toolbar"
-        layout="@layout/common_toolbar" />
+        layout="@layout/config_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

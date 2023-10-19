@@ -9,7 +9,7 @@
     tools:context=".pages.RollerViewActivity">
 
     <include android:id="@+id/discover_web_tb"
-        layout="@layout/common_toolbar" />
+        layout="@layout/config_toolbar" />
 
     <com.mredrock.cyxbs.common.webView.LiteJsWebView
         android:id="@+id/discover_web_view"

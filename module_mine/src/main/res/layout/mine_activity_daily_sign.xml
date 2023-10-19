@@ -18,7 +18,7 @@
         android:fitsSystemWindows="true">
 
 
-        <com.mredrock.cyxbs.common.component.JToolbar
+        <com.mredrock.cyxbs.config.view.JToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
