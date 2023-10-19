@@ -11,8 +11,8 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.BindView
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.lib.utils.utils.BindView
 import org.greenrobot.eventbus.EventBus
 
 /**
