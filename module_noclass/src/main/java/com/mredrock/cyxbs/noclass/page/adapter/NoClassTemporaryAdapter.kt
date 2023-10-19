@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.Student
+import com.mredrock.cyxbs.noclass.callback.OnSlideChangedListener
 import com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
 
 /**
@@ -47,6 +48,12 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
 
     private var mOnItemDelete : ((Student) -> Unit)? = null
 
+    //当前右滑打开的位置
+    var rightSlideOpenLoc : Int? = null
+        private set
+
+    private var mOnItemSlideBack : ((loc : Int) -> Unit)? = null
+
     inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_member_name)
         val tvId : TextView = itemView.findViewById(R.id.noclass_tv_member_id)
@@ -59,6 +66,28 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
                     mOnItemDelete?.invoke(stu)
                 }
             }
+
+            slideMenu.setOnSlideChangedListener(object :OnSlideChangedListener{
+                override fun onSlideStateChanged(
+                    slideMenu: SlideMenuLayout,
+                    isLeftSlideOpen: Boolean,
+                    isRightSlideOpen: Boolean
+                ) {
+                    if (isRightSlideOpen){
+                        // 在滑动另外一个之前先把其它打开的关闭
+                        rightSlideOpenLoc?.let {
+                            if (it != bindingAdapterPosition){
+                                mOnItemSlideBack?.invoke(it)
+                            }
+                        }
+                        rightSlideOpenLoc = bindingAdapterPosition
+                    }
+                }
+                override fun onSlideRightChanged(percent: Float) {}
+
+                override fun onSlideLeftChanged(percent: Float) {}
+
+            })
         }
     }
 
@@ -83,6 +112,13 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
      */
     fun setOnItemDelete(listener : (Student) -> Unit){
         mOnItemDelete = listener
+    }
+
+    /**
+     * 设置上一个滑动的item的closeRight
+     */
+    fun setOnItemSlideBack(func : (loc : Int) -> Unit){
+        this.mOnItemSlideBack = func
     }
 
 }

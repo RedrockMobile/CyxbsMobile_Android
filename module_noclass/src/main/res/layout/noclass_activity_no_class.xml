@@ -101,6 +101,7 @@
                     app:tabIndicator="@drawable/noclass_ic_tab_indicator"
                     app:tabIndicatorColor="@android:color/transparent"
                     app:tabIndicatorFullWidth="false"
+                    android:longClickable="false"
                     android:backgroundTint="@android:color/transparent"
                     app:tabMode="fixed"
                     app:tabGravity="fill"
