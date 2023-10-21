@@ -2,6 +2,6 @@
 <resources>
     <color name="declare_post_text_light">#ffffff</color>
     <color name="declare_home_item_title">#514DCD</color>
-    <color name="declare_voted_text">#DC7979</color>
-    <color name="declare_novoted_text">#80C59797</color>
+    <color name="declare_voted_text">#F07979</color>
+    <color name="declare_novoted_text">#D0C59797</color>
 </resources>
