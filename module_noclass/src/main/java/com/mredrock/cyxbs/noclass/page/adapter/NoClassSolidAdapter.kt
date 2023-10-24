@@ -43,7 +43,6 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
 
     //当前右滑打开的位置
     var rightSlideOpenLoc : Int? = null
-        private set
 
     private var mOnItemSlideBack : ((loc : Int) -> Unit)? = null
 
@@ -124,6 +123,11 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
         holder.apply {
             tvGroupName.text = item.name
             tvGroupIsTop.text = if(item.isTop) "取消置顶" else "置顶"
+            if (item.isOpen){
+                mMenuLayout.openRightSlide()
+            }else{
+                mMenuLayout.closeRightSlide()
+            }
         }
     }
     /**

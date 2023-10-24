@@ -253,11 +253,13 @@ class GroupDetailActivity : BaseActivity(){
                     mViewModel.deleteMembers(mCurrentNoclassGroup.id,it)
                 }
                 //设置将上一个展开的item关闭的操作
-                setOnItemSlideBack {
-                    val view = mRecyclerView.getChildAt(it - lm.findFirstVisibleItemPosition())
-                    view?.let {item->
-                        val holder = mRecyclerView.getChildViewHolder(item) as NoClassTemporaryAdapter.VH?
-                        holder?.slideMenu?.closeRightSlide()
+                setOnItemSlideBack {curPosition ->
+                    val list = currentList.toMutableList()
+                    rightSlideOpenLoc?.let { lastPosition ->
+                        list[curPosition].isOpen = true
+                        list[lastPosition].isOpen = false
+                        submitList(list)
+                        notifyItemChanged(lastPosition)
                     }
                 }
             }
@@ -265,11 +267,13 @@ class GroupDetailActivity : BaseActivity(){
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     // 正在拖动
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING){
-                        mAdapter.rightSlideOpenLoc?.let {
-                            val view = mRecyclerView.getChildAt(it-lm.findFirstVisibleItemPosition())
-                            view?.let {item->
-                                val holder = mRecyclerView.getChildViewHolder(item) as NoClassTemporaryAdapter.VH?
-                                holder?.slideMenu?.closeRightSlide()
+                        with(mAdapter){
+                            rightSlideOpenLoc?.let {
+                                val list = currentList.toMutableList()
+                                list[it].isOpen = false
+                                submitList(list)
+                                notifyItemChanged(it)
+                                rightSlideOpenLoc = null
                             }
                         }
                     }

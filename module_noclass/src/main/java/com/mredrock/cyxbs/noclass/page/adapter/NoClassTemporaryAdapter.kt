@@ -50,7 +50,6 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
 
     //当前右滑打开的位置
     var rightSlideOpenLoc : Int? = null
-        private set
 
     private var mOnItemSlideBack : ((loc : Int) -> Unit)? = null
 
@@ -99,6 +98,11 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.tvName.text = currentList[position].name
         holder.tvId.text = currentList[position].id
+        if (currentList[position].isOpen){
+            holder.slideMenu.openRightSlide()
+        }else{
+            holder.slideMenu.closeRightSlide()
+        }
     }
 
     fun deleteMember(stu : Student){
