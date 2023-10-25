@@ -13,6 +13,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.AllSearchFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.CultureSearchFragment
@@ -109,8 +111,11 @@ class SearchActivity : BaseActivity() {
         mSearch.apply {
             findViewById<EditText>(androidx.appcompat.R.id.search_src_text).apply {
                 setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color))
-                setHintTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_alpha_forty_level_two_font_color))
+                setHintTextColor(getColor(R.color.uField_activity_style_color))
                 textSize = 16F
+                (this.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                    setMargins(28.dp2px, 0, 0, 0)
+                }
             }
             //把SearchView输入文字后自带的删除图标设置为null
             findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).apply {
@@ -132,6 +137,7 @@ class SearchActivity : BaseActivity() {
                     return false
                 }
             })
+            setBackgroundColor(Color.TRANSPARENT)
         }
         mCardView.setOnClickListener {
             mSearch.isIconified = false
