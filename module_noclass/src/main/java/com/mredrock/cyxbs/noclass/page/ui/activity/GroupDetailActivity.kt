@@ -243,15 +243,42 @@ class GroupDetailActivity : BaseActivity(){
      * 初始化RV
      */
     private fun initRv(){
-        mRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@GroupDetailActivity)
+        with(mRecyclerView){
+            val lm = LinearLayoutManager(this@GroupDetailActivity)
+            layoutManager = lm
             adapter = mAdapter.apply {
                 //设置删除功能
                 setOnItemDelete {
                     mWaitDeleteList.add(it)
                     mViewModel.deleteMembers(mCurrentNoclassGroup.id,it)
                 }
+                //设置将上一个展开的item关闭的操作
+                setOnItemSlideBack {curPosition ->
+                    val list = currentList.toMutableList()
+                    rightSlideOpenLoc?.let { lastPosition ->
+                        list[curPosition].isOpen = true
+                        list[lastPosition].isOpen = false
+                        submitList(list)
+                        notifyItemChanged(lastPosition)
+                    }
+                }
             }
+            addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    // 正在拖动
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING){
+                        with(mAdapter){
+                            rightSlideOpenLoc?.let {
+                                val list = currentList.toMutableList()
+                                list[it].isOpen = false
+                                submitList(list)
+                                notifyItemChanged(it)
+                                rightSlideOpenLoc = null
+                            }
+                        }
+                    }
+                }
+            })
         }
         // 将跳转过来的数据填充进去
         mAdapter.submitList(mCurrentNoclassGroup.members)

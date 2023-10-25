@@ -141,7 +141,8 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
 
     private fun initView() {
         mRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            val lm = LinearLayoutManager(requireContext())
+            layoutManager = lm
             adapter = mAdapter.apply {
                 setOnClickGroup {
                     startForResult.launch(
@@ -167,7 +168,34 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                         (!noclassGroup.isTop).toString()
                     )
                 }
+                //设置将上一个展开的item关闭的操作
+                setOnItemSlideBack {curPosition ->
+                    val list = currentList.toMutableList()
+                    rightSlideOpenLoc?.let { lastPosition ->
+                        list[curPosition].isOpen = true
+                        list[lastPosition].isOpen = false
+                        submitList(list)
+                        notifyItemChanged(lastPosition)
+                    }
+                }
             }
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    // 正在拖动
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING){
+                        with(mAdapter){
+                            rightSlideOpenLoc?.let {
+                                val list = currentList.toMutableList()
+                                list[it].isOpen = false
+                                submitList(list)
+                                notifyItemChanged(it)
+                                rightSlideOpenLoc = null
+                            }
+                        }
+                    }
+                }
+            })
         }
     }
 

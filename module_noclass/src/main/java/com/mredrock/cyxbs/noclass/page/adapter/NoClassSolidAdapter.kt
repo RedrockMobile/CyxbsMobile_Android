@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
+import com.mredrock.cyxbs.noclass.callback.OnSlideChangedListener
 import com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
 
 
@@ -40,6 +41,11 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
     private var onClickGroupIsTop : ((noclassGroup: NoClassGroup, tvIsGroup : TextView) -> Unit)? = null
     private var onClickGroupDelete : ((noclassGroup: NoClassGroup) -> Unit)? = null
 
+    //当前右滑打开的位置
+    var rightSlideOpenLoc : Int? = null
+
+    private var mOnItemSlideBack : ((loc : Int) -> Unit)? = null
+
     fun setOnClickGroup(onClickGroup : (noclassGroup: NoClassGroup) -> Unit){
         this.onClickGroup = onClickGroup
     }
@@ -52,11 +58,18 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
         this.onClickGroupDelete = onClickGroupDelete
     }
 
+    /**
+     * 设置上一个滑动的item的closeRight
+     */
+    fun setOnItemSlideBack(func : (loc : Int) -> Unit){
+        this.mOnItemSlideBack = func
+    }
+
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvGroupName: TextView = itemView.findViewById(R.id.tv_noclass_group_name)
         val tvGroupIsTop: TextView = itemView.findViewById(R.id.tv_noclass_group_top_name)
         private val tvGroupDelete: TextView = itemView.findViewById(R.id.tv_noclass_group_delete_item)
-        private val mMenuLayout : SlideMenuLayout = itemView.findViewById(R.id.slide_noclass_container)
+        val mMenuLayout : SlideMenuLayout = itemView.findViewById(R.id.slide_noclass_container)
         init {
             tvGroupIsTop.text = "取消置顶"
             mMenuLayout.setOnTapTouchListener {
@@ -74,6 +87,27 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
                 val item = getItem(bindingAdapterPosition)
                 onClickGroupDelete?.invoke(item)
             }
+            mMenuLayout.setOnSlideChangedListener(object : OnSlideChangedListener {
+                override fun onSlideStateChanged(
+                    slideMenu: SlideMenuLayout,
+                    isLeftSlideOpen: Boolean,
+                    isRightSlideOpen: Boolean
+                ) {
+                    if (isRightSlideOpen){
+                        // 在滑动另外一个之前先把其它打开的关闭
+                        rightSlideOpenLoc?.let {
+                            if (it != bindingAdapterPosition){
+                                mOnItemSlideBack?.invoke(it)
+                            }
+                        }
+                        rightSlideOpenLoc = bindingAdapterPosition
+                    }
+                }
+                override fun onSlideRightChanged(percent: Float) {}
+
+                override fun onSlideLeftChanged(percent: Float) {}
+
+            })
         }
     }
 
@@ -89,6 +123,11 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
         holder.apply {
             tvGroupName.text = item.name
             tvGroupIsTop.text = if(item.isTop) "取消置顶" else "置顶"
+            if (item.isOpen){
+                mMenuLayout.openRightSlide()
+            }else{
+                mMenuLayout.closeRightSlide()
+            }
         }
     }
     /**

@@ -117,7 +117,8 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
      */
     private fun initRv() {
         mRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            val lm = LinearLayoutManager(requireContext())
+            layoutManager = lm
             adapter = mAdapter.apply {
                 //加入本人
                 val list = listOf(Student("","","","",mUserName,mUserId,""))
@@ -125,7 +126,30 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                 setOnItemDelete {
                     deleteMember(it)
                 }
+                //设置将上一个展开的item关闭的操作
+                setOnItemSlideBack {curPosition ->
+                    val curList = currentList.toMutableList()
+                    rightSlideOpenLoc?.let { lastPosition ->
+                        curList[curPosition].isOpen = true
+                        curList[lastPosition].isOpen = false
+                        submitList(curList)
+                        notifyItemChanged(lastPosition)
+                    }
+                }
             }
+            addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    with(mAdapter){
+                        rightSlideOpenLoc?.let {
+                            val list = currentList.toMutableList()
+                            list[it].isOpen = false
+                            submitList(list)
+                            notifyItemChanged(it)
+                            rightSlideOpenLoc = null
+                        }
+                    }
+                }
+            })
         }
     }
 

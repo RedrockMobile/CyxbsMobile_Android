@@ -23,5 +23,7 @@ data class NoClassGroup(
     @SerializedName("members")
     override var members: List<Student>,
     @SerializedName("name")
-    val name: String
+    val name: String,
+
+    var isOpen : Boolean = false
 ) : Serializable, Group

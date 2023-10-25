@@ -37,4 +37,6 @@ data class Student(
   override val id: String,
   @SerializedName("depart")
   val depart : String?,   //depart是学院
+
+  var isOpen : Boolean = false,   //是否展开，默认为false
   ) : Serializable,NoClassItem
