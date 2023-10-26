@@ -1,0 +1,27 @@
+{
+  "easyGoVersion": "1.0",
+  "client": "com.mredrock.cyxbs",
+  "logicEntities": [
+    {
+      "head": {
+        "function": "magicwindow",
+        "required": "true"
+      },
+      "body": {
+        "mode": "1",
+        "activityPairs": [
+          {
+            "from": "com.mredrock.cyxbs.main.ui.main.MainActivity",
+            "to": "*"
+          }
+        ],
+        "transActivities": [],
+        "UX": {
+          "isDraggable": "false",
+          "showStatusBar": "true",
+          "supportDraggingToFullScreen": "true"
+        }
+      }
+    }
+  ]
+}
