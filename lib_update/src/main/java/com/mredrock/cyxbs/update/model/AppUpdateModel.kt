@@ -37,9 +37,12 @@ object AppUpdateModel {
                 ApiGenerator.getCommonApiService(AppUpdateApiService::class)
                     .getUpdateInfoByGithub().map {
                         it.run {
-                            val versionName = tag.split("-")[0].removeRange(0,1)
-                            val versionCode = tag.split("-")[1].toLong()
-                            UpdateInfo(assets[0].downloadUrl,body,versionCode, versionName)
+                            if (tag.matches("v\\d+\\.\\d+\\.\\d+-\\d+".toRegex())){
+                                val versionName = tag.split("-")[0].removeRange(0,1)
+                                val versionCode = tag.split("-")[1].toLong()
+                                UpdateInfo(assets[0].downloadUrl, body, versionCode, versionName)
+                                //github更新失败，这里抛出的异常将走到doOnError
+                            }else throw RuntimeException("release的tag格式不正确，请修改重新上传。")
                         }
                     }
             }.subscribeOn(Schedulers.io())
