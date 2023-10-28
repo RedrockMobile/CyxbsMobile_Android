@@ -4,14 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
-import com.mredrock.cyxbs.lib.utils.network.getBaseUrl
 import com.mredrock.cyxbs.lib.utils.utils.get.getAppVersionCode
 import com.mredrock.cyxbs.lib.utils.utils.get.getAppVersionName
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * Create By Hosigus at 2020/5/2
@@ -35,8 +31,17 @@ object AppUpdateModel {
         ApiGenerator.getCommonApiService(AppUpdateApiService::class)
             .getUpdateInfo()
             .onErrorResumeNext {
-                getSecondUpdateRetrofit().create(AppUpdateApiService::class.java)
-                    .getUpdateInfo()
+                // 当官网更新查询失败时会调用github的release更新查询
+                // 请注意github发布release时tag请按v+versionName+'-'+versionCode这样的格式，
+                // 例如versionName为6.8.0,versionCode为84,那么发布release的tag必须为v6.8.0-84,github查询更新才能更新成功,否则会更新失败
+                ApiGenerator.getCommonApiService(AppUpdateApiService::class)
+                    .getUpdateInfoByGithub().map {
+                        it.run {
+                            val versionName = tag.split("-")[0].removeRange(0,1)
+                            val versionCode = tag.split("-")[1].toLong()
+                            UpdateInfo(assets[0].downloadUrl,body,versionCode, versionName)
+                        }
+                    }
             }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
@@ -58,19 +63,4 @@ object AppUpdateModel {
                 }
             }
     }
-
-    /**
-     * 当默认域名请求错误
-     * 更换备用域名尝试更新
-     *
-     * 23-2-28：以前是用的上古域名，早就不行了，
-     * 从 6.6.1 版本我把他改成了 baseUrl，
-     * 但请注意，baseUrl 下并没有对应的更新接口，
-     * 如果有必要的话，可以让后端写一个该接口用于更新
-     */
-    private fun getSecondUpdateRetrofit() = Retrofit.Builder()
-        .baseUrl(getBaseUrl())
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
-        .build()
 }
