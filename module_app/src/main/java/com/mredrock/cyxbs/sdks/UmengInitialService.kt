@@ -49,12 +49,9 @@ class UmengInitialService : InitialService {
     }
 
     override fun onOtherProcess(manager: InitialManager) {
-        LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess = ${manager.currentProcessName()}\n")
+        LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess = ${manager.currentProcessName}\n")
         initUmengPush(manager)
     }
-
-    override fun isOtherProcess(manager: InitialManager): Boolean =
-        manager.currentProcessName()?.endsWith(":channel") ?: false
 
     override fun onPrivacyAgreed(manager: InitialManager) {
         Observable.just(Unit)
@@ -82,7 +79,7 @@ class UmengInitialService : InitialService {
                     * 注意：由于 debug 状态下修改包名，会导致 Umeng 注册失败，如果需要测试 Umeng
                     * 请修改 build-logic/core/version 模块中的 Config#getApplicationId() 方法
                     * */
-                    if (BuildConfig.DEBUG && manager.applicationId() != "com.mredrock.cyxbs") {
+                    if (BuildConfig.DEBUG && manager.application.packageName != "com.mredrock.cyxbs") {
                         val message = """
                             
                             ┌─────────警告────────────────────────────────────────────────────────

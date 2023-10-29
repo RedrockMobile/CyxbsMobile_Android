@@ -17,7 +17,7 @@ class CrashInitialService : InitialService {
     Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
       CrashActivity.start(
         throwable,
-        manager.currentProcessName() ?: "未知",
+        manager.currentProcessName,
         thread.name
       )
     }
@@ -28,7 +28,7 @@ class CrashInitialService : InitialService {
     Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
       CrashActivity.start(
         throwable,
-        manager.currentProcessName() ?: "未知",
+        manager.currentProcessName,
         thread.name
       )
     }

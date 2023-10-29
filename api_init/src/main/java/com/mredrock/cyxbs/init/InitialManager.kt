@@ -1,9 +1,6 @@
 package com.mredrock.cyxbs.init
 
-import android.app.ActivityManager
 import android.app.Application
-import android.os.Build
-import android.os.Process
 
 /**
  * @author ZhiQiang Tu
@@ -11,18 +8,11 @@ import android.os.Process
  * @signature 我将追寻并获取我想要的答案
  */
 interface InitialManager {
+
     val application: Application
-    fun isMainProcess(): Boolean  = currentProcessName()?.equals(applicationId()) ?: false
 
-    fun currentProcessName(): String? {
-        //不允许通过getRunningAppProcess获取当前线程号，因为有可能触发隐私条例
-        val applicationContext = application.applicationContext
-        val am = applicationContext.getSystemService(Application.ACTIVITY_SERVICE) as ActivityManager
-        return am.runningAppProcesses
-            .firstOrNull {
-                it.pid == Process.myPid()
-            }?.processName
-    }
+    val currentProcessName: String
 
-    fun applicationId() = application.packageName
+    val isMainProcess: Boolean
+        get() = currentProcessName == application.packageName
 }
