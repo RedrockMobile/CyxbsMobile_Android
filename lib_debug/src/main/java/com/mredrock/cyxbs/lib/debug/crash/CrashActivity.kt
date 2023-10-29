@@ -14,7 +14,7 @@ import android.text.style.ForegroundColorSpan
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import com.mredrock.cyxbs.api.crash.view.ScaleScrollTextView
+import com.mredrock.cyxbs.config.view.ScaleScrollTextView
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.debug.R
 import com.mredrock.cyxbs.lib.debug.SecretActivity
@@ -107,7 +107,7 @@ class CrashActivity : BaseActivity() {
         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
       )
     }
-    mScaleScrollTextView.setText(builder)
+    mScaleScrollTextView.text = builder
     val length = builder.indexOf('\n').let { if (it == -1) builder.length else it }
     mTvMessage.text = builder.substring(0, length) // 只显示第一行的 message
   }

@@ -42,8 +42,8 @@ class MovableItemHelper(
     mMovableItemListeners.remove(l)
   }
   
-  // MovableHandler 不能放进 mMovableItemListeners 中，因为 mMovableItemListeners 是倒序遍历的
-  // MovableHandler 需要保证第一个回调
+  // MovableHandler 不能与 IMovableItemListener 合并，因为 mMovableItemListeners 是倒序遍历的
+  // MovableHandler 需要保证第一个回调，所以你会看到先调用 mMovableHandler，再遍历 mMovableItemListeners
   private val mMovableHandler = config.getMovableHandler()
   private val mMovableItemListeners = arrayListOf<IMovableItemListener>()
   private val mLongPressMovableItemListener = LongPressMovableItemListener()

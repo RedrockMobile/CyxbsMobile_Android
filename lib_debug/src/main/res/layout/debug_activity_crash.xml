@@ -65,7 +65,7 @@
         app:layout_constraintLeft_toLeftOf="@id/debug_tv_hint"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <com.mredrock.cyxbs.api.crash.view.ScaleScrollTextView
+    <com.mredrock.cyxbs.config.view.ScaleScrollTextView
         android:id="@+id/debug_ssv_crash"
         android:layout_width="match_parent"
         android:layout_height="0dp"

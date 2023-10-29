@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.mredrock.cyxbs.api.crash.view.ScaleScrollTextView
+import com.mredrock.cyxbs.config.view.ScaleScrollTextView
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.utils.extensions.collectUsefulStackTrace
 import com.mredrock.cyxbs.lib.utils.extensions.color
@@ -118,7 +118,7 @@ class CrashDialog private constructor(
       title.length,
       Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
-    mScaleScrollTextView.setText(builder)
+    mScaleScrollTextView.text = builder
     val length = data.content.indexOf('\n').let { if (it == -1) data.content.length else it }
     mTvExceptionMessage.text = data.content.substring(0, length) // 只显示第一行的 message
   }

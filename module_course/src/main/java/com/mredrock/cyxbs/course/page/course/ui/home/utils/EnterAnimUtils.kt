@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.anim
 import com.ndhzs.netlayout.child.OnChildExistListener
 
 /**
- * .
+ * 课表第一次进入动画
  *
  * @author 985892345
  * @date 2022/9/21 17:28
@@ -38,7 +38,6 @@ object EnterAnimUtils {
       override fun onChildViewRemoved(parent: ViewGroup, child: View) {
         child.alpha = 1F
         viewList.remove(child)
-        parent.children
       }
     }
     course.addChildExistListener(viewListener)
@@ -60,7 +59,6 @@ object EnterAnimUtils {
                 )
               )
               course.startLayoutAnimation() // 现在已经布局了，需要手动开启动画执行
-              // 在下一帧回调，因为动画是在下一帧执行的，这个时候动画已经开始执行
               viewList.forEach { it.alpha = 1F }
               course.removeChildExitListener(viewListener) // 移除上面设置的监听
             }
