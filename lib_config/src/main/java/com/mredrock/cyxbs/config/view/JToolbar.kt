@@ -4,11 +4,14 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.config.R
@@ -96,15 +99,39 @@ class JToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, attrs)
     mWithSplitLine = withSplitLine
     invalidate()
   }
-  
-  private var mPaint = Paint().apply {
+
+  /**
+   * 添加右侧图标
+   *
+   * 点击事件可拿到返回的 View 进行添加
+   */
+  fun setRightIcon(
+    @DrawableRes
+    icon: Int,
+    width: Int = ViewGroup.LayoutParams.WRAP_CONTENT, // 单位 px
+    height: Int = ViewGroup.LayoutParams.WRAP_CONTENT, // 单位 px
+  ) : ImageButton {
+    if (mIbRightIcon != null) {
+      throw IllegalStateException("已经设置，不允许再次调用")
+    }
+    return ImageButton(context).also { button ->
+      mIbRightIcon = button
+      button.background = AppCompatResources.getDrawable(context, icon)!!
+      button.layoutParams = LayoutParams(width, height, Gravity.CENTER_VERTICAL or Gravity.END).also {
+        it.marginEnd = 16.dp2pxF.toInt()
+      }
+      addView(button)
+    }
+  }
+
+  private var mSplitLinePaint = Paint().apply {
     color = ContextCompat.getColor(context, R.color.config_default_divide_line_color)
-    alpha = 25
     strokeWidth = 1.dp2pxF
   }
-  
+
   private var mTitleTextView: TextView? = null
   private var mSubtitleTextView: TextView? = null
+  private var mIbRightIcon: ImageButton? = null
   
   private var mIsTitleAtLeft = true
   private var mWithSplitLine = true
@@ -163,7 +190,7 @@ class JToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, attrs)
     super.dispatchDraw(canvas)
     if (mWithSplitLine) {
       val y = height - 0.5F
-      canvas.drawLine(0F, y, width.toFloat(), y, mPaint)
+      canvas.drawLine(0F, y, width.toFloat(), y, mSplitLinePaint)
     }
   }
   

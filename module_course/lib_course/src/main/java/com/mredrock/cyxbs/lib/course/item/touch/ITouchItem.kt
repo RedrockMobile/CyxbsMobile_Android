@@ -16,5 +16,9 @@ import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
  * 2023/2/6 13:50
  */
 interface ITouchItem : IItem {
+
+  /**
+   * 应该重写为一个持久的变量，而不是每次都调用都生成新的对象值
+   */
   val touchHelper: ITouchItemHelper
 }

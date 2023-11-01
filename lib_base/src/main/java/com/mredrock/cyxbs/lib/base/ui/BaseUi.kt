@@ -7,11 +7,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.whenStarted
 import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.withStarted
 import com.mredrock.cyxbs.lib.base.operations.OperationUi
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.utils.BindView
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -141,14 +142,12 @@ interface BaseUi : OperationUi {
       }
     )
   }
-  
+
   fun <T> Flow<T>.collectLaunch(
     owner: LifecycleOwner = getViewLifecycleOwner(),
     action: suspend (value: T) -> Unit
-  ) {
-    owner.launch {
-      collect { action.invoke(it) }
-    }
+  ): Job = owner.launch {
+    collect { action.invoke(it) }
   }
   
   /**
@@ -161,9 +160,9 @@ interface BaseUi : OperationUi {
   fun <T> Flow<T>.collectSuspend(
     owner: LifecycleOwner = getViewLifecycleOwner(),
     action: suspend (value: T) -> Unit
-  ) {
-    owner.launch {
-      owner.whenStarted {
+  ): Job = owner.launch {
+    owner.withStarted {
+      owner.launch {
         collect { action.invoke(it) }
       }
     }
@@ -182,7 +181,5 @@ interface BaseUi : OperationUi {
   fun <T> Flow<T>.collectRestart(
     owner: LifecycleOwner = getViewLifecycleOwner(),
     action: suspend (value: T) -> Unit
-  ) {
-    flowWithLifecycle(owner.lifecycle).collectLaunch(owner, action)
-  }
+  ): Job = flowWithLifecycle(owner.lifecycle).collectLaunch(owner, action)
 }

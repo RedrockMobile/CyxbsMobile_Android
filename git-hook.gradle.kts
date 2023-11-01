@@ -39,8 +39,11 @@ fun moveHookFile(action: ((File) -> Unit)? = null) {
 
 // 将 根目录下的 hooks 移动到 .git/hooks 的 task
 // 已生成了 group 为 hook，名字叫 git-hook-move 的任务
-val moveTask = tasks.register("git-hook-move") {
+val task = tasks.register("git-hook-move") {
   group = "hook"
+  inputs.dir(hooksFile) // gradle 任务缓存设置
+  outputs.dir(gitHookFile) // gradle 任务缓存设置
+  dependsOn()
   doFirst {
     println("正在移动 git 钩子文件：")
     moveHookFile {
@@ -50,6 +53,5 @@ val moveTask = tasks.register("git-hook-move") {
   }
 }
 
-// 因为每次 clone 项目 .git/hook 文件都会还原，加上不好区分是否过期
-// 所以只能每次刷新 gradle 都移动一遍，文件目前就一个，几乎不花时间
-moveHookFile()
+// 依赖于刷新 gradle 的 task
+tasks.getByName("prepareKotlinBuildScriptModel").dependsOn(task)

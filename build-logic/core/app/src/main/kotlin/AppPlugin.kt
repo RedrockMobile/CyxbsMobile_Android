@@ -25,7 +25,12 @@ class AppPlugin : BasePlugin() {
 
         apply(plugin="base.application")
         apply(plugin= "com.tencent.vasdolly")
-        apply(from = "$rootDir/build-logic/secret/secret.gradle")
+        val secretGradleFile = rootDir.resolve("build-logic")
+            .resolve("secret")
+            .resolve("secret.gradle")
+        if (secretGradleFile.exists()) {
+            apply(from = "$rootDir/build-logic/secret/secret.gradle")
+        }
 
         dependAllProject()
         dependBugly()
@@ -43,19 +48,23 @@ class AppPlugin : BasePlugin() {
         androidApp {
             signingConfigs {
                 create("config") {
-                    // 获取保存在 secret.gradle 中的变量
-                    keyAlias = ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
-                    keyPassword = ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
-                    storePassword = ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
-                    storeFile = file("$rootDir/build-logic/secret/key-cyxbs")
+                    if (secretGradleFile.exists()) {
+                        // 获取保存在 secret.gradle 中的变量
+                        keyAlias = ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
+                        keyPassword = ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
+                        storePassword = ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
+                        storeFile = file("$rootDir/build-logic/secret/key-cyxbs")
+                    }
                 }
             }
 
             defaultConfig {
-                // 秘钥文件
-                manifestPlaceholders += (ext["secret"]["manifestPlaceholders"] as Map<String, String>)
-                (ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
-                    buildConfigField("String", k, v)
+                if (secretGradleFile.exists()) {
+                    // 秘钥文件
+                    manifestPlaceholders += (ext["secret"]["manifestPlaceholders"] as Map<String, String>)
+                    (ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
+                        buildConfigField("String", k, v)
+                    }
                 }
             }
 
