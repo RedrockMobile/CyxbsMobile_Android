@@ -5,3 +5,8 @@
 - [Android 开发中的易错点收集(内部文档)](https://redrock.feishu.cn/wiki/wikcnSDEtcCJzyWXSsfQGqWxqGe): 包含 Fragment、ViewModel、协程相关易错点收集
 - [入手掌邮(内部文档)](https://redrock.feishu.cn/wiki/wikcnHCgHJSFgn5ccJ8BqjMGFef): 掌邮内部一些开发工具
 - [掌邮 Android 新人接锅指南(内部文档)](https://redrock.feishu.cn/wiki/wikcn90MLIPKsG006YTLzg60fvb)
+
+## 群聊
+欢迎各位 Android 爱好者加群
+
+<img src="doce/assets/img_qq_group.jpg" width="240" />
