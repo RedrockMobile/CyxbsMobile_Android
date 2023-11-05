@@ -30,7 +30,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
 
 /**
- * 注意：整个课表采用了观察者模式。数据库对应的数据改变，会自动修改视图内容
+ * 注意：整个课表采用了观察者模式。数据库对应的数据改变，会自动修改视图内容，这是一种声明式的设计
+ *
+ * ## 如何更新课表数据 ？
+ * 如果你在其他模块添加了事务，然后你想更新课表，那么你应该去更新事务数据库，然后课表会自动收到更新的数据，显示对应的视图。
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
