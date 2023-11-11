@@ -16,7 +16,15 @@ object Config {
   const val compileSdk = targetSdk
   
   const val versionCode = 85 // 线上84，开发85
-  const val versionName = "6.8.1" // 线上6.8.0，开发6.8.1，自己打包 -alpha，内测 -beta
+  const val versionName = "6.8.1-alpha" // 线上6.8.0，开发6.8.1，自己打包 -alpha，内测 -beta
+  //线上版本更新内容
+  const val updateContent =
+    """
+    •桌面小部件上线
+    •修复课表偶尔加载很慢的问题
+    •修复没课约显示的bug
+    •修复活动布告栏搜索显示的bug
+    """
   
   val releaseAbiFilters = listOf("arm64-v8a")
   val debugAbiFilters = listOf("arm64-v8a","x86_64")
