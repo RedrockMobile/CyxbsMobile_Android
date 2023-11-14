@@ -72,7 +72,7 @@ class HomeCourseViewModel : BaseViewModel() {
     // 这里更新后，所有观察关联人的地方都会重新发送新数据
   }
   
-  private var mDataObserveDisposable = initObserve()
+  private var mDataObserveDisposable = initObserve(true)
   
   /**
    * 取消课表数据的观察流
@@ -90,15 +90,15 @@ class HomeCourseViewModel : BaseViewModel() {
    */
   fun refreshDataObserve() {
     cancelDataObserve()
-    mDataObserveDisposable = initObserve()
+    mDataObserveDisposable = initObserve(false)
   }
   
   /**
    * 注意：整个课表采用了观察者模式。数据库对应的数据改变，会自动修改视图内容
    */
-  private fun initObserve(): Disposable {
+  private fun initObserve(isToast: Boolean): Disposable {
     // 自己课的观察流
-    val selfLessonObservable = StuLessonRepository.observeSelfLesson(isForce = true, isToast = true)
+    val selfLessonObservable = StuLessonRepository.observeSelfLesson(isForce = true, isToast = isToast)
 
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
