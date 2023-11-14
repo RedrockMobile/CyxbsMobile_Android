@@ -14,7 +14,7 @@ data class ReleaseData(
     @SerializedName("apk_url")
     val apkUrl: String,
     @SerializedName("update_content")
-    val updateContent: String = Config.updateContent.trimIndent(),
+    val updateContent: String = Config.updateContent,
     @SerializedName("version_code")
     val versionCode: Int = Config.versionCode,
     @SerializedName("version_name")

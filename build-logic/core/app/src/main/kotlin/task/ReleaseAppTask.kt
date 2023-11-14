@@ -1,5 +1,6 @@
 package task
 
+import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
 import config.Config
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -7,36 +8,47 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.getByType
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import task.net.ReleaseData
 import task.net.TaskService
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 /**
  * ...
  * @author RQ527 (Ran Sixiang)
  * @email 1799796122@qq.com
  * @date 2023/11/11
- * @Description: 一键发版的task,执行任务过程无异常处理,异常都将抛到控制台。
+ * @Description: 一键发版的 task,执行任务过程无异常处理,异常都将抛到控制台。
+ *
  * 使用方式（三种）：
- * 1.右侧gradle栏的Run Configurations下找到releaseApp(在module_app下Task下的other也能找到)这个任务名称，点击执行
- * 2.或者右侧gradle有个搜索task的选项，搜索releaseApp点击执行
- * 3.命令行执行./gradlew releaseApp
+ * 1.右侧 gradle 栏的 Run Configurations 下找到 module_app/Tasks/cyxbs/releaseApp 点击执行
+ * 2.或者右侧 gradle 有个搜索 task 的选项，搜索 releaseApp 点击执行
+ * 3.命令行执行 ./gradlew releaseApp
+ *
+ * 记得先修改 [Config] 中的版本信息 !!!!!!!!
  */
 open class ReleaseAppTask : DefaultTask() {
-    //发版的token由运维下发
+
+    // 发版的 token 由运维下发，只能由每届 Android 管理人持有 (移动副站或 Android 部长)
     private val okHttpClient = OkHttpClient.Builder().addInterceptor {
         it.proceed(
             it.request()
                 .newBuilder()
                 .header(
                     "token",
-                    File("${project.rootDir}/build-logic/secret/release-token.txt").readText()
-                )
-                .build()
+                    project.rootDir
+                        .resolve("build-logic")
+                        .resolve("secret")
+                        .resolve("release-token.txt")
+                        .readText()
+                ).build()
         )
-    }.build()
+    }.connectTimeout(10, TimeUnit.SECONDS)
+        .callTimeout(10, TimeUnit.SECONDS)
+        .build()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://app.redrock.team")
@@ -48,34 +60,38 @@ open class ReleaseAppTask : DefaultTask() {
 
     @TaskAction
     fun taskAction() {
-        val apk = getApkFile()
-        apk?.let {
-            val lastVersion = getUpdateContent()
-            //忘记改updateContent和versionName的情况
-            if (lastVersion.versionCode < Config.versionCode &&
-                (lastVersion.updateContent == Config.updateContent || lastVersion.versionName == Config.versionName)) {
-                throw RuntimeException("当前版本更新信息或版本号与上个版本无变化，请更新新版本的更新信息或版本号再发版")
-                //versionCode相同，name和content不同时
-            } else if (lastVersion.versionCode == Config.versionCode &&
-                (lastVersion.versionName != Config.versionName || lastVersion.updateContent != Config.updateContent)
-            ) {
-                val input = project.findProperty("input")
-                if (input != null && input == "Yes") {
-                    releaseApp(apk)
-                } else {
-                    throw RuntimeException("当前的versionCode已经上线，但versionName与updateContent和线上不一样，如果确定要上传请命令行执行:./gradlew releaseApp -P input=\"Yes\"")
-                }
+        val apk = getApkFile() ?: throw RuntimeException(
+            "获取apk失败！请检查是否修改了腾讯打包工具的配置，请全局搜索 ChannelConfigExtension")
+        val lastVersion = getUpdateContent()
+        //忘记改updateContent和versionName的情况
+        if (lastVersion.versionCode > Config.versionCode) {
+            throw IllegalArgumentException("没改版本号 versionCode")
+        } else if (lastVersion.versionCode == Config.versionCode) {
+            if (project.findProperty("force") == "TRUE") {
+                releaseApp(apk)
+            } else {
+                throw IllegalArgumentException("当前版本已发布，如果是因为发布错误或者需要重新覆盖安装包，" +
+                    "请在终端中手动执行: ./gradlew releaseApp -P force=\"TRUE\"")
+            }
+        } else {
+            if (lastVersion.versionName == Config.versionName) {
+                throw IllegalArgumentException("改了 versionCode 却没改 versionName")
+            } else if (lastVersion.updateContent == Config.updateContent) {
+                throw IllegalArgumentException("没改更新的文案，去找产品要一个，然后写在 Config#updateContent 中")
+            } else if (!lastVersion.versionName.matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))) {
+                throw IllegalArgumentException("versionName 不符合规则，只能为 x.y.z")
+            } else if (compareVersion(lastVersion.versionName, Config.versionName) >= 0) {
+                throw IllegalArgumentException("versionName 版本号低于或等于线上版本号")
             } else {
                 releaseApp(apk)
             }
-        } ?: throw RuntimeException(
-            "获取apk失败！请检查module_app\\build\\channel路径下是否有apk文件，如果没有，请执行腾讯多渠道打包channelRelease任务后再发版。"
-        )
+        }
     }
 
     private fun releaseApp(apk: File) {
         val apkUrl = uploadApk(apk)
-        println("发版成功:${postUpdateContent(apkUrl)}\n请及时更新github的tag!!!")
+        println("发版成功: ${postUpdateContent(apkUrl)}\n" +
+            "请及时更新 github 的 tag!!!")
     }
 
     /**
@@ -87,13 +103,14 @@ open class ReleaseAppTask : DefaultTask() {
             apk.asRequestBody("application/octet-stream".toMediaType())
         )
         val response = netService.uploadApk(filePart).execute()
-        if (!response.isSuccessful) throw RuntimeException("apk上传失败:message:${response.message()},code:${response.code()}")
+        if (!response.isSuccessful) throw RuntimeException("apk 上传失败: " +
+            "message: ${response.message()}, code: ${response.code()}")
         val apkUploadData = response.body()!!
         if (apkUploadData.ok) {
-            println("上传apk成功:$apkUploadData")
+            println("上传 apk 成功: $apkUploadData")
             return apkUploadData.data
         } else {
-            throw RuntimeException("上传apk失败:$apkUploadData")
+            throw RuntimeException("上传 apk 失败: $apkUploadData")
         }
     }
 
@@ -103,7 +120,8 @@ open class ReleaseAppTask : DefaultTask() {
     private fun postUpdateContent(apkUrl: String): ReleaseData {
         val data = ReleaseData(apkUrl)
         val response = netService.postUpdateContent(data).execute()
-        if (!response.isSuccessful) throw RuntimeException("发版信息上传失败:message:${response.message()},code:${response.code()}")
+        if (!response.isSuccessful) throw RuntimeException("发版信息上传失败: " +
+            "message: ${response.message()}, code: ${response.code()}")
         return response.body()!!
     }
 
@@ -112,7 +130,8 @@ open class ReleaseAppTask : DefaultTask() {
      */
     private fun getUpdateContent(): ReleaseData {
         val response = netService.getUpdateContent().execute()
-        if (!response.isSuccessful) throw RuntimeException("获取更新信息失败:message:${response.message()},code:${response.code()}")
+        if (!response.isSuccessful) throw RuntimeException("获取更新信息失败: " +
+            "message: ${response.message()}, code: ${response.code()}")
         return response.body()!!
     }
 
@@ -120,11 +139,42 @@ open class ReleaseAppTask : DefaultTask() {
      * 获取腾讯多渠道打包文件
      */
     private fun getApkFile(): File? {
-        val apks = File("${project.buildDir.path}\\channel").listFiles()
-        for (apk: File in apks) {
-            if (apk.name.matches("掌上重邮-${Config.versionName}-official-release-\\d+-\\d+\\.apk".toRegex()))
-                return apk
+        return project.extensions.getByType(ChannelConfigExtension::class)
+            .let { extension ->
+                extension.outputDir.listFiles()?.singleOrNull {
+                    it.name.matches(
+                        Regex("掌上重邮-${Config.versionName}-official-release-\\d+-\\d+\\.apk"))
+                }
+            }
+    }
+
+    /**
+     * https://leetcode.cn/problems/compare-version-numbers/description/
+     * 时间复杂度: O(n+m)
+     * 空间复杂度: O(1)
+     */
+    private fun compareVersion(version1: String, version2: String): Int {
+        val n = version1.length
+        val m = version2.length
+        var i = 0
+        var j = 0
+        while (i < n || j < m) {
+            var x = 0
+            while (i < n && version1[i] != '.') {
+                x = x * 10 + (version1[i] - '0')
+                i++
+            }
+            i++ // 跳过点号
+            var y = 0
+            while (j < m && version2[j] != '.') {
+                y = y * 10 + (version2[j] - '0')
+                j++
+            }
+            j++ // 跳过点号
+            if (x != y) {
+                return if (x > y) 1 else -1
+            }
         }
-        return null
+        return 0
     }
 }
