@@ -75,7 +75,7 @@ class WidgetService : IWidgetService {
                 }
             }
 
-        refreshCourseSingleWidget(myLessons, otherStuLessons, affairs)
+        refreshCourseSingleWidget(myLessons)
     }
 
     override fun init(context: Context) {
@@ -90,16 +90,12 @@ class WidgetService : IWidgetService {
      */
     private fun refreshCourseSingleWidget(
         myLessons: List<ILessonService.Lesson>,
-        otherStuLessons: List<ILessonService.Lesson>,
-        affairs: List<IAffairService.Affair>,
     ) {
         CourseWidget.setData(
             mContext,
             SchoolCalendar.getWeekOfTerm()!!,
             mapOf(
                 WidgetRankImpl(0) to myLessons.map { LessonWidgetItem(it) },
-                WidgetRankImpl(1) to affairs.map { AffairWidgetItem(it) },
-                WidgetRankImpl(2) to otherStuLessons.map { LessonWidgetItem(it) }
             )
         )
     }
@@ -125,24 +121,6 @@ class WidgetService : IWidgetService {
             IWidgetItem.Start.values()[getStartRow(lesson.beginLesson)],
             lesson.period,
             IWidgetItem.WeekNum.values()[lesson.hashDay]
-        )
-    }
-
-    private class AffairWidgetItem(
-        override val title: String,
-        override val content: String,
-        override val week: Int,
-        override val start: IWidgetItem.Start,
-        override val period: Int,
-        override val weekNum: IWidgetItem.WeekNum
-    ) : IWidgetItem {
-        constructor(affair: IAffairService.Affair) : this(
-            affair.title,
-            affair.content,
-            affair.week,
-            IWidgetItem.Start.values()[getStartRow(affair.beginLesson)],
-            affair.period,
-            IWidgetItem.WeekNum.values()[affair.day]
         )
     }
 }
