@@ -30,11 +30,13 @@ import kotlin.coroutines.resume
  * @author 985892345
  * @date 2022/10/27 21:17
  */
-@Suppress("ObjectPropertyName")
 object NetworkUtil {
 
   /**
    * 观察网络连接状态，类似于 LiveData，每次观察会返回上一次下发的值
+   *
+   * true -> 网络可用
+   * false -> 网络不可用，但具体是后端问题还是没连接网络，可以通过 [tryPingNetWork] 测试
    */
   val state: Observable<Boolean>
     get() = _state.distinctUntilChanged()

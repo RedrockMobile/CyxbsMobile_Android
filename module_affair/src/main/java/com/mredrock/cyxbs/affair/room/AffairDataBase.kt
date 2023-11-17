@@ -163,7 +163,7 @@ abstract class AffairDao {
   }
   
   /**
-   * 返回当前插入的 [AffairEntity.onlyId]
+   * 返回当前插入的 [AffairEntity]
    */
   @Transaction
   open fun insertAffair(

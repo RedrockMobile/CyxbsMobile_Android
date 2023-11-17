@@ -19,12 +19,15 @@ import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.throwApiExceptionIfFail
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.internal.functions.Functions
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.Callable
+import java.util.concurrent.TimeUnit
 import kotlin.IllegalStateException
 
 /**
@@ -33,6 +36,7 @@ import kotlin.IllegalStateException
  * @email 2767465918@qq.com
  * @date 2022/5/3 19:30
  */
+@SuppressLint("CheckResult")
 object AffairRepository {
   
   private val Api = AffairApiService.INSTANCE
@@ -300,9 +304,11 @@ object AffairRepository {
    */
   @SuppressLint("CheckResult")
   private fun uploadLocalAffair(stuNum: String): Completable {
+    var hasLocalAffair = false
     // 本地临时添加的事务
     val localAdd = {
       LocalAddDao.getLocalAddAffair(stuNum).forEach { entity ->
+        hasLocalAffair = true
         Api.addAffair(entity.time, entity.title, entity.content, entity.dateJson) // 网络请求
           .throwApiExceptionIfFail()
           .doOnSuccess {
@@ -318,6 +324,7 @@ object AffairRepository {
     // 本地临时更新的事务
     val localUpdate = {
       LocalUpdateDao.getLocalUpdateAffair(stuNum).forEach { entity ->
+        hasLocalAffair = true
         Api.updateAffair(
           entity.remoteId, // 注意：这里需要使用 remoteId
           entity.time,
@@ -335,6 +342,7 @@ object AffairRepository {
     // 本地临时删除的事务
     val localDelete = {
       LocalDeleteDao.getLocalDeleteAffair(stuNum).forEach { entity ->
+        hasLocalAffair = true
         Api.deleteAffair(entity.remoteId) // 注意：这里需要使用 remoteId
           .throwApiExceptionIfFail()
           .doOnSuccess {
@@ -356,7 +364,11 @@ object AffairRepository {
       } catch (e: Exception) {
         emitter.tryOnError(e)
       }
-    }.subscribeOn(Schedulers.io())
+    }.toObservable<Unit>().flatMapCompletable {
+      // 进行延时处理，防止同步问题
+      Completable.complete()
+        .delay(if (hasLocalAffair) 200 else 0, TimeUnit.MILLISECONDS)
+    }.observeOn(Schedulers.io())
   }
   
   /**
@@ -428,5 +440,16 @@ object AffairRepository {
         AffairCalendarDao.insert(AffairCalendarEntity(onlyId, eventIdList))
       }
     }
+  }
+
+  init {
+    // 监听网络状态，在网络恢复时上传临时事务
+    NetworkUtil.state
+      .filter { it }
+      .doOnNext {
+        uploadLocalAffair(ServiceManager(IAccountService::class).getUserService().getStuNum())
+          .subscribeOn(Schedulers.io())
+          .subscribe(Functions.EMPTY_ACTION, Functions.emptyConsumer())
+      }.subscribe()
   }
 }

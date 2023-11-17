@@ -33,6 +33,8 @@ interface OnFoldListener {
   
   /**
    * 不带动画的直接折叠
+   *
+   * 不带动画时不会回调 [onFoldStart] 和 [onFoldEnd]
    */
   fun onFoldWithoutAnim(course: ICourseViewGroup) {}
   
@@ -59,6 +61,8 @@ interface OnFoldListener {
   
   /**
    * 不带动画的直接展开
+   *
+   * 不带动画时不会回调 [onUnfoldStart] 和 [onUnfoldEnd]
    */
   fun onUnfoldWithoutAnim(course: ICourseViewGroup) {}
 }
