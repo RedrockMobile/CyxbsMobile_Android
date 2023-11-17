@@ -162,10 +162,7 @@ class MainActivity : BaseActivity() {
       when (it) {
         0, 2 -> {
           mBottomNavLayout.cardElevation = 0F
-          if (!mIsActivityRebuilt) {
-            // 只在 Activity 没有重建时才设置成 false
-            mViewModel.courseBottomSheetExpand.value = false
-          }
+          mViewModel.courseBottomSheetExpand.value = false
         }
         1 -> {
           mBottomNavLayout.cardElevation = 4.dp2pxF
