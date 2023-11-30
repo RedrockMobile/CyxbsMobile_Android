@@ -5,15 +5,23 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.config.route.USER_PROTOCOL
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.*
-import com.mredrock.cyxbs.lib.utils.network.*
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.network.CommonApiService
+import com.mredrock.cyxbs.lib.utils.network.DownMessage
+import com.mredrock.cyxbs.lib.utils.network.DownMessageParams
+import com.mredrock.cyxbs.lib.utils.network.commonApi
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.login.adapter.UserAgreementAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
+@Route(path = USER_PROTOCOL)
 class UserAgreeActivity : BaseActivity() {
 
     private val mBack by R.id.login_view_user_agree_back.view<View>()
@@ -36,7 +44,8 @@ class UserAgreeActivity : BaseActivity() {
             getDownMessage()
         } else {
             // savedInstanceState 不为 null 时说明界面重新被异常摧毁重建了
-            val downMessage = savedInstanceState.getSerializable(this::mDownMessage.name) as DownMessage?
+            val downMessage =
+                savedInstanceState.getSerializable(this::mDownMessage.name) as DownMessage?
             if (downMessage != null) {
                 mRecyclerView.adapter = UserAgreementAdapter(downMessage.textList)
             } else {

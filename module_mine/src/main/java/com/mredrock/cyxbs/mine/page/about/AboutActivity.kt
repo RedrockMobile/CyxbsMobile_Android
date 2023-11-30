@@ -29,6 +29,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
+import com.mredrock.cyxbs.config.route.USER_PROTOCOL
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DebugUpdateDialog
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
@@ -38,7 +39,6 @@ import java.util.Calendar
 
 class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
     private val mine_about_rl_share by R.id.mine_about_rl_share.view<RelativeLayout>()
-    private val mine_about_legal by R.id.mine_about_legal.view<TextView>()
     private val mine_about_rl_website by R.id.mine_about_rl_website.view<RelativeLayout>()
     private val mine_about_rl_update by R.id.mine_about_rl_update.view<RelativeLayout>()
     private val mine_about_rl_function by R.id.mine_about_rl_function.view<RelativeLayout>()
@@ -46,6 +46,9 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
     private val mine_about_version by R.id.mine_about_version.view<TextView>()
     private val mine_about_tv_already_up_to_date by R.id.mine_about_tv_already_up_to_date.view<TextView>()
 
+
+    private val mTvProtocol by R.id.mine_about_user_protocol.view<TextView>()
+    private val mTvPrivacy by R.id.mine_about_privacy_statement.view<TextView>()
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +72,6 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
 
         bindUpdate()
         mine_about_rl_website.setOnClickListener { clickWebsite() }
-        mine_about_legal.setOnClickListener { clickLegal() }
         mine_about_rl_share.setOnClickListener { onShareClick() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
@@ -77,6 +79,10 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
             Calendar.getInstance().get(Calendar.YEAR)
         } All Rights Reserved",8211)
         mine_about_tv_copy_right.setOnLongClickListener { clickLogLocal() }
+
+        mTvProtocol.setOnClickListener { clickProtocol() }
+        mTvPrivacy.setOnClickListener { clickPrivacy() }
+
 
         if (BuildConfig.DEBUG) {
             val title = mine_about_rl_update.findViewById<TextView>(R.id.mine_about_update_title)
@@ -169,10 +175,22 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         startActivity(
             Intent(
                 this,
-                AgreementActivity::class.java
+                PrivacyActivity::class.java
             )
         )
     }
+
+
+
+    //跳转到用户协议的activity
+    private fun clickProtocol() {
+        ServiceManager.activity(USER_PROTOCOL) {}
+    }
+
+    private fun clickPrivacy() {
+        startActivity(Intent(this, PrivacyActivity::class.java))
+    }
+
 
     private fun setAppVersionName() {
         mine_about_version.text =

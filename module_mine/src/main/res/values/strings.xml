@@ -195,6 +195,9 @@
     <string name="mine_feedback_label_text">#%s</string>
     <string name="mine_feedback_feedback_content_text">今天喝了脉动呐，吃了果冻呐，打了电动呐， 还是挡不住对你的心动呐~</string>
     <string name="mine_feedback_none_history_text">你还没有提交过反馈意见哦~</string>
+    <string name="mine_about_user_protocol">《用户协议》</string>
+    <string name="mine_about_and"><![CDATA[&]]></string>
+    <string name="mine_about_privacy_statement">《隐私权声明》</string>
 
 
 </resources>
