@@ -16,11 +16,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.config.route.PRIVACY_PROTOCOL
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
-import com.mredrock.cyxbs.login.page.privacy.PrivacyActivity
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
 
 /**
@@ -104,8 +105,7 @@ class UserAgreementDialog private constructor(
     }.wrapByNoLeak(view) // 防止内存泄漏
     val privacyClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
-        val intent = Intent(context, PrivacyActivity::class.java)
-        context.startActivity(intent)
+        ServiceManager.activity(PRIVACY_PROTOCOL)
       }
       
       override fun updateDrawState(ds: TextPaint) {

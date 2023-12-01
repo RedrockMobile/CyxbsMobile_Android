@@ -29,6 +29,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
+import com.mredrock.cyxbs.config.route.PRIVACY_PROTOCOL
 import com.mredrock.cyxbs.config.route.USER_PROTOCOL
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DebugUpdateDialog
@@ -49,6 +50,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
 
     private val mTvProtocol by R.id.mine_about_user_protocol.view<TextView>()
     private val mTvPrivacy by R.id.mine_about_privacy_statement.view<TextView>()
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +77,11 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         mine_about_rl_share.setOnClickListener { onShareClick() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
-        mine_about_tv_copy_right.text = String.format("CopyRight © 2015%c${
-            Calendar.getInstance().get(Calendar.YEAR)
-        } All Rights Reserved",8211)
+        mine_about_tv_copy_right.text = String.format(
+            "CopyRight © 2015%c${
+                Calendar.getInstance().get(Calendar.YEAR)
+            } All Rights Reserved", 8211
+        )
         mine_about_tv_copy_right.setOnLongClickListener { clickLogLocal() }
 
         mTvProtocol.setOnClickListener { clickProtocol() }
@@ -171,24 +175,14 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         startActivity(intent)
     }
 
-    private fun clickLegal() {
-        startActivity(
-            Intent(
-                this,
-                PrivacyActivity::class.java
-            )
-        )
-    }
-
-
 
     //跳转到用户协议的activity
     private fun clickProtocol() {
-        ServiceManager.activity(USER_PROTOCOL) {}
+        ServiceManager.activity(USER_PROTOCOL)
     }
 
     private fun clickPrivacy() {
-        startActivity(Intent(this, PrivacyActivity::class.java))
+        ServiceManager.activity(PRIVACY_PROTOCOL)
     }
 
 

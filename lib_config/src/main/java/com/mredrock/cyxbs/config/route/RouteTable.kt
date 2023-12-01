@@ -119,3 +119,5 @@ const val FOOD_ENTRY = "/food/entry"
 
 //跳转到用户协议的activity
 const val USER_PROTOCOL = "/login/user"
+//跳转到隐私协议的activity
+const val PRIVACY_PROTOCOL = "/protocol/privacy"
