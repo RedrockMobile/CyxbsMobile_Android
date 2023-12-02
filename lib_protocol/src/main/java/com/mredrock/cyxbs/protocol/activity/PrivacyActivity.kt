@@ -5,11 +5,11 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ViewGroup
 import android.webkit.WebSettings
-import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.mredrock.cyxbs.config.route.PRIVACY_PROTOCOL
 import com.mredrock.cyxbs.protocol.R
 
@@ -27,7 +27,7 @@ class PrivacyActivity : BaseActivity() {
         const val USER_PRIVACY_URL = "https://fe-prod.redrock.cqupt.edu.cn/privacy-policy/"
     }
 
-    private val mWebView by lazy { WebView(applicationContext) }
+    private val mWebView by lazy { LiteJsWebView(applicationContext) }
     private val webViewParentContainer by R.id.protocol_webView_container.view<LinearLayout>()
     private val mBack by R.id.protocol_mBack.view<ImageView>()
 
@@ -36,6 +36,10 @@ class PrivacyActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.protocol_activity_privacy)
         mWebView.apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
@@ -46,10 +50,6 @@ class PrivacyActivity : BaseActivity() {
                 displayZoomControls = false
                 mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                 mediaPlaybackRequiresUserGesture = false
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
             }
             loadUrl(USER_PRIVACY_URL)
             // 适配黑夜模式
@@ -67,24 +67,10 @@ class PrivacyActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        destroyWebView()
+        removeWebView()
     }
 
-    private fun destroyWebView() {
-        try {
-            val parent = mWebView.parent as ViewGroup
-            parent.removeView(mWebView)
-            mWebView.apply {
-                stopLoading()
-                clearHistory()
-                clearCache(true)
-                onPause()
-                removeAllViewsInLayout()
-                removeAllViews()
-                destroy()
-            }
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
+    private fun removeWebView() {
+        (mWebView.parent as? ViewGroup)?.removeView(mWebView)
     }
 }
