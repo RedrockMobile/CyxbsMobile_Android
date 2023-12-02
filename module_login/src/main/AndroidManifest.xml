@@ -6,9 +6,6 @@
             android:name=".page.login.ui.LoginActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".page.privacy.PrivacyActivity"
-            android:exported="false" />
-        <activity
             android:name=".page.useragree.UserAgreeActivity"
             android:exported="false" />
         <activity

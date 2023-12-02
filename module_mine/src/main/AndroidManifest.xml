@@ -8,7 +8,6 @@
         <activity android:name=".page.feedback.history.detail.HistoryDetailActivity" />
         <activity android:name=".page.feedback.edit.ui.FeedbackEditActivity" />
         <activity android:name=".page.feedback.history.list.HistoryListActivity" />
-        <activity android:name=".page.about.AgreementActivity" />
         <activity
             android:name=".page.mine.ui.activity.IdentityActivity"
             android:exported="true" />

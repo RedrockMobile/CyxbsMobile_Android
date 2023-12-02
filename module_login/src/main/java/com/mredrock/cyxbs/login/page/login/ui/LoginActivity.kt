@@ -31,6 +31,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.route.MINE_FORGET_PASSWORD
+import com.mredrock.cyxbs.config.route.PRIVACY_PROTOCOL
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.BaseApp
@@ -41,7 +42,6 @@ import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.login.viewmodel.LoginViewModel
-import com.mredrock.cyxbs.login.page.privacy.PrivacyActivity
 import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
 import com.mredrock.cyxbs.login.ui.UserAgreementDialog
 
@@ -108,7 +108,7 @@ class LoginActivity : BaseActivity() {
   private val mTvForget by R.id.login_tv_forget_password.view<TextView>()
   private val mTvUserAgreement by R.id.login_tv_user_agreement.view<TextView>()
   private val mContainer by R.id.login_container.view<ViewGroup>()
-  
+
   // 后端是否可用
   private var mIsServerAvailable = true
 
@@ -166,7 +166,7 @@ class LoginActivity : BaseActivity() {
     mTvForget.setOnSingleClickListener {
       ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
     }
-  
+
     if (!mViewModel.userAgreementIsCheck) {
       // 显示用户协议 dialog
       showUserAgreement()
@@ -194,8 +194,7 @@ class LoginActivity : BaseActivity() {
     }.wrapByNoLeak(mTvUserAgreement) // 防止内存泄漏
     val privacyClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
-        val intent = Intent(this@LoginActivity, PrivacyActivity::class.java)
-        startActivity(intent)
+        ServiceManager.activity(PRIVACY_PROTOCOL)
       }
 
       override fun updateDrawState(ds: TextPaint) {
@@ -305,7 +304,7 @@ class LoginActivity : BaseActivity() {
   private fun initUpdate() {
     IAppUpdateService::class.impl.tryNoticeUpdate(this, true)
   }
-  
+
   private fun initCheckNetWork() {
     launch {
       NetworkUtil.tryPingNetWork()?.onFailure {

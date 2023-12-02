@@ -3,12 +3,18 @@
 
     <application>
         <activity
+            android:name=".activity.PrivacyActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ReceiveActivity"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="redrock.team"
                     android:scheme="cyxbs" />
@@ -16,4 +22,5 @@
         </activity>
         <activity android:name=".activity.WebContainerActivity" />
     </application>
+
 </manifest>
