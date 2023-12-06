@@ -15,6 +15,9 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.utils.Umeng
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.launch
+import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
+import com.mredrock.cyxbs.lib.utils.logger.TrackingUtils
+import com.mredrock.cyxbs.lib.utils.logger.event.ClickEvent
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
@@ -24,6 +27,7 @@ import com.mredrock.cyxbs.main.ui.course.CourseFragment
 import com.mredrock.cyxbs.main.ui.splash.SplashFragment
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.mredrock.cyxbs.main.widget.BottomNavLayout
+import kotlinx.coroutines.launch
 
 /**
  * ...
@@ -167,6 +171,13 @@ class MainActivity : BaseActivity() {
         1 -> {
           mBottomNavLayout.cardElevation = 4.dp2pxF
           mViewModel.courseBottomSheetExpand.value = null
+
+          if (IAccountService::class.impl.getVerifyService().isLogin()) {
+            // “邮乐园” 按钮点击事件埋点
+            processLifecycleScope.launch {
+              TrackingUtils.trackClickEvent(ClickEvent.CLICK_YLC_ENTRY)
+            }
+          }
         }
       }
       

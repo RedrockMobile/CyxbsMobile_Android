@@ -23,9 +23,13 @@ import com.mredrock.cyxbs.config.route.*
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.logger.TrackingUtils
+import com.mredrock.cyxbs.lib.utils.logger.event.ClickEvent
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.mine.noyification.NotificationUtils
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
@@ -34,6 +38,7 @@ import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.launch
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -121,9 +126,23 @@ class UserFragment : BaseFragment() {
                     )
                 }
             }
-            mine_user_iv_center_stamp.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
+            mine_user_iv_center_stamp.setOnSingleClickListener {
+                doIfLogin {
+                    // “邮票中心”点击埋点
+                    processLifecycleScope.launch {
+                        TrackingUtils.trackClickEvent(ClickEvent.CLICK_YLC_YPZX_ENTRY)
+                    }
+
+                    jump(STORE_ENTRY)
+                }
+            }
             mine_user_iv_center_feedback.setOnSingleClickListener {
                 doIfLogin {
+                    // “反馈中心”点击埋点
+                    processLifecycleScope.launch {
+                        TrackingUtils.trackClickEvent(ClickEvent.CLICK_YLC_FKZX_ENTRY)
+                    }
+
                     startActivity(
                         Intent(
                             this,
@@ -184,12 +203,24 @@ class UserFragment : BaseFragment() {
             }
 
             mine_user_iv_center_notification.setOnSingleClickListener {
+                if (IAccountService::class.impl.getVerifyService().isLogin()) {
+                    // 消息中心入口点击埋点
+                    processLifecycleScope.launch {
+                        TrackingUtils.trackClickEvent(ClickEvent.CLICK_YLC_XXZX_ENTRY)
+                    }
+                }
+
                 ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
                 // 进入消息中心，移除红点
                 mine_user_tv_center_notification_count.gone()
             }
             mine_user_iv_center_activity.setOnSingleClickListener {
                 doIfLogin {
+                    // “活动中心”点击埋点
+                    processLifecycleScope.launch {
+                        TrackingUtils.trackClickEvent(ClickEvent.CLICK_YLC_HDZX_ENTRY)
+                    }
+
                     ARouter.getInstance().build(UFIELD_CENTER_ENTRY).navigation()
                 }
             }
