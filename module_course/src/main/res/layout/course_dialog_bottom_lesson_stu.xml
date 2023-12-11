@@ -36,29 +36,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription"
             tools:visibility="visible" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/course_tv_dialog_stu_classroom"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/course_flv_dialog_stu_container"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="13sp"
-            android:textColor="@color/config_level_two_font_color"
-            android:drawableEnd="@drawable/course_ic_dialog_bottom_lesson_classroom"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/course_tv_dialog_stu_course"
-            tools:text="计算机制图教室(三)(综合实验楼C401/C402)" />
+            app:layout_constraintTop_toBottomOf="@id/course_tv_dialog_stu_course">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.mredrock.cyxbs.config.view.MarqueeTextView
+                    android:id="@+id/course_tv_dialog_stu_classroom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:textColor="@color/config_level_two_font_color"
+                    android:drawableEnd="@drawable/course_ic_dialog_bottom_lesson_classroom"
+                    tools:text="计算机制图教室(三)(综合实验楼C401/C402)" />
 
-        <TextView
-            android:id="@+id/course_tv_dialog_stu_teacher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textSize="13sp"
-            android:textColor="@color/config_level_two_font_color"
-            app:layout_constraintTop_toTopOf="@id/course_tv_dialog_stu_classroom"
-            app:layout_constraintStart_toEndOf="@id/course_tv_dialog_stu_classroom"
-            tools:text="某教师" />
+                <TextView
+                    android:id="@+id/course_tv_dialog_stu_teacher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textSize="13sp"
+                    android:textColor="@color/config_level_two_font_color"
+                    app:layout_constraintTop_toTopOf="@id/course_tv_dialog_stu_classroom"
+                    app:layout_constraintStart_toEndOf="@id/course_tv_dialog_stu_classroom"
+                    tools:text="某教师" />
+             </LinearLayout>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/course_tv_dialog_stu_rawWeek_title"
@@ -69,7 +79,7 @@
             android:textSize="15sp"
             android:textColor="@color/config_level_two_font_color"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/course_tv_dialog_stu_classroom"
+            app:layout_constraintTop_toBottomOf="@id/course_flv_dialog_stu_container"
             tools:ignore="HardcodedText" />
 
         <TextView
