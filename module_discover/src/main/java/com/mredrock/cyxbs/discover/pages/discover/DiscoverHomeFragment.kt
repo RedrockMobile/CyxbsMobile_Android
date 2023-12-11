@@ -49,12 +49,16 @@ import com.mredrock.cyxbs.discover.utils.NotificationSp
 import com.mredrock.cyxbs.discover.widget.IndicatorView
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.logger.TrackingUtils
+import com.mredrock.cyxbs.lib.utils.logger.event.ClickEvent
 import com.ndhzs.slideshow.SlideShow
 import com.ndhzs.slideshow.adapter.ImageViewAdapter
 import com.ndhzs.slideshow.adapter.setImgAdapter
 import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 
@@ -187,6 +191,13 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                         .onCreate {
                             view.scaleType = ImageView.ScaleType.CENTER_CROP
                             view.setOnSingleClickListener {
+                                if (IAccountService::class.impl.getVerifyService().isLogin()) {
+                                    // banner位的点击埋点
+                                    processLifecycleScope.launch {
+                                        TrackingUtils.trackClickEvent(ClickEvent.CLICK_YLC_BANNER_ENTRY)
+                                    }
+                                }
+
                                 if (data.picture_goto_url.startsWith("http")) {
                                     RollerViewActivity.startRollerViewActivity(data, requireContext())
                                 }
@@ -254,6 +265,15 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                 if (it == functions.size - 1) {
                     CyxbsToast.makeText(requireContext(), R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
                 } else {
+                    if (IAccountService::class.impl.getVerifyService().isLogin()) {
+                        // 发现首页横排按钮点击埋点
+                        functions[it].clickEvent?.let {  clickEvent ->
+                            processLifecycleScope.launch {
+                                TrackingUtils.trackClickEvent(clickEvent)
+                            }
+                        }
+                    }
+
                     functions[it].activityStarter.startActivity(context)
                 }
             }
