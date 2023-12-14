@@ -106,6 +106,9 @@ class OverlapHelper(
   
   override fun unlockRefreshAnim() {
     mRefreshAnimLockCount--
+    if (mRefreshAnimLockCount < 0) {
+      mRefreshAnimLockCount = 0
+    }
   }
   
   interface IOverlapLogic {

@@ -36,14 +36,14 @@ object ScrollTouchHandler : IPointerTouchHandler {
           // 此时说明没有经过 Down，直接从 Move 中添加进来的
           mIdDeque.addLast(event.pointerId)
         }
+        val nowRawY = event.rawY.toInt()
         val first = mIdDeque.first()
         if (event.pointerId == first) {
           // 只把事件交给第一个手指处理
-          val nowRawY = event.rawY.toInt()
           val lastRawY = mRawYById.get(event.pointerId, nowRawY)
           view.scrollCourseBy(lastRawY - nowRawY)
-          mRawYById.put(event.pointerId, nowRawY)
         }
+        mRawYById.put(event.pointerId, nowRawY)
       }
       IPointerEvent.Action.UP,
       IPointerEvent.Action.CANCEL -> {

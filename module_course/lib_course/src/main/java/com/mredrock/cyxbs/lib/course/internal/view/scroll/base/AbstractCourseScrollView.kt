@@ -2,10 +2,12 @@ package com.mredrock.cyxbs.lib.course.internal.view.scroll.base
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.iterator
 import androidx.core.widget.NestedScrollView
 import com.mredrock.cyxbs.lib.course.internal.view.scroll.ICourseScroll
+import com.mredrock.cyxbs.lib.course.widget.NestedDispatchLayout
 import kotlin.math.max
 
 /**
@@ -69,6 +71,32 @@ abstract class AbstractCourseScrollView @JvmOverloads constructor(
     )
     
     child.measure(childWidthMeasureSpec, childHeightMeasureSpec)
+  }
+
+  private var mIsRequestedDisallowIntercept = false
+
+  override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+    super.requestDisallowInterceptTouchEvent(disallowIntercept)
+    mIsRequestedDisallowIntercept = disallowIntercept
+  }
+
+  override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+    if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+      mIsRequestedDisallowIntercept = false
+    }
+    val result = super.dispatchTouchEvent(ev)
+    when (ev.actionMasked) {
+      MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+        if (mIsRequestedDisallowIntercept) {
+          /**
+           * 如果此时因为被 requestDisallow 导致 onInterceptTouchEvent 不被回调，就手动回调一次，用于清理状态
+           * 主要是为了解决 [NestedDispatchLayout] 头注释中描述的 bug
+           */
+          super.onInterceptTouchEvent(ev)
+        }
+      }
+    }
+    return result
   }
   
   final override fun getIterable(): Iterable<View> {

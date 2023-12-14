@@ -32,7 +32,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--解决 BottomSheet 与 Vp、NSV 的嵌套滑动-->
-    <com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView
+    <com.mredrock.cyxbs.lib.course.widget.NestedDispatchLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -41,5 +41,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView>
+    </com.mredrock.cyxbs.lib.course.widget.NestedDispatchLayout>
 </LinearLayout>

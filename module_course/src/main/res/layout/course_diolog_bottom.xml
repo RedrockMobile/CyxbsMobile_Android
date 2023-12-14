@@ -7,7 +7,7 @@
     android:paddingTop="36dp">
 
     <!--解决 Vp 与 BottomSheet 的嵌套滑动问题-->
-    <com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView
+    <com.mredrock.cyxbs.lib.course.widget.NestedDispatchLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -30,6 +30,6 @@
 
         </com.ndhzs.slideshow.SlideShow>
 
-    </com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView>
+    </com.mredrock.cyxbs.lib.course.widget.NestedDispatchLayout>
 
 </FrameLayout>

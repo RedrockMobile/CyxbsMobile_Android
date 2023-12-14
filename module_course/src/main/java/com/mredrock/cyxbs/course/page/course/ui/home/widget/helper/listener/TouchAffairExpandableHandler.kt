@@ -16,7 +16,7 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
  * 2023/4/23 18:20
  */
 class TouchAffairExpandableHandler : DefaultExpandableHandler() {
-  override fun newSingleSIdeExpandable(
+  override fun newSingleSideExpandable(
     page: ICoursePage,
     item: ITouchItem,
     child: View,

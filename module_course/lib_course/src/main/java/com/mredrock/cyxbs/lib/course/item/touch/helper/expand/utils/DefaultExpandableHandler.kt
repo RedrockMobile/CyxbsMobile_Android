@@ -33,7 +33,7 @@ open class DefaultExpandableHandler : IExpandableItemHandler {
   /**
    * 生成一个新的 [ISingleSideExpandable]
    */
-  open fun newSingleSIdeExpandable(
+  open fun newSingleSideExpandable(
     page: ICoursePage,
     item: ITouchItem,
     child: View,
@@ -63,7 +63,7 @@ open class DefaultExpandableHandler : IExpandableItemHandler {
     mIsRunning = true
     var side = mSideExpandable
     if (side == null) {
-      side = newSingleSIdeExpandable(page, item, child, event)
+      side = newSingleSideExpandable(page, item, child, event)
       mSideExpandable = side
     }
     side.onMoveStart(page.course, item, child)
