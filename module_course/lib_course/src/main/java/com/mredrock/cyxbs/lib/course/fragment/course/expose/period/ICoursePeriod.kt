@@ -16,12 +16,12 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.pm.IPmPeriod
 interface ICoursePeriod : IAmPeriod, INoonPeriod, IPmPeriod, IDuskPeriod, INightPeriod {
   
   /**
-   * 得到某节课开始前的高度值
+   * 得到某节课开始前的高度值（距离课表上边缘）
    */
   fun getLessonStartHeight(num: Int): Int
   
   /**
-   * 得到某节课结束时的高度值
+   * 得到某节课结束时的高度值（距离课表上边缘）
    */
   fun getLessonEndHeight(num: Int): Int
 }

@@ -33,7 +33,7 @@ abstract class AbstractCourseViewGroup(
   final override fun getIterable(): Iterable<View> {
     return object : Iterable<View> {
       override fun iterator(): Iterator<View> {
-        return this@AbstractCourseViewGroup.run { iterator() }
+        return this@AbstractCourseViewGroup.iterator()
       }
     }
   }

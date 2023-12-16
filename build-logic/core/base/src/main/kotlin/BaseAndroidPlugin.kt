@@ -24,20 +24,9 @@ internal class BaseAndroidPlugin : BasePlugin() {
 
         // 自动依赖模块中的直接子模块
         dependencies {
-            // 根 gradle 中包含的所有子模块
-            val includeProjects = rootProject.subprojects.map { it.name }
-
-            projectDir.listFiles()!!.filter {
-                // 1.是文件夹
-                // 2.以 lib_ 或者 api_ 开头
-                // 3.根 gradle 导入了的模块
-                it.isDirectory
-                        && "(lib_.+)|(api_.+)".toRegex().matches(it.name)
-                        && includeProjects.contains(it.name)
-            }.forEach {
-                "implementation"(project(":${name}:${it.name}"))
+            subprojects {
+                "implementation"(this)
             }
-
         }
     
         // 项目检查工具

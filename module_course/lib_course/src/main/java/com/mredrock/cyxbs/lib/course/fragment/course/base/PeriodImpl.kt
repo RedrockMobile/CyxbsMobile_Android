@@ -44,7 +44,7 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   }
   
   final override fun forEachAm(block: (row: Int) -> Unit) {
-    for (column in AM_TOP .. PM_BOTTOM) {
+    for (column in AM_TOP .. AM_BOTTOM) {
       block.invoke(column)
     }
   }

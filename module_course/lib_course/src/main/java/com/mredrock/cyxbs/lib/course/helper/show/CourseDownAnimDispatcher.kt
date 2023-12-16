@@ -47,19 +47,12 @@ open class CourseDownAnimDispatcher(
       }
     )
   }
-  
+
   /**
    * 是否需要动画
    */
   open fun isNeedAnim(item: IItem, view: View, x: Int, y: Int): Boolean {
-    val whichItem = item is ILessonItem || item is IAffairItem
-    // 触摸边缘区域不开启动画
-    val l = view.x + view.width * 0.2F
-    val r = view.x + view.width * 0.8F
-    val t = view.y + view.height * 0.2F
-    val b = view.y + view.height * 0.8F
-    val where = x.toFloat() in l .. r && y.toFloat() in t .. b
-    return whichItem && where
+    return item is ILessonItem || item is IAffairItem
   }
   
   final override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
@@ -104,7 +97,7 @@ open class CourseDownAnimDispatcher(
             val point = pair.second
             val x = event.getX(index).toInt()
             val y = event.getY(index).toInt()
-            if (abs(child.translationX) > 30 || abs(child.translationY) > 30) {
+            if (abs(child.translationX) > 10 || abs(child.translationY) > 10) {
               endAnim(child, point.x, point.y, x, y)
               mViewWithRawPointById.remove(id)
             } else {
@@ -156,10 +149,12 @@ open class CourseDownAnimDispatcher(
       .setInterpolator { 1 - 1F / (1F + it).pow(6) }
       .start()
   }
-  
+
   protected open fun changeView(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
-    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 50 // 上下翻转
-    view.rotationY = (nowX - initialX) / view.width.toFloat() * 90 // 左右翻转
+    val centerY = view.height / 2F
+    val centerX = view.width / 2F
+    view.rotationX = -(nowY - view.y - centerY) / centerY * ((-0.0023F * view.height + 1.7F) * 16) // 上下翻转
+    view.rotationY = (nowX - view.x - centerX) / centerX * ((-0.0023F * view.width + 1.7F) * 10) // 左右翻转
   }
   
   protected open fun endAnim(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {

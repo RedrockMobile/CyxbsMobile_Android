@@ -42,8 +42,9 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
   @CallSuper
   open fun replaceDataFromOldList(oldData: Data, newData: Data) {
     val index = mOldData.indexOf(oldData)
-    mOldData.removeAt(index)
-    mOldData.add(index, newData)
+    if (index >= 0) {
+      mOldData[index] = newData
+    }
   }
   
   /**
@@ -94,8 +95,6 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
       }
       
       override fun onMoved(fromPosition: Int, toPosition: Int) {
-        val data = mOldData.removeAt(fromPosition)
-        mOldData.add(toPosition, data)
       }
       
       override fun onChanged(position: Int, count: Int, payload: Any?) {
