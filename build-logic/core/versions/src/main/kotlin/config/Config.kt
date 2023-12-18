@@ -21,6 +21,14 @@ object Config {
   
   val releaseAbiFilters = listOf("arm64-v8a")
   val debugAbiFilters = listOf("arm64-v8a","x86_64")
+
+  // 线上版本更新内容，注意缩进统一
+  val updateContent = """
+    •桌面小部件上线
+    •修复课表偶尔加载很慢的问题
+    •修复没课约显示的bug
+    •修复活动布告栏搜索显示的bug
+  """.trimIndent()
   
   val resourcesExclude = listOf(
     "LICENSE.txt",
