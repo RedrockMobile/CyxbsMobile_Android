@@ -4,6 +4,8 @@ import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.utils.getEndRow
 import com.mredrock.cyxbs.api.course.utils.getStartRow
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
  * ...
@@ -33,12 +35,10 @@ data class AffairWeekData(
     /**
      * 这里面的个数跟 [ICourseService.maxWeek] 挂钩
      */
-    val WEEK_ARRAY = arrayOf(
-      "整学期", "第一周", "第二周", "第三周", "第四周", "第五周",
-      "第六周", "第七周", "第八周", "第九周", "第十周", "第十一周",
-      "第十二周", "第十三周", "第十四周", "第十五周", "第十六周",
-      "第十七周", "第十八周", "第十九周", "第二十周", "第二十一周",
-    )
+    val WEEK_ARRAY: Array<String> by lazyUnlock {
+      appContext.resources.getStringArray(
+        com.mredrock.cyxbs.api.course.R.array.course_course_weeks_strings)
+    }
   }
 }
 
@@ -81,7 +81,19 @@ data class AffairTimeData(
       "第十一节课", //20:50
       "第十二节课", //21:45
     )
-    val DAY_ARRAY = arrayOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+
+    val DAY_ARRAY by lazyUnlock {
+      val resources = appContext.resources
+      arrayOf(
+        resources.getString(com.mredrock.cyxbs.api.course.R.string.course_week_mon),
+        resources.getString(com.mredrock.cyxbs.api.course.R.string.course_week_tue),
+        resources.getString(com.mredrock.cyxbs.api.course.R.string.course_week_wed),
+        resources.getString(com.mredrock.cyxbs.api.course.R.string.course_week_thu),
+        resources.getString(com.mredrock.cyxbs.api.course.R.string.course_week_fri),
+        resources.getString(com.mredrock.cyxbs.api.course.R.string.course_week_sat),
+        resources.getString(com.mredrock.cyxbs.api.course.R.string.course_week_sun),
+      )
+    }
   }
 }
 

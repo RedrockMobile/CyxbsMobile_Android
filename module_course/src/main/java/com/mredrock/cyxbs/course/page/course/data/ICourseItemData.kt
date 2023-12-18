@@ -4,7 +4,7 @@ import com.mredrock.cyxbs.api.course.utils.getEndRow
 import com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr
 import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
 import com.mredrock.cyxbs.api.course.utils.getStartRow
-import com.mredrock.cyxbs.lib.course.R
+import com.mredrock.cyxbs.api.course.R
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
 import com.mredrock.cyxbs.lib.utils.extensions.appContext

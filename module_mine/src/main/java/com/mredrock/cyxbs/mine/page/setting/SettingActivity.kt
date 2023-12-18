@@ -26,6 +26,7 @@ import com.mredrock.cyxbs.lib.utils.utils.config.PhoneCalendar
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
+import com.mredrock.cyxbs.mine.util.ui.CourseMaxWeekDialog
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
 import com.mredrock.cyxbs.mine.util.widget.SwitchPlus
 
@@ -33,6 +34,7 @@ class SettingActivity : BaseActivity() {
     private val mSwitch by R.id.mine_setting_switch.view<SwitchPlus>()
     private val mFmSecurity by R.id.mine_setting_fm_security.view<FrameLayout>()
     private val mFmClear by R.id.mine_setting_fm_clear.view<FrameLayout>()
+    private val mFmCourseMaxWeek by R.id.mine_setting_fm_course_max_week.view<FrameLayout>()
     private val mBtnExit by R.id.mine_setting_btn_exit.view<Button>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,6 +106,12 @@ class SettingActivity : BaseActivity() {
             }.setNegativeClick {
                 dismiss()
             }.show()
+        }
+
+        // 课表最大周数设置
+        mFmCourseMaxWeek.setOnSingleClickListener {
+            CourseMaxWeekDialog.Builder(this)
+                .show()
         }
         
         //退出登录
