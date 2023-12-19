@@ -40,7 +40,7 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
     }
   
   protected val mWhichWeekStr by lazyUnlock {
-    resources.getStringArray(R.array.course_course_weeks_strings)
+    resources.getStringArray(com.mredrock.cyxbs.api.course.R.array.course_course_weeks_strings)
   }
   
   /**

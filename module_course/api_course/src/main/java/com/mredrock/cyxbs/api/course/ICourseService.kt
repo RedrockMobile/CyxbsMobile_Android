@@ -3,9 +3,12 @@ package com.mredrock.cyxbs.api.course
 import android.app.Dialog
 import android.content.Context
 import androidx.annotation.IdRes
+import androidx.core.content.edit
 import androidx.fragment.app.FragmentManager
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 
 /**
  * ...
@@ -19,7 +22,14 @@ interface ICourseService : IProvider {
     /**
      * 课表能显示的最大周数
      */
-    val maxWeek = 21
+    var maxWeek: Int = appContext.getSp("课表").getInt("课表最大周数", 21)
+      private set
+
+    fun setMaxWeek(maxWeek: Int) {
+      appContext.getSp("课表").edit { putInt("课表最大周数", maxWeek) }
+      this.maxWeek = maxWeek
+    }
+
   }
   
   

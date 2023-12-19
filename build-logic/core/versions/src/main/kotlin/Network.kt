@@ -18,7 +18,7 @@ object Network {
   const val `adapter-rxjava3` = "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
   
   // https://github.com/square/okhttp
-  const val okhttp_version = "4.11.0"
+  const val okhttp_version = "4.12.0"
   const val okhttp = "com.squareup.okhttp3:okhttp:$okhttp_version"
   const val `logging-interceptor` = "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
   
