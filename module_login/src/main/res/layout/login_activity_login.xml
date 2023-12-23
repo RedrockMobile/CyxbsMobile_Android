@@ -201,7 +201,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="同意《用户协议》和《隐私权政策》"
+        android:text="同意《用户协议》和《隐私权声明》"
         android:textSize="11sp"
         android:textColor="#ABBCD8"
         app:layout_constraintStart_toEndOf="@+id/login_lav_check"

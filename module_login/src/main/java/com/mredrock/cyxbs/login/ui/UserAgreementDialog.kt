@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.login.ui
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -16,13 +15,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.config.route.PRIVACY_PROTOCOL
+import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
-import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
 
 /**
  * 用户协议的 Dialog
@@ -92,8 +90,9 @@ class UserAgreementDialog private constructor(
     //设置用户协议和隐私权政策点击事件
     val userAgreementClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
-        val intent = Intent(context, UserAgreeActivity::class.java)
-        context.startActivity(intent)
+        ServiceManager(IProtocolService::class).startLegalNoticeActivity(
+          context,
+          IProtocolService.USER_PROTOCOL_URL,"用户协议")
       }
       
       override fun updateDrawState(ds: TextPaint) {
@@ -105,7 +104,9 @@ class UserAgreementDialog private constructor(
     }.wrapByNoLeak(view) // 防止内存泄漏
     val privacyClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
-        ServiceManager.activity(PRIVACY_PROTOCOL)
+        ServiceManager(IProtocolService::class).startLegalNoticeActivity(
+          context,
+          IProtocolService.PRIVACY_POLICY_URL,"隐私权政策")
       }
       
       override fun updateDrawState(ds: TextPaint) {
