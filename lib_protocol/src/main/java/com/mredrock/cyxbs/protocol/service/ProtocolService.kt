@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.protocol.PROTOCOL_SERVICE
 import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.protocol.activity.LegalNoticeActivity
 import com.mredrock.cyxbs.protocol.activity.WebContainerActivity
 import com.mredrock.cyxbs.protocol.bean.UriBean
 
@@ -42,6 +43,10 @@ class ProtocolService : IProtocolService {
                 context?.let { WebContainerActivity.loadWebPage(it, uri) }
             }
         }
+    }
+
+    override fun startLegalNoticeActivity(context: Context, url: String, title: String) {
+        LegalNoticeActivity.start(context,url, title)
     }
 
 

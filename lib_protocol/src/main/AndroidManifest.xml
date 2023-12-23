@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".activity.PrivacyActivity"
+            android:name=".activity.LegalNoticeActivity"
             android:exported="false" />
         <activity
             android:name=".activity.ReceiveActivity"

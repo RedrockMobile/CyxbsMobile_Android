@@ -9,6 +9,7 @@ dependApiStore()
 dependApiLogin()
 dependApiCourse()
 
+dependApiProtocol()
 dependLibUtils()
 dependLibBase()
 dependLibConfig()

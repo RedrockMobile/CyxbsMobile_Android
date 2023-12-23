@@ -28,21 +28,24 @@ import androidx.core.view.postDelayed
 import com.airbnb.lottie.LottieAnimationView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.route.MINE_FORGET_PASSWORD
-import com.mredrock.cyxbs.config.route.PRIVACY_PROTOCOL
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.*
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.launch
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.login.viewmodel.LoginViewModel
-import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
 import com.mredrock.cyxbs.login.ui.UserAgreementDialog
 
 class LoginActivity : BaseActivity() {
@@ -181,8 +184,9 @@ class LoginActivity : BaseActivity() {
     //设置用户协议和隐私权政策点击事件
     val userAgreementClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
-        val intent = Intent(this@LoginActivity, UserAgreeActivity::class.java)
-        startActivity(intent)
+          ServiceManager(IProtocolService::class).startLegalNoticeActivity(
+              this@LoginActivity,
+              IProtocolService.USER_PROTOCOL_URL,"用户协议")
       }
 
       override fun updateDrawState(ds: TextPaint) {
@@ -194,7 +198,9 @@ class LoginActivity : BaseActivity() {
     }.wrapByNoLeak(mTvUserAgreement) // 防止内存泄漏
     val privacyClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
-        ServiceManager.activity(PRIVACY_PROTOCOL)
+        ServiceManager(IProtocolService::class).startLegalNoticeActivity(
+            this@LoginActivity,
+            IProtocolService.PRIVACY_POLICY_URL,"隐私权政策")
       }
 
       override fun updateDrawState(ds: TextPaint) {

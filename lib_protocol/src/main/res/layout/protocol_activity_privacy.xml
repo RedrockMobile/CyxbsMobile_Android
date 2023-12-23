@@ -26,16 +26,17 @@
             android:background="@drawable/protocol_ic_back" />
 
         <TextView
+            android:id="@+id/protocol_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="30dp"
-            android:text="@string/protocol_privacy_text"
             android:textColor="@color/config_level_three_font_color"
             android:textSize="21sp"
             app:layout_constraintBottom_toBottomOf="@id/protocol_toolbar"
             app:layout_constraintStart_toEndOf="@+id/protocol_toolbar"
             app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/protocol_privacy_text"
             tools:ignore="HardcodedText" />
     </androidx.appcompat.widget.Toolbar>
 

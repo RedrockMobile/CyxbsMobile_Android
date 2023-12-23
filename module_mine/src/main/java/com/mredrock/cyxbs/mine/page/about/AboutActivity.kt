@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.BuildConfig
 import com.mredrock.cyxbs.api.update.IAppUpdateService
@@ -29,8 +30,6 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
-import com.mredrock.cyxbs.config.route.PRIVACY_PROTOCOL
-import com.mredrock.cyxbs.config.route.USER_PROTOCOL
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DebugUpdateDialog
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
@@ -178,11 +177,15 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
 
     //跳转到用户协议的activity
     private fun clickProtocol() {
-        ServiceManager.activity(USER_PROTOCOL)
+        ServiceManager(IProtocolService::class).startLegalNoticeActivity(
+            this,
+            IProtocolService.USER_PROTOCOL_URL,"用户协议")
     }
 
     private fun clickPrivacy() {
-        ServiceManager.activity(PRIVACY_PROTOCOL)
+        ServiceManager(IProtocolService::class).startLegalNoticeActivity(
+            this,
+            IProtocolService.PRIVACY_POLICY_URL,"隐私权声明")
     }
 
 
