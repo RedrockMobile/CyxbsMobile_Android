@@ -37,7 +37,7 @@ class ModuleDebugManagerPlugin : BasePlugin() {
                     || it == "cacheToLocalMaven"
                     || it == "channelRelease"
                     || it == "channelDebug"
-                    || it == "releaseApp"
+                    || it == "cyxbsRelease"
         } && !name.startsWith("api_") // api 模块不开启
     }
 
