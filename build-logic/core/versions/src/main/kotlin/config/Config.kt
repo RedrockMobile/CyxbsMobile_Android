@@ -16,18 +16,16 @@ object Config {
   const val compileSdk = targetSdk
 
   // 发版有单独的 gradle task，请全局搜索 ReleaseAppTask
-  const val versionCode = 85 // 线上84，开发85
-  const val versionName = "6.8.1" // 线上6.8.0，开发6.8.1，自己打包 -alpha，内测 -beta
+  const val versionCode = 86 // 线上85，开发86
+  const val versionName = "6.8.2-alpha" // 线上6.8.1，开发6.8.2-alpha，自己打包 -alpha，内测 -beta
   
   val releaseAbiFilters = listOf("arm64-v8a")
   val debugAbiFilters = listOf("arm64-v8a","x86_64")
 
   // 线上版本更新内容，注意缩进统一
   val updateContent = """
-    •桌面小部件上线
-    •修复课表偶尔加载很慢的问题
-    •修复没课约显示的bug
-    •修复活动布告栏搜索显示的bug
+    • 提高了稳定性，修复了一些已知问题
+    • 对隐私政策权限做了进一步的规范修改
   """.trimIndent()
   
   val resourcesExclude = listOf(
