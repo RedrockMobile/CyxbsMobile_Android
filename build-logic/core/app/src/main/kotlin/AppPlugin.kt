@@ -5,11 +5,9 @@
 
 
 import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
-import com.tencent.vasdolly.plugin.extension.RebuildChannelConfigExtension
 import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.kotlin.dsl.*
-import task.ReleaseAppTask
-import java.io.File
+import task.CyxbsReleaseTask
 
 /**
  *
@@ -106,7 +104,7 @@ class AppPlugin : BasePlugin() {
             //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
             lowMemory = false
         }
-        tasks.register("releaseApp", ReleaseAppTask::class) {
+        tasks.register("cyxbsRelease", CyxbsReleaseTask::class) {
             group = "cyxbs"
             dependsOn(project.tasks.getByName("channelRelease"))
         }

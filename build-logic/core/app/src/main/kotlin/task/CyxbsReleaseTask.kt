@@ -24,13 +24,13 @@ import java.util.concurrent.TimeUnit
  * @Description: 一键发版的 task,执行任务过程无异常处理,异常都将抛到控制台。
  *
  * 使用方式（三种）：
- * 1.右侧 gradle 栏的 Run Configurations 下找到 module_app/Tasks/cyxbs/releaseApp 点击执行
- * 2.或者右侧 gradle 有个搜索 task 的选项，搜索 releaseApp 点击执行
- * 3.命令行执行 ./gradlew releaseApp
+ * 1.右侧 gradle 栏的 Run Configurations 下找到 module_app/Tasks/cyxbs/cyxbsRelease 点击执行
+ * 2.或者右侧 gradle 有个搜索 task 的选项，搜索 cyxbsRelease 点击执行
+ * 3.命令行执行 ./gradlew cyxbsRelease
  *
  * 记得先修改 [Config] 中的版本信息 !!!!!!!!
  */
-open class ReleaseAppTask : DefaultTask() {
+open class CyxbsReleaseTask : DefaultTask() {
 
     // 发版的 token 由运维下发，只能由每届 Android 管理人持有 (移动副站或 Android 部长)
     private val okHttpClient = OkHttpClient.Builder().addInterceptor {
