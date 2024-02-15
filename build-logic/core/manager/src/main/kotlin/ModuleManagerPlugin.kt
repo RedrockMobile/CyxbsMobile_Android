@@ -19,6 +19,7 @@ class ModuleManagerPlugin : BasePlugin() {
             projectName == "lib_utils" -> "lib.utils"
             projectName == "lib_config" -> "lib.config"
             projectName == "lib_debug" -> "lib.debug"
+            projectName == "lib_single" -> "lib.single"
             projectName.startsWith("module_") -> "module"
             projectName.startsWith("lib_") -> "lib"
             projectName.startsWith("api_") -> "api"

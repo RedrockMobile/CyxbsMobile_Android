@@ -40,6 +40,11 @@ gradlePlugin {
             id = "lib"
         }
 
+        create("lib.single") {
+            implementationClass = "LibSinglePlugin"
+            id = "lib.single"
+        }
+
         create("lib.utils") {
             implementationClass = "LibUtilsPlugin"
             id = "lib.utils"
