@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.page.course.item
 
-import com.mredrock.cyxbs.api.course.utils.getEndTimeMinute
 import com.mredrock.cyxbs.api.course.utils.getNowTime
+import com.mredrock.cyxbs.api.course.utils.getStartTimeMinute
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
 
@@ -51,7 +51,7 @@ interface ISingleDayRank : ISingleDayData, IWeek {
                 }
               } else {
                 // 长度相同，但起始位置不同，以当前时间来计算谁在谁上面
-                compareBy(getEndTimeMinute(e1) - getNowTime()) {
+                compareBy(getNowTime() - getStartTimeMinute(maxOf(s1, s2))) {
                   -1
                 }
               }
@@ -63,8 +63,8 @@ interface ISingleDayRank : ISingleDayData, IWeek {
   }
   
   companion object {
-    inline fun compareBy(diff: Int, block: (diff: Int) -> Int): Int {
-      return if (diff != 0) diff else block.invoke(diff)
+    inline fun compareBy(diff: Int, block: () -> Int): Int {
+      return if (diff != 0) diff else block.invoke()
     }
   }
 }

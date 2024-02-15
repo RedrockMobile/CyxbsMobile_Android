@@ -8,6 +8,7 @@ import api.utils.ApiDependUtils
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.dependencies
 
 /**
  *@author ZhiQiang Tu
@@ -31,19 +32,31 @@ class ModuleDebugPlugin : BasePlugin() {
             // 设置 debug 的源集
             sourceSets {
                 getByName("main") {
-                    /*
-                    * 重定向 AndroidManifest 文件和 java 代码
-                    * 以后统一将 debug 用到的 java 代码和 AndroidManifest 文件放在 main/debug 下
-                    * */
-                    manifest.srcFile("src/main/debug/AndroidManifest.xml")
-                    java {
-                        srcDir("src/main/debug")
+                    // 将 debug 加入编译环境，单模块需要的代码放这里面
+                    java.srcDir("src/main/debug")
+                    res.srcDir("src/main/debug-res")
+                    // 如果 debug 下存在 AndroidManifest 文件，则重定向 AndroidManifest 文件
+                    // 可参考 lib_crash 模块
+                    if (projectDir.resolve("src")
+                        .resolve("main")
+                        .resolve("debug")
+                        .resolve("AndroidManifest.xml").exists()) {
+                        manifest.srcFile("src/main/debug/AndroidManifest.xml")
                     }
                 }
+            }
+            defaultConfig {
+                // 设置单模块安装包名字
+                manifestPlaceholders["single_module_app_name"] = project.name
             }
             buildFeatures{
                 buildConfig=true
             }
+        }
+
+        // 依赖 lib_single 用于设置单模块入口
+        dependencies {
+            "implementation"(rootProject.project("lib_single"))
         }
 
         passOnApiImplDepend(project, project, hashSetOf(), hashSetOf())

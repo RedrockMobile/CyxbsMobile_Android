@@ -1,6 +1,5 @@
 plugins {
-    id("module-manager")
-    id("org.jetbrains.kotlin.android")
+    id("module-debug")
 }
 dependLibBase()
 

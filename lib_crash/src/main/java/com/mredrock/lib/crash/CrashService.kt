@@ -3,6 +3,7 @@ package com.mredrock.lib.crash
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.init.InitialManager
 import com.mredrock.cyxbs.init.InitialService
+import com.mredrock.cyxbs.lib.utils.BuildConfig
 import com.mredrock.lib.crash.core.CyxbsCrashMonitor
 
 /**

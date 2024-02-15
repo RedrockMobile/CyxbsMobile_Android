@@ -43,7 +43,6 @@ val task = tasks.register("git-hook-move") {
   group = "hook"
   inputs.dir(hooksFile) // gradle 任务缓存设置
   outputs.dir(gitHookFile) // gradle 任务缓存设置
-  dependsOn()
   doFirst {
     println("正在移动 git 钩子文件：")
     moveHookFile {
