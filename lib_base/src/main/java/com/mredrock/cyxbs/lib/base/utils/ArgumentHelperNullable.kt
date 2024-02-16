@@ -12,23 +12,29 @@ import kotlin.reflect.KProperty
 /**
  * 这里面所有的类型参考了官方的设计：[bundleOf]
  */
-class ArgumentHelper<T : Any>(
+class ArgumentHelperNullable<T>(
   private val arguments: () -> Bundle
-) : ReadWriteProperty<Any, T> {
+) : ReadWriteProperty<Any, T?> {
   
   private var mValue: T? = null
   
   @Suppress("UNCHECKED_CAST")
-  override fun getValue(thisRef: Any, property: KProperty<*>): T {
-    if (mValue != null) return mValue!!
+  override fun getValue(thisRef: Any, property: KProperty<*>): T? {
+    if (mValue != null) return mValue
     @Suppress("DEPRECATION") // 这里使用 get() 更方便
-    mValue = arguments.invoke().get(property.name) as T
-    return mValue!!
+    mValue = arguments.invoke().get(property.name) as T?
+    return mValue
   }
   
-  override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
+  @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
+  override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
     val name = property.name
     arguments.invoke().apply {
+      if (value == null) {
+        mValue = null
+        remove(name)
+        return
+      }
       when (value) {
         is String -> putString(name, value) // 优先判断 String
         
@@ -59,7 +65,7 @@ class ArgumentHelper<T : Any>(
         
         // Reference arrays
         is Array<*> -> {
-          val componentType = value::class.java.componentType!!
+          val componentType = value!!::class.java.componentType!!
           @Suppress("UNCHECKED_CAST") // Checked by reflection.
           when {
             Parcelable::class.java.isAssignableFrom(componentType) -> {
@@ -86,7 +92,7 @@ class ArgumentHelper<T : Any>(
         is Serializable -> putSerializable(name, value)
         is IBinder -> putBinder(name, value)
         is Size -> putSize(name, value)
-        else -> error("未实现该类型 ${value::class.java.name} for key \"$name\"")
+        else -> error("未实现该类型 ${value!!::class.java.name} for key \"$name\"")
       }
     }
     mValue = value

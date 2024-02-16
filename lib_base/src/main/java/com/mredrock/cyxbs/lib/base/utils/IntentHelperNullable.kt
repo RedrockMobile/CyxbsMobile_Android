@@ -11,16 +11,16 @@ import kotlin.reflect.KProperty
 /**
  * 这里面所有的类型参考了官方的设计：[bundleOf]
  */
-class IntentHelper<T : Any>(
+class IntentHelperNullable<T>(
   private val clazz: Class<T>,
   private val intent: () -> Intent
-) : ReadWriteProperty<Any, T> {
+) : ReadWriteProperty<Any, T?> {
   
   private var mValue: T? = null
 
   @Suppress("DEPRECATION") // 抑制 sdk33 的 getSerializableExtra() 方法
-  override fun getValue(thisRef: Any, property: KProperty<*>): T {
-    if (mValue != null) return mValue!!
+  override fun getValue(thisRef: Any, property: KProperty<*>): T? {
+    if (mValue != null) return mValue
     val name = property.name
     @Suppress("UNCHECKED_CAST")
     mValue = intent.invoke().run {
@@ -31,7 +31,7 @@ class IntentHelper<T : Any>(
         List::class.java -> getSerializableExtra(name)
         Set::class.java -> getSerializableExtra(name)
         Map::class.java -> getSerializableExtra(name)
-
+        
         Int::class.java -> getIntExtra(name, Int.MIN_VALUE)
         Boolean::class.java -> getBooleanExtra(name, false)
         Byte::class.java -> getByteExtra(name, Byte.MIN_VALUE)
@@ -40,7 +40,7 @@ class IntentHelper<T : Any>(
         Float::class.java -> getFloatExtra(name, Float.MIN_VALUE)
         Long::class.java -> getLongExtra(name, Long.MIN_VALUE)
         Short::class.java -> getShortExtra(name, Short.MIN_VALUE)
-
+        
         Bundle::class.java -> getBundleExtra(name)
         BooleanArray::class.java -> getBooleanArrayExtra(name)
         ByteArray::class.java -> getByteArrayExtra(name)
@@ -50,7 +50,7 @@ class IntentHelper<T : Any>(
         IntArray::class.java -> getIntArrayExtra(name)
         LongArray::class.java -> getLongArrayExtra(name)
         ShortArray::class.java -> getShortArrayExtra(name)
-
+        
         Array::class.java -> {
           val componentType = clazz.componentType!!
           when {
@@ -81,20 +81,26 @@ class IntentHelper<T : Any>(
               getParcelableExtra<Parcelable>(name) // 这里类型推导会出问题，必须加泛型
             Serializable::class.java.isAssignableFrom(clazz) ->
               getSerializableExtra(name)
-            else -> error("未实现该类型 ${clazz.name} for key \"$name\"")
+            else -> null
           }
         }
       }
-    } as T
-    return mValue!!
+    } as T?
+    return mValue
   }
-
-  override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
+  
+  @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
+  override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
     val name = property.name
     intent.invoke().apply {
+      if (value == null) {
+        mValue = null
+        removeExtra(name)
+        return
+      }
       when (value) {
         is String -> putExtra(name, value) // 优先判断 String
-
+        
         // Scalars
         is Int -> putExtra(name, value)
         is Boolean -> putExtra(name, value)
@@ -104,12 +110,12 @@ class IntentHelper<T : Any>(
         is Float -> putExtra(name, value)
         is Long -> putExtra(name, value)
         is Short -> putExtra(name, value)
-
+        
         // References
         is Bundle -> putExtra(name, value)
         is CharSequence -> putExtra(name, value)
         is Parcelable -> putExtra(name, value)
-
+        
         // Scalar arrays
         is BooleanArray -> putExtra(name, value)
         is ByteArray -> putExtra(name, value)
@@ -119,10 +125,10 @@ class IntentHelper<T : Any>(
         is IntArray -> putExtra(name, value)
         is LongArray -> putExtra(name, value)
         is ShortArray -> putExtra(name, value)
-
+        
         // Reference arrays
         is Array<*> -> {
-          val componentType = value::class.java.componentType!!
+          val componentType = value!!::class.java.componentType!!
           @Suppress("UNCHECKED_CAST") // Checked by reflection.
           when {
             Parcelable::class.java.isAssignableFrom(componentType) -> {
@@ -147,7 +153,7 @@ class IntentHelper<T : Any>(
         }
         // Last resort. Also we must check this after Array<*> as all arrays are serializable.
         is Serializable -> putExtra(name, value)
-        else -> error("未实现该类型 ${value::class.java.name} for key \"$name\"")
+        else -> error("未实现该类型 ${value!!::class.java.name} for key \"$name\"")
       }
     }
     mValue = value

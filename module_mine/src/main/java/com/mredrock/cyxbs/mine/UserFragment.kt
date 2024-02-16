@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.store.IStoreService
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.config.route.*
+import com.mredrock.cyxbs.lib.base.operations.doIfLogin
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.gone

@@ -83,6 +83,8 @@ abstract class BaseBindFragment<VB : ViewBinding> : BaseFragment() {
         Boolean::class.java
       )
     }
+    // 正常情况下这里一定不会为 null，DataBinding 会在编译期根据模块依赖关系生成 Bind 类的映射文件，
+    // 但是如果使用 runtimeOnly 时将因为未加入编译环境而导致这里会出现返回 null 的情况
     _binding = method.invoke(null, inflater, container, false) as VB
     if (_binding is ViewDataBinding) {
       // ViewBinding 是 ViewBind 和 DataBind 共有的父类

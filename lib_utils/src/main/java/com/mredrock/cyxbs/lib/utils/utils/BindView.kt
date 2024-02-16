@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import java.lang.ref.WeakReference
 import kotlin.properties.ReadOnlyProperty
@@ -84,28 +85,34 @@ import kotlin.reflect.KProperty
 class BindView<V : View>(
   @IdRes val resId: Int,
   val findView: (Int) -> V,
-  val getLifecycle: () -> Lifecycle
+  val getLifecycle: () -> Lifecycle,
 ) : ReadOnlyProperty<Any, V> {
-  
+
+  constructor(@IdRes resId: Int, root: () -> View) : this(
+    resId,
+    { root.invoke().findViewById(it) },
+    { root.invoke().findViewTreeLifecycleOwner()!!.lifecycle }
+  )
+
   constructor(@IdRes resId: Int, activity: ComponentActivity) : this(
     resId,
     { activity.findViewById(it) },
-    { activity.lifecycle }
+    { activity.lifecycle },
   )
-  
+
   constructor(@IdRes resId: Int, fragment: Fragment) : this(
     resId,
     { fragment.requireView().findViewById(it) },
-    { fragment.viewLifecycleOwner.lifecycle }
+    { fragment.viewLifecycleOwner.lifecycle },
   )
-  
+
   constructor(@IdRes resId: Int, dialog: ComponentDialog) : this(
     resId,
     { dialog.findViewById(it) },
-    { dialog.lifecycle }
+    { dialog.lifecycle },
   )
-  
-  
+
+
   /**
    * 增加初始化的设置
    */
@@ -113,13 +120,14 @@ class BindView<V : View>(
     mInitializeList.add(initialize)
     return this
   }
-  
-  
-  
+
+
+
   private var mView: V? = null
-  
+
   private val mInitializeList = mutableListOf<V.() -> Unit>()
-  
+
+  // 这里 thisRef 写成非空就不允许在局部变量中使用
   override fun getValue(thisRef: Any, property: KProperty<*>): V {
     if (mView == null) {
       val lifecycle: Lifecycle
@@ -129,13 +137,13 @@ class BindView<V : View>(
         // 目前只有 Fragment 使用 viewLifecycleOwner 会出现这个问题，因为 Fragment 与 View 的生命周期不一致
         throw RuntimeException("获取 lifecycle 失败", e)
       }
-      
+
       // 检查当前生命周期
       if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
         // 虽然 lifecycle 的 DESTROYED 在 onDestroy() 前回调，但是在 onDestroy() 时 mView 并不会为 null，所以不会在这里报错
         throw RuntimeException("此时 ${thisRef::class.simpleName} 已经经历了 destroy，非法获取 ${getIdName()}")
       }
-      
+
       // 查找 View
       val view: View
       try {
@@ -144,12 +152,12 @@ class BindView<V : View>(
       } catch (e: Exception) {
         throw RuntimeException("获取 View 失败，id 为 ${getIdName()}", e)
       }
-      
+
       // 回调 initialize
       mInitializeList.forEach {
         it.invoke(view)
       }
-      
+
       // 观察 lifecycle 的 DESTROYED 回调
       lifecycle.addObserver(
         object : DefaultLifecycleObserver {
@@ -164,20 +172,20 @@ class BindView<V : View>(
     }
     return mView!!
   }
-  
+
   // 用于清除 mView 的引用
   private fun clearView() {
     mView = null
   }
-  
+
   // 获取 id 对应的名称
   private fun getIdName(): String {
     return "R.id.${appContext.resources.getResourceEntryName(resId)}"
   }
-  
+
   companion object {
     private val Handler = Handler(Looper.getMainLooper())
-  
+
     /**
      * 这里使用弱引用，防止全局 Handler 持有 [BindView] 导致 Activity/Fragment 内存泄漏
      *
@@ -194,3 +202,5 @@ class BindView<V : View>(
     }
   }
 }
+
+fun <T : View> Int.view(root: () -> View): BindView<T> = BindView(this, root)

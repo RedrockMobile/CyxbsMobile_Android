@@ -2,8 +2,6 @@ package com.mredrock.cyxbs.food.ui.activity
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.util.Log
-import android.util.Size
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,7 +20,7 @@ import com.mredrock.cyxbs.food.ui.adapters.FoodMainRvAdapter
 import com.mredrock.cyxbs.food.ui.view.FoodDetailDialog
 import com.mredrock.cyxbs.food.ui.view.FoodMainDialog
 import com.mredrock.cyxbs.food.viewmodel.FoodMainViewModel
-import com.mredrock.cyxbs.lib.base.dailog.BaseDialog
+import com.mredrock.cyxbs.lib.base.dailog.BaseChooseDialog
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
@@ -130,11 +128,12 @@ class FoodMainActivity : BaseActivity() {
             } else {
                 FoodMainDialog.Builder(
                     this,
-                    data = ChooseDialog.Data(
+                    data = ChooseDialog.DataImpl(
                         width = 255,
                         content = "如果还没找到你喜欢的美食，可以尝试多选一些关键词哦！",
-                        type = BaseDialog.DialogType.ONE_BUT,
-                        buttonSize = Size(130, 37)
+                        type = BaseChooseDialog.DialogType.ONE_BUT,
+                        buttonWidth = 130,
+                        buttonHeight = 37,
                     )
                 ).setPositiveClick {
                     this.dismiss()
@@ -155,11 +154,12 @@ class FoodMainActivity : BaseActivity() {
             if (!it) {
                 FoodMainDialog.Builder(
                     this,
-                    data = ChooseDialog.Data(
+                    data = ChooseDialog.DataImpl(
                         width = 255,
                         content = "请选择标签",
-                        type = BaseDialog.DialogType.ONE_BUT,
-                        buttonSize = Size(130, 37)
+                        type = BaseChooseDialog.DialogType.ONE_BUT,
+                        buttonWidth = 130,
+                        buttonHeight = 37,
                     )
                 ).setPositiveClick {
                     this.dismiss()
@@ -241,11 +241,12 @@ class FoodMainActivity : BaseActivity() {
                     } else {
                         FoodMainDialog.Builder(
                             this@FoodMainActivity,
-                            data = ChooseDialog.Data(
+                            data = ChooseDialog.DataImpl(
                                 width = 255,
                                 content = "如果还没找到你喜欢的美食，可以尝试多选一些关键词哦！",
-                                type = BaseDialog.DialogType.ONE_BUT,
-                                buttonSize = Size(130, 37)
+                                type = BaseChooseDialog.DialogType.ONE_BUT,
+                                buttonWidth = 130,
+                                buttonHeight = 37,
                             )
                         ).setPositiveClick {
                             this.dismiss()
@@ -260,14 +261,15 @@ class FoodMainActivity : BaseActivity() {
         mImgNotification.setOnSingleClickListener {
             FoodMainDialog.Builder(
                 this,
-                data = ChooseDialog.Data(
+                data = ChooseDialog.DataImpl(
                     width = 255,
                     content = "美食咨询处的设置，一" +
                             "是为了帮助各位选择综合症的邮子们更好的选择自己的需要的美食，对选择综合症说拜拜！二是为" +
                             "了各位初来学校的新生学子更好的体验学校各处的美食！按照要求通过标签进行选择，" +
                             "卷卷会帮助你选择最符合要求的美食哦！",
-                    type = BaseDialog.DialogType.ONE_BUT,
-                    buttonSize = Size(130, 37)
+                    type = BaseChooseDialog.DialogType.ONE_BUT,
+                    buttonWidth = 130,
+                    buttonHeight = 37,
                 )
             ).setPositiveClick {
                 this.dismiss()

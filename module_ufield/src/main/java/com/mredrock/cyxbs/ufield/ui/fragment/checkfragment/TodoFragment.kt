@@ -97,7 +97,7 @@ class TodoFragment : BaseFragment() {
                     run {
                         CheckDialog.Builder(
                             requireContext(),
-                            CheckDialog.Data(
+                            CheckDialog.DataImpl(
                                 content = "不得超过10个字",
                                 width = 255,
                                 height = 207

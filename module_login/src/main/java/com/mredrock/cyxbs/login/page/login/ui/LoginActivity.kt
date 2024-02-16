@@ -37,7 +37,6 @@ import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.launch
-import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -76,7 +75,7 @@ class LoginActivity : BaseActivity() {
           .apply {
             if (successActivity != null) {
               putExtra(
-                INTENT_SUCCESS,
+                LoginActivity::mSuccessIntent.name,
                 Intent(appContext, successActivity)
                   .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // 因为使用 appContext，所以需要加
               )
@@ -88,15 +87,10 @@ class LoginActivity : BaseActivity() {
           }
       )
     }
-
-    private const val INTENT_SUCCESS = "成功后跳转的 Activity"
   }
 
   private val mIsReboot by intent<Boolean>()
-  private val mSuccessIntent by lazyUnlock {
-    // 因为 by intent<>() 泛型不能写 null，所以采用原始的方法去拿
-    intent.getParcelableExtra(INTENT_SUCCESS) as Intent?
-  }
+  private val mSuccessIntent by intentNullable<Intent?>()
 
   private val mViewModel by viewModels<LoginViewModel>()
 

@@ -8,7 +8,6 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.util.Size
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -34,10 +33,11 @@ class UserAgreementDialog private constructor(
   
   class Builder(context: Context) : ChooseDialog.Builder(
     context,
-    Data(
+    DataImpl(
       positiveButtonText = "同意并继续",
       negativeButtonText = "不同意",
-      buttonSize = Size(119, 38)
+      buttonWidth = 119,
+      buttonHeight = 38,
     )
   ) {
     override fun buildInternal(): UserAgreementDialog {
