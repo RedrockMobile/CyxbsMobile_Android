@@ -24,7 +24,6 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.get
-import androidx.core.view.postDelayed
 import com.airbnb.lottie.LottieAnimationView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -77,7 +76,7 @@ class LoginActivity : BaseActivity() {
           .apply {
             if (successActivity != null) {
               putExtra(
-                LoginActivity::mSuccessIntent.name,
+                INTENT_SUCCESS,
                 Intent(appContext, successActivity)
                   .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // 因为使用 appContext，所以需要加
               )
@@ -156,13 +155,10 @@ class LoginActivity : BaseActivity() {
         IAccountService::class.impl
           .getVerifyService()
           .loginByTourist()
-        it.postDelayed(30) {
-          // 延迟一下，因为 sp 保存属性没得这么快
-          ServiceManager.activity(MAIN_MAIN) {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) // 游客模式也需要清空 Activity 栈
-          }
-          finish()
+        ServiceManager.activity(MAIN_MAIN) {
+          addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) // 游客模式也需要清空 Activity 栈
         }
+        finish()
       }
     }
     //跳转到忘记密码模块
