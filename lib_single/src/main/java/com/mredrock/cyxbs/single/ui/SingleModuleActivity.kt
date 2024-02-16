@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.single.ISingleModuleEntry
  * @author 985892345
  * @date 2023/9/7 00:13
  */
-class BaseSingleModuleActivity : BaseActivity() {
+class SingleModuleActivity : BaseActivity() {
 
   private val mSingleModuleEntry by lazyUnlock {
     ServiceManager(ISingleModuleEntry::class)
@@ -51,7 +51,7 @@ class BaseSingleModuleActivity : BaseActivity() {
     when (val page = mSingleModuleEntry.getPage(this)) {
       is ISingleModuleEntry.FragmentPage -> {
         replaceFragment(android.R.id.content) {
-          page.fragment.invoke(this@BaseSingleModuleActivity)
+          page.fragment.invoke(this@SingleModuleActivity)
         }
       }
       is ISingleModuleEntry.ActionPage -> {

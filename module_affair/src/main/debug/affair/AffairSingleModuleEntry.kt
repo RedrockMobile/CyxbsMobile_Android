@@ -4,7 +4,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.single.ISingleModuleEntry
-import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
+import com.mredrock.cyxbs.single.ui.SingleModuleActivity
 
 /**
  * .
@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
  */
 @Route(path = "/single/affair")
 class AffairSingleModuleEntry : ISingleModuleEntry {
-  override fun getPage(activity: BaseSingleModuleActivity): ISingleModuleEntry.Page {
+  override fun getPage(activity: SingleModuleActivity): ISingleModuleEntry.Page {
     return ISingleModuleEntry.ActionPage {
       ServiceManager(IAffairService::class)
         .startActivityForAddAffair(

@@ -3,7 +3,7 @@ package declare.ui
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.declare.pages.main.page.activity.HomeActivity
 import com.mredrock.cyxbs.single.ISingleModuleEntry
-import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
+import com.mredrock.cyxbs.single.ui.SingleModuleActivity
 
 /**
  * .
@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
  */
 @Route(path = "/single/declare")
 class DeclareSingleModuleEntry : ISingleModuleEntry {
-  override fun getPage(activity: BaseSingleModuleActivity): ISingleModuleEntry.Page {
+  override fun getPage(activity: SingleModuleActivity): ISingleModuleEntry.Page {
     return ISingleModuleEntry.ActionPage {
       HomeActivity.startActivity(activity)
     }

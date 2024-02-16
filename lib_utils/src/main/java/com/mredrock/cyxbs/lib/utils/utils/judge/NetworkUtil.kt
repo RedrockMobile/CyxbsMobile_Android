@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.lib.utils.network.IApi
 import com.mredrock.cyxbs.lib.utils.network.commonApi
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -156,6 +157,8 @@ object NetworkUtil {
       val result = ApiServer::class.commonApi.pingMagipoke()
       result.throwApiExceptionIfFail() // 如果 status 状态码不成功将抛出异常
       return Result.success(result)
+    } catch (e: CancellationException) {
+      throw e
     } catch (e: Exception) {
       // 无网返回 UnknownHostException
       // 有网但无法连接网络时也返回 UnknownHostException
