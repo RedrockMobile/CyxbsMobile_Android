@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.main.ui.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -30,7 +32,10 @@ import com.mredrock.cyxbs.main.widget.BottomNavLayout
 import kotlinx.coroutines.launch
 
 /**
- * ...
+ * 注意:
+ * - 新逻辑请在 [initUI] 里面 添加新的 initXXX 方法
+ * - 不建议重写其他生命周期方法，应该使用 lifecycle.addObserver() 写在你的 initXXX 方法里
+ * -
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -66,14 +71,6 @@ class MainActivity : BaseActivity() {
     }
   }
 
-  override fun onResume() {
-    super.onResume()
-    if(mIsLogin){
-    // 获取（远端消息数据可能发生更新后）最新的未读消息数量，一般认为在从其他Activity返回后调用
-      mViewModel.getNotificationUnReadStatus()
-    }
-  }
-  
   private fun checkIsLogin(): Boolean? {
     if (!mAccountService.getVerifyService().isTouristMode()) {
       // 不是游客模式
@@ -96,6 +93,7 @@ class MainActivity : BaseActivity() {
    */
   private fun initUI() {
     setContentView(R.layout.main_activity_main)
+    initAction()
     initSplash()
     initCourse()
     initViewPager()
@@ -103,23 +101,12 @@ class MainActivity : BaseActivity() {
     initNotification()
     initUpdate()
   }
-  
-  // 初始化闪屏页
-  private fun initSplash() {
-    replaceFragment(R.id.main_fcv_splash_fragment) {
-      SplashFragment()
-    }
-  }
-  
-  private fun initCourse() {
-    replaceFragment(R.id.main_fcv_course_fragment) {
-      CourseFragment()
-    }
-    mViewModel.courseBottomSheetOffset.observe {
-      // 底部按钮跟随课表展开而变化
-      mBottomNavLayout.translationY = mBottomNavLayout.height * it
-      mBottomNavLayout.alpha = 1 - it
-    }
+
+  /**
+   * 打开应用就要触发的「大型UI」事件，比如直接跳转到某页面
+   */
+  private fun initAction() {
+    if (mIsActivityRebuilt) return // 如果 activity 被重建了，就不应该执行
     when (intent.action) {
       DESKTOP_SHORTCUT_COURSE -> {
         if (mIsLogin) {
@@ -129,9 +116,7 @@ class MainActivity : BaseActivity() {
           }
         }
       }
-      /**
-       * TODO 关闭服务 长按桌面图标
-       */
+      // 因政策问题暂时关闭
 //      DESKTOP_SHORTCUT_EXAM -> {
 //        if (mIsLogin) {
 //          ServiceManager.activity(DISCOVER_GRADES)
@@ -155,24 +140,44 @@ class MainActivity : BaseActivity() {
     }
   }
   
+  // 初始化闪屏页
+  private fun initSplash() {
+    replaceFragment(R.id.main_fcv_splash_fragment) {
+      SplashFragment()
+    }
+  }
+  
+  private fun initCourse() {
+    replaceFragment(R.id.main_fcv_course_fragment) {
+      CourseFragment()
+    }
+  }
+  
   private fun initViewPager() {
     mViewPager.adapter = MainAdapter(this)
     mViewPager.isUserInputEnabled = false
   }
   
   private fun initBottomNav() {
+    mViewModel.courseBottomSheetOffset.observe {
+      // 底部按钮跟随课表展开而变化
+      mBottomNavLayout.translationY = mBottomNavLayout.height * it
+      mBottomNavLayout.alpha = 1 - it
+    }
     mBottomNavLayout.addSelectListener {
       mViewPager.currentItem = it
       when (it) {
         0, 2 -> {
           mBottomNavLayout.cardElevation = 0F
-          mViewModel.courseBottomSheetExpand.value = false
+          if (mViewModel.courseBottomSheetExpand.value == null) {
+            mViewModel.courseBottomSheetExpand.value = false
+          }
         }
         1 -> {
           mBottomNavLayout.cardElevation = 4.dp2pxF
           mViewModel.courseBottomSheetExpand.value = null
 
-          if (IAccountService::class.impl.getVerifyService().isLogin()) {
+          if (mIsLogin) {
             // “邮乐园” 按钮点击事件埋点
             processLifecycleScope.launch {
               TrackingUtils.trackClickEvent(ClickEvent.CLICK_YLC_ENTRY)
@@ -197,6 +202,14 @@ class MainActivity : BaseActivity() {
       // 设置为有红点的状态
       mBottomNavLayout.setBtnSelector(2,false)
     }
+    lifecycle.addObserver(object : DefaultLifecycleObserver {
+      override fun onResume(owner: LifecycleOwner) {
+        if (mIsLogin){
+          // 获取（远端消息数据可能发生更新后）最新的未读消息数量，一般认为在从其他Activity返回后调用
+          mViewModel.getNotificationUnReadStatus()
+        }
+      }
+    })
   }
 
   private fun initUpdate() {

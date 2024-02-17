@@ -60,22 +60,6 @@ class ApiDependUtils(val apiProjectPath: String) {
         }
       }
     }
-  
-    override fun dependApiImplOnly(project: Project, filter: (String) -> Boolean): List<String> {
-      if (isNoImpl) return emptyList()
-      val dependList = mutableListOf<String>()
-      project.run {
-        dependencies {
-          getImplPaths().forEach {
-            if (it.isNotBlank() && filter.invoke(it)) {
-              "runtimeOnly"(project(it)) // 使用 runtimeOnly 保证编译时不依赖
-              dependList.add(it)
-            }
-          }
-        }
-      }
-      return dependList
-    }
   }
   
   companion object {
@@ -108,12 +92,5 @@ class ApiDependUtils(val apiProjectPath: String) {
      * 只依赖 api 模块
      */
     fun dependApiOnly(project: Project)
-  
-    /**
-     * 依赖 api 模块的实现模块，用于在单模块调试时使用
-     * @param project 当前处于单模块调试的模块
-     * @param filter 筛选器，提供实现模块的 path，返回一个 Boolean 用于决定是否依赖该实现模块
-     */
-    fun dependApiImplOnly(project: Project, filter: (String) -> Boolean = { true }): List<String>
   }
 }
