@@ -85,6 +85,9 @@ class BottomNavLayout(
           .duration = animDuration
       }
       mLastSelectPosition = position
+      mSelectListeners.forEach {
+        it.invoke(position)
+      }
     } else {
       ValueAnimator.ofFloat(1.1F, 0.9F, 1.1F).apply {
         duration = animDuration * 2
@@ -95,9 +98,6 @@ class BottomNavLayout(
         }
         start()
       }
-    }
-    mSelectListeners.forEach {
-      it.invoke(position)
     }
   }
 

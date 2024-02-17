@@ -148,7 +148,7 @@ abstract class BaseActivity : AppCompatActivity, BaseUi {
    *
    * 没有返回 Fragment 的原因：Fragment 一般是不能直接暴露方法让外面调用的，所以拿了作用不大，
    * 想宿主给子 Fragment 通信，请使用 ViewModel。
-   * 但返过来通信时，是允许直接强转的（requestFragment() as XXXFragment）
+   * 但返过来通信时，是允许直接强转的（requestActivity() as XXXActivity）
    */
   protected fun <F : Fragment> replaceFragment(
     @IdRes id: Int,
