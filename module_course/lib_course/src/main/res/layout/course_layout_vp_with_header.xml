@@ -5,9 +5,20 @@
     android:orientation="vertical"
     android:background="@drawable/course_layer_list_course_bg">
 
-    <include
+    <FrameLayout
         android:id="@+id/course_header"
-        layout="@layout/course_layout_header" />
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <include
+            android:id="@+id/course_header_content"
+            layout="@layout/course_layout_header" />
+
+        <include
+            android:id="@+id/course_header_tab"
+            layout="@layout/course_layout_header_tab" />
+
+    </FrameLayout>
 
     <!--解决 BottomSheet 与 Vp、NSV 的嵌套滑动问题-->
     <com.mredrock.cyxbs.lib.course.widget.NestedDispatchLayout

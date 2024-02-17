@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isGone
-import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.ui.home.expose.IHomeCourseVp
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
@@ -23,14 +22,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 15:19
  */
-@Suppress("LeakingThis")
 abstract class HomeCourseVpLinkFragment : AbstractHeaderCourseVpFragment(), IHomeCourseVp {
-  
-  override val mHeader by R.id.course_header_fragment_home.view<ViewGroup>()
-  
-  // 因为使用了不一样的 xml，所以需要重写下 mViewPager
-  override val mViewPager by R.id.course_vp_fragment_home.view<ViewPager2>()
-  
+
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,

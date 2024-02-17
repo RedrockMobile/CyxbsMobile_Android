@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="horizontal"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:visibility="gone"
+    tools:visibility="visible" >
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/course_tab_layout"
+        android:layout_width="0dp"
+        android:layout_height="39dp"
+        android:layout_weight="1"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@null"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/config_level_two_font_color"
+        app:tabTextColor="#999999">
+    </com.google.android.material.tabs.TabLayout>
+
+    <ImageView
+        android:id="@+id/course_iv_tab_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:src="@drawable/config_ic_back"
+        android:importantForAccessibility="no" />
+
+</LinearLayout>
