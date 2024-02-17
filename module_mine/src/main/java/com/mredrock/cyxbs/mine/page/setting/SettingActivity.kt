@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.config.view.JToolbar
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
+import com.mredrock.cyxbs.lib.base.operations.doIfLogin
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -81,7 +82,7 @@ class SettingActivity : BaseActivity() {
             var boolean = false
             ChooseDialog.Builder(
                 this,
-                ChooseDialog.Data(
+                ChooseDialog.DataImpl(
                     content = "清理软件数据将重新登录并还原所有本地设置，请慎重选择！",
                     positiveButtonText = "确定",
                     negativeButtonText = "取消",
@@ -160,7 +161,7 @@ class SettingActivity : BaseActivity() {
     private fun doExit() {
         ChooseDialog.Builder(
             this,
-            ChooseDialog.Data(
+            ChooseDialog.DataImpl(
                 content = "是否退出登录？",
                 positiveButtonText = "确定",
                 negativeButtonText = "取消",

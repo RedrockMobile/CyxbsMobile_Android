@@ -2,7 +2,7 @@ package login.ui
 
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.single.ISingleModuleEntry
-import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
+import com.mredrock.cyxbs.single.ui.SingleModuleActivity
 
 /**
  * ...
@@ -16,7 +16,7 @@ class LoginSingleModuleEntry : ISingleModuleEntry {
   override val isNeedLogin: Boolean
     get() = true
 
-  override fun getPage(activity: BaseSingleModuleActivity): ISingleModuleEntry.Page {
+  override fun getPage(activity: SingleModuleActivity): ISingleModuleEntry.Page {
     // isNeedLogin 为 true 则会主动启动 LoginActivity，所以就没有必要写其他代码
     return ISingleModuleEntry.ActionPage { null }
   }

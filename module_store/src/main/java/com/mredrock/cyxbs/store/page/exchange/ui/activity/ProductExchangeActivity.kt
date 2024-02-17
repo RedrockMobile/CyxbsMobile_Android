@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
-import com.mredrock.cyxbs.lib.base.dailog.BaseDialog
+import com.mredrock.cyxbs.lib.base.dailog.BaseChooseDialog
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
@@ -80,7 +80,7 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
       it.isClickable = false // 在继续显示 dialog 期间禁止用户点击
       ChooseDialog.Builder(
         this,
-        ChooseDialog.Data(
+        ChooseDialog.DataImpl(
           content = "确认要用${binding.storeTvExchangeDetailPrice.text}" +
             "邮票兑换${binding.storeTvProductName.text}吗？",
           width = 300,
@@ -150,7 +150,7 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
           mStampCount -= mData.price
           ChooseDialog.Builder(
             this,
-            ChooseDialog.Data(
+            ChooseDialog.DataImpl(
               content = "兑换成功！现在就换掉原来的名片吧！",
               width = 300,
               height = 178,
@@ -177,11 +177,11 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
           mStampCount -= mData.price
           ChooseDialog.Builder(
             this,
-            ChooseDialog.Data(
+            ChooseDialog.DataImpl(
               content = "兑换成功！请在30天内到红岩网校领取哦",
               width = 300,
               height = 178,
-              type = BaseDialog.DialogType.ONE_BUT
+              type = BaseChooseDialog.DialogType.ONE_BUT
             )
           ).setPositiveClick {
             dismiss()
@@ -198,11 +198,11 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
         StoreType.ExchangeError.OUT_OF_STOCK -> {
           ChooseDialog.Builder(
             this,
-            ChooseDialog.Data(
+            ChooseDialog.DataImpl(
               content = "啊欧，手慢了！下次再来吧=.=",
               width = 300,
               height = 178,
-              type = BaseDialog.DialogType.ONE_BUT
+              type = BaseChooseDialog.DialogType.ONE_BUT
             )
           ).setPositiveClick {
             dismiss()
@@ -213,11 +213,11 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
         StoreType.ExchangeError.NOT_ENOUGH_MONEY -> {
           ChooseDialog.Builder(
             this,
-            ChooseDialog.Data(
+            ChooseDialog.DataImpl(
               content = "诶......邮票不够啊......穷日子真不好过呀QAQ",
               width = 300,
               height = 178,
-              type = BaseDialog.DialogType.ONE_BUT
+              type = BaseChooseDialog.DialogType.ONE_BUT
             )
           ).setPositiveClick {
             dismiss()

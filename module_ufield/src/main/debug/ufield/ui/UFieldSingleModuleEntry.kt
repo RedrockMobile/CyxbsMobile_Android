@@ -3,7 +3,7 @@ package ufield.ui
 import android.content.Intent
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.single.ISingleModuleEntry
-import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
+import com.mredrock.cyxbs.single.ui.SingleModuleActivity
 import com.mredrock.cyxbs.ufield.ui.activity.UFieldActivity
 
 /**
@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.ufield.ui.activity.UFieldActivity
  */
 @Route(path = "/single/ufield")
 class UFieldSingleModuleEntry : ISingleModuleEntry {
-    override fun getPage(activity: BaseSingleModuleActivity): ISingleModuleEntry.Page {
+    override fun getPage(activity: SingleModuleActivity): ISingleModuleEntry.Page {
         return ISingleModuleEntry.ActionPage {
             startActivity(Intent(this, UFieldActivity::class.java))
         }

@@ -61,7 +61,7 @@ class LinkCardFragment : BaseFragment() {
       setOnSingleClickListener {
         ChooseDialog.Builder(
           requireContext(),
-          ChooseDialog.Data(
+          ChooseDialog.DataImpl(
             content = "确定要取消关联吗？",
             width = 255,
             height = 146,

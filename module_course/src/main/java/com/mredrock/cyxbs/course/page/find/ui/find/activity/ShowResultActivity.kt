@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.course.page.find.ui.find.adapter.ShowTeaResultRvAdapte
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.ShowResultViewModel
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
+import com.mredrock.cyxbs.lib.base.operations.doIfLogin
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -193,7 +194,7 @@ class ShowResultActivity : BaseActivity() {
             } else {
               ChooseDialog.Builder(
                 this@initRecyclerView,
-                ChooseDialog.Data(
+                ChooseDialog.DataImpl(
                   content = "你已有一位关联的同学\n确定要替换吗？",
                   width = 255,
                   height = 167
@@ -211,7 +212,7 @@ class ShowResultActivity : BaseActivity() {
           // 点击已关联的图标
           ChooseDialog.Builder(
             this@initRecyclerView,
-            ChooseDialog.Data(
+            ChooseDialog.DataImpl(
               content = "确定要取消关联吗？",
               width = 255,
               height = 146

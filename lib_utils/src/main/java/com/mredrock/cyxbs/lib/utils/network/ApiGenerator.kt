@@ -23,7 +23,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.CopyOnWriteArrayList
+import java.util.ServiceLoader
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -76,15 +76,6 @@ import kotlin.reflect.KClass
  * @date 2022/5/29 22:30
  */
 object ApiGenerator {
-    // 用于 debug 时保存网络请求，因为异常触发时进程被摧毁，Pandora 记录的请求会被清空
-    val apiResultList by lazy {
-        CopyOnWriteArrayList<ApiResult>()
-    }
-
-    class ApiResult(var request: Request) {
-        var response: Response? = null
-        var stackTrace: String? = null // 直接保存 throwable 对象的话，不会被记录下来，不知道为什么
-    }
 
     private const val DEFAULT_TIME_OUT = 10
 
@@ -95,6 +86,7 @@ object ApiGenerator {
 
     //init对两种公共的retrofit进行配置
     init {
+        val networkConfigs = ServiceLoader.load(INetworkConfigService::class.java)
         //添加监听得到登录后的token和refreshToken,应用于初次登录或重新登录
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
@@ -102,6 +94,7 @@ object ApiGenerator {
                 it.apply {
                     defaultConfig()
                     configureTokenOkHttp()
+                    networkConfigs.forEach { config -> config.onCreateOkHttp(this) }
                 }.build()
             }
         }.build()
@@ -111,6 +104,7 @@ object ApiGenerator {
                 it.apply {
                     defaultConfig()
                     configureCommonOkHttp()
+                    networkConfigs.forEach { config -> config.onCreateOkHttp(this) }
                 }.build()
             }
         }.build()
@@ -246,24 +240,6 @@ object ApiGenerator {
     private fun OkHttpClient.Builder.defaultConfig() {
         this.connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
         this.readTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
-        if (BuildConfig.DEBUG) {
-            addInterceptor {
-                // 专门用于收集信息的拦截器
-                val request = it.request()
-                val apiResult = ApiResult(request.newBuilder().build())
-                apiResultList.add(apiResult)
-                try {
-                    it.proceed(request).also { response ->
-                        // 如果请求成功了就记录新的 request
-                        apiResult.request = response.request.newBuilder().build()
-                        apiResult.response = response.newBuilder().build()
-                    }
-                } catch (e: Exception) {
-                    apiResult.stackTrace = e.stackTraceToString()
-                    throw e
-                }
-            }
-        }
     }
 
 

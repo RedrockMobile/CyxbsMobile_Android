@@ -1,6 +1,9 @@
 package com.mredrock.cyxbs.lib.base.utils
 
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.Disposable
 
@@ -102,6 +105,27 @@ interface RxjavaLifecycle {
     onError: (Throwable) -> Unit = {},
     onComplete: () -> Unit = {},
   ): Disposable = subscribe(onComplete, onError)
+
+  /**
+   * RxjavaLifecycle 绑定 Lifecycle
+   */
+  fun bindLifecycle(disposable: Disposable, lifecycle: Lifecycle) {
+    lifecycle.addObserver(
+      object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+          if (event.targetState == Lifecycle.State.DESTROYED) {
+            source.lifecycle.removeObserver(this)
+            disposable.dispose() // 在 DESTROYED 时关掉流
+          } else {
+            if (disposable.isDisposed) {
+              // 如果在其他生命周期时流已经被关了，就取消该观察者
+              source.lifecycle.removeObserver(this)
+            }
+          }
+        }
+      }
+    )
+  }
 }
 
 fun <T : Any> Single<T>.safeSubscribeBy(

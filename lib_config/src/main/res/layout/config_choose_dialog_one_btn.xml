@@ -13,7 +13,7 @@
         tools:src="@drawable/config_shape_round_corner_dialog"/>
 
     <FrameLayout
-        android:id="@+id/config_fl_choose_dialog_one_btn_content"
+        android:id="@+id/config_fl_choose_dialog_btn_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="64dp"

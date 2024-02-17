@@ -2,14 +2,13 @@ package com.mredrock.cyxbs.mine.util.ui
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Size
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import com.mredrock.cyxbs.config.R
-import com.mredrock.cyxbs.lib.base.dailog.BaseDialog
+import com.mredrock.cyxbs.lib.base.dailog.BaseChooseDialog
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
@@ -21,13 +20,13 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  */
 class DebugUpdateDialog private constructor(
   context: Context,
-) : BaseDialog<DebugUpdateDialog, DebugUpdateDialog.Data>(context) {
+) : BaseChooseDialog<DebugUpdateDialog, DebugUpdateDialog.Data>(context) {
   
   fun getContent(): String {
     return mEditText.text.toString()
   }
   
-  class Builder(context: Context) : BaseDialog.Builder<DebugUpdateDialog, Data>(context, Data()) {
+  class Builder(context: Context) : BaseChooseDialog.Builder<DebugUpdateDialog, Data>(context, Data()) {
     override fun buildInternal(): DebugUpdateDialog {
       return DebugUpdateDialog(context)
     }
@@ -38,8 +37,9 @@ class DebugUpdateDialog private constructor(
     override val width: Int = 320,
     override val height: Int = 300,
     override val type: DialogType = DialogType.ONE_BUT,
-    override val buttonSize: Size = Size(120, 40)
-  ) : BaseDialog.Data by BaseDialog.Data.DEFAULT
+    override val buttonWidth: Int = 120,
+    override val buttonHeight: Int = 40,
+  ) : BaseChooseDialog.Data by Data
   
   private val mEditText = EditText(context).apply {
     layoutParams = FrameLayout.LayoutParams(

@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.config.route.DECLARE_ENTRY
 import com.mredrock.cyxbs.config.route.FAIRGROUND_ENTRY
 import com.mredrock.cyxbs.config.route.FOOD_ENTRY
 import com.mredrock.cyxbs.config.route.UFIELD_MAIN_ENTRY
+import com.mredrock.cyxbs.lib.base.operations.doIfLogin
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager

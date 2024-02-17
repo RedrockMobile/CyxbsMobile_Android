@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Size
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +34,12 @@ class CrashDialog private constructor(
     throwable: Throwable
   ) : ChooseDialog.Builder(
     context,
-    Data(
+    DataImpl(
       content = throwable.collectUsefulStackTrace(),
       positiveButtonText = "复制信息",
       negativeButtonText = "关闭",
-      buttonSize = Size(110, 38),
+      buttonWidth = 110,
+      buttonHeight = 38,
       width = 320,
       height = 500
     ),

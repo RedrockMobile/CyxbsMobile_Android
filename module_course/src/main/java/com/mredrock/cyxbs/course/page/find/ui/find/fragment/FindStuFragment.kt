@@ -25,8 +25,8 @@ import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewMode
 import com.mredrock.cyxbs.course.page.find.viewmodel.fragment.FindStuViewModel
 import com.mredrock.cyxbs.course.page.link.ui.fragment.LinkCardFragment
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
+import com.mredrock.cyxbs.lib.base.operations.doIfLogin
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
 /**
  * ...
@@ -80,7 +80,7 @@ class FindStuFragment : BaseFragment() {
           } else if (num != mViewModel.linkStudent.value?.linkNum) {
             ChooseDialog.Builder(
               requireContext(),
-              ChooseDialog.Data(
+              ChooseDialog.DataImpl(
                 content = "你已有一位关联的同学\n确定要替换吗？",
                 width = 255,
                 height = 167

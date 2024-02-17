@@ -9,15 +9,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.*
-import com.mredrock.cyxbs.lib.base.operations.OperationFragment
 import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
+import com.mredrock.cyxbs.lib.base.utils.ArgumentHelperNullable
+import com.mredrock.cyxbs.lib.utils.utils.BindView
 
 /**
  * 绝对基础的抽象
  *
  * 这里面不要跟业务挂钩！！！
  * 比如：使用 api 模块
- * 这种操作请放在 [OperationFragment] 中
+ * 这种操作请放在 OperationFragment 中，以扩展的方式向外提供
  *
  * ## 零、Fragment 易错点必看文档 (必须看完并理解 !!!!!)
  * https://redrock.feishu.cn/wiki/wikcnSDEtcCJzyWXSsfQGqWxqGe
@@ -79,7 +80,7 @@ import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
  * @email 2767465918@qq.com
  * @date 2021/5/25
  */
-abstract class BaseFragment : OperationFragment {
+abstract class BaseFragment : Fragment, BaseUi {
   
   constructor() : super()
   
@@ -142,13 +143,24 @@ abstract class BaseFragment : OperationFragment {
         .commit()
     }
   }
-  
+
   final override val rootView: View
     get() = requireView()
-  
+
+  final override fun doOnCreateContentView(action: (rootView: View) -> Any?) {
+    viewLifecycleOwnerLiveData.observeUntil(this) {
+      if (it != null) {
+        // 直到返回 null 才停止
+        action.invoke(rootView) == null
+      } else false
+    }
+  }
+
+  final override fun <T : View> Int.view(): BindView<T> = BindView(this, this@BaseFragment)
+
   val viewLifecycleScope: LifecycleCoroutineScope
     get() = viewLifecycleOwner.lifecycle.coroutineScope
-  
+
   /**
    * 快速得到 arguments 中的变量，直接使用反射拿了变量的名字
    * ```
@@ -170,6 +182,11 @@ abstract class BaseFragment : OperationFragment {
    * ```
    */
   fun <T : Any> arguments() = ArgumentHelper<T>{ requireArguments() }
+
+  /**
+   * 支持 null
+   */
+  fun <T> argumentsNullable() = ArgumentHelperNullable<T>{ requireArguments() }
   
   
   

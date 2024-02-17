@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--因为 lib_crash 需要对 activity 进行测试，所以单独提供了 AndroidManifest，
+    其他模块这样使用时需要把原有的 AndroidManifest 一起 CV 过来，未做合并操作-->
 
     <application>
         <activity

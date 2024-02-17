@@ -4,7 +4,7 @@ import android.content.Intent
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.noclass.page.ui.activity.NoClassActivity
 import com.mredrock.cyxbs.single.ISingleModuleEntry
-import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
+import com.mredrock.cyxbs.single.ui.SingleModuleActivity
 
 /**
  *
@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.single.ui.BaseSingleModuleActivity
  */
 @Route(path = "/single/noclass")
 class NoClassSingleModuleEntry : ISingleModuleEntry {
-    override fun getPage(activity: BaseSingleModuleActivity): ISingleModuleEntry.Page {
+    override fun getPage(activity: SingleModuleActivity): ISingleModuleEntry.Page {
         return ISingleModuleEntry.ActionPage {
             startActivity(Intent(this, NoClassActivity::class.java))
         }

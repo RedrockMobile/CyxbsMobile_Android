@@ -8,7 +8,7 @@
     android:allowBackup="true"
     android:supportsRtl="true" >
 
-    <activity android:name=".ui.BaseSingleModuleActivity"
+    <activity android:name=".ui.SingleModuleActivity"
       android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

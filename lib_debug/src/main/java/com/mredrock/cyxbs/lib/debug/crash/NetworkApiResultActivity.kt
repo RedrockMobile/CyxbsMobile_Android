@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.lib.debug.crash
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -85,7 +86,7 @@ class NetworkApiResultActivity : BaseActivity() {
           val result = mNetworkResult[layoutPosition]
           mTvRequest.text = result.request
           mTvResponse.text = result.response
-          mTvError.text = result.stackTrace
+          mTvError.text = result.throwable?.stackTraceToString()
         }
       }
     }
@@ -112,6 +113,7 @@ class NetworkApiResultActivity : BaseActivity() {
       }
     }
   
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VH, position: Int) {
       when (getItemViewType(position)) {
         ApiVH::class.hashCode() -> {
@@ -119,7 +121,7 @@ class NetworkApiResultActivity : BaseActivity() {
           val result = mNetworkResult[position]
           val url = result.request.substringAfter("url=").substringBefore(", ")
           holder.tvUrl.text = "Url: ${url.substringAfter(getBaseUrl())}"
-          holder.tvError.text = "Error: ${result.stackTrace.substringBefore(":")}"
+          holder.tvError.text = "Error: ${result.throwable?.stackTraceToString()?.substringBefore(":")}"
         }
         LogVH::class.hashCode() -> {
           holder as LogVH

@@ -23,7 +23,7 @@ class CourseMaxWeekDialog private constructor(
 
   class Builder(context: Context) : ChooseDialog.Builder(
     context,
-    Data(
+    DataImpl(
       type = DialogType.ONE_BUT
     )
   ) {
