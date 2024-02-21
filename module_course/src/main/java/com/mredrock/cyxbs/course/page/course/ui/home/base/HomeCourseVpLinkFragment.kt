@@ -57,6 +57,12 @@ abstract class HomeCourseVpLinkFragment : AbstractHeaderCourseVpFragment(), IHom
   
   override fun showNowWeek(position: Int, positionOffset: Float) {
     super.showNowWeek(position, positionOffset)
-    mIvLink.translationX = positionOffset * (mHeader.width - mIvLink.right - 32)
+    val nowWeekPosition = getPositionByNowWeek()
+    if (position == nowWeekPosition || position == nowWeekPosition - 1) {
+      val offset = if (position == nowWeekPosition) 1 - positionOffset else positionOffset
+      mIvLink.translationX = offset * (mHeader.width - mIvLink.right - 32)
+    } else {
+      mIvLink.translationX = 0f
+    }
   }
 }

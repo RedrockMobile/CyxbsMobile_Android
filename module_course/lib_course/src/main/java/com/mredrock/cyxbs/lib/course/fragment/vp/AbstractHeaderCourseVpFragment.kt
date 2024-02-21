@@ -95,16 +95,7 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
           positionOffset: Float,
           positionOffsetPixels: Int
         ) {
-          val nowWeekPosition = getPositionByNowWeek()
-          when (position) {
-            nowWeekPosition - 1 -> showNowWeek(position, positionOffset)
-            nowWeekPosition -> showNowWeek(position, 1 - positionOffset)
-            else -> {
-              /*
-              * 因为课表打开就是显示当前周，所以可以不用在其他周还原，减少回调
-              * */
-            }
-          }
+          showNowWeek(position, positionOffset)
         }
       }
     )
@@ -139,12 +130,21 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
    * @param positionOffset 为 0.0 -> 1.0 的值，最后为 1.0 时表示完全显示本周
    */
   protected open fun showNowWeek(position: Int, positionOffset: Float) {
-    mTvNowWeek.alpha = positionOffset
-    mTvNowWeek.scaleX = positionOffset
-    mTvNowWeek.scaleY = positionOffset
-    mBtnBackNowWeek.alpha = (1 - positionOffset)
-    mBtnBackNowWeek.translationX = positionOffset * (mHeader.width - mBtnBackNowWeek.left)
-
+    val nowWeekPosition = getPositionByNowWeek()
+    if (position == nowWeekPosition || position == nowWeekPosition - 1) {
+      val offset = if (position == nowWeekPosition) 1 - positionOffset else positionOffset
+      mTvNowWeek.alpha = offset
+      mTvNowWeek.scaleX = offset
+      mTvNowWeek.scaleY = offset
+      mBtnBackNowWeek.alpha = 1 - offset
+      mBtnBackNowWeek.translationX = offset * (mHeader.width - mBtnBackNowWeek.left)
+    } else {
+      mTvNowWeek.alpha = 0F
+      mTvNowWeek.scaleX = 0F
+      mTvNowWeek.scaleY = 0F
+      mBtnBackNowWeek.alpha = 1F
+      mBtnBackNowWeek.translationX = 0F
+    }
     if (position == 0) {
       // 整学期界面不显示“本周”
       // 这里有些小问题，这里是父类，并不知道子类有没有整学期这个界面（目前是都有），先暂时这样吧
