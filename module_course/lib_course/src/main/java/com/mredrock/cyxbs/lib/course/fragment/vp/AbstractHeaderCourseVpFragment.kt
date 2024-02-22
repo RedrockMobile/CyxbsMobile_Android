@@ -11,12 +11,15 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.CallSuper
+import androidx.core.content.edit
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.vp.expose.IHeaderCourseVp
 import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
@@ -95,19 +98,32 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
           positionOffset: Float,
           positionOffsetPixels: Int
         ) {
-          val nowWeekPosition = getPositionByNowWeek()
-          when (position) {
-            nowWeekPosition - 1 -> showNowWeek(position, positionOffset)
-            nowWeekPosition -> showNowWeek(position, 1 - positionOffset)
-            else -> {
-              /*
-              * 因为课表打开就是显示当前周，所以可以不用在其他周还原，减少回调
-              * */
-            }
-          }
+          showNowWeek(position, positionOffset)
         }
       }
     )
+    if (!defaultSp.getBoolean("已显示课表tab引导", false)) {
+      mViewPager.registerOnPageChangeCallback(
+        object : ViewPager2.OnPageChangeCallback() {
+          var lastTimestamp = 0L
+          var count = 0
+          override fun onPageSelected(position: Int) {
+            val now = System.currentTimeMillis()
+            if (now - lastTimestamp > 1000) {
+              lastTimestamp = now
+              count = 0
+            } else count++
+            if (count >= 2) {
+              defaultSp.edit { putBoolean("已显示课表tab引导", true) }
+              // 官方未做迭代中删除处理，只能 post 删除
+              mViewPager.post { mViewPager.unregisterOnPageChangeCallback(this) }
+              // 目前掌邮没有气泡引导功能，暂时使用 toast 提示
+              toastLong("点击“第几周”可快速跳转周数")
+            }
+          }
+        }
+      )
+    }
   }
 
   protected open fun initTabLayout() {
@@ -117,6 +133,10 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
     mIvTableBack.setOnSingleClickListener {
       hideTabLayout()
     }
+    // 先设置成 invisible，在布局后才设置成 gone
+    // 如果一来就是 gone，则第一次显示时 tab 不会居中显示当前页
+    mHeaderTab.invisible()
+    mHeaderTab.post { mHeaderTab.gone() }
   }
 
   /**
@@ -136,15 +156,24 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
   
   /**
    * 显示本周的进度
-   * @param positionOffset 为 0.0 -> 1.0 的值，最后为 1.0 时表示完全显示本周
+   * @param positionOffset 为 [0.0, 1.0) 的值
    */
   protected open fun showNowWeek(position: Int, positionOffset: Float) {
-    mTvNowWeek.alpha = positionOffset
-    mTvNowWeek.scaleX = positionOffset
-    mTvNowWeek.scaleY = positionOffset
-    mBtnBackNowWeek.alpha = (1 - positionOffset)
-    mBtnBackNowWeek.translationX = positionOffset * (mHeader.width - mBtnBackNowWeek.left)
-
+    val nowWeekPosition = getPositionByNowWeek()
+    if (position == nowWeekPosition || position == nowWeekPosition - 1) {
+      val offset = if (position == nowWeekPosition) 1 - positionOffset else positionOffset
+      mTvNowWeek.alpha = offset
+      mTvNowWeek.scaleX = offset
+      mTvNowWeek.scaleY = offset
+      mBtnBackNowWeek.alpha = 1 - offset
+      mBtnBackNowWeek.translationX = offset * (mHeader.width - mBtnBackNowWeek.left)
+    } else {
+      mTvNowWeek.alpha = 0F
+      mTvNowWeek.scaleX = 0F
+      mTvNowWeek.scaleY = 0F
+      mBtnBackNowWeek.alpha = 1F
+      mBtnBackNowWeek.translationX = 0F
+    }
     if (position == 0) {
       // 整学期界面不显示“本周”
       // 这里有些小问题，这里是父类，并不知道子类有没有整学期这个界面（目前是都有），先暂时这样吧
