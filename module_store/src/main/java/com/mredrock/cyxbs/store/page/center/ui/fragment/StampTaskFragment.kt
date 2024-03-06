@@ -141,13 +141,13 @@ class StampTaskFragment : BaseFragment() {
         IStoreService.TaskType.MORE.type -> moreList.add(task)
       }
     }
-    
-    titleMap[baseList.size] = "更多任务"
+    titleMap[0]="每日任务"
+    titleMap[baseList.size+1] = "更多任务"
     for (i in baseList.indices) {
-      taskMap[i] = baseList[i]
+      taskMap[i+1] = baseList[i]
     }
     for (i in moreList.indices) {
-      taskMap[baseList.size + 1 + i] = moreList[i]
+      taskMap[baseList.size + 2 + i] = moreList[i]
     }
   }
 }

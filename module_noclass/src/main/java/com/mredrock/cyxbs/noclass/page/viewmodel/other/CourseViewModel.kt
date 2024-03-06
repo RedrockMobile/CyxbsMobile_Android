@@ -3,7 +3,9 @@ package com.mredrock.cyxbs.noclass.page.viewmodel.other
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.api.course.ILessonService
+import com.mredrock.cyxbs.api.store.IStoreService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
@@ -46,6 +48,8 @@ class CourseViewModel : BaseViewModel(){
                             it.value.mIdToNameMap = mMap
                         }
                     })
+                    ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_NOCLASS,"")
+                    toast("今日已使用没课约一次，获得10邮票")
                 },
                 onError = {
                     it.printStackTrace()

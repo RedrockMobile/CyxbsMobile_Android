@@ -10,6 +10,7 @@ dependLibCourse()
 
 dependApiAccount()
 dependApiCourse()
+dependApiStore()
 dependApiAffair()
 
 dependNetwork()

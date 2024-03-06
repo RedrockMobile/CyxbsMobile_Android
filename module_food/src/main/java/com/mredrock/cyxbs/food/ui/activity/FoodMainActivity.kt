@@ -14,6 +14,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.mredrock.cyxbs.api.store.IStoreService
 import com.mredrock.cyxbs.config.route.FOOD_ENTRY
 import com.mredrock.cyxbs.food.R
 import com.mredrock.cyxbs.food.ui.adapters.FoodMainRvAdapter
@@ -138,6 +139,8 @@ class FoodMainActivity : BaseActivity() {
                 ).setPositiveClick {
                     this.dismiss()
                 }.show()
+                com.mredrock.cyxbs.lib.utils.service.ServiceManager(IStoreService::class)
+                    .postTask(IStoreService.Task.JOIN_FOOD,"")
             }
         }
         viewModel.foodRefreshBean.observe {

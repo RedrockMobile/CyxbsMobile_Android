@@ -44,8 +44,6 @@ class CreateViewModel : BaseViewModel() {
             .safeSubscribeBy {
                     _publishStatus.postValue(true)
             }
-
-
     }
 
     @SuppressLint("CheckResult")
