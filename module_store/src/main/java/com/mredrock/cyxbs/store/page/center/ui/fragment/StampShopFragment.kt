@@ -140,13 +140,12 @@ class StampShopFragment : BaseFragment() {
         StoreType.Product.GOODS -> goodsList.add(shop)
       }
     }
-    titleMap[0] = Pair("装扮", if (dressList.isEmpty()) "敬请期待" else "请在个人资料里查看")
-    titleMap[dressList.size + 1] = Pair("邮货", if (goodsList.isEmpty()) "敬请期待" else "需要到红岩网校领取哦")
+    titleMap[0] = Pair("邮货", if (goodsList.isEmpty()) "敬请期待" else "需要到红岩网校领取哦")
     for (i in dressList.indices) {
-      shopMap[i + 1] = dressList[i]
+      shopMap[i] = dressList[i]
     }
     for (i in goodsList.indices) {
-      shopMap[dressList.size + 2 + i] = goodsList[i]
+      shopMap[dressList.size+1+ i] = goodsList[i]
     }
   }
 }

@@ -1,7 +1,7 @@
 plugins {
     id("module-debug")
 }
-
+dependApiStore()
 dependNetwork()
 dependLibBase()
 dependLibUtils()

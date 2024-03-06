@@ -4,6 +4,8 @@ import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.IApi
+import com.mredrock.cyxbs.mine.Bean.PersonData
 import com.mredrock.cyxbs.mine.network.model.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -14,7 +16,7 @@ import retrofit2.http.*
 /**
  * Created by zia on 2018/8/15.
  */
-interface ApiService {
+interface ApiService:IApi {
 
     /**
      * 上传头像
@@ -25,6 +27,12 @@ interface ApiService {
         @Part("stunum") stunum: RequestBody,
         @Part fold: MultipartBody.Part
     ): Observable<RedrockApiWrapper<UploadImgResponse>>
+
+
+    @POST("magipoke/Person/Search")
+    fun getPersonData():Single<PersonData>
+
+
 
     /**
      * 上传用户信息

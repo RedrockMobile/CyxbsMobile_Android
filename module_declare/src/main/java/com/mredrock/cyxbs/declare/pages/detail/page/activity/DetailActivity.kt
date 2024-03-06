@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mredrock.cyxbs.api.store.IStoreService
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityDetailBinding
 import com.mredrock.cyxbs.declare.pages.detail.bean.VoteData
 import com.mredrock.cyxbs.declare.pages.detail.page.adapter.DetailRvAdapter
@@ -12,6 +13,7 @@ import com.mredrock.cyxbs.declare.pages.detail.page.viewmodel.DetailViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 
 class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
     companion object {
@@ -81,6 +83,7 @@ class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
                 votedList.add(VoteData(it.voted, data.choice, data.percent))
             }
             declareDetailRvAdapter.submitList(votedList)
+            ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_DECLARE,"","今日已完成表态一次，获得10邮票")
         }
 
         mViewModel.cancelLiveData.observe {

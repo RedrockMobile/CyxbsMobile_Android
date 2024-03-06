@@ -6,7 +6,7 @@ plugins {
 dependLibBase()
 dependLibConfig()
 dependLibUtils()
-
+dependApiStore()
 //使用ARouter
 useARouter()
 
