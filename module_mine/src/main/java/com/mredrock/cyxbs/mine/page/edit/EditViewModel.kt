@@ -42,17 +42,6 @@ class EditViewModel : com.mredrock.cyxbs.lib.base.ui.BaseViewModel() {
                 upLoadImageEvent.postValue(true)
                 apiService.updateUserImage(it.data.thumbnail_src, it.data.photosrc)
             }
-//        apiService.uploadSocialImg(requestBody, file)
-//                .mapOrThrowApiException()
-//                .flatMap {
-//                    apiService.updateUserImage(it.thumbnail_src, it.photosrc)
-//                }
-//                .normalStatus(this)
-//                .doOnError { upLoadImageEvent.postValue(false) }
-//                .unsafeSubscribeBy {
-//                    upLoadImageEvent.postValue(true)
-//                }
-//                .lifeCycle()
     }
 
     fun getUserData() {
