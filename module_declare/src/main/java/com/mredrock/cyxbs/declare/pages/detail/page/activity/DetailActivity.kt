@@ -83,8 +83,7 @@ class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
                 votedList.add(VoteData(it.voted, data.choice, data.percent))
             }
             declareDetailRvAdapter.submitList(votedList)
-            ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_DECLARE,"")
-            toast("今日已完成表态一次，获得10邮票")
+            ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_DECLARE,"","今日已完成表态一次，获得10邮票")
         }
 
         mViewModel.cancelLiveData.observe {

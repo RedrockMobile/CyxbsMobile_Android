@@ -140,7 +140,7 @@ class FoodMainActivity : BaseActivity() {
                     this.dismiss()
                 }.show()
                 com.mredrock.cyxbs.lib.utils.service.ServiceManager(IStoreService::class)
-                    .postTask(IStoreService.Task.JOIN_FOOD,"")
+                    .postTask(IStoreService.Task.JOIN_FOOD,"","今日已使用美食咨询处一次，获得10邮票")
             }
         }
         viewModel.foodRefreshBean.observe {

@@ -2,12 +2,14 @@ package com.mredrock.cyxbs.store.service
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.store.IStoreService
 import com.mredrock.cyxbs.api.store.STORE_SERVICE
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.IApi
@@ -21,6 +23,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 
 /**
  * ...
@@ -30,19 +33,23 @@ import java.util.*
  */
 @Route(path = STORE_SERVICE)
 class StoreServiceImpl : IStoreService {
-  
-  override fun postTask(task: IStoreService.Task, onlyTag: String?) {
+
+  override fun postTask(task: IStoreService.Task, onlyTag: String?,toast: String?) {
+
     when (task.type) {
-      IStoreService.TaskType.BASE -> postTask(baseSp, task.title)
-      IStoreService.TaskType.MORE -> postTask(moreSp, task.title)
+      IStoreService.TaskType.BASE -> postTask(baseSp, task.title,toast)
+      IStoreService.TaskType.MORE -> postTask(moreSp, task.title,toast)
     }
   }
-  
-  private fun postTask(sp: SharedPreferences, title: String) {
+
+  private fun postTask(sp: SharedPreferences, title: String, toast: String? =null) {
     // 先检查进度条是否已满
     val inEnd = sp.getBoolean(title, false)
     if (!inEnd) {
       if (checkOnlyTag(title)) {
+        if(!toast.isNullOrEmpty()){
+          toast(toast)
+        }
         postTask(
           title,
           onSlopOver = {
@@ -52,7 +59,7 @@ class StoreServiceImpl : IStoreService {
       }
     }
   }
-  
+
   private fun checkOnlyTag(title: String, onlyTag: String? = null): Boolean {
     if (onlyTag != null) {
       val set = onlyTagSp.getStringSet(title, null)?.toHashSet() ?: hashSetOf()
@@ -69,7 +76,7 @@ class StoreServiceImpl : IStoreService {
       return true
     }
   }
-  
+
   override fun init(context: Context) {
     // Base 任务是每天刷新的, 不相等时就先清空所有本地保存的 sharedPreferences
     val nowDate = SimpleDateFormat("yyyy.M.d", Locale.CHINA).format(Date())
@@ -78,7 +85,7 @@ class StoreServiceImpl : IStoreService {
       baseSp.edit { clear() }
     }
   }
-  
+
   // 上一次发送任务的时间, 用于清空每日任务
   private var lastSaveDate: String
     get() = dateSp.getString("last_save_date", null) ?: ""
@@ -89,7 +96,7 @@ class StoreServiceImpl : IStoreService {
   private val baseSp = appContext.getSp(this::class.java.simpleName + "_base")
   private val moreSp = appContext.getSp(this::class.java.simpleName + "_more")
   private val onlyTagSp = appContext.getSp(this::class.java.simpleName + "_onlyTag")
-  
+
   // 发送请求, 该网络请求私有
   private fun postTask(
     title: String,
@@ -115,7 +122,7 @@ class StoreServiceImpl : IStoreService {
         onSuccess?.invoke()
       }
   }
-  
+
   private interface ApiService : IApi {
     // 用于改变积分商城界面的任务
     @POST("/magipoke-intergral/Integral/progress")

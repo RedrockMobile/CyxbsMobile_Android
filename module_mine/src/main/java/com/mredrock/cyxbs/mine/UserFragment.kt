@@ -64,7 +64,6 @@ class UserFragment : BaseFragment() {
     private val mine_user_avatar by R.id.mine_user_avatar.view<CircleImageView>()
     private val mine_user_tv_unchecked_notification_count by R.id.mine_user_tv_unchecked_notification_count.view<TextView>()
     private val mine_user_username by R.id.mine_user_username.view<TextView>()
-    private val mine_user_introduce by R.id.mine_user_introduce.view<TextView>()
     private val mine_user_iv_center_activity by R.id.mine_user_iv_center_activity.view<ImageView>()
     private val mine_user_tv_center_notification_count by R.id.mine_user_tv_center_notification_count.view<TextView>()
     private val mine_user_iv_enter by R.id.mine_user_ib_arrow.view<ImageButton>()
@@ -324,17 +323,7 @@ class UserFragment : BaseFragment() {
     private fun refreshUserLayout() {
         val userService = ServiceManager(IAccountService::class).getUserService()
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_user_avatar)
-        mine_user_username.text =
-            if (userService.getNickname()
-                    .isBlank()
-            ) appContext.getString(R.string.mine_user_empty_username)
-            else userService.getNickname()
-        mine_user_introduce.text =
-            if (userService.getIntroduction()
-                    .isBlank()
-            ) appContext.getString(R.string.mine_user_empty_introduce)
-            else userService.getIntroduction()
-
+        mine_user_username.text = userService.getRealName()
         if (userService.getNickname().isNotBlank() &&
             userService.getIntroduction().isNotBlank() &&
             userService.getQQ().isNotBlank() &&

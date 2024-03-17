@@ -23,7 +23,8 @@ interface IStoreService : IProvider {
    */
   fun postTask(
     task: Task,
-    onlyTag: String?
+    onlyTag: String?,
+    toast: String?=null
   )
   
   enum class TaskType(val type: String) {

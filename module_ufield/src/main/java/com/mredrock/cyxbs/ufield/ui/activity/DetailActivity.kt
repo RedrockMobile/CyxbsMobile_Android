@@ -81,14 +81,13 @@ class DetailActivity : BaseActivity() {
         viewModel.wantToSee.observe(this) {
             if (it) {
                 //在将文本替换为“已想看”后，修改文本位置，使其位于中心
-                toast("已参加活动一次，获得50邮票")
                 tvSee.apply {
                     text = "已想看"
                     setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.uField_text_see))
                     tvSee.layoutParams = getConstrainLayoutParams()
                     ivAdd.gone()
                     //上传活动进度，获取邮票
-                    ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_UFIELD,"")
+                    ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_UFIELD,"","已参加活动一次，获得50邮票")
 
                 }
                 layout.apply {

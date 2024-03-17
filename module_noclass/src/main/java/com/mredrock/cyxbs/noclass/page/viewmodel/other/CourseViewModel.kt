@@ -48,8 +48,7 @@ class CourseViewModel : BaseViewModel(){
                             it.value.mIdToNameMap = mMap
                         }
                     })
-                    ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_NOCLASS,"")
-                    toast("今日已使用没课约一次，获得10邮票")
+                    ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_NOCLASS,"","今日已使用没课约一次，获得10邮票")
                 },
                 onError = {
                     it.printStackTrace()
