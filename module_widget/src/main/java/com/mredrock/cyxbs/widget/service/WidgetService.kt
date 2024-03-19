@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.api.course.utils.getStartRow
 import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.api.widget.WIDGET_SERVICE
 import com.mredrock.cyxbs.config.config.SchoolCalendar
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
@@ -23,6 +24,7 @@ import com.ndhzs.widget.data.IWidgetItem
 import com.ndhzs.widget.data.IWidgetRank
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
@@ -82,6 +84,8 @@ class WidgetService : IWidgetService {
         mContext = context
     }
 
+    private var refreshDispose: Disposable? = null
+
     /**
      * 那个最小且透明的小组件由 985892345 的 CQUPTCourseWidget 开源库提供
      * 
@@ -91,13 +95,26 @@ class WidgetService : IWidgetService {
     private fun refreshCourseSingleWidget(
         myLessons: List<ILessonService.Lesson>,
     ) {
-        CourseWidget.setData(
-            mContext,
-            SchoolCalendar.getWeekOfTerm()!!,
-            mapOf(
-                WidgetRankImpl(0) to myLessons.map { LessonWidgetItem(it) },
+        refreshDispose?.dispose()
+        refreshDispose = null
+        val weekOfTerm = SchoolCalendar.getWeekOfTerm()
+        if (weekOfTerm != null) {
+            CourseWidget.setData(
+                mContext,
+                weekOfTerm,
+                mapOf(
+                    WidgetRankImpl(0) to myLessons.map { LessonWidgetItem(it) },
+                )
             )
-        )
+        } else {
+            // 只有第一次使用掌邮才会出现 weekOfTerm 为 null
+            refreshDispose = SchoolCalendar.observeWeekOfTerm()
+                .firstElement()
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsafeSubscribeBy {
+                    refreshCourseSingleWidget(myLessons)
+                }
+        }
     }
 
     private class WidgetRankImpl(

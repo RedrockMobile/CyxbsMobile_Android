@@ -35,6 +35,10 @@ import kotlinx.coroutines.rx3.asObservable
  * ## 如何更新课表数据 ？
  * 如果你在其他模块添加了事务，然后你想更新课表，那么你应该去更新事务数据库，然后课表会自动收到更新的数据，显示对应的视图。
  *
+ * ## 如果后面课表不显示怎么排查 ？
+ * 课表数据由自己课程、关联人课程、自己事物三个数据流进行合并，
+ * 优先在 [initObserve] 中对每个数据流打上日志，先判断是哪个数据流的问题，再依次深入排查
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/27 17:12
@@ -98,7 +102,8 @@ class HomeCourseViewModel : BaseViewModel() {
    */
   private fun initObserve(isToast: Boolean): Disposable {
     // 自己课的观察流
-    val selfLessonObservable = StuLessonRepository.observeSelfLesson(isForce = true, isToast = isToast)
+    val selfLessonObservable = StuLessonRepository
+      .observeSelfLesson(isForce = true, isToast = isToast)
 
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
@@ -132,9 +137,13 @@ class HomeCourseViewModel : BaseViewModel() {
       linkLessonObservable,
       affairObservable
     ) { self, link, affair ->
-      // 刷新小组件
-      IWidgetService::class.impl
-        .notifyWidgetRefresh(self.toLesson(), link.toLesson(), affair)
+      try {
+        // 刷新小组件
+        IWidgetService::class.impl
+          .notifyWidgetRefresh(self.toLesson(), link.toLesson(), affair)
+      } catch (e: Exception) {
+        Log.d(TAG, "刷新小组件发生异常：\n${e.stackTraceToString()}")
+      }
       // 装换为 data 数据类
       HomePageResultImpl.flatMap(
         self.toStuLessonData(),

@@ -51,5 +51,8 @@ class ModuleDebugPlugin : BasePlugin() {
         dependencies {
             "implementation"(project(":lib_single"))
         }
+
+        // databind 需要启动模块开启后才能正常运行，所以这里单模块调试作为启动模块需要开启
+        useDataBinding()
     }
 }

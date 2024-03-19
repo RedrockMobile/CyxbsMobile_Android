@@ -5,6 +5,7 @@
 
 
 import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
+import org.gradle.api.Project
 import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.kotlin.dsl.*
 import task.CyxbsReleaseTask
@@ -111,37 +112,29 @@ class AppPlugin : BasePlugin() {
     }
 
     private fun dependAllProject() {
+        Companion.dependAllProject(project)
+    }
 
-        with(project) {
+    companion object {
+        fun dependAllProject(
+            project: Project,
+            vararg exclude: String,
+        ) {
             // 测试使用，设置 module_app 暂时不依赖的模块
             val excludeList = mutableListOf<String>(
-                "lib_single", // lib_single 只跟单模块调试有关
-            )
 
-            // 根 gradle 中包含的所有子模块
-            val includeProjects = rootProject.allprojects.map { it.name }
+            ) + exclude
 
-            dependencies {
-                //引入所有的module和lib模块
-                rootDir.listFiles()!!.filter {
-                    // 1.是文件夹
-                    // 2.不是module_app
-                    // 3.以lib_或者module_开头
-                    // 4.去掉暂时排除的模块
-                    // 5.根 gradle 导入了的模块
-                    it.isDirectory
-                            && it.name != "module_app"
-                            && "(lib_.+)|(module_.+)|(api_.+)".toRegex().matches(it.name)
-                            && !it.name.contains("lib_common") // 目前 app 模块已经去掉了对 common 模块的依赖
-                            && !it.name.contains("lib_debug") // 去除主动依赖 lib_debug 模块
-                            && it.name !in excludeList
-                            && includeProjects.contains(it.name)
+            project.dependencies {
+                // 根 gradle 中包含的所有子模块
+                project.rootProject.subprojects.filter {
+                    it.name !in excludeList
+                        && it != project
+                        && it.name != "lib_single" // lib_single 只跟单模块调试有关，单模块编译时单独依赖
                 }.forEach {
-                    "implementation"(project(":${it.name}"))
+                    "implementation"(it)
                 }
             }
-
-
         }
     }
 }

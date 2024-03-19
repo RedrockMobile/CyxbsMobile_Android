@@ -71,7 +71,8 @@ interface IApiStatus : Serializable {
   @Throws(ApiException::class)
   fun throwApiExceptionIfFail() {
     // 后端文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
-    if (status == 20003) {
+    // 后端后台密钥对7天一更新，此时使用token请求会报 20002 verify failed，按照token过期的逻辑处理，刷新token
+    if (status == 20002 || status == 20003) {
       // token 过期
       if (checkTokenExpired.compareAndSet(false, true)) {
         userTokenService.tokenExpired()

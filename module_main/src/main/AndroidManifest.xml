@@ -3,35 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application>
+        <activity android:name=".ui.defaultpage.DefaultPageActivity"/>
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="qa"
-                    android:scheme="cyxbsmobile" />
-
-                <!-- <a href="[scheme]://[host]/[path]?[query]">启动应用程序</a> -->
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/main_shortcut" />
-        </activity>
-        <activity android:name=".ui.defaultpage.DefaultPageActivity"/>
+            android:theme="@style/SplashTheme"/>
     </application>
 
 </manifest>
