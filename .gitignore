@@ -3,8 +3,10 @@
 /local.properties
 .DS_Store
 
-# 这个 build 会忽略掉所有 build 文件夹，所以请不要建 build 文件夹
+# 忽略 build，但不忽略 src 下的 build
 build
+!**/src/**/build
+
 /captures
 .externalNativeBuild
 key-cyxbs
@@ -16,3 +18,5 @@ secret.gradle
 **/lint-baseline.xml
 **/modules
 maven
+
+
