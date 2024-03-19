@@ -72,6 +72,39 @@
             tools:replace="android:exported" />
         <!--友盟 End-->
 
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="${amap_apikey}"/>
+
+        <activity
+            android:name=".main.ui.main.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="qa"
+                    android:scheme="cyxbsmobile" />
+
+                <!-- <a href="[scheme]://[host]/[path]?[query]">启动应用程序</a> -->
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/main_shortcut" />
+        </activity>
+
     </application>
 
 </manifest>

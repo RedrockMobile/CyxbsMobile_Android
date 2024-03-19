@@ -10,11 +10,12 @@
             android:launchMode="singleTop"/>
         <activity android:name="com.mredrock.cyxbs.schoolcar.SchoolDetailActivity"
             />
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="${amap_apikey}"/>
 
         <service android:name="com.amap.api.location.APSService" />
+
+        <!--⚠️注：校车需要 amap_apikey，目前是写在 module_app 的注册文件里，
+        单模块调试时不会加载，但不建议对校车进行单模块调试，防止密钥泄漏-->
+
     </application>
 
 </manifest>
