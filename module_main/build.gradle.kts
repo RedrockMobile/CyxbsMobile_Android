@@ -1,5 +1,5 @@
 plugins {
-    id("module-manager")
+    id("module-debug")
 }
 
 
@@ -21,3 +21,10 @@ dependNetwork()
 dependCoroutinesRx3()
 
 useARouter()
+
+
+
+if (project.plugins.hasPlugin("com.android.application")) {
+    // 如果 main 模块以单模块的形式编译，则对其他模块进行依赖
+    AppPlugin.dependAllProject(project, "module_app")
+}

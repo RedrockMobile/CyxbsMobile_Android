@@ -99,8 +99,6 @@ class HomeCourseViewModel : BaseViewModel() {
   
   /**
    * 注意：整个课表采用了观察者模式。数据库对应的数据改变，会自动修改视图内容
-   *
-   * 如果后面出现数据
    */
   private fun initObserve(isToast: Boolean): Disposable {
     // 自己课的观察流

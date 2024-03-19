@@ -8,6 +8,15 @@ import com.mredrock.cyxbs.single.ui.SingleModuleActivity
 /**
  * 负责单模块调试的入口界面启动
  *
+ * ```
+ * 使用方式：
+ * - 实现该接口
+ * - 添加 @Route 注解，path 请以 /single/模块名 命名
+ *
+ * @Route(path = "/single/xxx")
+ * class XXXSingleModuleEntry : ISingleModuleEntry
+ * ```
+ *
  * @author 985892345
  * @date 2023/9/7 00:08
  */
