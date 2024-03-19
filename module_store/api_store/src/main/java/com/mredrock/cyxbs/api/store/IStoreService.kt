@@ -47,7 +47,7 @@ interface IStoreService : IProvider {
     //以下是跳转到没课约
     JOIN_NOCLASS("使用一次没课约",TaskType.BASE),
     //以下跳转到表态
-    JOIN_DECLARE("发表一次动态",TaskType.BASE),
+    JOIN_DECLARE("发表一次表态",TaskType.BASE),
     //以下跳转到module_ufield
     JOIN_UFIELD("参加一次活动",TaskType.MORE),
     // 以下跳转到 module_mine 的 EditInfoActivity
