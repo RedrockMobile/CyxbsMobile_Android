@@ -84,6 +84,9 @@ import androidx.recyclerview.widget.RecyclerView.NO_ID
  * 时隔两年来看这个，感觉还是设计得多可以的，有时间再来优化下
  * - 2022/9/17 郭祥瑞
  *
+ * 再隔两年来看这个，感觉写得有点不行，建议学弟别用😂
+ * - 2024/3/19 郭祥瑞
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2021/5/31 (在开发邮票商城项目前在自己的项目中开发的, 后续进行了许多优化和修改)
