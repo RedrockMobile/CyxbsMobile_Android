@@ -83,11 +83,20 @@ class DetailActivity : BaseActivity() {
                 //在将文本替换为“已想看”后，修改文本位置，使其位于中心
                 tvSee.apply {
                     text = "已想看"
-                    setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.uField_text_see))
+                    setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailActivity,
+                            R.color.uField_text_see
+                        )
+                    )
                     tvSee.layoutParams = getConstrainLayoutParams()
                     ivAdd.gone()
                     //上传活动进度，获取邮票
-                    ServiceManager(IStoreService::class).postTask(IStoreService.Task.JOIN_UFIELD,"","已参加活动一次，获得50邮票")
+                    ServiceManager(IStoreService::class).postTask(
+                        IStoreService.Task.JOIN_UFIELD,
+                        "",
+                        "已参加活动一次，获得50邮票"
+                    )
 
                 }
                 layout.apply {
@@ -140,10 +149,10 @@ class DetailActivity : BaseActivity() {
             tvStart.text = trans(it.activityStartAt)
             tvEnd.text = trans(it.activityEndAt)
             if (it.activityState == "reviewing") {
-               setStatusText("活动未审核")
-            }else if(it.activityState=="rejected"){
-               setStatusText("活动未通过")
-            }else{
+                setStatusText("活动未审核")
+            } else if (it.activityState == "rejected") {
+                setStatusText("活动未通过")
+            } else {
                 if (it.ended) {
                     tvGoing.text = "已结束"
                     ivGoing.setImageResource(R.drawable.ufield_ic_finished)
@@ -232,7 +241,7 @@ class DetailActivity : BaseActivity() {
         }
     }
 
-    private fun setStatusText(text:String){
+    private fun setStatusText(text: String) {
         layout.gone()
         tvGoing.gone()
         ivGoing.gone()

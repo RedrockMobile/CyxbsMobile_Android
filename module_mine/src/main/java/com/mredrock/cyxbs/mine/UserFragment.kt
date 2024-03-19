@@ -22,7 +22,6 @@ import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.config.route.*
 import com.mredrock.cyxbs.lib.base.operations.doIfLogin
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -197,10 +196,12 @@ class UserFragment : BaseFragment() {
                             context,
                             EditInfoActivity::class.java
                         ),
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            context as Activity,
-                            Pair(mine_user_avatar, "avatar")
-                        ).toBundle()
+                        (context as? Activity)?.let { it1 ->
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                it1,
+                                Pair(mine_user_avatar, "avatar")
+                            ).toBundle()
+                        }
                     )
                 }
             }
@@ -212,7 +213,7 @@ class UserFragment : BaseFragment() {
                         context,
                         EditInfoActivity::class.java
                     ),
-                    (context as?Activity)?.let { it1 ->
+                    (context as? Activity)?.let { it1 ->
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
                             it1,
                             Pair(mine_user_avatar, "avatar")
