@@ -23,7 +23,8 @@ interface IStoreService : IProvider {
    */
   fun postTask(
     task: Task,
-    onlyTag: String?
+    onlyTag: String?,
+    toast: String?=null
   )
   
   enum class TaskType(val type: String) {
@@ -41,7 +42,14 @@ interface IStoreService : IProvider {
     SHARE_DYNAMIC("围观吃瓜", TaskType.BASE), // 分享动态
     POST_COMMENT("能说会道", TaskType.BASE), // 发布评论
     GIVE_A_LIKE("拍案叫绝", TaskType.BASE), // 点赞
-    
+    //以下跳转到美食板块
+    JOIN_FOOD("使用美食板块",TaskType.BASE),
+    //以下是跳转到没课约
+    JOIN_NOCLASS("使用一次没课约",TaskType.BASE),
+    //以下跳转到表态
+    JOIN_DECLARE("发表一次表态",TaskType.BASE),
+    //以下跳转到module_ufield
+    JOIN_UFIELD("参加一次活动",TaskType.MORE),
     // 以下跳转到 module_mine 的 EditInfoActivity
     EDIT_INFO("完善个人信息", TaskType.MORE),
     

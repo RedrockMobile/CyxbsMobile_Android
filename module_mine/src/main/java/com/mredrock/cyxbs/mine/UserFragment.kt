@@ -22,7 +22,6 @@ import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.config.route.*
 import com.mredrock.cyxbs.lib.base.operations.doIfLogin
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -52,13 +51,7 @@ class UserFragment : BaseFragment() {
 
     private val viewModel by viewModels<UserViewModel>()
 
-    private val mine_user_tv_dynamic_number by R.id.mine_user_tv_dynamic_number.view<TextView>()
-    private val mine_user_tv_dynamic by R.id.mine_user_tv_dynamic.view<TextView>()
     private val mine_user_ib_arrow by R.id.mine_user_ib_arrow.view<ImageButton>()
-    private val mine_user_tv_comment_number by R.id.mine_user_tv_comment_number.view<TextView>()
-    private val mine_user_tv_comment by R.id.mine_user_tv_comment.view<TextView>()
-    private val mine_user_tv_praise_number by R.id.mine_user_tv_praise_number.view<TextView>()
-    private val mine_user_tv_praise by R.id.mine_user_tv_praise.view<TextView>()
     private val mine_user_iv_center_stamp by R.id.mine_user_iv_center_stamp.view<ImageView>()
     private val mine_user_iv_center_feedback by R.id.mine_user_iv_center_feedback.view<ImageView>()
     private val mine_user_tv_sign by R.id.mine_user_tv_sign.view<TextView>()
@@ -69,13 +62,10 @@ class UserFragment : BaseFragment() {
     private val mine_user_iv_center_notification by R.id.mine_user_iv_center_notification.view<ImageView>()
     private val mine_user_avatar by R.id.mine_user_avatar.view<CircleImageView>()
     private val mine_user_tv_unchecked_notification_count by R.id.mine_user_tv_unchecked_notification_count.view<TextView>()
-    private val mine_user_tv_unchecked_praise by R.id.mine_user_tv_unchecked_praise.view<TextView>()
-    private val mine_user_tv_unchecked_comment by R.id.mine_user_tv_unchecked_comment.view<TextView>()
     private val mine_user_username by R.id.mine_user_username.view<TextView>()
-    private val mine_user_introduce by R.id.mine_user_introduce.view<TextView>()
     private val mine_user_iv_center_activity by R.id.mine_user_iv_center_activity.view<ImageView>()
     private val mine_user_tv_center_notification_count by R.id.mine_user_tv_center_notification_count.view<TextView>()
-
+    private val mine_user_iv_enter by R.id.mine_user_ib_arrow.view<ImageButton>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addObserver()
@@ -85,45 +75,13 @@ class UserFragment : BaseFragment() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
-            mine_user_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+
+
             mine_user_ib_arrow.setOnSingleClickListener {
                 doIfLogin {
                     HomepageActivity.startHomePageActivity(
                         null,
                         context as Activity
-                    )
-                }
-            }
-            mine_user_tv_comment_number.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_COMMENT,
-                        1
-                    )
-                }
-            }
-            mine_user_tv_comment.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_COMMENT,
-                        1
-                    )
-                }
-            }
-            mine_user_tv_praise_number.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_PRAISE,
-                        2
-                    )
-                }
-            }
-            mine_user_tv_praise.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_PRAISE,
-                        2
                     )
                 }
             }
@@ -196,9 +154,15 @@ class UserFragment : BaseFragment() {
             }
             mine_user_cl_info.setOnSingleClickListener {
                 doIfLogin {
-                    HomepageActivity.startHomePageActivity(
-                        null,
-                        context as Activity
+                    startActivity(
+                        Intent(
+                            context,
+                            EditInfoActivity::class.java
+                        ),
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            context as Activity,
+                            Pair(mine_user_avatar, "avatar")
+                        ).toBundle()
                     )
                 }
             }
@@ -232,12 +196,30 @@ class UserFragment : BaseFragment() {
                             context,
                             EditInfoActivity::class.java
                         ),
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            context as Activity,
-                            Pair(mine_user_avatar, "avatar")
-                        ).toBundle()
+                        (context as? Activity)?.let { it1 ->
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                it1,
+                                Pair(mine_user_avatar, "avatar")
+                            ).toBundle()
+                        }
                     )
                 }
+            }
+        }
+        mine_user_iv_enter.setOnSingleClickListener {
+            doIfLogin {
+                startActivity(
+                    Intent(
+                        context,
+                        EditInfoActivity::class.java
+                    ),
+                    (context as? Activity)?.let { it1 ->
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            it1,
+                            Pair(mine_user_avatar, "avatar")
+                        ).toBundle()
+                    }
+                )
             }
         }
     }
@@ -281,9 +263,6 @@ class UserFragment : BaseFragment() {
         viewModel.userCount.observe(viewLifecycleOwner) {
             it?.let {
                 //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
-                viewModel.judgeChangedAndSetText(mine_user_tv_dynamic_number, it.dynamicCount)
-                viewModel.judgeChangedAndSetText(mine_user_tv_comment_number, it.commentCount)
-                viewModel.judgeChangedAndSetText(mine_user_tv_praise_number, it.praiseCount)
 //                //由于视觉给的字体不是等宽的，其中数字"1"的宽度明显小于其他数字的宽度，要对此进行单独的处理
 //                //基本规则是：基础距离是17dp，非1字体+15dp，1则+12dp
 //                viewModel.setLeftMargin(mine_main_tv_uncheck_comment_count, it.commentCount)
@@ -302,16 +281,7 @@ class UserFragment : BaseFragment() {
                         99
                     )
 
-                    viewModel.setViewWidthAndText(
-                        mine_user_tv_unchecked_praise,
-                        uncheckPraise
-                    )
-                }
-                it.uncheckCommentCount?.let { uncheckComment ->
-                    viewModel.setViewWidthAndText(
-                        mine_user_tv_unchecked_comment,
-                        uncheckComment
-                    )
+
                 }
             }
         }
@@ -356,17 +326,7 @@ class UserFragment : BaseFragment() {
     private fun refreshUserLayout() {
         val userService = ServiceManager(IAccountService::class).getUserService()
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_user_avatar)
-        mine_user_username.text =
-            if (userService.getNickname()
-                    .isBlank()
-            ) appContext.getString(R.string.mine_user_empty_username)
-            else userService.getNickname()
-        mine_user_introduce.text =
-            if (userService.getIntroduction()
-                    .isBlank()
-            ) appContext.getString(R.string.mine_user_empty_introduce)
-            else userService.getIntroduction()
-
+        mine_user_username.text = userService.getRealName()
         if (userService.getNickname().isNotBlank() &&
             userService.getIntroduction().isNotBlank() &&
             userService.getQQ().isNotBlank() &&
@@ -389,8 +349,4 @@ class UserFragment : BaseFragment() {
         ARouter.getInstance().build(path).navigation()
     }
 
-    private fun jumpAndSaveTime(path: String, type: Int) {
-        viewModel.saveCheckTimeStamp(type)
-        jump(path)
-    }
 }

@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.api.store.IStoreService
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.config.route.UFIELD_DETAIL_ENTRY
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
@@ -80,23 +81,32 @@ class DetailActivity : BaseActivity() {
         viewModel.wantToSee.observe(this) {
             if (it) {
                 //在将文本替换为“已想看”后，修改文本位置，使其位于中心
-                toast("想看成功")
                 tvSee.apply {
                     text = "已想看"
-                    setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.uField_text_see))
+                    setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailActivity,
+                            R.color.uField_text_see
+                        )
+                    )
                     tvSee.layoutParams = getConstrainLayoutParams()
                     ivAdd.gone()
+                    //上传活动进度，获取邮票
+                    ServiceManager(IStoreService::class).postTask(
+                        IStoreService.Task.JOIN_UFIELD,
+                        "",
+                        "已参加活动一次，获得50邮票"
+                    )
+
                 }
                 layout.apply {
                     setBackgroundResource(R.drawable.ufield_shape_haveseen)
                     setOnClickListener(null)
                 }
-
             } else {
                 toast("想看失败")
             }
         }
-
     }
 
     private fun getConstrainLayoutParams(): ConstraintLayout.LayoutParams {
@@ -139,10 +149,10 @@ class DetailActivity : BaseActivity() {
             tvStart.text = trans(it.activityStartAt)
             tvEnd.text = trans(it.activityEndAt)
             if (it.activityState == "reviewing") {
-               setStatusText("活动未审核")
-            }else if(it.activityState=="rejected"){
-               setStatusText("活动未通过")
-            }else{
+                setStatusText("活动未审核")
+            } else if (it.activityState == "rejected") {
+                setStatusText("活动未通过")
+            } else {
                 if (it.ended) {
                     tvGoing.text = "已结束"
                     ivGoing.setImageResource(R.drawable.ufield_ic_finished)
@@ -231,7 +241,7 @@ class DetailActivity : BaseActivity() {
         }
     }
 
-    private fun setStatusText(text:String){
+    private fun setStatusText(text: String) {
         layout.gone()
         tvGoing.gone()
         ivGoing.gone()

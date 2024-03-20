@@ -3,9 +3,13 @@ package com.mredrock.cyxbs.store.utils
 import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.store.IStoreService.Task.*
+import com.mredrock.cyxbs.config.route.DECLARE_ENTRY
 import com.mredrock.cyxbs.config.route.DEFAULT_PAGE
+import com.mredrock.cyxbs.config.route.DISCOVER_NO_CLASS
+import com.mredrock.cyxbs.config.route.FOOD_ENTRY
 import com.mredrock.cyxbs.config.route.MINE_CHECK_IN
 import com.mredrock.cyxbs.config.route.MINE_EDIT_INFO
+import com.mredrock.cyxbs.config.route.UFIELD_MAIN_ENTRY
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.store.bean.StampCenter
 
@@ -39,9 +43,20 @@ class StoreType {
 //          val intent = Intent(context, QaActivity::class.java)
 //          context.startActivity(intent)
         }
+        JOIN_FOOD.title->{
+          ARouter.getInstance().build(FOOD_ENTRY).navigation()
+        }
+        JOIN_NOCLASS.title->{
+          ARouter.getInstance().build(DISCOVER_NO_CLASS).navigation()
+        }
+        JOIN_DECLARE.title->{
+          ARouter.getInstance().build(DECLARE_ENTRY).navigation()
+        }
+        JOIN_UFIELD.title->{
+          ARouter.getInstance().build(UFIELD_MAIN_ENTRY).navigation()
+        }
         EDIT_INFO.title -> {
           ARouter.getInstance().build(MINE_EDIT_INFO).navigation()
-          
         }
         LOGIN_VOLUNTEER.title -> {
           ARouter.getInstance().build(DEFAULT_PAGE).navigation()

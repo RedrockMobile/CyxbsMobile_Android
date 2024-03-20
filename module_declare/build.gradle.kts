@@ -6,6 +6,7 @@ plugins {
 dependLibBase()
 dependLibUtils()
 dependLibConfig()
+dependApiStore()
 
 dependRxjava()
 dependNetwork()
