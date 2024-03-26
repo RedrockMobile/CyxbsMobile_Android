@@ -110,7 +110,7 @@ class WidgetService : IWidgetService {
             // 只有第一次使用掌邮才会出现 weekOfTerm 为 null
             refreshDispose = SchoolCalendar.observeWeekOfTerm()
                 .firstElement()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .unsafeSubscribeBy {
                     refreshCourseSingleWidget(myLessons)
                 }

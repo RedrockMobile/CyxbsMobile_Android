@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit
 @Suppress("LiftReturnOrAssignment")
 object StuLessonRepository {
   
-  private val mStuDB by lazyUnlock { LessonDataBase.INSTANCE.getStuLessonDao() }
+  private val mStuDB = LessonDataBase.stuLessonDao
 
   // 上一次更新的天数差
   private var mLastUpdateDay: Int
@@ -58,11 +58,9 @@ object StuLessonRepository {
    * - 没有连接网络并且不允许使用本地缓存时会一直不发送数据给下游
    * - 不会抛出异常给下游
    *
-   * @param isForce 是否强制获取数据，如果不强制的话，将使用临时缓存
    * @param isToast 是否提示课表正在使用缓存数据
    */
   fun observeSelfLesson(
-    isForce: Boolean = false,
     isToast: Boolean = false,
   ): Observable<List<StuLessonEntity>> {
     return IAccountService::class.impl
@@ -72,12 +70,14 @@ object StuLessonRepository {
       .switchMap { value ->
         // 使用 switchMap 可以停止之前学号的订阅
         value.nullUnless(Observable.just(emptyList())) { stuNum ->
+          android.util.Log.d("ggg", "${Exception().stackTrace[0].run { "$fileName:$lineNumber" }} -> " +
+              "observeSelfLesson: stuNum = $stuNum")
           if (ILessonService.isUseLocalSaveLesson) {
-            LessonDataBase.INSTANCE.getStuLessonDao()
+            LessonDataBase.stuLessonDao
               .observeLesson(stuNum)
               .doOnSubscribe {
                 // 在开始订阅时异步请求一次云端数据，所以下游会先拿到本地数据库中的数据，如果远端数据更新了，整个流会再次通知
-                refreshLesson(stuNum, isForce).doOnError {
+                refreshLesson(stuNum).doOnError {
                   if (isToast) {
                     val lastUpdateDay = mLastUpdateDay
                     if (lastUpdateDay < 1) {
@@ -99,7 +99,7 @@ object StuLessonRepository {
               emit(Unit)
             }.asObservable()
               .switchMap {
-                refreshLesson(stuNum, isForce)
+                refreshLesson(stuNum)
                   .onErrorComplete() // 网络请求的异常全部吞掉
                   .toObservable()
               }
@@ -109,23 +109,10 @@ object StuLessonRepository {
   }
   
   /**
-   * 掌邮应用生命周期内的缓存
-   *
-   * 因为 jwzx 不允许我们本地保存课表数据，但关联人那里有显示和不显示的逻辑，会重复获取课表数据，
-   * 但存在用户打开网络后关闭网络的情况，所以需要单独做一层缓存
-   */
-  private val mCacheForProcessLifecycle = ArrayMap<String, List<StuLessonEntity>>()
-  
-  /**
    * 刷新某人的课，会抛出网络异常
-   * @param isForce 是否强制刷新，如果不采取强制刷新，则会优先从 [mCacheForProcessLifecycle] 查找数据
    */
-  fun refreshLesson(stuNum: String, isForce: Boolean = false): Single<List<StuLessonEntity>> {
+  fun refreshLesson(stuNum: String): Single<List<StuLessonEntity>> {
     if (stuNum.isBlank()) return Single.error(IllegalArgumentException("学号不能为空！"))
-    if (!isForce) {
-      val cache = mCacheForProcessLifecycle[stuNum]
-      if (cache != null) return Single.just(cache)
-    }
     return CourseApiServices::class.api
       .getStuLesson(stuNum)
       .map { bean ->
@@ -135,8 +122,6 @@ object StuLessonRepository {
         // 检查网络请求数据是否出错
         bean.throwApiExceptionIfFail()
         httpFromStuSuccess(bean)
-      }.doOnSuccess {
-        mCacheForProcessLifecycle[stuNum] = it
       }.subscribeOn(Schedulers.io())
   }
   

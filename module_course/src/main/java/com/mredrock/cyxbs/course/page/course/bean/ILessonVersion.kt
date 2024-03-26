@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.page.course.bean
 import androidx.annotation.WorkerThread
 import com.mredrock.cyxbs.course.BuildConfig
 import com.mredrock.cyxbs.course.page.course.room.LessonDataBase
-import com.mredrock.cyxbs.course.page.course.room.LessonVerEntity
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 /**
@@ -28,24 +27,26 @@ sealed interface ILessonVersion {
   @WorkerThread
   fun judgeVersion(defaultWhenSame: Boolean): Boolean {
     // 版本号保存于数据库中
-    val oldVersion = LessonDataBase.INSTANCE.getLessonVerDao()
-      .findVersion(num)?.version ?: "0.0.0"
+    val oldVersion = LessonDataBase.lessonVerDao
+      .findVersion(num) ?: "0.0.0"
     val newVersionList = version.split(".")
     val oldVersionList = oldVersion.split(".")
     if (newVersionList.size != oldVersionList.size) {
       // 不应该出现这种情况，因为版本号规定形式为：0.0.0
       // 如果出现，可以认为是远端出现问题，所以就不对本地数据进行更新
       if (BuildConfig.DEBUG) {
-        toast("课表接口 version 字段错误：$version")
+        toast("课表接口 version 字段错误：$version\n版本号规定形式为：0.0.0")
       }
       return false
     }
     for (i in oldVersionList.indices) {
-      if (newVersionList[i] > oldVersionList[i]) {
-        LessonDataBase.INSTANCE.getLessonVerDao()
-          .insertVersion(LessonVerEntity(num, version))
+      val new = newVersionList[i].toInt()
+      val old = oldVersionList[i].toInt()
+      if (new > old) {
+        LessonDataBase.lessonVerDao
+          .insertVersion(num, version)
         return true
-      } else if (newVersionList[i] < oldVersionList[i]) {
+      } else if (new < old) {
         return false
       }
     }

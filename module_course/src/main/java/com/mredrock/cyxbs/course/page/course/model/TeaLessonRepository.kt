@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 @Suppress("LiftReturnOrAssignment")
 object TeaLessonRepository {
   
-  private val mTeaDB by lazyUnlock { LessonDataBase.INSTANCE.getTeaLessonDao() }
+  private val mTeaDB = LessonDataBase.teaLessonDao
   
   fun getTeaLesson(teaNum: String): Single<List<TeaLessonEntity>> {
     return CourseApiServices::class.api
