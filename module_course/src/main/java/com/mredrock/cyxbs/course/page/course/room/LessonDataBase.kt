@@ -1,29 +1,37 @@
 package com.mredrock.cyxbs.course.page.course.room
 
-import androidx.room.*
+import android.content.Context
+import androidx.core.content.edit
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.util.concurrent.ConcurrentHashMap
 
 /**
- * ...
+ * # 更新日志
+ * 2024-3-26:
+ * 课程出现错乱，导出数据库后发现，Room 中数据源有问题，
+ * 但是导入有问题的数据库却又能正常更新，所以未排查到问题原因，
+ *
+ * 因为课程本来就是直接用后端的数据覆盖本地的，所以这里在保持接口不变的情况下改成了 sp
+ *
+ *
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/1 21:12
  */
-@Database(entities = [StuLessonEntity::class, TeaLessonEntity::class, LessonVerEntity::class], version = 1)
-abstract class LessonDataBase : RoomDatabase() {
-  abstract fun getStuLessonDao(): StuLessonDao
-  abstract fun getTeaLessonDao(): TeaLessonDao
-  abstract fun getLessonVerDao(): LessonVerDao
-  
-  companion object {
-    val INSTANCE by lazy {
-      Room.databaseBuilder(
-        appContext,
-        LessonDataBase::class.java,
-        "course_lesson_db"
-      ).fallbackToDestructiveMigration().build()
-    }
+object LessonDataBase {
+  val stuLessonDao: StuLessonDao by lazy {
+    StuLessonDao()
+  }
+  val teaLessonDao: TeaLessonDao by lazy {
+    TeaLessonDao()
+  }
+  val lessonVerDao: LessonVerDao by lazy {
+    LessonVerDao()
   }
 }
 
@@ -46,21 +54,8 @@ sealed interface ILessonEntity {
   val weekModel: String
   
   val num: String // 学号或者教师工号 (不建议将次设置为数据库字段)
-  
-  class WeekConverter {
-    @TypeConverter
-    fun listToString(list: List<Int>): String {
-      return list.joinToString("*&*")
-    }
-    @TypeConverter
-    fun stringToList(string: String): List<Int> {
-      return string.split("*&*").map { it.toInt() }
-    }
-  }
 }
 
-@Entity(tableName = "stu_lesson", indices = [Index("stuNum")])
-@TypeConverters(ILessonEntity.WeekConverter::class)
 data class StuLessonEntity(
   val stuNum: String,
   override val beginLesson: Int,
@@ -80,40 +75,39 @@ data class StuLessonEntity(
   override val weekEnd: Int,
   override val weekModel: String,
 ) : ILessonEntity {
-  
-  @PrimaryKey(autoGenerate = true)
-  var id: Int = 0
-  
   override val num: String
     get() = stuNum
 }
 
-@Dao
-abstract class StuLessonDao {
+private val Gson = Gson()
+
+class StuLessonDao {
+
+  private val stuLessonSp = appContext.getSharedPreferences("stu_lesson", Context.MODE_PRIVATE)
+
+  private val observerMap = ConcurrentHashMap<String, BehaviorSubject<List<StuLessonEntity>>>()
   
-  @Query("SELECT * FROM stu_lesson WHERE stuNum = :stuNum")
-  abstract fun observeLesson(stuNum: String): Observable<List<StuLessonEntity>>
+  fun observeLesson(stuNum: String): Observable<List<StuLessonEntity>> {
+    return observerMap.getOrPut(stuNum) {
+      val list = getLesson(stuNum)
+      BehaviorSubject.createDefault(list)
+    }
+  }
   
-  @Query("SELECT * FROM stu_lesson WHERE stuNum = :stuNum")
-  abstract fun getLesson(stuNum: String): List<StuLessonEntity>
+  fun getLesson(stuNum: String): List<StuLessonEntity> {
+    return stuLessonSp.getString(stuNum, null)?.let {
+      Gson.fromJson(it, object : TypeToken<List<StuLessonEntity>>() {}.type)
+    } ?: emptyList()
+  }
   
-  @Query("DELETE FROM stu_lesson WHERE stuNum = :stuNum")
-  protected abstract fun deleteLesson(stuNum: String)
-  
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  protected abstract fun insertLesson(lesson: List<StuLessonEntity>)
-  
-  @Transaction
-  open fun resetData(stuNum: String, lesson: List<StuLessonEntity>) {
-    deleteLesson(stuNum)
-    insertLesson(lesson)
+  fun resetData(stuNum: String, lesson: List<StuLessonEntity>) {
+    stuLessonSp.edit {
+      putString(stuNum, Gson.toJson(lesson))
+    }
+    observerMap[stuNum]?.onNext(lesson)
   }
 }
 
-
-
-@Entity(tableName = "tea_lesson", indices = [Index("teaNum")])
-@TypeConverters(TeaLessonEntity.ClassNumberConverter::class, ILessonEntity.WeekConverter::class)
 data class TeaLessonEntity(
   val teaNum: String,
   override val beginLesson: Int,
@@ -134,56 +128,43 @@ data class TeaLessonEntity(
   override val weekModel: String,
   val classNumber: List<String>,
 ) : ILessonEntity {
-  
-  @PrimaryKey(autoGenerate = true)
-  var id: Int = 0
-  
   override val num: String
     get() = teaNum
-  
-  class ClassNumberConverter {
-    @TypeConverter
-    fun listToString(list: List<String>): String {
-      return list.joinToString("*&*")
-    }
-    @TypeConverter
-    fun stringToList(string: String): List<String> {
-      return string.split("*&*")
+}
+
+class TeaLessonDao {
+
+  private val teaLessonSp = appContext.getSharedPreferences("tea_lesson", Context.MODE_PRIVATE)
+
+  fun getLesson(teaNum: String): List<TeaLessonEntity> {
+    return teaLessonSp.getString(teaNum, null)?.let {
+      Gson.fromJson(it, object : TypeToken<List<TeaLessonEntity>>() {}.type)
+    } ?: emptyList()
+  }
+
+
+  fun resetData(teaNum: String, lesson: List<TeaLessonEntity>) {
+    teaLessonSp.edit {
+      putString(teaNum, Gson.toJson(lesson))
     }
   }
 }
 
-@Dao
-abstract class TeaLessonDao {
-  @Query("SELECT * FROM tea_lesson WHERE teaNum = :teaNum")
-  abstract fun getLesson(teaNum: String): List<TeaLessonEntity>
-  
-  @Query("DELETE FROM tea_lesson WHERE teaNum = :teaNum")
-  protected abstract fun deleteLesson(teaNum: String)
-  
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  protected abstract fun insertLesson(lesson: List<TeaLessonEntity>)
-  
-  @Transaction
-  open fun resetData(teaNum: String, lesson: List<TeaLessonEntity>) {
-    deleteLesson(teaNum)
-    insertLesson(lesson)
+class LessonVerDao {
+
+  private val lessonVersionSp = appContext.getSharedPreferences("lesson_version", Context.MODE_PRIVATE)
+
+  fun findVersion(num: String): String? {
+    return lessonVersionSp.getString(num, null)
   }
-}
 
-@Entity(tableName = "lesson_version")
-data class LessonVerEntity(
-  @PrimaryKey
-  val num: String,
-  val version: String
-)
+  fun insertVersion(num: String, version: String) {
+    lessonVersionSp.edit {
+      putString(num, version)
+    }
+  }
 
-@Dao
-interface LessonVerDao {
-  
-  @Query("SELECT * FROM lesson_version WHERE num = :num")
-  fun findVersion(num: String): LessonVerEntity?
-  
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertVersion(lessonVer: LessonVerEntity)
+  fun clear() {
+    lessonVersionSp.edit { clear() }
+  }
 }

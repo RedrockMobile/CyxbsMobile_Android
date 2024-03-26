@@ -35,10 +35,8 @@ interface ILessonService : IProvider {
    * 刷新当前学号的课
    * - 上游已主动切换成 io 线程
    * - 在得不到这个人课表数据时会抛出异常，比如学号为空串时
-   *
-   * @param isForce 如果为 false，则将使用掌邮应用生命周期内的临时缓存，而不再去网络请求
    */
-  fun refreshLesson(stuNum: String, isForce: Boolean): Single<List<Lesson>>
+  fun refreshLesson(stuNum: String): Single<List<Lesson>>
   
   /**
    * 直接得到当前学号的课
@@ -77,10 +75,8 @@ interface ILessonService : IProvider {
    * - 没登录时发送 emptyList()
    * - 没有连接网络并且不允许使用本地缓存时会一直不发送数据给下游
    * - 不会抛出异常给下游
-   *
-   * @param isForce 是否强制刷新，默认不进行强制刷新，会使用应用生命周期的缓存
    */
-  fun observeSelfLesson(isForce: Boolean = false): Observable<List<Lesson>>
+  fun observeSelfLesson(): Observable<List<Lesson>>
   
   /**
    * 这里提供 Calendar 与 [hashDay] 互换代码

@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.data.toAffairData
 import com.mredrock.cyxbs.course.page.course.data.toStuLessonData
 import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
+import com.mredrock.cyxbs.course.page.course.room.LessonDataBase
 import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.service.CourseServiceImpl
@@ -94,6 +95,7 @@ class HomeCourseViewModel : BaseViewModel() {
    */
   fun refreshDataObserve() {
     cancelDataObserve()
+    LessonDataBase.lessonVerDao.clear() // 清空课程数据版本号，强制使用网络数据
     mDataObserveDisposable = initObserve(false)
   }
   
@@ -103,7 +105,10 @@ class HomeCourseViewModel : BaseViewModel() {
   private fun initObserve(isToast: Boolean): Disposable {
     // 自己课的观察流
     val selfLessonObservable = StuLessonRepository
-      .observeSelfLesson(isForce = true, isToast = isToast)
+      .observeSelfLesson(isToast = isToast)
+      .doOnNext {
+        Log.d(TAG, "selfLesson: $it")
+      }
 
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
@@ -124,12 +129,17 @@ class HomeCourseViewModel : BaseViewModel() {
             }.onErrorReturn {
               emptyList()
             }
+        }.doOnNext {
+          Log.d(TAG, "linkLesson: $it")
         }
       }
   
     // 事务的观察流
     val affairObservable = IAffairService::class.impl
       .observeSelfAffair()
+      .doOnNext {
+        Log.d(TAG, "affair: $it")
+      }
 
     // 合并观察流
     return Observable.combineLatest(

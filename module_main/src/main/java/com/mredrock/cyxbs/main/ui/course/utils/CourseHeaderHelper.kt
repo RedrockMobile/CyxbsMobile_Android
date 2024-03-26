@@ -70,7 +70,7 @@ object CourseHeaderHelper {
       .observeStuNumState()
       .switchMap { value ->
         value.nullUnless(Observable.empty()) {
-          lessonService.refreshLesson(it, true)
+          lessonService.refreshLesson(it)
             .toObservable()
             .flatMap { Observable.empty<Header>() }
             .doOnError {

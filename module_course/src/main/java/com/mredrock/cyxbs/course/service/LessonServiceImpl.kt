@@ -25,9 +25,8 @@ class LessonServiceImpl : ILessonService {
 
   override fun refreshLesson(
     stuNum: String,
-    isForce: Boolean
   ): Single<List<ILessonService.Lesson>> {
-    return StuLessonRepository.refreshLesson(stuNum, isForce)
+    return StuLessonRepository.refreshLesson(stuNum)
       .map { it.toLesson() }
   }
 
@@ -60,8 +59,8 @@ class LessonServiceImpl : ILessonService {
     }
   }
   
-  override fun observeSelfLesson(isForce: Boolean): Observable<List<ILessonService.Lesson>> {
-    return StuLessonRepository.observeSelfLesson(isForce)
+  override fun observeSelfLesson(): Observable<List<ILessonService.Lesson>> {
+    return StuLessonRepository.observeSelfLesson()
       .map { it.toLesson() }
   }
   
