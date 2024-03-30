@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.network.api
-import com.mredrock.cyxbs.mine.Bean.PersonData
+import com.mredrock.cyxbs.mine.bean.PersonData
 import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.widget.ExecuteOnceObserver
