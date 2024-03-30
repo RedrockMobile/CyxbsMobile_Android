@@ -63,7 +63,7 @@
         android:id="@+id/mine_about_press"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/mine_about_1"
         android:textColor="@color/common_about_colors_declared_below"
         android:textSize="11sp"
@@ -75,13 +75,25 @@
         android:id="@+id/mine_about_tv_copy_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/mine_about_copyright"
         android:textColor="@color/common_about_colors_declared_below"
         android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_about_iv"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_tv_icp_info"
         app:layout_constraintEnd_toEndOf="@+id/mine_about_press"
         app:layout_constraintStart_toStartOf="@+id/mine_about_press" />
+
+    <TextView
+        android:id="@+id/mine_about_tv_icp_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="@string/mine_about_icp_info"
+        android:textColor="@color/common_mine_about_text_color_blue"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_about_iv"
+        app:layout_constraintEnd_toEndOf="@id/mine_about_tv_copy_right"
+        app:layout_constraintStart_toStartOf="@id/mine_about_tv_copy_right" />
 
 
     <LinearLayout

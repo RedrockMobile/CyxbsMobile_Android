@@ -35,6 +35,9 @@ const val SP_SIGN_REMIND = "signRemind"
 
 const val APP_WEBSITE = "https://m.app.redrock.team"
 
+// 工信部网站
+const val ICP_WEBSITE = "https://beian.miit.gov.cn/"
+
 const val ABOUT_US_WEBSITE = "https://redrock.team"
 
 //小控件课表及事务

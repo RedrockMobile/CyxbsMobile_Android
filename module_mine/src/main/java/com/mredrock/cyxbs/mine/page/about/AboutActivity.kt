@@ -25,11 +25,13 @@ import com.mredrock.cyxbs.api.update.BuildConfig
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.config.DIR_LOG
+import com.mredrock.cyxbs.common.config.ICP_WEBSITE
 import com.mredrock.cyxbs.common.config.OKHTTP_LOCAL_LOG
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DebugUpdateDialog
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
@@ -45,6 +47,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
     private val mine_about_tv_copy_right by R.id.mine_about_tv_copy_right.view<TextView>()
     private val mine_about_version by R.id.mine_about_version.view<TextView>()
     private val mine_about_tv_already_up_to_date by R.id.mine_about_tv_already_up_to_date.view<TextView>()
+    private val icpInfoTv by R.id.mine_about_tv_icp_info.view<TextView>()
 
 
     private val mTvProtocol by R.id.mine_about_user_protocol.view<TextView>()
@@ -72,7 +75,8 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         setAppVersionName()
 
         bindUpdate()
-        mine_about_rl_website.setOnClickListener { clickWebsite() }
+        mine_about_rl_website.setOnClickListener { clickWebsite(APP_WEBSITE) }
+        icpInfoTv.setOnSingleClickListener { clickWebsite(ICP_WEBSITE) }
         mine_about_rl_share.setOnClickListener { onShareClick() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
@@ -169,8 +173,8 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         }
     }
 
-    private fun clickWebsite() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(APP_WEBSITE))
+    private fun clickWebsite(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(intent)
     }
 
