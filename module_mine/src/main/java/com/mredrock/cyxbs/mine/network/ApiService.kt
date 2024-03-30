@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.IApi
-import com.mredrock.cyxbs.mine.Bean.PersonData
+import com.mredrock.cyxbs.mine.bean.PersonData
 import com.mredrock.cyxbs.mine.network.model.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
