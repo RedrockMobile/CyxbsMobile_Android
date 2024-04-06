@@ -46,8 +46,10 @@ open class CyxbsReleaseTask : DefaultTask() {
                         .readText()
                 ).build()
         )
-    }.connectTimeout(10, TimeUnit.SECONDS)
-        .callTimeout(10, TimeUnit.SECONDS)
+    }.connectTimeout(60, TimeUnit.SECONDS)//运维cdn宽带受限上传apk较慢，设置timeout时间在60s
+        .callTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60,TimeUnit.SECONDS)
+        .readTimeout(60,TimeUnit.SECONDS)
         .build()
 
     private val retrofit = Retrofit.Builder()
