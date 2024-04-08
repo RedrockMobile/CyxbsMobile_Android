@@ -47,7 +47,7 @@
                     android:layout_marginStart="45dp"
                     android:layout_marginTop="30dp"
                     android:text="快来红岩网校和我一起玩吧~"
-                    android:textColor="#15315B"
+                    android:textColor="@color/mine_text_introduce"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mine_user_avatar" />

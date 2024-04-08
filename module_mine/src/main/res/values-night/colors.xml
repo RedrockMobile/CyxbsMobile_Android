@@ -14,6 +14,7 @@
     <color name="mine_text_count_bottom">#99FFFFFF</color>
     <color name="mine_bg_sign">#393B40</color>
     <color name="mine_text_sign">#FFFFFF</color>
+    <color name="mine_text_introduce">#FFFFFF</color>
     <color name="mine_text_setting">#F0F0F2</color>
     <color name="mine_text_fan_head">#DFDFE3</color>
     <color name="mine_bg_vp_fan">#1D1D1D</color>
