@@ -29,6 +29,9 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <!--  华为/oppo 折叠屏  -->
+        <meta-data android:name="EasyGoClient" android:value="true" />
+
         <!--友盟-->
         <!--移除友盟自带的关联启动-->
         <service
