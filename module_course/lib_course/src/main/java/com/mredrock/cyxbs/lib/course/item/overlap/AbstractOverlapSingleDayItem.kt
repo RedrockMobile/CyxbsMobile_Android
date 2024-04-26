@@ -325,6 +325,11 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
         if (sideType == SideType.ROW) {
           val lp = layoutParams as NetLayoutParams
           if (which in lp.startRow .. lp.endRow) {
+            if (lp.rowCount != netLayout.rowCount) {
+              // refreshOverlap() 方法中虽然会同步 lp 跟 netLayout，但有点靠后了
+              // 这里会因为不同步在设置比重时出现问题，所以这里先进行同步
+              netLayout.setRowColumnCount(lp.rowCount, lp.columnCount)
+            }
             netLayout.setRowShowWeight(which - lp.startRow, newWeight)
           }
         }
