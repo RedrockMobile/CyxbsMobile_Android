@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.model
 
 import androidx.annotation.WorkerThread
-import androidx.collection.ArrayMap
 import androidx.core.content.edit
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ILessonService
@@ -70,8 +69,6 @@ object StuLessonRepository {
       .switchMap { value ->
         // 使用 switchMap 可以停止之前学号的订阅
         value.nullUnless(Observable.just(emptyList())) { stuNum ->
-          android.util.Log.d("ggg", "${Exception().stackTrace[0].run { "$fileName:$lineNumber" }} -> " +
-              "observeSelfLesson: stuNum = $stuNum")
           if (ILessonService.isUseLocalSaveLesson) {
             LessonDataBase.stuLessonDao
               .observeLesson(stuNum)
