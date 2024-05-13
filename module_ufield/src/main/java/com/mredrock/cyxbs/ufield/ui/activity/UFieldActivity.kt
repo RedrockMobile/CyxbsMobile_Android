@@ -36,7 +36,6 @@ class UFieldActivity : BaseActivity() {
     private val mAdd: ImageView by R.id.uField_add.view()
     private val mAdmin: ImageView by R.id.uField_activity_isAdmin.view()
     private val mCup: ImageView by R.id.uField_cup.view()
-
     private val mTabLayout: TabLayout by R.id.uField_tabLayout.view()
     private val mVp: ViewPager2 by R.id.uField_viewpager2.view()
     private val mViewModel by viewModels<UFieldViewModel>()
@@ -56,8 +55,11 @@ class UFieldActivity : BaseActivity() {
      * 初始化tabLayout
      */
     private fun iniTab() {
-        mVp.adapter = FragmentVpAdapter(this).add { AllFragment() }.add { CultureFragment() }
-            .add { SportsFragment() }.add { EducationFragment() }
+        mVp.adapter = FragmentVpAdapter(this)
+            .add { AllFragment() }
+            .add { CultureFragment() }
+            .add { SportsFragment() }
+            .add { EducationFragment() }
         TabLayoutMediator(mTabLayout, mVp) { tab, position ->
             when (position) {
                 0 -> tab.text = "全部活动"

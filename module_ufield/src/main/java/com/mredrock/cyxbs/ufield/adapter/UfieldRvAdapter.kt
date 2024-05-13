@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.bean.ItemActivityBean
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import com.mredrock.cyxbs.ufield.helper.formatNumberToTime
 
 /**
  *  description :用于活动布告栏的Rv adapter
@@ -25,7 +23,11 @@ import java.time.format.DateTimeFormatter
  *  version ： 1.0
  */
 class UfieldRvAdapter :
-    ListAdapter<ItemActivityBean.ItemAll, UfieldRvAdapter.RvAllActViewHolder>((RvAllDiffCallback())) {
+    ListAdapter<ItemActivityBean.ItemAll, UfieldRvAdapter.RvAllActViewHolder>(object :
+        DiffUtil.ItemCallback<ItemActivityBean.ItemAll>() {
+        override fun areItemsTheSame(oldItem: ItemActivityBean.ItemAll, newItem: ItemActivityBean.ItemAll) = oldItem.activityId == newItem.activityId
+        override fun areContentsTheSame(oldItem: ItemActivityBean.ItemAll, newItem: ItemActivityBean.ItemAll) = oldItem == newItem
+    }) {
 
 
     /**
@@ -38,11 +40,7 @@ class UfieldRvAdapter :
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvAllActViewHolder {
-        return RvAllActViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.ufield_item_rv_all, parent, false)
-        )
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)=RvAllActViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.ufield_item_rv_all, parent, false))
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RvAllActViewHolder, position: Int) {
@@ -55,10 +53,7 @@ class UfieldRvAdapter :
     inner class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actPic: ImageView = itemView.findViewById(R.id.uField_activity_pic)
-        private val actName: TextView =
-            itemView.findViewById<TextView?>(R.id.uField_activity_name).apply {
-//            isSelected=true
-            }
+        private val actName: TextView = itemView.findViewById(R.id.uField_activity_name)
         private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_activity_isGoing)
         private val actType: TextView = itemView.findViewById(R.id.uField_activity_type)
         private val actTime: TextView = itemView.findViewById(R.id.uField_activity_time)
@@ -69,14 +64,11 @@ class UfieldRvAdapter :
             }
         }
 
-        /**
-         * 进行视图的绑定
-         */
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: ItemActivityBean.ItemAll) {
             actName.text = itemData.activityTitle
             actType.text = itemData.activityType
-            actTime.text = timeFormat(itemData.activityStartAt)
+            actTime.text = formatNumberToTime(itemData.activityStartAt)
             actPic.setImageFromUrl(itemData.activityCoverUrl)
 
             when (itemData.ended) {
@@ -84,43 +76,12 @@ class UfieldRvAdapter :
                 else -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_off)
             }
 
-
             when (itemData.activityType) {
                 "culture" -> actType.text = "文娱活动"
                 "sports" -> actType.text = "体育活动"
                 else -> actType.text = "教育活动"
             }
 
-        }
-
-
-        /**
-         * 加工时间戳,把时间戳转化为“年.月.日”格式
-         */
-        @RequiresApi(Build.VERSION_CODES.O)
-        fun timeFormat(time: Long): String {
-            return Instant
-                .ofEpochSecond(time)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"))
-        }
-    }
-
-    class RvAllDiffCallback : DiffUtil.ItemCallback<ItemActivityBean.ItemAll>() {
-        override fun areItemsTheSame(
-            oldItem: ItemActivityBean.ItemAll,
-            newItem: ItemActivityBean.ItemAll
-        ): Boolean {
-            return oldItem == newItem
-        }
-
-
-        override fun areContentsTheSame(
-            oldItem: ItemActivityBean.ItemAll,
-            newItem: ItemActivityBean.ItemAll
-        ): Boolean {
-            return oldItem.activityId == newItem.activityId && oldItem.activityCreator == newItem.activityCreator && oldItem.activityStartAt == newItem.activityStartAt
         }
 
     }

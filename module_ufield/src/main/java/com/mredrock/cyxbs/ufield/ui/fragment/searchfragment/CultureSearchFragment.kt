@@ -38,9 +38,8 @@ class CultureSearchFragment : BaseFragment() {
 
     private fun iniRv() {
         mViewModel.apply {
-            cultureSearchList.observe(requireActivity()) {
+            cultureSearchList.observe{
                 mDataList = it as MutableList<ItemActivityBean.ItemAll>
-
                 mAdapter.submitList(it)
             }
         }

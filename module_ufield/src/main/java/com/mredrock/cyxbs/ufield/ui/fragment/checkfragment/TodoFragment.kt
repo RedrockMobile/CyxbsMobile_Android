@@ -52,7 +52,6 @@ class TodoFragment : BaseFragment() {
         iniRv()
         iniRefresh()
 
-
     }
 
     /**
@@ -104,11 +103,10 @@ class TodoFragment : BaseFragment() {
                             )
                         ).setPositiveClick {
                             mViewModel.apply {
-                                if (!getInput().isEmpty()) {
+                                if (getInput().isNotEmpty()) {
                                     rejectActivity(mDataList[position].activityId, getInput())
                                     getTodoData()
                                     getTodoUpData(mDataList.lastOrNull()?.activityId!!)
-                                    notifyDataSetChanged()
                                     dismiss()
                                     toast("已经驳回")
                                 } else {
@@ -138,21 +136,15 @@ class TodoFragment : BaseFragment() {
      * 处理刷新和加载
      */
     private fun iniRefresh() {
-        /**
-         * 我最初的理解是 刷新和加载都一个效果，所以把头和尾的数据都刷新了，但是逻辑复杂 而且错误较为复杂（有异常情况）
-         * 现在统一一下，上拉加载只能在后面加数据 上拉刷新只加载表头数据
-         */
         mRefresh.apply {
             setRefreshHeader(ClassicsHeader(requireContext()))
             setRefreshFooter(ClassicsFooter(requireContext()))
-            //下拉刷新
             setOnRefreshListener {
                 mViewModel.apply {
                     getTodoData()
                 }
                 finishRefresh(600)
             }
-            //上拉加载
             setOnLoadMoreListener {
                 mViewModel.apply {
                     getTodoUpData(mDataList.lastOrNull()?.activityId ?: 1)

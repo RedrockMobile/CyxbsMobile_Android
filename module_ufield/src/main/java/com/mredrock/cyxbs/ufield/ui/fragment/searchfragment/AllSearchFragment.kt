@@ -39,7 +39,7 @@ class AllSearchFragment : BaseFragment() {
 
     private fun iniRv() {
         mViewModel.apply {
-            allSearchList.observe(requireActivity()) {
+            allSearchList.observe {
                 mDataList = it as MutableList<ItemActivityBean.ItemAll>
                 mAdapter.submitList(it)
             }

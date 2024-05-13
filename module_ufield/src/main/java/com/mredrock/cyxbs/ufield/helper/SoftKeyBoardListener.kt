@@ -26,7 +26,6 @@ import android.view.ViewTreeObserver
  */
 
 
-
 class SoftKeyBoardListener(activity: Activity) {
     private var rootView: View = activity.window.decorView
     private var rootViewVisibleHeight = 0

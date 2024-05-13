@@ -15,3 +15,12 @@ fun formatNumberToTime(number: Long): String {
         .toLocalDateTime()
         .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"))
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun timeFormat(time: Long): String {
+    return Instant
+        .ofEpochSecond(time)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+        .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+}

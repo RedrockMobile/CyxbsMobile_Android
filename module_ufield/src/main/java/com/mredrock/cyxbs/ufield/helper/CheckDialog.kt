@@ -68,7 +68,6 @@ open class CheckDialog protected constructor(
         return LinearLayout(parent.context).apply {
             orientation = LinearLayout.VERTICAL
             addView(
-                // 标题
                 TextView(parent.context).apply {
                     text = "驳回理由"
                     layoutParams = LinearLayout.LayoutParams(
@@ -89,7 +88,6 @@ open class CheckDialog protected constructor(
     }
 
     override fun initContentView(view: View) {
-      //  view as EditText
         editText.apply {
             hint = data.content
             textSize = data.contentSize
@@ -102,17 +100,12 @@ open class CheckDialog protected constructor(
 
     }
 
-    // 定义文本变化监听器
     private val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
         override fun afterTextChanged(s: Editable?) {
-            // 检查输入的文本长度
             val inputText = s.toString()
             if (inputText.length > 10) {
-                // 如果超过10个字，则截取前10个字
                 toast("已经超过十个字了哦")
                 val limitedText = inputText.substring(0, 10)
                 editText.setText(limitedText)
