@@ -13,14 +13,13 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.helper.SoftKeyBoardListener
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.AllSearchFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.CultureSearchFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.EducationSearchFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.SportsSearchFragment
-import com.mredrock.cyxbs.ufield.helper.SoftKeyBoardListener
 import com.mredrock.cyxbs.ufield.viewmodel.SearchViewModel
 
 
@@ -103,9 +102,7 @@ class SearchActivity : BaseActivity() {
         })
     }
 
-    /**
-     * 监听搜索框,初始化搜索框
-     */
+
     private fun iniSearch() {
 
         mSearch.apply {
@@ -125,7 +122,6 @@ class SearchActivity : BaseActivity() {
             setOnQueryTextListener(object :
                 androidx.appcompat.widget.SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    //这种判断有点多虑，因为现在的输入法一定非空，因为直接提交是esc，走不到这个方法里面
                     if (query.isNotEmpty()) {
                         mViewModel.iniSearchList(query)
                         mSearch.clearFocus()

@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.bean.DoneBean
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import com.mredrock.cyxbs.ufield.helper.timeFormat
 
 /**
  *  author : lytMoon
@@ -23,21 +21,20 @@ import java.time.format.DateTimeFormatter
  *  version ： 1.0
  */
 class DoneRvAdapter :
-    ListAdapter<DoneBean, DoneRvAdapter.RvDoneViewHolder>((RvDoneDiffCallback())) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvDoneViewHolder {
-        return RvDoneViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.ufield_item_rv_done, parent, false)
-        )
-    }
+    ListAdapter<DoneBean, DoneRvAdapter.RvDoneViewHolder>(object :
+        DiffUtil.ItemCallback<DoneBean>() {
+        override fun areItemsTheSame(oldItem: DoneBean, newItem: DoneBean) = oldItem.activityId == newItem.activityId
+        override fun areContentsTheSame(oldItem: DoneBean, newItem: DoneBean) = oldItem == newItem
+    }) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = RvDoneViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.ufield_item_rv_done, parent, false)
+    )
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RvDoneViewHolder, position: Int) {
         val itemData = getItem(position)
-
         holder.bind(itemData)
     }
-
 
 
     /**
@@ -45,12 +42,9 @@ class DoneRvAdapter :
      */
 
     private var mClick: ((Int) -> Unit)? = null
-
-
-    fun setOnItemClick(listener: (Int) -> Unit){
+    fun setOnItemClick(listener: (Int) -> Unit) {
         mClick = listener
     }
-
 
 
     inner class RvDoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -69,44 +63,16 @@ class DoneRvAdapter :
         }
 
 
-        /**
-         * 进行视图的绑定
-         */
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: DoneBean) {
             actName.text = itemData.activityTitle
             actTime.text = timeFormat(itemData.activityCreateTimestamp)
             actPhone.text = itemData.activityPhone
             actAuthor.text = itemData.activityCreator
-
             when (itemData.state) {
                 "rejected" -> actImage.setImageResource(R.drawable.ufield_ic_reject)
                 "published" -> actImage.setImageResource(R.drawable.ufield_ic_pass)
             }
-        }
-
-        /**
-         * 加工时间戳,把时间戳转化为“年.月.日”格式
-         */
-        @RequiresApi(Build.VERSION_CODES.O)
-        fun timeFormat(time: Long): String {
-            return Instant
-                .ofEpochSecond(time)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-        }
-    }
-
-    class RvDoneDiffCallback : DiffUtil.ItemCallback<DoneBean>() {
-
-        override fun areItemsTheSame(oldItem: DoneBean, newItem: DoneBean): Boolean {
-            return oldItem == newItem
-        }
-
-
-        override fun areContentsTheSame(oldItem: DoneBean, newItem: DoneBean): Boolean {
-            return oldItem.activityId == newItem.activityId && oldItem.activityCreator==newItem.activityCreator && oldItem.activityPhone==newItem.activityPhone
         }
 
     }

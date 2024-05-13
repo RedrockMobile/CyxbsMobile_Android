@@ -38,7 +38,7 @@ class SportsSearchFragment : BaseFragment() {
 
     private fun iniRv() {
         mViewModel.apply {
-            sportsSearchList.observe(requireActivity()) {
+            sportsSearchList.observe{
                 mDataList = it as MutableList<ItemActivityBean.ItemAll>
                 mAdapter.submitList(it)
             }

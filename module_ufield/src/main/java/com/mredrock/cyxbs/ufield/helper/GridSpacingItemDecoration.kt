@@ -22,8 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class GridSpacingItemDecoration(
     private val count: Int,
-) :
-    RecyclerView.ItemDecoration() {
+) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -36,17 +35,11 @@ class GridSpacingItemDecoration(
         val itemCount = parent.adapter?.itemCount ?: 0
 
         if (count == 2) {
-            val spanCount = 2  // 假设是两列的布局
-            //因为有奇数的可能，所以向上取整(行数)
+            val spanCount = 2
             val rowCount = kotlin.math.ceil(itemCount.toDouble() / spanCount).toInt()
-            // 计算当前item所在的行数和列数
             val row = position / spanCount
             val column = position % spanCount
-            /**
-             *
-             * 这里重点就是两边间距的比例，因为约束布局按照比例来的
-             */
-            // 根据列数设置相应的间距
+
             if (column == 0) {
                 // 第一列
                 outRect.left = 50

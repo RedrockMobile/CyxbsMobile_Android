@@ -24,14 +24,18 @@ class RoundedImageView(context: Context, attrs: AttributeSet) : AppCompatImageVi
     private val rect = RectF()
     private val cornerRadius = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
-        8f, // 这里修改度数
+        8f,
         context.resources.displayMetrics
     )
 
     override fun onDraw(canvas: Canvas) {
         rect.set(0f, 0f, width.toFloat(), height.toFloat())
         path.reset()
-        path.addRoundRect(rect, floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius, 0f, 0f, 0f, 0f), Path.Direction.CW)
+        path.addRoundRect(
+            rect,
+            floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius, 0f, 0f, 0f, 0f),
+            Path.Direction.CW
+        )
         canvas.clipPath(path)
         super.onDraw(canvas)
     }

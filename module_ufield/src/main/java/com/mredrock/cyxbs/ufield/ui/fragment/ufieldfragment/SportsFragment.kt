@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.ufield.bean.ItemActivityBean
 import com.mredrock.cyxbs.ufield.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.viewmodel.UFieldViewModel
-import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
@@ -49,7 +48,7 @@ class SportsFragment : BaseFragment() {
      */
     private fun iniRv() {
         mViewModel.apply {
-            sportsList.observe(requireActivity()) {
+            sportsList.observe {
                 mAdapter.submitList(it)
                 mDataList = it as MutableList<ItemActivityBean.ItemAll>
 
@@ -75,7 +74,6 @@ class SportsFragment : BaseFragment() {
         mRefresh.apply {
             setRefreshHeader(ClassicsHeader(requireContext()))
             setEnableLoadMore(false)
-            //下拉刷新
             setOnRefreshListener {
                 mViewModel.apply {
                     getSportsActivityList()

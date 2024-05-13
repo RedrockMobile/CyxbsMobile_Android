@@ -78,22 +78,15 @@ class DoneFragment : BaseFragment() {
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun iniRefresh() {
-        /**
-         * 我最初的理解是 刷新和加载都一个效果，所以把头和尾的数据都刷新了，但是逻辑复杂 而且错误较为复杂（有异常情况）
-         * 现在统一一下，上拉加载只能在后面加数据 上拉刷新只加载表头数据
-         */
         mRefresh.apply {
             setRefreshHeader(ClassicsHeader(requireContext()))
             setRefreshFooter(ClassicsFooter(requireContext()))
-            //下拉刷新
             setOnRefreshListener {
                 mViewModel.apply {
                     getViewedData()
-                    //    getViewedUpData(mDataList.lastOrNull()?.activity_id?:1)
                 }
                 finishRefresh(600)
             }
-            //上拉加载
             setOnLoadMoreListener {
                 mViewModel.apply {
                     getViewedUpData(mDataList.lastOrNull()?.activityId ?: 1)

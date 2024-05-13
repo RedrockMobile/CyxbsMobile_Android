@@ -1,10 +1,7 @@
 package com.mredrock.cyxbs.ufield.repository
 
-import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
-import com.mredrock.cyxbs.ufield.bean.ItemActivityBean
 import com.mredrock.cyxbs.ufield.network.SearchApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
@@ -15,7 +12,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  *  version ： 1.0
  */
 object SearchRepository {
-
 
     /**
      * 负责搜索界面
@@ -30,13 +26,10 @@ object SearchRepository {
         num: Int,
         orderBy: String,
         keyword: String
-    ):  Single<ApiWrapper<List<ItemActivityBean.ItemAll>>> {
-        return SearchApiService
-            .INSTANCE
-            .getSearchData(type, num, orderBy, keyword)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
+    ) = SearchApiService
+        .INSTANCE
+        .getSearchData(type, num, orderBy, keyword)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
 
 }

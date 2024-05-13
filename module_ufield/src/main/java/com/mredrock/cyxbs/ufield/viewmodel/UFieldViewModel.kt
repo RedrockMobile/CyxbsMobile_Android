@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.ufield.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -46,93 +45,48 @@ class UFieldViewModel : BaseViewModel() {
     val isAdmin: LiveData<List<IsAdminBean>>
         get() = _isAdmin
 
-    /**
-     * 得到所有的数据
-     */
-     fun getAllActivityList() {
 
+    fun getAllActivityList() {
         UFieldRepository
             .receiveAllData()
-            .mapOrInterceptException {
-                Log.d("getAllActivityList", "测试结果-->> ${it.message}")
-                toast("网络似乎有点问题~")
-            }
-            .doOnError { Log.d("getAllActivityList", "测试结果-->> ${it.message}"); }
-            .safeSubscribeBy {
-                _allList.value = it.ongoing + it.ended
-                Log.d("logTest", "测试结果-->> $it")
-            }
+            .mapOrInterceptException {}
+            .doOnError {}
+            .safeSubscribeBy { _allList.value = it.ongoing.plus(it.ended) }
     }
 
-    /**
-     * 得到文娱活动数据
-     */
-     fun getCultureActivityList() {
+
+    fun getCultureActivityList() {
         UFieldRepository
             .receiveCultureData()
-            .mapOrInterceptException {
-                Log.d(
-                    "getCultureActivityList",
-                    "测试结果-->> ${it.message}"
-                )
-            }
-            .doOnError { Log.d("getCultureActivityList", "测试结果-->> ${it.message}"); }
-            .safeSubscribeBy {
-                _cultureList.value = it.ongoing + it.ended
-                Log.d("8552", "测试结果-->> $it")
-            }
+            .mapOrInterceptException {}
+            .doOnError {}
+            .safeSubscribeBy { _cultureList.value = it.ongoing.plus(it.ended) }
     }
 
-
-    /**
-     * 得到体育活动数据
-     */
-     fun getSportsActivityList() {
+    fun getSportsActivityList() {
         UFieldRepository
             .receiveSportsData()
-            .mapOrInterceptException {
-                Log.d(
-                    "getSportsActivityList",
-                    "测试结果-->> ${it.message}"
-                )
-            }
-            .doOnError { Log.d("getSportsActivityList", "测试结果-->> ${it.message}"); }
-            .safeSubscribeBy {
-                _sportsList.value = it.ongoing + it.ended
-            }
+            .mapOrInterceptException {}
+            .doOnError {}
+            .safeSubscribeBy { _sportsList.value = it.ongoing.plus(it.ended) }
     }
 
 
-    /**
-     * 得到教育活动数据
-     */
-     fun getEducationActivityList() {
+    fun getEducationActivityList() {
         UFieldRepository
             .receiveEductionData()
-            .mapOrInterceptException {
-                Log.d(
-                    "getEducationActivityList",
-                    "测试结果-->> ${it.message}"
-                )
-            }
-            .doOnError { Log.d("getEducationActivityList", "测试结果-->> ${it.message}"); }
-            .safeSubscribeBy {
-                _educationList.value = it.ongoing + it.ended
-            }
+            .mapOrInterceptException {}
+            .doOnError {}
+            .safeSubscribeBy { _educationList.value = it.ongoing.plus(it.ended) }
     }
 
-    /**
-     * 查看是否是管理员
-     */
 
     fun getIsAdmin() {
         UFieldRepository
             .receiveIsAdmin()
-            .mapOrInterceptException { Log.d("getIsAdmin", "测试结果-->> ${it.message}"); }
-            .doOnError { Log.d("getIsAdmin", "测试结果-->> ${it.message}"); }
-            .safeSubscribeBy {
-                _isAdmin.postValue(listOf(it))
-            }
+            .mapOrInterceptException {}
+            .doOnError {}
+            .safeSubscribeBy { _isAdmin.postValue(listOf(it)) }
     }
 
 

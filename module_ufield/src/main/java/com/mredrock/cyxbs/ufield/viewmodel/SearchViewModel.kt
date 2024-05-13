@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.ufield.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -42,65 +41,45 @@ class SearchViewModel : BaseViewModel() {
         searchEducation(keyword)
     }
 
-    /**
-     * 搜索全部活动
-     */
+
     private fun searchAll(keyword: String) {
         SearchRepository
             .receiveSearchData("all", 50, "start_timestamp_but_ongoing_first", keyword)
-            .mapOrInterceptException {
-                Log.d("searchAll", "测试结果: $it")
-            }
-            .doOnError {
-                Log.d("searchAll", "测试结果: $it")
-            }
+            .mapOrInterceptException {}
+            .doOnError {}
             .safeSubscribeBy {
                 if (it.isEmpty()) {
                     toast("暂无更多内容~")
                 } else {
                     _allSearchList.postValue(it)
-
                 }
             }
     }
 
-    /**
-     * 搜索文娱活动
-     */
+
     private fun searchCulture(keyword: String) {
         SearchRepository
             .receiveSearchData("culture", 50, "start_timestamp_but_ongoing_first", keyword)
-            .mapOrInterceptException { Log.d("searchCulture", "测试结果-->>$it "); }
-            .doOnError { Log.d("searchCulture", "测试结果-->> $it"); }
-            .safeSubscribeBy {
-                _cultureSearchList.postValue(it)
-            }
+            .mapOrInterceptException { }
+            .doOnError { }
+            .safeSubscribeBy { _cultureSearchList.postValue(it) }
     }
 
-    /**
-     * 搜索体育活动
-     */
+
     private fun searchSports(keyword: String) {
         SearchRepository
             .receiveSearchData("sports", 50, "start_timestamp_but_ongoing_first", keyword)
-            .mapOrInterceptException { Log.d("searchSports", "测试结果-->>$it "); }
-            .doOnError { Log.d("searchSports", "测试结果-->> $it"); }
-            .safeSubscribeBy {
-                _sportsSearchList.postValue(it)
-            }
+            .mapOrInterceptException { }
+            .doOnError { }
+            .safeSubscribeBy { _sportsSearchList.postValue(it) }
     }
 
-    /**
-     * 搜索教育活动
-     */
     private fun searchEducation(keyword: String) {
         SearchRepository
             .receiveSearchData("education", 50, "start_timestamp_but_ongoing_first", keyword)
-            .mapOrInterceptException { Log.d("searchEducation", "测试结果-->>$it "); }
-            .doOnError { Log.d("searchEducation", "测试结果-->> $it"); }
-            .safeSubscribeBy {
-                _educationSearchList.postValue(it)
-            }
+            .mapOrInterceptException { }
+            .doOnError {}
+            .safeSubscribeBy { _educationSearchList.postValue(it) }
 
 
     }
