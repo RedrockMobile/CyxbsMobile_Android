@@ -1,71 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_white_background"
-    android:orientation="vertical">
+    android:background="@color/common_white_background">
 
-    <RelativeLayout
-        android:id="@+id/todo_inner_home_bar"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="45dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/todo_inner_home_bar_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/todo_ic_detail_back" />
-
-        <TextView
-            android:id="@+id/todo_inner_home_bar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="37dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="12dp"
-            android:layout_toEndOf="@+id/todo_inner_home_bar_back"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:text="邮子清单"
-            android:textColor="@color/todo_check_line_color"
-            android:textSize="21sp" />
-
-        <ImageView
-            android:id="@+id/todo_inner_home_bar_add"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/todo_ic_add_thin" />
-
-        <View
+        <RelativeLayout
+            android:id="@+id/todo_inner_home_bar"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignBottom="@+id/todo_inner_home_bar_title"
-            android:background="@color/todo_feed_divide_line_color" />
-    </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp">
 
-    <TextView
-        android:id="@+id/todo_inner_home_todo_title"
+            <ImageView
+                android:id="@+id/todo_inner_home_bar_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/todo_ic_detail_back" />
+
+            <TextView
+                android:id="@+id/todo_inner_home_bar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@+id/todo_inner_home_bar_back"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="邮子清单"
+                android:textColor="@color/todo_check_line_color"
+                android:textSize="21sp" />
+
+            <ImageView
+                android:id="@+id/todo_inner_home_bar_manage"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/todo_ic_management"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignBottom="@+id/todo_inner_home_bar_title"
+                android:background="@color/todo_feed_divide_line_color" />
+
+        </RelativeLayout>
+
+        <!-- TabLayout -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/CustomTabLayout"
+            app:tabIndicatorFullWidth="false"
+          />
+
+        <!-- ViewPager2 -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/todo_inner_home_bar_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
-        android:text="待办"
-        android:textColor="@color/todo_check_line_color"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/todo_ic_add_thin"
+        app:backgroundTint="@color/config_level_four_font_color"
+        app:fabSize="normal" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/todo_inner_home_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

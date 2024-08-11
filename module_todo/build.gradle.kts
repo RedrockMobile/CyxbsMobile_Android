@@ -13,3 +13,6 @@ dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base �
 dependLibUtils()
 
 useARouter()
+dependencies {
+    implementation(project(":lib_base"))
+}

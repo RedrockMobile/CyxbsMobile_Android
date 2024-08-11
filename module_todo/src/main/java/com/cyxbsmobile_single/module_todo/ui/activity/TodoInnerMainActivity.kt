@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
@@ -18,12 +19,19 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowTy
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
+import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
+import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
+import com.cyxbsmobile_single.module_todo.ui.fragment.TodoStudyFragment
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dip
+import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 
 
 @Route(path = DISCOVER_TODO_MAIN)
@@ -31,20 +39,38 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
     //在详情页面是否有做出修改的flag
     private var changedFlag = false
-
     private val todo_inner_home_bar_add by R.id.todo_inner_home_bar_add.view<ImageView>()
     private val todo_inner_home_bar_back by R.id.todo_inner_home_bar_back.view<ImageView>()
-    private val todo_inner_home_rv by R.id.todo_inner_home_rv.view<RecyclerView>()
-
+    private val mTabLayout: TabLayout by R.id.tab_layout.view()
+    private val mVp: ViewPager2 by R.id.view_pager .view()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
+        initTab()
         changedFlag = false
         viewModel.initDataList(
                 onLoadSuccess = {
                     onDateLoaded()
                 }
         )
+    }
+
+    private fun initTab() {
+     mVp.adapter=FragmentVpAdapter(this)
+         .add {TodoAllFragment()}
+         .add { TodoOtherFragement() }
+         .add { TodoLifeFragment() }
+         .add { TodoStudyFragment() }
+        TabLayoutMediator(mTabLayout,mVp){tab,position->
+            when(position){
+                0->tab.text="全部"
+                1->tab.text="学习"
+                2->tab.text="生活"
+                else->tab.text="其他"
+            }
+        }.attach()
+
+
     }
 
     override fun onResume() {
@@ -166,9 +192,6 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
             }
         }
 
-        val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(todo_inner_home_rv)
-        todo_inner_home_rv.adapter = adapter
-        todo_inner_home_rv.layoutManager = LinearLayoutManager(this)
+
     }
 }
