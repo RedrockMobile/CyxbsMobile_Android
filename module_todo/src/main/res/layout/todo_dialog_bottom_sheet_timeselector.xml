@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    android:background="@drawable/todo_layer_list_bottom_sheet_back">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="选择时间"
+        android:textSize="16sp"
+        android:textColor="@color/config_black_white"/>
+
+    <TextView
+        android:id="@+id/todo_tv_cancel_timeselector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消"
+        android:textSize="14sp"
+        android:textColor="@color/config_black_white"/>
+
+    <TextView
+        android:id="@+id/todo_tv_confirm_timeselector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="确定"
+        android:textColor="@color/todo_confirm_button_color"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"/>
+
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="210dp"
+        android:layout_below="@id/todo_tv_cancel_timeselector"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:id="@+id/todo_iv_timeselector"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/todo_ic_inner_add_thing_time_index" />
+
+        <com.aigestudio.wheelpicker.WheelPicker
+            android:id="@+id/todo_wheelpicker_hour_timeselector"
+            android:layout_width="50dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            app:wheel_item_text_color="@color/config_black_white"
+            app:wheel_item_text_size="20sp"
+            app:wheel_atmospheric="true"
+            app:wheel_cyclic="true"
+            app:wheel_visible_item_count="7"
+            android:layout_toRightOf="@id/todo_iv_timeselector" />
+
+        <com.aigestudio.wheelpicker.WheelPicker
+            android:id="@+id/todo_wheelpicker_minute_timeselector"
+            android:layout_width="50dp"
+            android:layout_height="150dp"
+            android:layout_toRightOf="@id/todo_wheelpicker_hour_timeselector"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="20dp"
+            app:wheel_item_text_size="20sp"
+            app:wheel_atmospheric="true"
+            app:wheel_cyclic="true"
+            app:wheel_visible_item_count="7"
+            app:wheel_item_text_color="@color/config_black_white"/>
+    </RelativeLayout>
+
+</RelativeLayout>

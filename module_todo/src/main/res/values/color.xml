@@ -47,4 +47,10 @@
 
     <!--    当todo本地和远程的仓库冲突时，提醒用的按钮的颜色-->
     <color name="todo_on_conflict_button_color">#2923D2</color>
+
+    <!--    选择时间时的取消按钮的颜色-->
+    <color name="todo_cancel_button_color">#BEBEBE</color>
+
+    <!--    选择时间时的确认按钮的颜色-->
+    <color name="todo_confirm_button_color">#2923D2</color>
 </resources>
