@@ -37,11 +37,12 @@
         android:layout_height="210dp"
         android:layout_below="@id/todo_tv_cancel_timeselector"
         android:layout_centerHorizontal="true">
+
         <ImageView
             android:id="@+id/todo_iv_timeselector"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginTop="50dp"
+            android:layout_centerVertical="true"
             android:src="@drawable/todo_ic_inner_add_thing_time_index" />
 
         <com.aigestudio.wheelpicker.WheelPicker
@@ -49,12 +50,13 @@
             android:layout_width="50dp"
             android:layout_height="150dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
+            android:layout_centerVertical="true"
             app:wheel_item_text_color="@color/config_black_white"
             app:wheel_item_text_size="20sp"
             app:wheel_atmospheric="true"
             app:wheel_cyclic="true"
-            app:wheel_visible_item_count="7"
+            app:wheel_item_align="center"
+            app:wheel_visible_item_count="4"
             android:layout_toRightOf="@id/todo_iv_timeselector" />
 
         <com.aigestudio.wheelpicker.WheelPicker
@@ -63,11 +65,11 @@
             android:layout_height="150dp"
             android:layout_toRightOf="@id/todo_wheelpicker_hour_timeselector"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_centerVertical="true"
             app:wheel_item_text_size="20sp"
             app:wheel_atmospheric="true"
             app:wheel_cyclic="true"
-            app:wheel_visible_item_count="7"
+            app:wheel_visible_item_count="5"
             app:wheel_item_text_color="@color/config_black_white"/>
     </RelativeLayout>
 

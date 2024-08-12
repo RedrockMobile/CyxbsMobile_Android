@@ -13,8 +13,13 @@ import java.util.Calendar
  * author: sanhuzhen
  * date: 2024/8/12 19:48
  */
-class TimeSelectDialog(context: Context, val onTimeSelected: (Int, Int) -> Unit) :
-    BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
+class TimeSelectDialog(
+    context: Context,
+    val selectedYear: Int,
+    val selectedMonth: Int,
+    val selectedDay: Int,
+    val onTimeSelected: (Int, Int) -> Unit
+): BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
 
 
     private val tvCancel by lazy { findViewById<TextView>(R.id.todo_tv_cancel_timeselector) }
@@ -29,36 +34,54 @@ class TimeSelectDialog(context: Context, val onTimeSelected: (Int, Int) -> Unit)
         setContentView(dialogView)
 
         dialogView?.apply {
-
-
             setupWheelPickers()
             initClick()
         }
     }
+
     private fun initClick() {
         tvCancel?.setOnClickListener {
             dismiss()
         }
 
         tvConfirm?.setOnClickListener {
-            val selectedHour = hourWheelPicker?.currentItemPosition ?: 0
-            val selectedMinute = minuteWheelPicker?.currentItemPosition ?: 0
+            val selectedHour = hourWheelPicker?.data?.get(hourWheelPicker?.currentItemPosition ?: 0) as Int
+            val selectedMinute = minuteWheelPicker?.data?.get(minuteWheelPicker?.currentItemPosition ?: 0) as Int
             onTimeSelected(selectedHour, selectedMinute)
             dismiss()
         }
     }
 
     private fun setupWheelPickers() {
-        // 设置小时选择器的值范围 0-23
-        hourWheelPicker?.data = (0..23).toList()
-
-        // 设置分钟选择器的值范围 0-59
-        minuteWheelPicker?.data = (0..59).toList()
-
-        // 设置默认值为当前时间
         val calendar = Calendar.getInstance()
-        hourWheelPicker?.setSelectedItemPosition(calendar.get(Calendar.HOUR_OF_DAY))
-        minuteWheelPicker?.setSelectedItemPosition(calendar.get(Calendar.MINUTE))
+        var startTimeHour = 0
+        var startTimeMinute = 0
+
+        if (isToday(selectedYear, selectedMonth, selectedDay)) {
+            startTimeHour = calendar.get(Calendar.HOUR_OF_DAY)
+            startTimeMinute = calendar.get(Calendar.MINUTE)
+        }
+
+        // 设置小时选择器的值范围
+        hourWheelPicker?.data = (startTimeHour..23).toList()
+        // 设置分钟选择器的值范围
+        minuteWheelPicker?.data = (startTimeMinute..59).toList()
+
+        // 如果时间选择的范围太小，取消滚动
+        hourWheelPicker?.isCyclic = hourWheelPicker?.data?.size ?: 0 > 5
+        minuteWheelPicker?.isCyclic = minuteWheelPicker?.data?.size ?: 0 > 5
+
+        // 设置默认值为当天时间或初始值
+        hourWheelPicker?.setSelectedItemPosition(0)
+        minuteWheelPicker?.setSelectedItemPosition(0)
+    }
+
+    // 判断是否是今天
+    private fun isToday(year: Int, month: Int, day: Int): Boolean {
+        val calendar = Calendar.getInstance()
+        return calendar.get(Calendar.YEAR) == year &&
+                calendar.get(Calendar.MONTH) == month &&
+                calendar.get(Calendar.DAY_OF_MONTH) == day
     }
 
 }

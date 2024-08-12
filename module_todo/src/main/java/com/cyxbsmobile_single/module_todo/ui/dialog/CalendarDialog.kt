@@ -67,7 +67,14 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
         }
 
         rlCalendar?.setOnClickListener {
-            TimeSelectDialog(context) { hour, minute ->
+
+            //传递选中的时间，判断是不是当前这一天
+            TimeSelectDialog(
+                context,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ) { hour, minute ->
                 tvSelectTime?.text = "${
                     String.format(
                         "%02d",
@@ -125,6 +132,8 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
 
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) //获取当前月份的天数
 
+        calendar.set(Calendar.DAY_OF_MONTH, currentDay)
+
         //填充之前的空白天数
         for (i in 1 until firstDayOfWeek) {
             val emptyView = TextView(context)
@@ -145,7 +154,10 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
                     calendar.set(Calendar.DAY_OF_MONTH, day)
                     selectedDayView?.background = null
                     dayView.background =
-                        ContextCompat.getDrawable(context, R.drawable.todo_shape_bg_day_select) //根据需要设置背景
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.todo_shape_bg_day_select
+                        ) //根据需要设置背景
                     selectedDayView = dayView
                 }
             }
