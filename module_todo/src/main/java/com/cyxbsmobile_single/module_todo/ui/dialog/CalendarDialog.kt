@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -172,45 +173,37 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
             text = day.toString()
             textSize = 16f
             gravity = Gravity.CENTER
-            setPadding(16, 16, 16, 16)
-            if (calendar.get(Calendar.YEAR) > currentYear) {
-                setTextColor(Color.BLACK)
-            } else if (calendar.get(Calendar.YEAR) == currentYear) {
-                if (calendar.get(Calendar.MONTH) < currentMonth) {
-                    setTextColor(Color.GRAY)
-                } else if (calendar.get(Calendar.MONTH) == currentMonth) {
-                    if (day == currentDay) {
-                        setTextColor(R.color.todo_inner_add_save_text_color)
-                        if (selectedDayView == null) {
-                            selectedDayView = this
-                            background =
-                                ContextCompat.getDrawable(
-                                    context,
-                                    R.drawable.todo_shape_bg_day_select
-                                ) //根据需要设置背景
-                        }
-                    } else if (day > currentDay) {
-                        setTextColor(Color.BLACK)
-                    } else {
-                        setTextColor(Color.GRAY)
+            setPadding(10, 10, 10, 10)
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val dayColor = when {
+                year > currentYear -> Color.BLACK
+                year < currentYear -> Color.GRAY
+                month < currentMonth -> Color.GRAY
+                month > currentMonth -> Color.BLACK
+                day > currentDay -> Color.BLACK
+                day < currentDay -> Color.GRAY
+                else -> {
+                    if (selectedDayView == null) {
+                        selectedDayView = this
+                        background = ContextCompat.getDrawable(context, R.drawable.todo_shape_bg_day_select)
                     }
-                } else {
-                    setTextColor(Color.BLACK)
+                    Color.BLUE
                 }
-            } else {
-                setTextColor(Color.GRAY)
             }
+
+            setTextColor(dayColor)
         }
     }
 
     //创建GridLayout的布局参数
     private fun createGridLayoutParam(): GridLayout.LayoutParams {
         return GridLayout.LayoutParams().apply {
-            width = 0
+            width = GridLayout.LayoutParams.WRAP_CONTENT
             height = GridLayout.LayoutParams.WRAP_CONTENT
             columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
             rowSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL)
-            setMargins(8, 8, 8, 8)
+            setMargins(25, 25, 25, 25)
         }
     }
 

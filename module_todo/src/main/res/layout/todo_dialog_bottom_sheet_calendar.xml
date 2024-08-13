@@ -62,6 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="时间"
+            android:layout_marginLeft="15dp"
             android:textColor="@color/config_black_white"
             android:textSize="16sp"/>
 
@@ -72,7 +73,7 @@
             android:src="@drawable/todo_ic_category_detail"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="20dp"/>
         <TextView
             android:id="@+id/todo_tv_time_calendar"
             android:layout_width="wrap_content"
