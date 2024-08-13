@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.cyxbsmobile_single.module_todo.R
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 
 /**
@@ -15,11 +16,11 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
  */
 class TodoLifeFragment : BaseFragment() {
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.todo_fragment_life, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

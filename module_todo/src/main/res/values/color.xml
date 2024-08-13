@@ -35,6 +35,7 @@
     <color name="todo_item_inner_nf_time_color">#7815315b</color>
     <color name="todo_inner_check_eclipse_color">#7515315B</color>
     <color name="todo_inner_checked_line_color">#8997ad</color>
+    <color name="todo_list">#112C54</color>
     <color name="todo_ic_back_color">#122D55</color>
     <!--    小组件背景的颜色-->
     <color name="todo_widget_back_color">#FFFFFF</color>

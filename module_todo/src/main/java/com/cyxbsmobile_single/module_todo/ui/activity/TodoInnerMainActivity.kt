@@ -1,9 +1,13 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
+import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -55,21 +59,41 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         )
     }
 
+    @SuppressLint("MissingInflatedId")
     private fun initTab() {
      mVp.adapter=FragmentVpAdapter(this)
          .add {TodoAllFragment()}
          .add { TodoOtherFragement() }
          .add { TodoLifeFragment() }
          .add { TodoStudyFragment() }
-        TabLayoutMediator(mTabLayout,mVp){tab,position->
-            when(position){
-                0->tab.text="全部"
-                1->tab.text="学习"
-                2->tab.text="生活"
-                else->tab.text="其他"
+        TabLayoutMediator(mTabLayout, mVp) { tab, position ->
+            val tabView = LayoutInflater.from(this).inflate(R.layout.todo_custom_tab, null)
+            val tabTextView = tabView.findViewById<TextView>(R.id.tabTextView)
+            when (position) {
+                0 -> tabTextView.text = "全部"
+                1 -> tabTextView.text = "学习"
+                2 -> tabTextView.text = "生活"
+                else -> tabTextView.text = "其他"
             }
+            tab.customView = tabView
         }.attach()
 
+   //选中字体加粗
+        mTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val tabTextView = tab.customView as TextView?
+                tabTextView?.setTypeface(null, Typeface.BOLD)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                val tabTextView = tab.customView as TextView?
+                tabTextView?.setTypeface(null, Typeface.NORMAL)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+
+            }
+        })
 
     }
 
@@ -107,7 +131,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                 adapter.addTodo(it)
             }.show()
         }
-
+//返回按钮点击事件
         todo_inner_home_bar_back.setOnClickListener {
             finish()
         }

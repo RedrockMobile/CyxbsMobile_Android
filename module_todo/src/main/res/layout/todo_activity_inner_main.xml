@@ -38,32 +38,55 @@
                 android:textStyle="bold"
                 android:text="邮子清单"
                 android:textColor="@color/todo_check_line_color"
-                android:textSize="21sp" />
+                android:textSize="22sp" />
 
-            <ImageView
-                android:id="@+id/todo_inner_home_bar_manage"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+
+            <FrameLayout
+                android:id="@+id/custom_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/todo_ic_rectangle"
+                android:padding="8dp"
+                android:layout_margin="16dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/todo_ic_management"/>
+               >
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignBottom="@+id/todo_inner_home_bar_title"
-                android:background="@color/todo_feed_divide_line_color" />
+                <!-- 矢量图标 -->
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:src="@drawable/todo_ic_manage" />
+
+                <!-- 文字 -->
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginStart="32dp"
+                    android:text="@string/todo_string_management"
+                    android:textColor="@color/todo_list"
+                    android:textSize="16sp" />
+            </FrameLayout>
+
+
 
         </RelativeLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/todo_inner_home_bar_title"
+            android:background="@color/todo_feed_divide_line_color" />
         <!-- TabLayout -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/CustomTabLayout"
+            app:tabTextAppearance="@style/todo_TabTextAppearance"
             app:tabIndicatorFullWidth="false"
           />
 
@@ -83,8 +106,8 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/todo_ic_add_thin"
-        app:backgroundTint="@color/config_level_four_font_color"
+        android:src="@drawable/todo_ic_floatbuttton"
+        app:backgroundTint="@color/config_todo_floatbutton"
         app:fabSize="normal" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
