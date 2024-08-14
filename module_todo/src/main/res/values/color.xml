@@ -24,6 +24,8 @@
     <color name="todo_item_del_red">#FF6262</color>
     <color name="todo_item_del_red_46_alpha">#75FF6262</color>
     <color name="todo_item_nf_time_color">#862A4E84</color>
+    <color name="todo_item_delete">#FF6262</color>
+    <color name="todo_item_to_top"> #5263FF</color>
     <!--    40-->
     <color name="todo_item_checked_color">#6615315B</color>
     <color name="todo_feed_divide_line_color">#142A4E84</color>
@@ -36,6 +38,7 @@
     <color name="todo_inner_check_eclipse_color">#7515315B</color>
     <color name="todo_inner_checked_line_color">#8997ad</color>
     <color name="todo_list">#112C54</color>
+    <color name="todo_title">#15315B</color>
     <color name="todo_ic_back_color">#122D55</color>
     <!--    小组件背景的颜色-->
     <color name="todo_widget_back_color">#FFFFFF</color>

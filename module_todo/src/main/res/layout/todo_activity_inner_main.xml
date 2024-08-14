@@ -59,7 +59,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="start|center_vertical"
-                    android:src="@drawable/todo_ic_manage" />
+                    android:src="@drawable/todo_ic_pic_manage" />
 
                 <!-- 文字 -->
                 <TextView
@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="36dp"
         android:src="@drawable/todo_ic_floatbuttton"
         app:backgroundTint="@color/config_todo_floatbutton"
         app:fabSize="normal" />
