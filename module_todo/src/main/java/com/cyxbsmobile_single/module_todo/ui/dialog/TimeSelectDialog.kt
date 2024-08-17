@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import com.aigestudio.wheelpicker.WheelPicker
 import com.cyxbsmobile_single.module_todo.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -19,11 +20,11 @@ class TimeSelectDialog(
     val selectedMonth: Int,
     val selectedDay: Int,
     val onTimeSelected: (Int, Int) -> Unit
-): BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
+): BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
 
-    private val tvCancel by lazy { findViewById<TextView>(R.id.todo_tv_cancel_timeselector) }
-    private val tvConfirm by lazy { findViewById<TextView>(R.id.todo_tv_confirm_timeselector) }
+    private val btCancel by lazy { findViewById<AppCompatButton>(R.id.todo_bt_cancel_timeselector) }
+    private val btConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_bt_confirm_timeselector) }
     private val hourWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_hour_timeselector) }
     private val minuteWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_minute_timeselector) }
 
@@ -40,11 +41,11 @@ class TimeSelectDialog(
     }
 
     private fun initClick() {
-        tvCancel?.setOnClickListener {
+        btCancel?.setOnClickListener {
             dismiss()
         }
 
-        tvConfirm?.setOnClickListener {
+        btConfirm?.setOnClickListener {
             val selectedHour = hourWheelPicker?.data?.get(hourWheelPicker?.currentItemPosition ?: 0) as Int
             val selectedMinute = minuteWheelPicker?.data?.get(minuteWheelPicker?.currentItemPosition ?: 0) as Int
             onTimeSelected(selectedHour, selectedMinute)
@@ -68,8 +69,8 @@ class TimeSelectDialog(
         minuteWheelPicker?.data = (startTimeMinute..59).toList()
 
         // 如果时间选择的范围太小，取消滚动
-        hourWheelPicker?.isCyclic = hourWheelPicker?.data?.size ?: 0 > 5
-        minuteWheelPicker?.isCyclic = minuteWheelPicker?.data?.size ?: 0 > 5
+        hourWheelPicker?.isCyclic = (hourWheelPicker?.data?.size ?: 0) > 7
+        minuteWheelPicker?.isCyclic = (minuteWheelPicker?.data?.size ?: 0) > 7
 
         // 设置默认值为当天时间或初始值
         hourWheelPicker?.setSelectedItemPosition(0)

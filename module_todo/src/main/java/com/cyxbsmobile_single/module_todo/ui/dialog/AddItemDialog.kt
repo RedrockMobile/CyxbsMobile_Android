@@ -38,7 +38,7 @@ import kotlin.collections.ArrayList
  * 增加todo用dialog
  */
 class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
-    BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
+    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
     private val dateBeenList: ArrayList<ArrayList<DateBeen>>
             by lazy { getYearDateSting() }
@@ -210,13 +210,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         //设置添加提醒日期的点击事件
         todo_tv_set_notify_time.setOnClickListener {
 //            whenStatusDifDoAndChangeStatus(NOTIFY) { showNotifyDatePicker() }
-            val calendarDialog = CalendarDialog(
-                context
-            ) { year, month, day ->
-                // 处理选中的日期
-                val selectedDate = "$year-$month-$day"
-            }
-            calendarDialog.show()
+
         }
 
         //设置重复时间的点击事件

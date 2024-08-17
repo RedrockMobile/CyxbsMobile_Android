@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -22,13 +21,16 @@ import java.util.Calendar
  * author: sanhuzhen
  * date: 2024/8/11 22:45
  */
-class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -> Unit) :
-    BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
+class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, Int, Int) -> Unit) :
+    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
 
     //设置一个选中状态的TextView，用于将背景销毁
     private var selectedDayView: TextView? = null
 
+    //选择的时间
+    private var selectHour = 24
+    private var selectMinute = 60
     private val calendar = Calendar.getInstance()
     private val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
     private val currentMonth = calendar.get(Calendar.MONTH)
@@ -46,9 +48,8 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
     private val tvSelectTime by lazy { findViewById<TextView>(R.id.todo_tv_time_calendar) }
 
     init {
-        val dialogView =
-            LayoutInflater.from(context)
-                .inflate(R.layout.todo_dialog_bottom_sheet_calendar, null, false)
+        val dialogView = LayoutInflater.from(context)
+            .inflate(R.layout.todo_dialog_bottom_sheet_calendar, null, false)
         setContentView(dialogView)
 
         dialogView?.apply {
@@ -76,15 +77,15 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             ) { hour, minute ->
+                selectHour = hour
+                selectMinute = minute
                 tvSelectTime?.text = "${
                     String.format(
-                        "%02d",
-                        hour
+                        "%02d", selectHour
                     )
                 }:${
                     String.format(
-                        "%02d",
-                        minute
+                        "%02d", selectMinute
                     )
                 }"
             }.show()
@@ -95,7 +96,9 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
             onCalendarSelected(
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.DAY_OF_MONTH),
+                selectHour,
+                selectMinute
             )
             dismiss()
         }
@@ -154,11 +157,9 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
                     //用户点击日期时触发
                     calendar.set(Calendar.DAY_OF_MONTH, day)
                     selectedDayView?.background = null
-                    dayView.background =
-                        ContextCompat.getDrawable(
-                            context,
-                            R.drawable.todo_shape_bg_day_select
-                        ) //根据需要设置背景
+                    dayView.background = ContextCompat.getDrawable(
+                        context, R.drawable.todo_shape_bg_day_select
+                    ) //根据需要设置背景
                     selectedDayView = dayView
                 }
             }
@@ -186,7 +187,8 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
                 else -> {
                     if (selectedDayView == null) {
                         selectedDayView = this
-                        background = ContextCompat.getDrawable(context, R.drawable.todo_shape_bg_day_select)
+                        background =
+                            ContextCompat.getDrawable(context, R.drawable.todo_shape_bg_day_select)
                     }
                     Color.BLUE
                 }
@@ -211,11 +213,7 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int) -
     private fun changeMonth(amount: Int) {
         calendar.add(Calendar.MONTH, amount)
         setDayOfCalendar() //刷新日历${calendar.get(Calendar.MONTH) + 1}月
-        tvCalendarHeader?.text = "${calendar.get(Calendar.YEAR)}/${
-            String.format(
-                "%02d",
-                calendar.get(Calendar.MONTH) + 1
-            )
-        }"
+        tvCalendarHeader?.text =
+            "${calendar.get(Calendar.YEAR)}年${calendar.get(Calendar.MONTH) + 1}月"
     }
 }
