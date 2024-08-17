@@ -7,7 +7,6 @@ import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListGetWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
-import com.cyxbsmobile_single.module_todo.model.bean.TodoTypeListWrapper
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
@@ -21,18 +20,14 @@ class TodoViewModel2: BaseViewModel() {
 
     private val _allTodo = MutableLiveData<TodoListSyncTimeWrapper>()
     private val _changedTodo = MutableLiveData<TodoListGetWrapper>()
-    private val _groupTodo = MutableLiveData<TodoTypeListWrapper>()
 
     val allTodo : LiveData<TodoListSyncTimeWrapper>
             get() = _allTodo
     val changedTodo : LiveData<TodoListGetWrapper>
             get() = _changedTodo
-    val groupTodo : LiveData<TodoTypeListWrapper>
-            get() = _groupTodo
 
     init {
         getAllTodo()
-        getGroupTodo()
     }
 
     /**
@@ -96,18 +91,6 @@ class TodoViewModel2: BaseViewModel() {
             .doOnError { }
             .safeSubscribeBy {
                 getAllTodo()
-            }
-    }
-    /**
-     * 获取分组内的ToDo
-     */
-    fun getGroupTodo() {
-        TodoRepository
-            .getGroupTodo()
-            .mapOrInterceptException { }
-            .doOnError { }
-            .safeSubscribeBy {
-                _groupTodo.postValue(it)
             }
     }
 

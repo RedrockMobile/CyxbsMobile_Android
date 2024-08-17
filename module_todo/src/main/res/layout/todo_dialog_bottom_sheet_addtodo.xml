@@ -240,6 +240,7 @@
                 android:layout_width="50dp"
                 android:layout_height="100dp"
                 app:wheel_atmospheric="true"
+                app:wheel_selected_item_position="1"
                 app:wheel_item_align="center"
                 app:wheel_item_text_color="@color/todo_calendar_header_color"
                 app:wheel_item_text_size="20sp"

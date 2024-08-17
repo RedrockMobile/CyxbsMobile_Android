@@ -45,10 +45,4 @@ object TodoRepository {
         .delTodo(delPushWrapper)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-
-    fun getGroupTodo() = TodoApiService
-        .INSTANCE
-        .getGroupTodo()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
 }

@@ -5,7 +5,6 @@ import com.cyxbsmobile_single.module_todo.model.bean.SyncTime
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListGetWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
-import com.cyxbsmobile_single.module_todo.model.bean.TodoTypeListWrapper
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import io.reactivex.rxjava3.core.Single
@@ -64,9 +63,4 @@ interface TodoApiService {
         @Body delPushWrapper: DelPushWrapper
     ): Single<ApiWrapper<SyncTime>>
 
-    /**
-     * 获取分组内的ToDo
-     */
-    @GET("/magipoke-todo/type-list")
-    fun getGroupTodo(): Single<ApiWrapper<TodoTypeListWrapper>>
 }

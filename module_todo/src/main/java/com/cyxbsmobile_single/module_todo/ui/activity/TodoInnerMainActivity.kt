@@ -48,6 +48,11 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
         initTab()
+        todo_inner_home_bar_add.setOnClickListener {
+            AddTodoDialog(this) {
+
+            }.show()
+        }
         changedFlag = false
         viewModel.initDataList(
                 onLoadSuccess = {
