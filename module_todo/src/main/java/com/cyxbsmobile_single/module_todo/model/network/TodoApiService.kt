@@ -5,6 +5,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.SyncTime
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListGetWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoTypeListWrapper
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import io.reactivex.rxjava3.core.Single
@@ -23,13 +24,12 @@ interface TodoApiService {
     companion object {
         val INSTANCE by lazy { ApiGenerator.getApiService(TodoApiService::class) }
     }
-
     /**
      * 从数据库获取全部todo
      */
     @GET("/magipoke-todo/list")
     fun queryAllTodo():
-            Single<ApiWrapper<List<TodoListSyncTimeWrapper>>>
+            Single<ApiWrapper<TodoListSyncTimeWrapper>>
 
     /**
      * 获取自上次同步到现在之间修改的所有todo
@@ -38,7 +38,7 @@ interface TodoApiService {
     fun queryChangedTodo(
         @Query("sync_time")
         syncTime: Long
-    ): Single<ApiWrapper<List<TodoListGetWrapper>>>
+    ): Single<ApiWrapper<TodoListGetWrapper>>
 
     /**
      * 上传todo到数据库
@@ -53,7 +53,7 @@ interface TodoApiService {
     @GET("/magipoke-todo/sync-time")
     fun getLastSyncTime(
         @Query("sync_time")
-        syncTime: Long
+        sync_time: Long
     ): Single<ApiWrapper<SyncTime>>
 
     /**
@@ -68,5 +68,5 @@ interface TodoApiService {
      * 获取分组内的ToDo
      */
     @GET("/magipoke-todo/type-list")
-    fun getGroupTodo(): Single<ApiWrapper<List<TodoListGetWrapper>>>
+    fun getGroupTodo(): Single<ApiWrapper<TodoTypeListWrapper>>
 }
