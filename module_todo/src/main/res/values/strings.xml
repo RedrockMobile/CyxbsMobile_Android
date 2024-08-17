@@ -12,6 +12,12 @@
     <string name="todo_string_local_file">本地存档</string>
     <string name="todo_string_cant_modify">掌友，无法对已完成事项进行修改哦！\nTip：点击待办勾选框即可改变状态嚎！</string>
     <string name="todo_string_management">批量管理</string>
+    <string name="todo_string_management_change">退出管理</string>
     <string name="todo_string_delete">删除</string>
     <string name="todo_string_totop">置顶</string>
+    <string name="todo_dialog_textone">确定是否删除</string>
+    <string name="todo_dialog_texttwo">删除后无法恢复</string>
+    <string name="todo_dialog_textthree">取消</string>
+    <string name="todo_dialog_textfore">确定</string>
+    <string name="todo_empty_view">还没有待做事项哦，快去添加吧！</string>
 </resources>

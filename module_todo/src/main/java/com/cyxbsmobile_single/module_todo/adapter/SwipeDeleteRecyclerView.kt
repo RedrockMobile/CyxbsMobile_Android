@@ -1,5 +1,7 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+
+import TodoAllAdapter
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
@@ -24,6 +26,7 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
     private val mTouchSlop: Int = ViewConfiguration.get(context).scaledTouchSlop
     private val mScroller: Scroller = Scroller(context)
     private var mLastX: Float = 0f
+    private var mLastY: Float = 0f
     private var mFirstX: Float = 0f
     private var mFirstY: Float = 0f
     private var mIsSlide: Boolean = false
@@ -43,29 +46,29 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
                 mFirstX = x.toFloat()
                 mLastX = x.toFloat()
                 mFirstY = y.toFloat()
+                mLastY = y.toFloat()
                 mPosition = pointToPosition(x, y)
                 if (mPosition != INVALID_POSITION) {
                     mFlingView = getChildAt(mPosition) as ViewGroup
-                    setupMenuWidth() // 更新菜单宽度
+                    setupMenuWidth(mPosition) // 传递当前项的position
                 }
                 return super.onInterceptTouchEvent(e)
             }
             MotionEvent.ACTION_MOVE -> {
-                val xVelocity = mVelocityTracker?.xVelocity ?: 0f
-                val yVelocity = mVelocityTracker?.yVelocity ?: 0f
                 val deltaX = x - mFirstX
                 val deltaY = y - mFirstY
-                val isHorizontalScroll = Math.abs(deltaX) > Math.abs(deltaY)
 
-                if (Math.abs(xVelocity) > SNAP_VELOCITY && isHorizontalScroll ||
-                    Math.abs(deltaX) >= mTouchSlop && isHorizontalScroll) {
+                if (Math.abs(deltaX) > mTouchSlop && Math.abs(deltaX) > Math.abs(deltaY)) {
                     mIsSlide = true
                     parent.requestDisallowInterceptTouchEvent(true)
                     return true
                 }
-                return false
+
+                if (Math.abs(deltaY) > mTouchSlop) {
+                    return false
+                }
             }
-            MotionEvent.ACTION_UP -> {
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 releaseVelocity()
                 parent.requestDisallowInterceptTouchEvent(false)
             }
@@ -82,34 +85,24 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
                     if (mMenuViewWidth != 0) {
                         val dx = mLastX - x
                         mFlingView?.let {
-                            // 计算新的滚动位置，并限制在菜单宽度范围内
                             val newScrollX = (it.scrollX + dx.toInt()).coerceIn(0, mMenuViewWidth)
                             it.scrollTo(newScrollX, 0)
                             mLastX = x
                         }
                     }
                 }
-                MotionEvent.ACTION_UP -> {
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     if (mMenuViewWidth != 0) {
                         val scrollX = mFlingView?.scrollX ?: 0
                         mVelocityTracker?.computeCurrentVelocity(1000)
                         val finalScrollX: Int
                         val velocityX = mVelocityTracker?.xVelocity ?: 0f
                         when {
-                            velocityX < -SNAP_VELOCITY -> {
-                                finalScrollX = 495 // 限制最终滑动距离为 495 像素
-                            }
-                            velocityX >= SNAP_VELOCITY -> {
-                                finalScrollX = 0
-                            }
-                            scrollX >= 495 / 2 -> {
-                                finalScrollX = 495
-                            }
-                            else -> {
-                                finalScrollX = 0
-                            }
+                            velocityX < -SNAP_VELOCITY -> finalScrollX = mMenuViewWidth
+                            velocityX >= SNAP_VELOCITY -> finalScrollX = 0
+                            scrollX >= mMenuViewWidth / 2 -> finalScrollX = mMenuViewWidth
+                            else -> finalScrollX = 0
                         }
-                        // 使用 Scroller 执行平滑滚动
                         mScroller.startScroll(scrollX, 0, finalScrollX - scrollX, 0, 400)
                         invalidate()
                     }
@@ -128,13 +121,29 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
         return super.onTouchEvent(e)
     }
 
-    private fun setupMenuWidth() {
+    // 更新 setupMenuWidth 方法
+    private fun setupMenuWidth(position: Int) {
+        val adapter = adapter as? TodoAllAdapter
+        val item = adapter?.getItem(position)
+
+
         mFlingView?.let { flingView ->
-            // 计算菜单的总宽度，包括所有子视图的宽度和边距
-            mMenuViewWidth = (0 until flingView.childCount).sumOf { index ->
-                val child = flingView.getChildAt(index)
-                val layoutParams = child.layoutParams as ViewGroup.MarginLayoutParams
-                child.width + layoutParams.leftMargin + layoutParams.rightMargin
+            val childCount = flingView.childCount
+            if (childCount > 0) {
+                val menuView = flingView.getChildAt(childCount - 1)
+                val layoutParams = menuView.layoutParams as ViewGroup.MarginLayoutParams
+                if (adapter?.isEnabled==true){
+                    mMenuViewWidth=0
+                    return
+                }
+                if (adapter?.pinnedItems?.contains(item) == true) {
+                    mMenuViewWidth = menuView.width + layoutParams.leftMargin + layoutParams.rightMargin
+                    return
+                }
+
+                mMenuViewWidth = menuView.width+menuView.width + layoutParams.leftMargin + layoutParams.rightMargin
+            } else {
+                mMenuViewWidth = 0
             }
         } ?: run {
             mMenuViewWidth = 0
@@ -184,4 +193,9 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
             }
         }
     }
+
+    fun isMenuOpen(): Boolean {
+        return mFlingView?.scrollX ?: 0 != 0
+    }
 }
+

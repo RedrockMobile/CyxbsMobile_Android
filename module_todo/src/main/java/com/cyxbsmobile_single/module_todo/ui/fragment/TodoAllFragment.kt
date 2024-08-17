@@ -1,26 +1,30 @@
 package com.cyxbsmobile_single.module_todo.ui.fragment
 
+import DragAndDropCallback
 import RemindMode
-import SwipeCallback
 import TodoAllAdapter
 import TodoDataDetails
 import TodoItem
-import android.icu.text.Transliterator.Position
+import TodoViewModel
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
-import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
  * description ：清单下面四个页面之一
@@ -32,12 +36,13 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
     private val mRecyclerView by R.id.todo_allrv.view<SwipeDeleteRecyclerView>()
+    private val emptyview by R.id.todo_empty.view<View>()
     private lateinit var todoDataDetails:TodoDataDetails
+    private val mViewModel: TodoViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.todo_fragment_all, container, false)
     }
 
@@ -48,14 +53,50 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     private fun initView() {
         initList()
+
         todoAllAdapter = TodoAllAdapter(this)
         mRecyclerView.adapter = todoAllAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(context)
         todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
-
-
-
+        val callback = DragAndDropCallback(mRecyclerView,todoAllAdapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(mRecyclerView)
+        checkIfEmpty()
+        ifClick()
     }
+
+    private fun ifClick() {
+        mViewModel.isEnabled.observe(viewLifecycleOwner) {
+            Log.d("TodoAllFragment", "isEnabled changed: $it")
+            if (it) {
+                showBatchManagementLayout()
+            } else {
+                hideBatchManagementLayout()
+            }
+
+        }
+    }
+
+    private fun hideBatchManagementLayout() {
+         todoAllAdapter.updateEnabled(false)
+    }
+
+    private fun showBatchManagementLayout() {
+        todoAllAdapter.updateEnabled(true)
+    }
+
+    private fun checkIfEmpty() {
+        Log.d("TodoAllFragment", "Checking if empty. Item count: ${todoAllAdapter.itemCount}")
+        if (todoAllAdapter.itemCount == 0) {
+            mRecyclerView.visibility = View.GONE
+            emptyview.vi = View.VISIBLE
+        } else {
+            mRecyclerView.visibility = View.VISIBLE
+            emptyview.visibility = View.GONE
+        }
+    }
+
+
     //测试用的数据类
     private fun initList() {
         val remindMode1 = RemindMode(
@@ -107,20 +148,39 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         Log.d("click","点击事件触发")
     }
 
-    override fun ondeleteButtonClick(item: TodoItem,position: Int) {
+    @SuppressLint("MissingInflatedId")
+    override fun ondeleteButtonClick(item: TodoItem, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
 
         // 检查索引是否在当前列表的有效范围内
         if (position >= 0 && position < currentList.size) {
-            // 移除指定位置的 item
-            currentList.removeAt(position)
+            val builder = AlertDialog.Builder(requireContext())
+            val inflater = layoutInflater
+            val dialogView = inflater.inflate(R.layout.todo_dialog_custom, null)
+            builder.setView(dialogView)
+            val closeButton = dialogView.findViewById<Button>(R.id.todo_dialog_positive_button)
+            val deleteButton = dialogView.findViewById<Button>(R.id.todo_dialog_negative_button)
+            // 创建并显示对话框
+            val dialog = builder.create()
+            closeButton.setOnClickListener {
+                dialog.dismiss()
+            }
+            deleteButton.setOnClickListener {
+                // 移除指定位置的 item
+                currentList.removeAt(position)
+                // 提交更新后的列表
+                todoAllAdapter.submitList(currentList){
+                    checkIfEmpty()
+                }
 
-            // 提交更新后的列表
-            todoAllAdapter.submitList(currentList)
+                dialog.dismiss()
+            }
+               dialog .show()
+
         } else {
             // 如果索引无效，记录错误日志
             Log.e("TodoAllFragment", "Invalid index: $position, Size: ${currentList.size}")
-            // 可选：你可以显示一个 Toast 或其他 UI 提示来通知用户
+
         }
     }
 

@@ -26,8 +26,13 @@
     <color name="todo_item_nf_time_color">#862A4E84</color>
     <color name="todo_item_delete">#FF6262</color>
     <color name="todo_item_to_top"> #5263FF</color>
+    <color name="todo_item_topitem"> #F6F7FF</color>
+    <color name="todo_dialog_background"> #FFFFFF</color>
+    <color name="todo_dialog_tetx_color"> #15315B</color>
     <!--    40-->
     <color name="todo_item_checked_color">#6615315B</color>
+    <color name="todo_list_change">#4A44E4</color>
+    <color name="todo_top_title">#4A44E4</color>
     <color name="todo_feed_divide_line_color">#142A4E84</color>
     <!--    54-->
     <color name="todo_feed_check_eclipse_color">#8A15315B</color>
@@ -72,6 +77,14 @@
     <color name="todo_addtodo_inner_text_color">#2A4E84</color>
     <!--    添加任务时的分组字体的颜色-->
     <color name="todo_addtodo_inner_category_text_color">#514DEB</color>
+    <!--    删除todo dialog按钮的颜色1-->
+    <color name="todo_cancel_button">#C3D4EE</color>
+    <!--    删除todo dialog按钮的颜色2-->
+    <color name="todo_delete_dialog_button">#4741E0</color>
+    <!--    空白页面提示词颜色-->
+    <color name="todo_empty_view">#112C54</color>
+    <!--    空白页面提示词颜色-->
+    <color name="todo_fragment_color">#FBFBFC</color>
 
     <color name="todo_addtodo_dividing_line_color">#EDF4FD</color>
     <color name="todo_transparent_background">#00000000</color>
