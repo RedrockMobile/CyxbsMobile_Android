@@ -23,10 +23,10 @@ class TimeSelectDialog(
 ): BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
 
-    private val btCancel by lazy { findViewById<AppCompatButton>(R.id.todo_bt_cancel_timeselector) }
-    private val btConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_bt_confirm_timeselector) }
-    private val hourWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_hour_timeselector) }
-    private val minuteWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_minute_timeselector) }
+    private val btCancel by lazy { findViewById<AppCompatButton>(R.id.todo_bt_cancel_timeselector)!! }
+    private val btConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_bt_confirm_timeselector)!! }
+    private val hourWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_hour_timeselector)!! }
+    private val minuteWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_minute_timeselector)!! }
 
     init {
         val dialogView =
@@ -41,13 +41,13 @@ class TimeSelectDialog(
     }
 
     private fun initClick() {
-        btCancel?.setOnClickListener {
+        btCancel.setOnClickListener {
             dismiss()
         }
 
-        btConfirm?.setOnClickListener {
-            val selectedHour = hourWheelPicker?.data?.get(hourWheelPicker?.currentItemPosition ?: 0) as Int
-            val selectedMinute = minuteWheelPicker?.data?.get(minuteWheelPicker?.currentItemPosition ?: 0) as Int
+        btConfirm.setOnClickListener {
+            val selectedHour = hourWheelPicker.data?.get(hourWheelPicker.currentItemPosition) as Int
+            val selectedMinute = minuteWheelPicker.data?.get(minuteWheelPicker.currentItemPosition) as Int
             onTimeSelected(selectedHour, selectedMinute)
             dismiss()
         }
@@ -64,17 +64,17 @@ class TimeSelectDialog(
         }
 
         // 设置小时选择器的值范围
-        hourWheelPicker?.data = (startTimeHour..23).toList()
+        hourWheelPicker.data = (startTimeHour..23).toList()
         // 设置分钟选择器的值范围
-        minuteWheelPicker?.data = (startTimeMinute..59).toList()
+        minuteWheelPicker.data = (startTimeMinute..59).toList()
 
         // 如果时间选择的范围太小，取消滚动
-        hourWheelPicker?.isCyclic = (hourWheelPicker?.data?.size ?: 0) > 7
-        minuteWheelPicker?.isCyclic = (minuteWheelPicker?.data?.size ?: 0) > 7
+        hourWheelPicker.isCyclic = (hourWheelPicker.data?.size ?: 0) > 7
+        minuteWheelPicker.isCyclic = (minuteWheelPicker.data?.size ?: 0) > 7
 
         // 设置默认值为当天时间或初始值
-        hourWheelPicker?.setSelectedItemPosition(0)
-        minuteWheelPicker?.setSelectedItemPosition(0)
+        hourWheelPicker.setSelectedItemPosition(0)
+        minuteWheelPicker.setSelectedItemPosition(0)
     }
 
     // 判断是否是今天

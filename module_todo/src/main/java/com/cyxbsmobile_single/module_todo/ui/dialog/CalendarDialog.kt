@@ -37,15 +37,15 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
     private val currentYear = calendar.get(Calendar.YEAR)
 
 
-    private val tvCalendarHeader by lazy { findViewById<TextView>(R.id.todo_tv_header_calendar) }
-    private val ivPreMonth by lazy { findViewById<ImageView>(R.id.todo_iv_pre_month) }
-    private val ivNextMonth by lazy { findViewById<ImageView>(R.id.todo_iv_next_month) }
-    private val glWeekCalendar by lazy { findViewById<GridLayout>(R.id.todo_gl_week) }
-    private val glCalendar by lazy { findViewById<GridLayout>(R.id.todo_gl_calendar) }
-    private val rlCalendar by lazy { findViewById<RelativeLayout>(R.id.todo_rl_calendar) }
-    private val btnConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_btn_confirm_calendar) }
-    private val btnCancel by lazy { findViewById<AppCompatButton>(R.id.todo_btn_cancel_calendar) }
-    private val tvSelectTime by lazy { findViewById<TextView>(R.id.todo_tv_time_calendar) }
+    private val tvCalendarHeader by lazy { findViewById<TextView>(R.id.todo_tv_header_calendar)!! }
+    private val ivPreMonth by lazy { findViewById<ImageView>(R.id.todo_iv_pre_month)!! }
+    private val ivNextMonth by lazy { findViewById<ImageView>(R.id.todo_iv_next_month)!! }
+    private val glWeekCalendar by lazy { findViewById<GridLayout>(R.id.todo_gl_week)!! }
+    private val glCalendar by lazy { findViewById<GridLayout>(R.id.todo_gl_calendar)!! }
+    private val rlCalendar by lazy { findViewById<RelativeLayout>(R.id.todo_rl_calendar)!! }
+    private val btnConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_btn_confirm_calendar)!! }
+    private val btnCancel by lazy { findViewById<AppCompatButton>(R.id.todo_btn_cancel_calendar)!! }
+    private val tvSelectTime by lazy { findViewById<TextView>(R.id.todo_tv_time_calendar)!! }
 
     init {
         val dialogView = LayoutInflater.from(context)
@@ -61,14 +61,14 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
 
     @SuppressLint("SetTextI18n", "DefaultLocale")
     private fun initClick() {
-        ivPreMonth?.setOnClickListener {
+        ivPreMonth.setOnClickListener {
             changeMonth(-1)
         }
-        ivNextMonth?.setOnClickListener {
+        ivNextMonth.setOnClickListener {
             changeMonth(1)
         }
 
-        rlCalendar?.setOnClickListener {
+        rlCalendar.setOnClickListener {
 
             //传递选中的时间，判断是不是当前这一天
             TimeSelectDialog(
@@ -79,7 +79,7 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
             ) { hour, minute ->
                 selectHour = hour
                 selectMinute = minute
-                tvSelectTime?.text = "${
+                tvSelectTime.text = "${
                     String.format(
                         "%02d", selectHour
                     )
@@ -91,7 +91,7 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
             }.show()
         }
 
-        btnConfirm?.setOnClickListener {
+        btnConfirm.setOnClickListener {
             //回传选择的日期
             onCalendarSelected(
                 calendar.get(Calendar.YEAR),
@@ -102,7 +102,7 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
             )
             dismiss()
         }
-        btnCancel?.setOnClickListener {
+        btnCancel.setOnClickListener {
             dismiss()
         }
     }
@@ -124,12 +124,13 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
                 setTextColor(Color.GRAY)
                 text = weekStringList[i]
             }
-            glWeekCalendar?.addView(weekView, createGridLayoutParam())
+            glWeekCalendar.addView(weekView, createGridLayoutParam())
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun setDayOfCalendar() {
-        glCalendar?.removeAllViews()
+        glCalendar.removeAllViews()
 
         calendar.set(Calendar.DAY_OF_MONTH, 1)
         val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 //获取当前月份第一天是星期几
@@ -141,7 +142,7 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
         //填充之前的空白天数
         for (i in 1 until firstDayOfWeek) {
             val emptyView = TextView(context)
-            glCalendar?.addView(emptyView, createGridLayoutParam())
+            glCalendar.addView(emptyView, createGridLayoutParam())
         }
 
         //填充当前月份的天数
@@ -157,13 +158,15 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
                     //用户点击日期时触发
                     calendar.set(Calendar.DAY_OF_MONTH, day)
                     selectedDayView?.background = null
+                    selectedDayView?.setTextColor(R.color.todo_calendar_header_color)
                     dayView.background = ContextCompat.getDrawable(
                         context, R.drawable.todo_shape_bg_day_select
                     ) //根据需要设置背景
+                    dayView.setTextColor(Color.WHITE)
                     selectedDayView = dayView
                 }
             }
-            glCalendar?.addView(dayView, createGridLayoutParam())
+            glCalendar.addView(dayView, createGridLayoutParam())
         }
     }
 
@@ -181,8 +184,8 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
                 year > currentYear -> Color.BLACK
                 year < currentYear -> Color.GRAY
                 month < currentMonth -> Color.GRAY
-                month > currentMonth -> Color.BLACK
-                day > currentDay -> Color.BLACK
+                month > currentMonth -> R.color.todo_calendar_header_color
+                day > currentDay -> R.color.todo_calendar_header_color
                 day < currentDay -> Color.GRAY
                 else -> {
                     if (selectedDayView == null) {
@@ -213,7 +216,7 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
     private fun changeMonth(amount: Int) {
         calendar.add(Calendar.MONTH, amount)
         setDayOfCalendar() //刷新日历${calendar.get(Calendar.MONTH) + 1}月
-        tvCalendarHeader?.text =
+        tvCalendarHeader.text =
             "${calendar.get(Calendar.YEAR)}年${calendar.get(Calendar.MONTH) + 1}月"
     }
 }
