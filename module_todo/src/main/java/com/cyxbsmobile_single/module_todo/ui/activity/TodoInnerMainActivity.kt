@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
@@ -27,6 +29,7 @@ import com.cyxbsmobile_single.module_todo.ui.fragment.TodoStudyFragment
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
+import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
@@ -48,11 +51,6 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
         initTab()
-        todo_inner_home_bar_add.setOnClickListener {
-            AddTodoDialog(this) {
-
-            }.show()
-        }
         changedFlag = false
         viewModel.initDataList(
                 onLoadSuccess = {
