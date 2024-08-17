@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -37,7 +38,7 @@ import kotlin.collections.ArrayList
  * 增加todo用dialog
  */
 class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
-    BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
+    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
     private val dateBeenList: ArrayList<ArrayList<DateBeen>>
             by lazy { getYearDateSting() }
@@ -136,18 +137,21 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                         todo.remindMode.repeatMode = RemindMode.NONE
                     }
                 }
+
                 RemindMode.WEEK -> {
                     todo.remindMode.week.removeAt(it)
                     if (todo.remindMode.week.isEmpty()) {
                         todo.remindMode.repeatMode = RemindMode.NONE
                     }
                 }
+
                 RemindMode.MONTH -> {
                     todo.remindMode.day.removeAt(it)
                     if (todo.remindMode.day.isEmpty()) {
                         todo.remindMode.repeatMode = RemindMode.NONE
                     }
                 }
+
                 RemindMode.DAY -> {
                     todo.remindMode.repeatMode = RemindMode.NONE
                 }
@@ -205,7 +209,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
 
         //设置添加提醒日期的点击事件
         todo_tv_set_notify_time.setOnClickListener {
-            whenStatusDifDoAndChangeStatus(NOTIFY) { showNotifyDatePicker() }
+//            whenStatusDifDoAndChangeStatus(NOTIFY) { showNotifyDatePicker() }
+
         }
 
         //设置重复时间的点击事件
@@ -261,7 +266,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             NOTIFY -> {
                 todo.remindMode.notifyDateTime = ""
                 todo_tv_set_notify_time.text = getString(R.string.todo_inner_add_thing_nf_text)
-                todo_inner_add_rv_thing_repeat_list.adapter = ChooseYearAdapter(ArrayList()){  }
+                todo_inner_add_rv_thing_repeat_list.adapter = ChooseYearAdapter(ArrayList()) { }
             }//判定为在添加提醒
             REPEAT -> {
                 val remindDate = todo.remindMode.notifyDateTime
@@ -301,7 +306,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         val curMin = calendar.get(Calendar.MINUTE)
         val curMonth = calendar.get(Calendar.MONTH) + 1
         val curDay = calendar.get(Calendar.DAY_OF_MONTH)
-        val notifyString = "${curMonth}月${curDay}日${numToString(curHour)}:${numToString(curMin)}"
+        val notifyString =
+            "${curMonth}月${curDay}日${numToString(curHour)}:${numToString(curMin)}"
 
         todo_tv_set_notify_time.text = notifyString
 
@@ -321,9 +327,11 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                     DateBeen.EMPTY -> {
                         ""
                     }
+
                     DateBeen.TODAY -> {
                         "今天"
                     }
+
                     else -> {
                         "${dateBeen.month}月${
                             numToString(dateBeen.day)
@@ -410,7 +418,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_inner_add_thing_second.setOnItemSelectedListener { _, data, _ ->
             //暴力处理String转Integer的错乱问题
             for (c in data.toString()) {
-                if (!c.isDigit()){
+                if (!c.isDigit()) {
                     return@setOnItemSelectedListener
                 }
             }
@@ -432,17 +440,21 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 //如果是用来占位的，就不增加进去
                 return
             }
+
             "今天" -> {
                 //如果是今天，就一定是dateBeenList此年的第一个date
                 val curDate = dateBeenList[0][0]
                 "${curDate.month}月${curDate.day}日"
             }
+
             else -> {
                 date.subSequence(0, date.length - 3).toString()
             }
         }
-        val hour = todo_inner_add_thing_second.data[todo_inner_add_thing_second.curPos()].toString()
-        val min = todo_inner_add_thing_third.data[todo_inner_add_thing_third.curPos()].toString()
+        val hour =
+            todo_inner_add_thing_second.data[todo_inner_add_thing_second.curPos()].toString()
+        val min =
+            todo_inner_add_thing_third.data[todo_inner_add_thing_third.curPos()].toString()
         todo.remindMode.notifyDateTime =
             "${curSelectYear}年${date}${
                 numToString(hour)
@@ -478,6 +490,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                         //不需要进行啥操作
                         "每天"
                     }
+
                     RemindMode.WEEK -> {//周
                         //添加新的周
                         todo.remindMode.week.addWithoutRepeat(
@@ -486,6 +499,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                         )
                         "周${weekStringList[todo_inner_add_thing_second.curPos() % 7]}"
                     }
+
                     RemindMode.MONTH -> {
                         todo.remindMode.day.addWithoutRepeat(
                             0,
@@ -493,6 +507,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                         )
                         "每月${secondPos}日"
                     }
+
                     RemindMode.YEAR -> {
                         todo.remindMode.date.addWithoutRepeat(
                             0,
@@ -500,6 +515,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                         )
                         "每年${secondPos}月${thirdPos}日"
                     }
+
                     else -> ""
                 }
             if (repeatString != "") {
@@ -536,10 +552,12 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
                 repeatTimeAdapter.notifyDataSetChanged()
             }
+
             NOTIFY -> {
                 todo_tv_set_repeat_time.text = "设置提醒时间"
                 todo_inner_add_rv_thing_repeat_list.adapter = chooseYearAdapter
             }
+
             else -> {
                 todo_tv_set_repeat_time.text = "设置重复提醒"
                 todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
@@ -602,9 +620,11 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             data.size == 0 -> {
                 0
             }
+
             currentItemPosition <= 0 -> {
                 (data.size + currentItemPosition) % (data.size)
             }
+
             else -> {
                 currentItemPosition % (data.size)
             }

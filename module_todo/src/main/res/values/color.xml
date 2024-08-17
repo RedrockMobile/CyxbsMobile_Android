@@ -51,4 +51,28 @@
 
     <!--    当todo本地和远程的仓库冲突时，提醒用的按钮的颜色-->
     <color name="todo_on_conflict_button_color">#2923D2</color>
+
+    <!--    选择时间时的取消按钮的颜色-->
+    <color name="todo_cancel_button_color">#E6EFFC</color>
+    <!--    选择时间时的取消按钮字体的颜色-->
+    <color name="todo_cancel_button_text_color">#7CA3DF</color>
+
+    <!--    选择时间时的确认按钮的颜色-->
+    <color name="todo_confirm_button_color">#4841E2</color>
+    <!--    选择时间时的确认按钮字体的颜色-->
+    <color name="todo_confirm_button_text_color">#FFFFFF</color>
+
+    <color name="todo_calendar_header_color">#15315B</color>
+
+    <!--    添加任务时的保存字体的颜色-->
+    <color name="todo_addtodo_save_text_none_color">#BEBEBE</color>
+    <color name="todo_addtodo_save_text_color">#15315B</color>
+
+    <!--    添加任务时的保存字体的颜色-->
+    <color name="todo_addtodo_inner_text_color">#2A4E84</color>
+    <!--    添加任务时的分组字体的颜色-->
+    <color name="todo_addtodo_inner_category_text_color">#514DEB</color>
+
+    <color name="todo_addtodo_dividing_line_color">#EDF4FD</color>
+    <color name="todo_transparent_background">#00000000</color>
 </resources>

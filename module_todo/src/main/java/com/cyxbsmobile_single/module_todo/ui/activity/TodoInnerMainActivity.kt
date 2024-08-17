@@ -23,6 +23,7 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowTy
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
@@ -51,6 +52,11 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
         initTab()
+        todo_inner_home_bar_add.setOnClickListener {
+            AddTodoDialog(this) {
+
+            }.show()
+        }
         changedFlag = false
         viewModel.initDataList(
                 onLoadSuccess = {
@@ -127,7 +133,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         val callback = SlideCallback()
 
         todo_inner_home_bar_add.setOnClickListener {
-            AddItemDialog(this) {
+            AddTodoDialog(this) {
                 adapter.addTodo(it)
             }.show()
         }

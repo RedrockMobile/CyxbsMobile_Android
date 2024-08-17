@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/todo_layer_list_bottom_sheet_back"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:id="@+id/todo_rl_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/todo_tv_header_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024年8月"
+            android:textColor="@color/todo_calendar_header_color"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/todo_iv_pre_month"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/todo_tv_header_calendar"
+            android:src="@drawable/todo_ic_pre_month" />
+
+        <ImageView
+            android:id="@+id/todo_iv_next_month"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/todo_iv_pre_month"
+            android:src="@drawable/todo_ic_next_month" />
+    </RelativeLayout>
+    <GridLayout
+        android:id="@+id/todo_gl_week"
+        android:layout_below="@id/todo_rl_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:columnCount="7"/>
+    <GridLayout
+        android:id="@+id/todo_gl_calendar"
+        android:layout_below="@id/todo_gl_week"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:columnCount="7"/>
+    <RelativeLayout
+        android:id="@+id/todo_rl_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/todo_gl_calendar"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间"
+            android:textColor="@color/config_black_white"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/todo_iv_time_select"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/todo_ic_category_detail"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"/>
+        <TextView
+            android:id="@+id/todo_tv_time_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/todo_on_conflict_button_color"
+            android:layout_toLeftOf="@id/todo_iv_time_select"/>
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/todo_btn_confirm_calendar"
+        android:layout_below="@id/todo_rl_calendar"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="60dp"
+        android:text="确定"
+        android:background="@drawable/todo_shape_btn_confirm"
+        android:textColor="@color/todo_confirm_button_text_color"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:textSize="18sp"
+        android:gravity="center"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/todo_btn_cancel_calendar"
+        android:layout_marginLeft="60dp"
+        android:layout_alignTop="@id/todo_btn_confirm_calendar"
+        android:text="不设置"
+        android:background="@drawable/todo_shape_btn_cancel"
+        android:textColor="@color/todo_cancel_button_text_color"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_width="100dp"
+        android:layout_height="40dp"/>
+
+
+</RelativeLayout>

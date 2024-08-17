@@ -10,7 +10,7 @@
       android:pathData="M5.75,19.5L14.25,19.5A0.75,0.75 0,0 1,15 20.25L15,20.25A0.75,0.75 0,0 1,14.25 21L5.75,21A0.75,0.75 0,0 1,5 20.25L5,20.25A0.75,0.75 0,0 1,5.75 19.5z"
       android:fillColor="#294169"/>
   <path
-      android:pathData="M3.75,8.75C3.75,5.2982 6.5482,2.5 10,2.5C13.4518,2.5 16.25,5.2982 16.25,8.75V17H3.75V8.75Z"
+      android:pathData="M3.75,8.75C3.75,5.298 6.548,2.5 10,2.5C13.452,2.5 16.25,5.298 16.25,8.75V17H3.75V8.75Z"
       android:strokeWidth="1.5"
       android:fillColor="#00000000"
       android:strokeColor="#294169"/>
@@ -18,7 +18,7 @@
       android:pathData="M10,0L10,0A0.75,0.75 0,0 1,10.75 0.75L10.75,2.25A0.75,0.75 0,0 1,10 3L10,3A0.75,0.75 0,0 1,9.25 2.25L9.25,0.75A0.75,0.75 0,0 1,10 0z"
       android:fillColor="#294169"/>
   <path
-      android:pathData="M14,9C14,6.7909 12.2091,5 10,5"
+      android:pathData="M14,9C14,6.791 12.209,5 10,5"
       android:strokeAlpha="0.8"
       android:strokeWidth="1.5"
       android:fillColor="#00000000"
