@@ -29,7 +29,7 @@ interface TodoApiService {
      */
     @GET("/magipoke-todo/list")
     fun queryAllTodo():
-            Single<ApiWrapper<TodoListSyncTimeWrapper>>
+            Single<ApiWrapper<List<TodoListSyncTimeWrapper>>>
 
     /**
      * 获取自上次同步到现在之间修改的所有todo
@@ -38,7 +38,7 @@ interface TodoApiService {
     fun queryChangedTodo(
         @Query("sync_time")
         syncTime: Long
-    ): Single<ApiWrapper<TodoListGetWrapper>>
+    ): Single<ApiWrapper<List<TodoListGetWrapper>>>
 
     /**
      * 上传todo到数据库
@@ -68,5 +68,5 @@ interface TodoApiService {
      * 获取分组内的ToDo
      */
     @GET("/magipoke-todo/type-list")
-    fun getGroupTodo(): Single<ApiWrapper<TodoListGetWrapper>>
+    fun getGroupTodo(): Single<ApiWrapper<List<TodoListGetWrapper>>>
 }

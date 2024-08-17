@@ -34,7 +34,7 @@ object TodoRepository {
     /**
      * 上传todo到数据库
      */
-    fun uploadTodo(pushWrapper: TodoListPushWrapper) = TodoApiService
+    fun pushTodo(pushWrapper: TodoListPushWrapper) = TodoApiService
         .INSTANCE
         .pushTodo(pushWrapper)
         .subscribeOn(Schedulers.io())
