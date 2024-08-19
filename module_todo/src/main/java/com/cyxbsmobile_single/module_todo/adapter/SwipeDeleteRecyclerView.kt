@@ -125,17 +125,16 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
     private fun setupMenuWidth(position: Int) {
         val adapter = adapter as? TodoAllAdapter
         val item = adapter?.getItem(position)
-
-
+        if (adapter?.isEnabled==true){
+            mMenuViewWidth=0
+            return
+        }
         mFlingView?.let { flingView ->
             val childCount = flingView.childCount
             if (childCount > 0) {
                 val menuView = flingView.getChildAt(childCount - 1)
                 val layoutParams = menuView.layoutParams as ViewGroup.MarginLayoutParams
-                if (adapter?.isEnabled==true){
-                    mMenuViewWidth=0
-                    return
-                }
+
                 if (adapter?.pinnedItems?.contains(item) == true) {
                     mMenuViewWidth = menuView.width + layoutParams.leftMargin + layoutParams.rightMargin
                     return

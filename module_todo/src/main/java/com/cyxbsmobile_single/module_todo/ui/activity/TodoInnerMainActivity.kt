@@ -5,25 +5,26 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
-import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
@@ -31,47 +32,81 @@ import com.cyxbsmobile_single.module_todo.ui.fragment.TodoStudyFragment
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
+import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel2
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 
 
 @Route(path = DISCOVER_TODO_MAIN)
-class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
+class TodoInnerMainActivity : BaseActivity() {
 
     //在详情页面是否有做出修改的flag
     private var changedFlag = false
     private val todo_inner_home_bar_add by R.id.todo_inner_home_bar_add.view<ImageView>()
     private val todo_inner_home_bar_back by R.id.todo_inner_home_bar_back.view<ImageView>()
     private val mTabLayout: TabLayout by R.id.tab_layout.view()
-    private val mVp: ViewPager2 by R.id.view_pager .view()
+    private val manageButton by R.id.todo_custom_button.view<FrameLayout>()
+    private val changeManageButton by R.id.todo_custom_button_change.view<FrameLayout>()
+    private val deleteCheckBox by R.id.button_bottom_right.view<FrameLayout>()
+    private val topCheckBox by R.id.button_bottom_left.view<FrameLayout>()
+    private val bottomButtons by R.id.todo_bottom_action_layout.view<LinearLayoutCompat>()
+    private val mVp: ViewPager2 by R.id.view_pager.view()
+    private val checkall by R.id.todo_bottom_check_all.view<CheckBox>()
+    private val addButton by R.id.todo_inner_home_bar_add.view<FloatingActionButton>()
+    private val todoViewModel by viewModels<TodoViewModel>()
+    private val todoViewModeldata by viewModels<TodoViewModel2>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
+        initView()
         initTab()
-        todo_inner_home_bar_add.setOnClickListener {
-            AddTodoDialog(this) {
-
-            }.show()
-        }
+        initClick()
         changedFlag = false
-        viewModel.initDataList(
-                onLoadSuccess = {
-                    onDateLoaded()
-                }
-        )
+
     }
+
+    private fun initView() {
+        todoViewModeldata.getAllTodo()
+
+    }
+
+    private fun initClick() {
+        todo_inner_home_bar_back.setOnClickListener {
+            finish()
+        }
+        manageButton.setOnClickListener {
+            manageButton.visibility = View.GONE
+            bottomButtons.visibility = View.VISIBLE
+            changeManageButton.visibility = View.VISIBLE
+            addButton.visibility=View.GONE
+            todoViewModel.setEnabled(true)
+        }
+        changeManageButton.setOnClickListener {
+            bottomButtons.visibility = View.GONE
+            changeManageButton.visibility = View.GONE
+            manageButton.visibility = View.VISIBLE
+            addButton.visibility=View.VISIBLE
+            todoViewModel.setEnabled(false)
+        }
+        checkall.setOnCheckedChangeListener { _, isChecked ->
+            todoViewModel.setSelectAll(isChecked)
+        }
+    }
+
 
     @SuppressLint("MissingInflatedId")
     private fun initTab() {
-     mVp.adapter=FragmentVpAdapter(this)
-         .add {TodoAllFragment()}
-         .add { TodoOtherFragement() }
-         .add { TodoLifeFragment() }
-         .add { TodoStudyFragment() }
+        mVp.adapter = FragmentVpAdapter(this)
+            .add { TodoAllFragment() }
+            .add { TodoOtherFragement() }
+            .add { TodoLifeFragment() }
+            .add { TodoStudyFragment() }
         TabLayoutMediator(mTabLayout, mVp) { tab, position ->
             val tabView = LayoutInflater.from(this).inflate(R.layout.todo_custom_tab, null)
             val tabTextView = tabView.findViewById<TextView>(R.id.tabTextView)
@@ -84,7 +119,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
             tab.customView = tabView
         }.attach()
 
-   //选中字体加粗
+        //选中字体加粗
         mTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val tabTextView = tab.customView as TextView?
@@ -107,121 +142,49 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         super.onResume()
         if (changedFlag) {
             //私以为都在子线程进行，不会ANR
-            viewModel.initDataList(
-                    onLoadSuccess = {
-                        onDateLoaded()
-                    }
-            )
+//            viewModel.initDataList(
+//                    onLoadSuccess = {
+//                        onDateLoaded()
+//                    }
+//            )
         }
     }
 
     private fun changeItemToChecked(itemView: View) {
         itemView.apply {
             findViewById<AppCompatEditText>(R.id.todo_tv_todo_title).setTextColor(
-                    ContextCompat.getColor(
-                            context,
-                            R.color.todo_item_checked_color
-                    )
+                ContextCompat.getColor(
+                    context,
+                    R.color.todo_item_checked_color
+                )
             )
             findViewById<AppCompatImageView>(R.id.todo_iv_check).visibility = View.VISIBLE
         }
     }
 
     private fun onDateLoaded() {
-        val adapter =
-                DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
+//        val adapter =
+//                DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
         val callback = SlideCallback()
 
-        todo_inner_home_bar_add.setOnClickListener {
-            AddTodoDialog(this) {
-                adapter.addTodo(it)
-            }.show()
-        }
+//        todo_inner_home_bar_add.setOnClickListener {
+//            AddItemDialog(this) {
+//                adapter.addTodo(it)
+//            }.show()
+//        }
 //返回按钮点击事件
-        todo_inner_home_bar_back.setOnClickListener {
-            finish()
-        }
-        adapter.onBindView = { view, pos, viewType, wrapper ->
-            when (viewType) {
-                DoubleListFoldRvAdapter.TITLE -> {
-                    if (pos != 0) {//确定是已完成事项的title
-                        view.setOnClickListener {
-                            adapter.changeFoldStatus(view.findViewById<AppCompatImageView>(R.id.todo_iv_hide_list))
-                        }
-                    } else {
-                        view.isClickable = false
-                    }
-                }
 
-                DoubleListFoldRvAdapter.TODO -> {
-                    view.apply {
-                        findViewById<FrameLayout>(R.id.todo_fl_todo_back).setOnClickListener {
-                            wrapper.todo?.let {
-                                TodoDetailActivity.startActivity(
-                                        it,
-                                        this@TodoInnerMainActivity
-                                )
-                                changedFlag = true
-                            }
-                        }
-                        findViewById<AppCompatEditText>(R.id.todo_tv_todo_title).setOnClickListener {
-                            wrapper.todo?.let {
-                                TodoDetailActivity.startActivity(
-                                        it,
-                                        this@TodoInnerMainActivity
-                                )
-                                changedFlag = true
-                            }
-                        }
-                        findViewById<FrameLayout>(R.id.todo_fl_del).visibility = View.VISIBLE
-                        findViewById<FrameLayout>(R.id.todo_fl_del).setOnClickListener {
-                            if (findViewById<ConstraintLayout>(R.id.todo_cl_item_main).translationX != 0f) {
-                                adapter.delItem(wrapper)
-                            }
-                        }
 
-                        findViewById<ConstraintLayout>(R.id.todo_cl_item_main).setBackgroundColor(
-                                ContextCompat.getColor(
-                                        this@TodoInnerMainActivity,
-                                        com.mredrock.cyxbs.common.R.color.common_white_background
-                                )
-                        )
-
-                        wrapper.todo?.let { todo ->
-                            if (todo.remindMode.notifyDateTime == "" || isOutOfTime(todo)) {
-                                //没有提醒，或者已经过时，就调整margin
-                                setMargin(
-                                        findViewById<AppCompatEditText>(R.id.todo_tv_todo_title),
-                                        top = dip(29),
-                                        bottom = dip(29)
-                                )
-                            } else {
-                                setMargin(
-                                        findViewById<AppCompatEditText>(R.id.todo_tv_todo_title),
-                                        top = dip(18),
-                                        bottom = dip(40)
-                                )
-                            }
-
-                            val todo_iv_todo_item = findViewById<CheckLineView>(R.id.todo_iv_todo_item)
-                            todo_iv_todo_item.setOnClickListener {
-                                wrapper.todo?.apply {
-                                    if (isChecked == 0) {
-                                        todo_iv_todo_item.setStatusWithAnime(true) {
-                                            adapter.checkItemAndSwap(wrapper)
-                                            changeItemToChecked(view)
-                                        }
-                                    } else {
-                                        todo_iv_todo_item.isClickable = false
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        findViewById<ConstraintLayout>(R.id.todo_cl_item_main).setBackgroundColor(
+            ContextCompat.getColor(
+                this@TodoInnerMainActivity,
+                com.mredrock.cyxbs.common.R.color.common_white_background
+            )
+        )
 
 
     }
 }
+
+
+

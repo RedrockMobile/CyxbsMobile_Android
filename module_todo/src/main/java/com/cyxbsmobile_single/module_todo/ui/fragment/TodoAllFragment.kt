@@ -1,11 +1,8 @@
 package com.cyxbsmobile_single.module_todo.ui.fragment
 
 import DragAndDropCallback
-import RemindMode
 import TodoAllAdapter
 import TodoDataDetails
-import TodoItem
-import TodoViewModel
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -13,8 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.util.set
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,6 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
+import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
+import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel2
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
@@ -36,9 +42,11 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
 class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
     private val mRecyclerView by R.id.todo_allrv.view<SwipeDeleteRecyclerView>()
-    private val emptyview by R.id.todo_empty.view<View>()
-    private lateinit var todoDataDetails:TodoDataDetails
+    private val emptyview by R.id.empty_view.view<View>()
+    private lateinit var todoListSyncTimeWrapper: TodoListSyncTimeWrapper
     private val mViewModel: TodoViewModel by activityViewModels()
+    private val viewModeldata: TodoViewModel2 by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,17 +60,59 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     private fun initView() {
-        initList()
 
         todoAllAdapter = TodoAllAdapter(this)
         mRecyclerView.adapter = todoAllAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
-        val callback = DragAndDropCallback(mRecyclerView,todoAllAdapter)
+        inittoList()
+        initList()
+//        todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
+        val callback = DragAndDropCallback(mRecyclerView, todoAllAdapter)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(mRecyclerView)
+        initClick()
         checkIfEmpty()
         ifClick()
+        todoAllAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                checkIfEmpty()
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                super.onItemRangeRemoved(positionStart, itemCount)
+                checkIfEmpty()
+            }
+        })
+
+    }
+
+    private fun initClick() {
+        val acDeleteButton: FrameLayout = requireActivity().findViewById(R.id.button_bottom_right)
+        val acTopButton: FrameLayout = requireActivity().findViewById(R.id.button_bottom_left)
+        acDeleteButton.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+            val inflater = layoutInflater
+            val dialogView = inflater.inflate(R.layout.todo_dialog_custom, null)
+            builder.setView(dialogView)
+            val closeButton = dialogView.findViewById<Button>(R.id.todo_dialog_positive_button)
+            val deleteButton = dialogView.findViewById<Button>(R.id.todo_dialog_negative_button)
+            // 创建并显示对话框
+            val dialog = builder.create()
+            closeButton.setOnClickListener {
+                dialog.dismiss()
+            }
+            deleteButton.setOnClickListener {
+                // 移除指定位置的 item
+                todoAllAdapter.deleteSelectedItems()
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
+        acTopButton.setOnClickListener {
+            todoAllAdapter.topSelectedItems()
+        }
+
     }
 
     private fun ifClick() {
@@ -73,12 +123,17 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             } else {
                 hideBatchManagementLayout()
             }
-
+        }
+        mViewModel.selectAll.observe(viewLifecycleOwner) { isChecked ->
+            for (i in 0 until todoAllAdapter.itemCount) {
+                todoAllAdapter.itemSelectionState[i] = isChecked
+            }
+            todoAllAdapter.notifyDataSetChanged()
         }
     }
 
     private fun hideBatchManagementLayout() {
-         todoAllAdapter.updateEnabled(false)
+        todoAllAdapter.updateEnabled(false)
     }
 
     private fun showBatchManagementLayout() {
@@ -89,67 +144,97 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         Log.d("TodoAllFragment", "Checking if empty. Item count: ${todoAllAdapter.itemCount}")
         if (todoAllAdapter.itemCount == 0) {
             mRecyclerView.visibility = View.GONE
-            emptyview.vi = View.VISIBLE
+            emptyview.visibility = View.VISIBLE
         } else {
             mRecyclerView.visibility = View.VISIBLE
             emptyview.visibility = View.GONE
         }
     }
 
+    private fun initList() {
+        //viewModeldata.allTodo.observe(viewLifecycleOwner) {
+        // Log.d("viemodeldata",it.toString())
+        //todoAllAdapter.submitList( it.todoArray)
+        // if (it.todoArray==null){
+        todoAllAdapter.submitList(todoListSyncTimeWrapper.todoArray)
+        // }
+
+        //}
+    }
 
     //测试用的数据类
-    private fun initList() {
-        val remindMode1 = RemindMode(
-            repeat_mode = 0,
-            notify_datetime = "2021年8月24日08:32",
-            date = listOf(), // 假设为空
-            week = listOf(), // 假设为空
-            day = listOf()   // 假设为空
+    private fun inittoList() {
+// 测试数据1
+        val todo1 = Todo(
+            todoId = 1L,
+            title = "Complete Android project",
+            detail = "Finish the RecyclerView implementation and test the swipe to delete functionality.",
+            isChecked = 0,
+            remindMode = RemindMode(
+                repeatMode = 1,
+                date = arrayListOf("2024-08-20"),
+                week = arrayListOf(),
+                day = arrayListOf(),
+                notifyDateTime = "2024-08-20 09:00:00"
+            ),
+            lastModifyTime = System.currentTimeMillis(),
+            type = "Work",
+            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
         )
 
-        val remindMode2 = RemindMode(
-            repeat_mode = 2,
-            notify_datetime = "",
-            date = listOf(), // 假设为空
-            week = listOf(1, 2),
-            day = listOf()   // 假设为空
+// 测试数据2
+        val todo2 = Todo(
+            todoId = 2L,
+            title = "Grocery Shopping",
+            detail = "Buy milk, bread, eggs, and vegetables.",
+            isChecked = 0,
+            remindMode = RemindMode(
+                repeatMode = 0,
+                date = arrayListOf("2024-08-19"),
+                week = arrayListOf(),
+                day = arrayListOf(),
+                notifyDateTime = "2024-08-19 17:00:00"
+            ),
+            lastModifyTime = System.currentTimeMillis(),
+            type = "Personal",
+            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
         )
 
-        // 创建 TodoItem 对象
-        val todoItem1 = TodoItem(
-            todo_id = 1,
-            title = "吃饭电影一条龙",
-            remind_mode = remindMode1,
-            detail = "和女朋友吃饭",
-            last_modify_time = 1561561561L,
-            is_done = 0,
-            type = "Academics"
+// 测试数据3
+        val todo3 = Todo(
+            todoId = 3L,
+            title = "Call the dentist",
+            detail = "Schedule an appointment for a routine check-up.",
+            isChecked = 0,
+            remindMode = RemindMode(
+                repeatMode = 2,
+                date = arrayListOf("2024-08-21"),
+                week = arrayListOf(),
+                day = arrayListOf(),
+                notifyDateTime = "2024-08-21 10:30:00"
+            ),
+            lastModifyTime = System.currentTimeMillis(),
+            type = "Health",
+            repeatStatus = Todo.NONE_WITH_REPEAT
         )
 
-        val todoItem2 = TodoItem(
-            todo_id = 2,
-            title = "通宵打游戏",
-            remind_mode = remindMode2,
-            detail = "跟男朋友一起通宵打游戏",
-            last_modify_time = 1561561561L,
-            is_done = 0,
-            type = "Academics"
+// 将这些 Todo 数据包装在 TodoListSyncTimeWrapper 中
+        todoListSyncTimeWrapper = TodoListSyncTimeWrapper(
+            syncTime = System.currentTimeMillis(),
+            todoArray = listOf(todo1, todo2, todo3)
         )
 
-        // 创建 TodoDataDetails 对象
-        todoDataDetails = TodoDataDetails(
-            changed_todo_array = listOf(todoItem1, todoItem2),
-            sync_time = 1561561561L
-        )
+
     }
+
     //处理点击事件
-    override fun onItemClick(item: TodoItem) {
-        Toast.makeText(context,"不好意思，多模块还没做",Toast.LENGTH_SHORT).show()
-        Log.d("click","点击事件触发")
+    override fun onItemClick(item: Todo) {
+        Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
+        Log.d("click", "点击事件触发")
     }
 
     @SuppressLint("MissingInflatedId")
-    override fun ondeleteButtonClick(item: TodoItem, position: Int) {
+    override fun ondeleteButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
 
         // 检查索引是否在当前列表的有效范围内
@@ -169,13 +254,11 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                 // 移除指定位置的 item
                 currentList.removeAt(position)
                 // 提交更新后的列表
-                todoAllAdapter.submitList(currentList){
-                    checkIfEmpty()
-                }
+                todoAllAdapter.submitList(currentList)
 
                 dialog.dismiss()
             }
-               dialog .show()
+            dialog.show()
 
         } else {
             // 如果索引无效，记录错误日志
@@ -184,7 +267,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
     }
 
-    override fun ontopButtonClick(item: TodoItem,position: Int) {
+    override fun ontopButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
 
         // 移除当前项

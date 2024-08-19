@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/todo_fragment_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,5 +9,13 @@
         android:id="@+id/todo_allrv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="MissingClass" />
+        android:visibility="visible"
+         />
+
+    <include
+        layout="@layout/todo_empty_view"
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </RelativeLayout>

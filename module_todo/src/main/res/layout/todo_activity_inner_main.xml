@@ -20,10 +20,10 @@
                 android:id="@+id/todo_inner_home_bar_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
+                android:padding="5dp"
                 android:src="@drawable/todo_ic_detail_back" />
 
             <TextView
@@ -35,23 +35,23 @@
                 android:layout_marginStart="12dp"
                 android:layout_toEndOf="@+id/todo_inner_home_bar_back"
                 android:gravity="center"
-                android:textStyle="bold"
                 android:text="邮子清单"
                 android:textColor="@color/todo_check_line_color"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
 
             <FrameLayout
-                android:id="@+id/custom_button"
+                android:id="@+id/todo_custom_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/todo_ic_rectangle"
-                android:padding="8dp"
-                android:layout_margin="16dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-               >
+                android:layout_margin="16dp"
+                android:background="@drawable/todo_ic_rectangle"
+                android:visibility="visible"
+                android:padding="8dp">
 
                 <!-- 矢量图标 -->
                 <ImageView
@@ -72,23 +72,49 @@
                     android:textColor="@color/todo_list"
                     android:textSize="16sp" />
             </FrameLayout>
+            <FrameLayout
+                android:id="@+id/todo_custom_button_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="16dp"
+                android:background="@drawable/todo_ic_rectangle_change"
+                android:padding="8dp"
+                android:visibility="gone"
+                >
 
+                <!-- 矢量图标 -->
+                <ImageView
+                    android:id="@+id/icon_change"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:src="@drawable/todo_ic_pic_manage_change" />
+
+                <!-- 文字 -->
+                <TextView
+                    android:id="@+id/text_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginStart="32dp"
+                    android:text="@string/todo_string_management_change"
+                    android:textColor="@color/todo_list_change"
+                    android:textSize="16sp" />
+            </FrameLayout>
 
 
         </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignBottom="@+id/todo_inner_home_bar_title"
-            android:background="@color/todo_feed_divide_line_color" />
+
         <!-- TabLayout -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextAppearance="@style/todo_TabTextAppearance"
             app:tabIndicatorFullWidth="false"
-          />
+            app:tabTextAppearance="@style/todo_TabTextAppearance" />
 
         <!-- ViewPager2 -->
         <androidx.viewpager2.widget.ViewPager2
@@ -105,9 +131,95 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="66dp"
         android:src="@drawable/todo_ic_floatbuttton"
         app:backgroundTint="@color/config_todo_floatbutton"
         app:fabSize="normal" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/todo_bottom_action_layout"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:visibility="gone"> <!-- 初始隐藏 -->
+
+        <CheckBox
+            android:id="@+id/todo_bottom_check_all"
+            android:layout_width="72dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:text="全选"
+            android:textColor="@color/todo_config_bottom_check_box"
+            android:textSize="18sp" />
+
+        <FrameLayout
+            android:id="@+id/button_bottom_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="34dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/todo_bottom_button_left">
+
+            <ImageView
+                android:id="@+id/custom_button_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="28.5dp"
+                android:layout_gravity="center_vertical|start"
+                android:src="@drawable/todo_bottom_button_leftimage" />
+
+            <!-- TextView for the label -->
+            <TextView
+                android:id="@+id/custom_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center"
+                android:layout_marginLeft="10dp"
+                android:layout_toEndOf="@id/custom_button_icon"
+                android:text="@string/todo_string_totop"
+                android:textColor="@color/config_white_black"
+                android:textSize="14sp" />
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/button_bottom_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="9dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/todo_ic_bottom_right_buttonbac">
+
+            <ImageView
+                android:id="@+id/custom_buttondelete_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="28.5dp"
+                android:layout_gravity="center_vertical|start"
+                android:src="@drawable/todo_bottom_right_image" />
+
+            <!-- TextView for the label -->
+            <TextView
+                android:id="@+id/custom_button_righttext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center"
+                android:layout_marginLeft="10dp"
+                android:layout_toEndOf="@id/custom_buttondelete_icon"
+                android:text="@string/todo_string_delete"
+                android:textColor="@color/config_white_black"
+                android:textSize="14sp" />
+        </FrameLayout>
+
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

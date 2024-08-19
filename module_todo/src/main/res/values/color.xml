@@ -47,6 +47,8 @@
     <color name="todo_ic_back_color">#122D55</color>
     <!--    小组件背景的颜色-->
     <color name="todo_widget_back_color">#FFFFFF</color>
+    <!--    被勾选后item的颜色-->
+    <color name="todo_check_item_color">#B9C2CE</color>
     <!--    小组件item前置圈的颜色-->
     <color name="todo_widget_check_cycle">#7515315B</color>
     <!--    小组件item的提醒时间的颜色-->
@@ -86,6 +88,9 @@
     <!--    空白页面提示词颜色-->
     <color name="todo_fragment_color">#FBFBFC</color>
 
+    <color name="todo_config_bottom_check_box">#15315B</color>
+
     <color name="todo_addtodo_dividing_line_color">#EDF4FD</color>
     <color name="todo_transparent_background">#00000000</color>
+
 </resources>

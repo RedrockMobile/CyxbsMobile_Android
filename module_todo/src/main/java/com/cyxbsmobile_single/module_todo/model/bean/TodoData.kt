@@ -12,21 +12,21 @@ data class TodoData(
 )
 
 data class TodoDataDetails(
-    val changed_todo_array: List<TodoItem>,
+    val changed_todo_array: List<TodoItems>,
     val sync_time: Long
 )
 
-data class TodoItem(
+data class TodoItems(
     val todo_id: Int,
     val title: String,
-    val remind_mode: RemindMode,
+    val remind_mode: RemindModes,
     val detail: String,
     val last_modify_time: Long,
     val is_done: Int,
     val type: String
 )
 
-data class RemindMode(
+data class RemindModes(
     val repeat_mode: Int,
     val notify_datetime: String,
     val date: List<String>,  // 这里的类型根据实际情况调整。如果有明确的格式可以考虑使用其他类型。
