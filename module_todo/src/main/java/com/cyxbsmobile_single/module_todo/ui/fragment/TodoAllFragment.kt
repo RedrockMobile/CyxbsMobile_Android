@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -90,6 +91,8 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private fun initClick() {
         val acDeleteButton: FrameLayout = requireActivity().findViewById(R.id.button_bottom_right)
         val acTopButton: FrameLayout = requireActivity().findViewById(R.id.button_bottom_left)
+        val checkall=requireActivity().findViewById<CheckBox>(R.id.todo_bottom_check_all)
+
         acDeleteButton.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             val inflater = layoutInflater
@@ -112,7 +115,14 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         acTopButton.setOnClickListener {
             todoAllAdapter.topSelectedItems()
         }
-
+         checkall.setOnCheckedChangeListener{_, isChecked ->
+             if (isChecked){
+                 todoAllAdapter.selectedall()
+             }
+             else{
+                 todoAllAdapter.toSelectedall()
+             }
+         }
     }
 
     private fun ifClick() {
@@ -125,11 +135,16 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             }
         }
         mViewModel.selectAll.observe(viewLifecycleOwner) { isChecked ->
-            for (i in 0 until todoAllAdapter.itemCount) {
-                todoAllAdapter.itemSelectionState[i] = isChecked
+            // 确保 `isEnabled` 状态不变
+            if (todoAllAdapter.isEnabled) {
+                for (i in 0 until todoAllAdapter.itemCount) {
+                   todoAllAdapter.itemSelectionState.put(i, isChecked)
+                }
+               todoAllAdapter. notifyDataSetChanged()
+
             }
-            todoAllAdapter.notifyDataSetChanged()
         }
+
     }
 
     private fun hideBatchManagementLayout() {
@@ -269,7 +284,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     override fun ontopButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
-
         // 移除当前项
         currentList.removeAt(position)
 

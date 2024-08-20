@@ -1,18 +1,18 @@
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.graphics.Paint
+import android.annotation.SuppressLint
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import java.util.Collections
 
@@ -29,101 +29,124 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
     var pinnedItems: MutableList<Todo> = mutableListOf()
     var isEnabled = false
+
     //SparseBooleanArray适合处理较大的数据集合。
     var itemSelectionState = SparseBooleanArray()
     private val selectedItems = mutableListOf<Todo>()
+
     // 用于保存选中项的 ID 集合
     private val selectedIds = mutableSetOf<Int>()
 
 
     fun updateEnabled(enabled: Boolean) {
+        val oldEnabled = isEnabled
         isEnabled = enabled
-        // 当退出 manage 状态时，重置所有复选框的选中状态
-        if (!isEnabled) {
-            itemSelectionState.clear() // 清除所有选中状态
+
+        // 如果状态没有变化，则无需刷新
+        if (oldEnabled == isEnabled) return
+
+        // 如果启用状态，刷新所有项的选择状态
+        if (isEnabled) {
+            notifyItemRangeChanged(0, itemCount)
+        } else {
+            // 退出 manage 状态时，重置所有复选框的选中状态
+            itemSelectionState.clear()
+            notifyItemRangeChanged(0, itemCount)
         }
         Log.d("TodoAllAdapter", "setEnabled called with: $isEnabled")
-        notifyItemRangeChanged(0, itemCount)    }
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutId = if (viewType == VIEW_TYPE_PINNED) {
-            R.layout.todo_rv_item_todo_pinned
-        } else if (!isEnabled) {
-            R.layout.todo_rv_item_todo
-        } else {
-            R.layout.todo_rv_item_manage
+        val layoutId = when (viewType) {
+            VIEW_TYPE_PINNED ->if (isEnabled) {
+                R.layout.todo_rv_item_manage
+            } else {
+                R.layout.todo_rv_item_todo_pinned
+            }
+            VIEW_TYPE_DEFAULT -> if (isEnabled) {
+                R.layout.todo_rv_item_manage
+            } else {
+                R.layout.todo_rv_item_todo
+            }
+            else -> throw IllegalArgumentException("Unknown view type")
         }
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        return ViewHolder(view, listener)
+        return ViewHolder(view, listener,viewType)
     }
 
     fun deleteSelectedItems() {
         val currentList = currentList.toMutableList()
         for (i in itemCount - 1 downTo 0) {
-            if (itemSelectionState[i, false]) {
+            if (itemSelectionState.get(i, false)) {
                 currentList.removeAt(i)
                 itemSelectionState.delete(i)
             }
         }
-        submitList(currentList)
-
+        submitList(currentList) {
+            notifyDataSetChanged() // 确保视图正确刷新
+        }
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun selectedall(){
+        // 清空当前的状态
+        itemSelectionState.clear()
+        // 遍历所有项，将它们的索引和默认状态添加到 SparseBooleanArray 中
+        for (i in 0 until itemCount) {
+            itemSelectionState.put(i, true) //勾选全部
+        }
+        notifyDataSetChanged()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun toSelectedall(){
+        // 清空当前的状态
+        itemSelectionState.clear()
+        // 遍历所有项，将它们的索引和默认状态添加到 SparseBooleanArray 中
+        for (i in 0 until itemCount) {
+            itemSelectionState.put(i, false) //勾选全部
+        }
+        notifyDataSetChanged()
     }
     fun topSelectedItems() {
         val currentList = currentList.toMutableList()
-
-        // 筛选出选中的项，并按它们在列表中的顺序排序
-        val selectedItems = currentList.filterIndexed { index, item ->
-            val isSelected = itemSelectionState.get(index, false)
-            if (isSelected) {
-                // 将选中的项加入到 pinnedItems 中
-                pinnedItems.add(item)
-            }
-            isSelected
+        val selectedItems = currentList.filterIndexed { index, _ ->
+            itemSelectionState.get(index, false)
         }
 
-        // 将选中的项从原来的位置移除
+        // 将选中的项添加到 pinnedItems 列表中
+        pinnedItems.addAll(selectedItems)
+
+        // 从 currentList 中移除选中的项
         currentList.removeAll(selectedItems)
 
-        // 将选中的项按原顺序添加到顶部
+        // 将选中的项添加到 currentList 的顶部
         currentList.addAll(0, selectedItems)
 
-        // 提交更新后的列表
-        submitList(currentList) {
-            // 滚动到顶部以显示置顶的项
-            notifyDataSetChanged()
-        }
-
+        // 提交更新后的列表并刷新 RecyclerView
+        submitList(currentList)
         // 清空选中状态
         itemSelectionState.clear()
     }
 
 
+
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         val isSelected = itemSelectionState.get(position, false)
-        holder.checkbox.isChecked = isSelected
-        holder.bind(item)
-        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            itemSelectionState.put(position, isChecked)
-        }
-        if (!isEnabled) {
-            holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
+        if (isEnabled) {
+            holder.checkbox?.isChecked = isSelected
+            holder.checkbox?.setOnCheckedChangeListener { _, isChecked ->
                 itemSelectionState.put(position, isChecked)
-                if (isChecked) {
-                    animateCheckBox(holder.checkbox)
-                    animateStrikeThrough(holder.listtext, true)
-                    holder.listtext.setTextColor(holder.listtext.context.getColor(R.color.todo_check_item_color))
-                } else {
-                    animateStrikeThrough(holder.listtext, false)
-                    holder.listtext.setTextColor(holder.listtext.context.getColor(R.color.todo_title))
-                }
             }
+
         } else {
-            holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-                itemSelectionState.put(position, isChecked)
-            }
+            holder.checkbox?.isChecked = false
+            holder.checkbox?.setOnCheckedChangeListener(null)
         }
+        holder.bind(item)
     }
+
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
@@ -145,22 +168,33 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         Collections.swap(currentList, fromPosition, toPosition)
         submitList(currentList)
     }
+
     public override fun getItem(position: Int): Todo {
         return super.getItem(position)
     }
-    inner class ViewHolder(itemView: View, private val listener: OnItemClickListener) :
+
+    inner class ViewHolder(itemView: View, private val listener: OnItemClickListener, private val viewType: Int) :
         RecyclerView.ViewHolder(itemView) {
 
         val listtext: TextView = itemView.findViewById(R.id.todo_title_text)
         private val date: TextView = itemView.findViewById(R.id.todo_notify_time)
         private val deletebutton: LinearLayout = itemView.findViewById(R.id.todo_delete)
         private val topbutton: LinearLayout = itemView.findViewById(R.id.todo_item_totop)
-        val checkbox:CheckBox=itemView.findViewById(R.id.todo_item_check)
+        private val icRight:ImageView?=itemView.findViewById(R.id.todo_iv_check)
+        val defaultcheckbox: CheckLineView? = if (!isEnabled) {
+            itemView.findViewById(R.id.todo_item_check) as? CheckLineView
+        } else {
+            null
+        }
+        val checkbox: CheckBox? = if ( isEnabled) {
+            itemView.findViewById(R.id.todo_item_check) as? CheckBox
+        } else {
+            null
+        }
 
         fun bind(item: Todo) {
             listtext.text = item.title
             date.text = item.remindMode.notifyDateTime
-
             itemView.setOnClickListener {
                 listener.onItemClick(item)
             }
@@ -183,9 +217,16 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                     listener.ontopButtonClick(item, currentPosition)
                 }
             }
-
+            defaultcheckbox?.setOnClickListener {
+            defaultcheckbox.setStatusWithAnime(true)
+                icRight?.let {
+                    it.visibility = View.VISIBLE
+                }
+            }
             // 如果当前项是置顶项，则隐藏置顶按钮
             topbutton.visibility = if (pinnedItems.contains(item)) View.GONE else View.VISIBLE
+
+
         }
     }
 
@@ -198,32 +239,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             return oldItem == newItem
         }
     }
-    private fun animateCheckBox(checkBox: CheckBox) {
-        // 创建CheckBox的动画，使其缓慢打上勾
-        ObjectAnimator.ofFloat(checkBox, "alpha", 0f, 1f).apply {
-            duration = 500 // 动画时长
-            start()
-        }
-    }
 
-    private fun animateStrikeThrough(textView: TextView, isStrikingThrough: Boolean) {
-        val start = if (isStrikingThrough) 0 else textView.width
-        val end = if (isStrikingThrough) textView.width else 0
-
-        ValueAnimator.ofInt(start, end).apply {
-            duration = 500 // 动画时长
-            addUpdateListener { animator ->
-                val value = animator.animatedValue as Int
-                textView.paintFlags = if (isStrikingThrough) {
-                    textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                } else {
-                    textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                }
-                textView.invalidate()
-            }
-            start()
-        }
-    }
 
     interface OnItemClickListener {
         fun onItemClick(item: Todo)

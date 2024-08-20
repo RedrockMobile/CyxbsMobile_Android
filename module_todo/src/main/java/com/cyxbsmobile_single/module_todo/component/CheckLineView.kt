@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import android.widget.CheckBox
 import androidx.core.animation.doOnEnd
 import com.cyxbsmobile_single.module_todo.R
 
@@ -20,7 +21,7 @@ class CheckLineView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : View(context, attrs, defStyle) {
+) : androidx.appcompat.widget.AppCompatCheckBox(context, attrs, defStyle) {
     private val paint by lazy {
         Paint().apply {
             isAntiAlias = true
@@ -65,7 +66,11 @@ class CheckLineView @JvmOverloads constructor(
         setStatusWithoutAnime(isChecked)
         typeArray.recycle()
         paint.style = Paint.Style.STROKE
+        // 设置点击事件
+
     }
+
+
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)

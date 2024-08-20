@@ -57,7 +57,6 @@ class TodoInnerMainActivity : BaseActivity() {
     private val topCheckBox by R.id.button_bottom_left.view<FrameLayout>()
     private val bottomButtons by R.id.todo_bottom_action_layout.view<LinearLayoutCompat>()
     private val mVp: ViewPager2 by R.id.view_pager.view()
-    private val checkall by R.id.todo_bottom_check_all.view<CheckBox>()
     private val addButton by R.id.todo_inner_home_bar_add.view<FloatingActionButton>()
     private val todoViewModel by viewModels<TodoViewModel>()
     private val todoViewModeldata by viewModels<TodoViewModel2>()
@@ -94,9 +93,7 @@ class TodoInnerMainActivity : BaseActivity() {
             addButton.visibility=View.VISIBLE
             todoViewModel.setEnabled(false)
         }
-        checkall.setOnCheckedChangeListener { _, isChecked ->
-            todoViewModel.setSelectAll(isChecked)
-        }
+
     }
 
 
