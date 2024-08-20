@@ -63,4 +63,13 @@ interface TodoApiService {
         @Body delPushWrapper: DelPushWrapper
     ): Single<ApiWrapper<SyncTime>>
 
+    /**
+     * 获取分组的数据
+     */
+    @GET("/magipoke-todo/type-list")
+    fun getTodoListByType(
+        @Query("type")
+        type: String
+    ):Single<ApiWrapper<TodoListGetWrapper>>
+
 }

@@ -45,4 +45,10 @@ object TodoRepository {
         .delTodo(delPushWrapper)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+
+    fun getTodoByType(type: String) = TodoApiService
+        .INSTANCE
+        .getTodoListByType(type)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
 }
