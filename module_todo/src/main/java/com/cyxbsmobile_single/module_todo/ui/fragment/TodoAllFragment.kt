@@ -15,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.util.set
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -47,7 +48,10 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoListSyncTimeWrapper: TodoListSyncTimeWrapper
     private val mViewModel: TodoViewModel by activityViewModels()
     private val viewModeldata: TodoViewModel2 by activityViewModels()
-
+    private val emptyBottom by R.id.todo_bottom_action_layout_all.view<LinearLayoutCompat>()
+    private val acDeleteButton by R.id.button_bottom_right_all.view<FrameLayout>()
+    private val acTopButton by R.id.button_bottom_left_all.view<FrameLayout>()
+    private val checkall by R.id.todo_bottom_check_al_all.view<CheckBox>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -89,9 +93,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     private fun initClick() {
-        val acDeleteButton: FrameLayout = requireActivity().findViewById(R.id.button_bottom_right)
-        val acTopButton: FrameLayout = requireActivity().findViewById(R.id.button_bottom_left)
-        val checkall=requireActivity().findViewById<CheckBox>(R.id.todo_bottom_check_all)
+
 
         acDeleteButton.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
@@ -115,14 +117,13 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         acTopButton.setOnClickListener {
             todoAllAdapter.topSelectedItems()
         }
-         checkall.setOnCheckedChangeListener{_, isChecked ->
-             if (isChecked){
-                 todoAllAdapter.selectedall()
-             }
-             else{
-                 todoAllAdapter.toSelectedall()
-             }
-         }
+        checkall.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                todoAllAdapter.selectedall()
+            } else {
+                todoAllAdapter.toSelectedall()
+            }
+        }
     }
 
     private fun ifClick() {
@@ -138,9 +139,9 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             // 确保 `isEnabled` 状态不变
             if (todoAllAdapter.isEnabled) {
                 for (i in 0 until todoAllAdapter.itemCount) {
-                   todoAllAdapter.itemSelectionState.put(i, isChecked)
+                    todoAllAdapter.itemSelectionState.put(i, isChecked)
                 }
-               todoAllAdapter. notifyDataSetChanged()
+                todoAllAdapter.notifyDataSetChanged()
 
             }
         }
@@ -149,9 +150,12 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     private fun hideBatchManagementLayout() {
         todoAllAdapter.updateEnabled(false)
+        emptyBottom.visibility = View.GONE
+
     }
 
     private fun showBatchManagementLayout() {
+        emptyBottom.visibility = View.VISIBLE
         todoAllAdapter.updateEnabled(true)
     }
 
@@ -182,7 +186,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 // 测试数据1
         val todo1 = Todo(
             todoId = 1L,
-            title = "Complete Android project",
+            title = "Complete Android project,test max line is sixty four",
             detail = "Finish the RecyclerView implementation and test the swipe to delete functionality.",
             isChecked = 0,
             remindMode = RemindMode(

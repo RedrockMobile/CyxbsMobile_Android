@@ -53,9 +53,6 @@ class TodoInnerMainActivity : BaseActivity() {
     private val mTabLayout: TabLayout by R.id.tab_layout.view()
     private val manageButton by R.id.todo_custom_button.view<FrameLayout>()
     private val changeManageButton by R.id.todo_custom_button_change.view<FrameLayout>()
-    private val deleteCheckBox by R.id.button_bottom_right.view<FrameLayout>()
-    private val topCheckBox by R.id.button_bottom_left.view<FrameLayout>()
-    private val bottomButtons by R.id.todo_bottom_action_layout.view<LinearLayoutCompat>()
     private val mVp: ViewPager2 by R.id.view_pager.view()
     private val addButton by R.id.todo_inner_home_bar_add.view<FloatingActionButton>()
     private val todoViewModel by viewModels<TodoViewModel>()
@@ -81,13 +78,11 @@ class TodoInnerMainActivity : BaseActivity() {
         }
         manageButton.setOnClickListener {
             manageButton.visibility = View.GONE
-            bottomButtons.visibility = View.VISIBLE
             changeManageButton.visibility = View.VISIBLE
             addButton.visibility=View.GONE
             todoViewModel.setEnabled(true)
         }
         changeManageButton.setOnClickListener {
-            bottomButtons.visibility = View.GONE
             changeManageButton.visibility = View.GONE
             manageButton.visibility = View.VISIBLE
             addButton.visibility=View.VISIBLE

@@ -5,14 +5,13 @@
     android:id="@+id/todo_fl_todo_back"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
     android:orientation="horizontal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/todo_item_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingEnd="15dp"
+        android:layout_marginTop="12dp"
         android:elevation="3dp">
 
         <com.cyxbsmobile_single.module_todo.component.CheckLineView
@@ -45,14 +44,13 @@
 
         <TextView
             android:id="@+id/todo_title_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="40dp"
             android:ellipsize="end"
-            android:height="25dp"
             android:gravity="center_vertical"
             android:cursorVisible="false"
             android:focusable="false"
@@ -61,30 +59,26 @@
             android:textColor="@color/todo_check_line_color"
             android:textSize="18sp"
             android:singleLine="true"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:maxEms="16"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:text="复习高数114514191911451419191145141919" />
+            tools:text="复习高数114514191911451419191145141919"
+            tools:ignore="MissingConstraints" />
 
 
         <TextView
             android:id="@+id/todo_notify_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_marginBottom="16dp"
             android:textColor="@color/todo_item_inner_nf_time_color"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.127"
+            app:layout_constraintHorizontal_bias="0.155"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/todo_title_text"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="8月2日 12:00" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
