@@ -68,11 +68,17 @@ interface TodoApiService {
     /**
      * 获取分组的数据
      */
-    @GET("/magipoke-todo/type-list")
-    fun getTodoListByType(
-        @Query("type")
-        type: String
-    ):Single<ApiWrapper<TodoListGetWrapper>>
+    @GET("/magipoke-todo/type-list?type=学习")
+    fun getTodoListByStudy():
+            Single<ApiWrapper<TodoListGetWrapper>>
+
+    @GET("/magipoke-todo/type-list?type=生活")
+    fun getTodoListByLife():
+            Single<ApiWrapper<TodoListGetWrapper>>
+
+    @GET("/magipoke-todo/type-list?type=其他")
+    fun getTodoListByOther():
+            Single<ApiWrapper<TodoListGetWrapper>>
 
     /**
      * 置顶
