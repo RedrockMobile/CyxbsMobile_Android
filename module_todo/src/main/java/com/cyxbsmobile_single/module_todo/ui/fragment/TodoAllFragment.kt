@@ -157,13 +157,14 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     private fun initList() {
         //viewModeldata.allTodo.observe(viewLifecycleOwner) {
-        // Log.d("viemodeldata",it.toString())
-        //todoAllAdapter.submitList( it.todoArray)
+        // Log.d("viemodeldata",it.toString()) todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
-        todoAllAdapter.submitList(todoListSyncTimeWrapper.todoArray)
+       // todoAllAdapter.submitList(todoListSyncTimeWrapper.todoArray)
         // }
-
         //}
+        mViewModel.allTodo.observe {
+            todoAllAdapter.submitList(it.todoArray)
+        }
     }
 
     //测试用的数据类
