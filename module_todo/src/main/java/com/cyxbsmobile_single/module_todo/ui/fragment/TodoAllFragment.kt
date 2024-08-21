@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
+import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
@@ -110,12 +111,14 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             deleteButton.setOnClickListener {
                 // 移除指定位置的 item
                 todoAllAdapter.deleteSelectedItems()
+                viewModeldata.delTodo( DelPushWrapper(  todoAllAdapter.selectItems.map { it.todoId },0))
                 dialog.dismiss()
             }
             dialog.show()
         }
         acTopButton.setOnClickListener {
             todoAllAdapter.topSelectedItems()
+
         }
         checkall.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -135,16 +138,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                 hideBatchManagementLayout()
             }
         }
-        mViewModel.selectAll.observe(viewLifecycleOwner) { isChecked ->
-            // 确保 `isEnabled` 状态不变
-            if (todoAllAdapter.isEnabled) {
-                for (i in 0 until todoAllAdapter.itemCount) {
-                    todoAllAdapter.itemSelectionState.put(i, isChecked)
-                }
-                todoAllAdapter.notifyDataSetChanged()
 
-            }
-        }
 
     }
 

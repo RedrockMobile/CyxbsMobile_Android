@@ -32,12 +32,9 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     var isEnabled = false
 
     //SparseBooleanArray适合处理较大的数据集合。
-    var itemSelectionState = SparseBooleanArray()
+  //  var itemSelectionState = SparseBooleanArray()
+   var selectItems:MutableList<Todo> = mutableListOf()
 
-    private val selectedItems = mutableListOf<Todo>()
-
-    // 用于保存选中项的 ID 集合
-    private val selectedIds = mutableSetOf<Int>()
 
 
     fun updateEnabled(enabled: Boolean) {
@@ -52,7 +49,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             notifyItemRangeChanged(0, itemCount)
         } else {
             // 退出 manage 状态时，重置所有复选框的选中状态
-            itemSelectionState.clear()
+            selectItems.clear()
             notifyItemRangeChanged(0, itemCount)
         }
         Log.d("TodoAllAdapter", "setEnabled called with: $isEnabled")
@@ -72,39 +69,35 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
     fun deleteSelectedItems() {
         val currentList = currentList.toMutableList()
+        // 遍历当前列表，从后往前删除选中的项
         for (i in itemCount - 1 downTo 0) {
-            if (itemSelectionState.get(i, false)) {
+            if (selectItems.contains(currentList[i])) {
+                pinnedItems.remove(currentList[i])
+//                selectItems.removeAt(i)
                 currentList.removeAt(i)
-                itemSelectionState.delete(i)
+
             }
         }
         submitList(currentList)
     }
     @SuppressLint("NotifyDataSetChanged")
     fun selectedall(){
-        // 清空当前的状态
-        itemSelectionState.clear()
-        // 遍历所有项，将它们的索引和默认状态添加到 SparseBooleanArray 中
-        for (i in 0 until itemCount) {
-            itemSelectionState.put(i, true) //勾选全部
-        }
+        // 清空当前的选中项
+        selectItems.clear()
+        // 将所有项添加到 selectItems 中
+        selectItems.addAll(currentList)
         notifyDataSetChanged()
     }
     @SuppressLint("NotifyDataSetChanged")
     fun toSelectedall(){
         // 清空当前的状态
-        itemSelectionState.clear()
-        // 遍历所有项，将它们的索引和默认状态添加到 SparseBooleanArray 中
-        for (i in 0 until itemCount) {
-            itemSelectionState.put(i, false) //取消勾选全部
-        }
+        // 清空当前的选中项
+        selectItems.clear()
         notifyDataSetChanged()
     }
     fun topSelectedItems() {
         val currentList = currentList.toMutableList()
-        val selectedItems = currentList.filterIndexed { index, _ ->
-            itemSelectionState.get(index, false)
-        }
+        val selectedItems = selectItems
 
         // 将选中的项添加到 pinnedItems 列表中
         pinnedItems.addAll(selectedItems)
@@ -118,23 +111,26 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         // 提交更新后的列表并刷新 RecyclerView
         submitList(currentList)
         // 清空选中状态
-        itemSelectionState.clear()
+        selectItems.clear()
     }
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        val isSelected = itemSelectionState.get(position, false)
+        val isSelected = selectItems.contains(item)
         Log.d("TodoAllAdapter", "onBindViewHolder - Position: $position, isEnabled: $isEnabled, isSelected: $isSelected")
         if (isEnabled) {
             holder.checkbox?.isChecked = isSelected
             holder.checkbox?.setOnCheckedChangeListener { _, isChecked ->
-                itemSelectionState.put(position, isChecked)
+                if (isChecked) {
+                    selectItems.add(item)
+                } else {
+                    selectItems.remove(item)
+                }
             }
 
         } else {
            holder.defaultcheckbox
-
         }
         holder.bind(item)
     }

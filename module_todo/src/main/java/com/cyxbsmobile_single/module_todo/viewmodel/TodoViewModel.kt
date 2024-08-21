@@ -30,18 +30,12 @@ class TodoViewModel : BaseViewModel() {
         get() = _changedTodo
     private val _isEnabled = MutableLiveData<Boolean>()
     val isEnabled: LiveData<Boolean> get() = _isEnabled
-    private val _selectAll = MutableLiveData<Boolean>()
-    val selectAll: LiveData<Boolean> get() = _selectAll
 
     fun setEnabled(click:Boolean) {
         _isEnabled.value = click
         Log.d("TodoViewModel", "isEnabled set to ${_isEnabled.value}")
     }
-    fun setSelectAll(isChecked: Boolean) {
-        if (_selectAll.value!=isChecked){
-        _selectAll.value = isChecked
-        }
-    }
+
     init {
         getAllTodo()
     }
