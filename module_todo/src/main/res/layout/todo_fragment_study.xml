@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="34dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/todo_bottom_button_left">
+            android:background="@drawable/todo_ic_bottom_button_left">
 
             <ImageView
                 android:id="@+id/custom_button_icon"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="28.5dp"
                 android:layout_gravity="center_vertical|start"
-                android:src="@drawable/todo_bottom_button_leftimage" />
+                android:src="@drawable/todo_ic_bottom_button_leftimage" />
 
             <!-- TextView for the label -->
             <TextView
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="28.5dp"
                 android:layout_gravity="center_vertical|start"
-                android:src="@drawable/todo_bottom_right_image" />
+                android:src="@drawable/todo_ic_bottom_right_image" />
 
             <!-- TextView for the label -->
             <TextView
