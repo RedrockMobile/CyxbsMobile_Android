@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -104,7 +103,7 @@ class SlideCallback :
         isCurrentlyActive: Boolean
     ) {
         viewHolder.itemView.apply {
-            val todo_fl_del = findViewById<LinearLayout>(R.id.todo_delete)
+            val todo_fl_del = findViewById<FrameLayout>(R.id.todo_fl_del)
             if (todo_fl_del == null){
                 return
             }
@@ -128,7 +127,7 @@ class SlideCallback :
                     alpha = animeProcess
                 }
             }
-            val todo_cl_item_main = findViewById<LinearLayout>(R.id.todo_item_main)
+            val todo_cl_item_main = findViewById<ConstraintLayout>(R.id.todo_cl_item_main)
             if (isCurrentlyActive) {
                 isFirstTimeReleaseFinger = true
                 if (touchFingerCount == 0L) {
