@@ -2,6 +2,7 @@ package com.cyxbsmobile_single.module_todo.repository
 
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.model.network.TodoApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -49,6 +50,12 @@ object TodoRepository {
     fun getTodoByType(type: String) = TodoApiService
         .INSTANCE
         .getTodoListByType(type)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+
+    fun pinTodo(todoPinData: TodoPinData) = TodoApiService
+        .INSTANCE
+        .pinTodo(todoPinData)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 }

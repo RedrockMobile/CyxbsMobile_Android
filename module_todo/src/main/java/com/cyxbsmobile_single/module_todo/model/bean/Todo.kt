@@ -27,13 +27,9 @@ data class Todo(
     @SerializedName("type")
     var type: String,
     @SerializedName("is_pinned")
-    var isPinned: Int,//是否置顶
-    var repeatStatus: Int
-) : Serializable, Comparable<Todo> {
+    var isPinned: Int//是否置顶
+) : Serializable{
     companion object {
-        const val SET_UNCHECK_BY_REPEAT = 0
-        const val CHECKED_AFTER_REPEAT = 1
-        const val NONE_WITH_REPEAT = 2
         fun generateEmptyTodo(): Todo {
             return Todo(
                 0,
@@ -43,33 +39,8 @@ data class Todo(
                 RemindMode.generateDefaultRemindMode(),
                 System.currentTimeMillis(),
                 "All",
-                0,
-                repeatStatus = NONE_WITH_REPEAT
+                0
             )
         }
-    }
-
-
-    override fun compareTo(other: Todo): Int {
-        return (this.lastModifyTime - other.lastModifyTime).toInt()
-    }
-
-    fun getIsChecked(): Boolean {
-        return isChecked == 1
-    }
-
-    //这个地方比较捞，data class写在主构造里面的属性不好加set和get，故出此下策
-    fun checked() {
-        if (repeatStatus == SET_UNCHECK_BY_REPEAT) {
-            repeatStatus = CHECKED_AFTER_REPEAT
-        }
-        isChecked = 1
-    }
-
-    fun uncheck() {
-        if (repeatStatus == CHECKED_AFTER_REPEAT) {
-            repeatStatus = SET_UNCHECK_BY_REPEAT
-        }
-        isChecked = 0
     }
 }

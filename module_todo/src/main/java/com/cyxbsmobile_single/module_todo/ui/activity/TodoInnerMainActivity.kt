@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.ui.activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -20,21 +21,4 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 @Route(path = DISCOVER_TODO_MAIN)
 class TodoInnerMainActivity: BaseActivity() {
 
-    private val mViewModel by lazy {
-        ViewModelProvider(this)[TodoViewModel::class.java]
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.todo_activity_main)
-        findViewById<Button>(R.id.add_button).setOnClickListener {
-            mViewModel.apply {
-                allTodo.observe(this@TodoInnerMainActivity){
-                    Log.d("TodoInnerMainActivity","${it}")
-                }
-            }
-            AddTodoDialog(this){
-
-            }.show()
-        }
-    }
 }

@@ -9,10 +9,8 @@ import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDataBase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
-import com.cyxbsmobile_single.module_todo.util.isNetworkAvailable
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -39,30 +37,29 @@ class TodoViewModel : BaseViewModel() {
     }
 
     /**
-     * 得到全部todo
+     * 获取所有待办事项
      */
-    fun getAllTodo() {
-        if (isNetworkAvailable(appContext)) {
-            TodoRepository
-                .queryAllTodo()
-                .mapOrInterceptException { }
-                .doOnError {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val modifyTime = System.currentTimeMillis() / 1000
-                        val todoList = TodoDataBase.INSTANCE.todoDao().queryAll()
-                        _allTodo.postValue(TodoListSyncTimeWrapper(modifyTime, todoList))
-                    }
+    fun getAllTodo(){
+        TodoRepository
+            .queryAllTodo()
+            .doOnError {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val modifyTime = System.currentTimeMillis() / 1000
+                    val todoList = TodoDataBase.INSTANCE.todoDao().queryAll()
+                    _allTodo.postValue(todoList?.let { it1 ->
+                        TodoListSyncTimeWrapper(modifyTime,
+                            it1
+                        )
+                    })
                 }
-                .safeSubscribeBy {
-                    _allTodo.postValue(it)
-                }
-        } else {
-            viewModelScope.launch(Dispatchers.IO) {
-                val modifyTime = System.currentTimeMillis() / 1000
-                val todoList = TodoDataBase.INSTANCE.todoDao().queryAll()
-                _allTodo.postValue(TodoListSyncTimeWrapper(modifyTime, todoList))
             }
-        }
+            .safeSubscribeBy {
+                _allTodo.postValue(it.data)
+                it.data.syncTime.apply {
+                    setLastSyncTime(this)
+                    setLastModifyTime(this)
+                }
+            }
     }
 
     /**
@@ -71,50 +68,10 @@ class TodoViewModel : BaseViewModel() {
     fun getChangedTodo(syncTime: Long) {
         TodoRepository
             .queryChangedTodo(syncTime)
-            .mapOrInterceptException { }
             .doOnError { }
             .safeSubscribeBy {
-                _changedTodo.postValue(it)
+                _changedTodo.postValue(it.data)
             }
-    }
-
-    /**
-     * 上传todo到数据库
-     */
-    fun pushTodo(pushWrapper: TodoListPushWrapper) {
-        if (isNetworkAvailable(appContext)) {
-            TodoRepository
-                .pushTodo(pushWrapper)
-                .mapOrInterceptException { }
-                .doOnError {
-                    viewModelScope.launch {
-                        val modifyTime = System.currentTimeMillis() / 1000
-                        setLastModifyTime(modifyTime)
-                        pushWrapper.todoList.forEach { todo ->
-                            TodoDataBase.INSTANCE.todoDao().insert(todo)
-                        }
-                        getAllTodo()
-                    }
-                }
-                .safeSubscribeBy {
-                    if (it.syncTime == getLastModifyTime()) {
-                        setLastModifyTime(it.syncTime)
-                    }
-                    setLastSyncTime(it.syncTime)
-                    getAllTodo()
-                }
-        } else {
-            viewModelScope.launch {
-                val modifyTime = System.currentTimeMillis() / 1000
-                setLastModifyTime(modifyTime)
-                pushWrapper.todoList.forEach { todo ->
-                    TodoDataBase.INSTANCE.todoDao().insert(todo)
-                }
-                getAllTodo()
-            }
-        }
-
-
     }
 
     /**
@@ -123,76 +80,90 @@ class TodoViewModel : BaseViewModel() {
     fun getLastSyncTime(syncTime: Long) {
         TodoRepository
             .getLastSyncTime(syncTime)
-            .mapOrInterceptException { }
             .doOnError { }
             .safeSubscribeBy {
+                setLastSyncTime(it.data.syncTime)
             }
     }
-
+    /**
+     * 推送todo
+     */
+    fun pushTodo(pushWrapper: TodoListPushWrapper) {
+        TodoRepository
+            .pushTodo(pushWrapper)
+            .doOnError {
+                viewModelScope.launch {
+                    val modifyTime = System.currentTimeMillis() / 1000
+                    setLastModifyTime(modifyTime)
+                    pushWrapper.todoList.forEach { todo ->
+                        TodoDataBase.INSTANCE.todoDao().insert(todo)
+                    }
+                    getAllTodo()
+                }
+            }
+            .safeSubscribeBy {
+                getAllTodo()
+                viewModelScope.launch {
+                    val modifyTime = System.currentTimeMillis() / 1000
+                    setLastModifyTime(modifyTime)
+                    pushWrapper.todoList.forEach { todo ->
+                        TodoDataBase.INSTANCE.todoDao().insert(todo)
+                    }
+                }
+                it.data.syncTime.apply {
+                    setLastSyncTime(this)
+                    setLastModifyTime(this)
+                }
+            }
+    }
     /**
      * 删除todo
      */
     fun delTodo(delPushWrapper: DelPushWrapper) {
-        if (isNetworkAvailable(appContext)) {
-            TodoRepository
-                .delTodo(delPushWrapper)
-                .mapOrInterceptException { }
-                .doOnError {
-                    viewModelScope.launch {
-                        val modifyTime = System.currentTimeMillis() / 1000
-                        setLastModifyTime(modifyTime)
-                        delPushWrapper.delTodoList.forEach { todoId ->
-                            TodoDataBase.INSTANCE.todoDao().deleteTodoById(todoId)
-                        }
-                        getAllTodo()
+        TodoRepository
+            .delTodo(delPushWrapper)
+            .doOnError {
+                viewModelScope.launch {
+                    val modifyTime = System.currentTimeMillis() / 1000
+                    setLastModifyTime(modifyTime)
+                    delPushWrapper.delTodoList.forEach { todoId ->
+                        TodoDataBase.INSTANCE.todoDao().deleteTodoById(todoId)
                     }
-                }
-                .safeSubscribeBy {
-                    if (it.syncTime == getLastModifyTime()) {
-                        setLastModifyTime(it.syncTime)
-                    }
-                    setLastSyncTime(it.syncTime)
                     getAllTodo()
                 }
-        } else {
-            viewModelScope.launch {
-                val modifyTime = System.currentTimeMillis() / 1000
-                setLastModifyTime(modifyTime)
-                delPushWrapper.delTodoList.forEach { todoId ->
-                    TodoDataBase.INSTANCE.todoDao().deleteTodoById(todoId)
-                }
-                getAllTodo()
             }
-        }
-
-
+            .safeSubscribeBy {
+                getAllTodo()
+                viewModelScope.launch {
+                    val modifyTime = System.currentTimeMillis() / 1000
+                    setLastModifyTime(modifyTime)
+                    delPushWrapper.delTodoList.forEach { todoId ->
+                        TodoDataBase.INSTANCE.todoDao().deleteTodoById(todoId)
+                    }
+                }
+                it.data.syncTime.apply {
+                    setLastSyncTime(this)
+                    setLastModifyTime(this)
+                }
+            }
     }
 
     /**
-     * 得到分组的todo
+     * 获取分组的数据
      */
     fun getTodoByType(type: String) {
-        if (!isNetworkAvailable(appContext)) {
-            viewModelScope.launch(Dispatchers.IO) {
+        TodoRepository
+            .getTodoByType(type)
+            .doOnError {
                 val modifyTime = System.currentTimeMillis() / 1000
-                val todoList = TodoDataBase.INSTANCE.todoDao().queryByType(type)
-                _categoryTodo.postValue(TodoListGetWrapper(todoList, modifyTime))
+                viewModelScope.launch(Dispatchers.IO) {
+                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType(type)
+                    _categoryTodo.postValue(TodoListGetWrapper(todoList, modifyTime))
+                }
             }
-        } else {
-            TodoRepository
-                .getTodoByType(type)
-                .mapOrInterceptException { }
-                .doOnError {
-                    val modifyTime = System.currentTimeMillis() / 1000
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val todoList = TodoDataBase.INSTANCE.todoDao().queryByType(type)
-                        _categoryTodo.postValue(TodoListGetWrapper(todoList, modifyTime))
-                    }
-                }
-                .safeSubscribeBy {
-                    _categoryTodo.postValue(it)
-                }
-        }
+            .safeSubscribeBy {
+                _categoryTodo.postValue(it.data)
+            }
     }
 
     /**
@@ -211,7 +182,7 @@ class TodoViewModel : BaseViewModel() {
     /**
      * 得到和设置本地最后同步的时间戳
      */
-    private fun getLastSyncTime(): Long =
+    private fun getLastSyncTime2(): Long =
         appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
 
     private fun setLastSyncTime(syncTime: Long) {
@@ -225,12 +196,8 @@ class TodoViewModel : BaseViewModel() {
      * 同步远端与本地数据
      */
     fun syncTodo() {
-        if (isNetworkAvailable(appContext)){
-            val syncTime = getLastSyncTime()
-            val modifyTime = getLastModifyTime()
-            if (syncTime != modifyTime){
+        if (getLastSyncTime2() != getLastModifyTime()){
 
-            }
         }
     }
 }
