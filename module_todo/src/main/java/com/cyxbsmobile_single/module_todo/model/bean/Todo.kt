@@ -26,6 +26,8 @@ data class Todo(
     var lastModifyTime: Long,
     @SerializedName("type")
     var type: String,
+    @SerializedName("is_pinned")
+    var isPinned: Int,//是否置顶
     var repeatStatus: Int
 ) : Serializable, Comparable<Todo> {
     companion object {
@@ -41,6 +43,7 @@ data class Todo(
                 RemindMode.generateDefaultRemindMode(),
                 System.currentTimeMillis(),
                 "All",
+                0,
                 repeatStatus = NONE_WITH_REPEAT
             )
         }
