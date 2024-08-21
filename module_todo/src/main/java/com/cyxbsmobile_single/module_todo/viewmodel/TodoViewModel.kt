@@ -1,84 +1,206 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
-import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.model.TodoModel
-import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
-import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.CHECKED_AFTER_REPEAT
-import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.SET_UNCHECK_BY_REPEAT
-import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
-import com.cyxbsmobile_single.module_todo.util.getString
-import com.cyxbsmobile_single.module_todo.util.needTodayDone
-import com.cyxbsmobile_single.module_todo.util.resetRepeatStatus
-import com.cyxbsmobile_single.module_todo.util.setRepeatTodoList
-import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListGetWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.model.database.TodoDataBase
+import com.cyxbsmobile_single.module_todo.repository.TodoRepository
+import com.cyxbsmobile_single.module_todo.util.isNetworkAvailable
+import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
- * Author: RayleighZ
- * Time: 2021-08-02 10:16
+ * description:
+ * author: sanhuzhen
+ * date: 2024/8/17 11:18
  */
 class TodoViewModel : BaseViewModel() {
 
-    //待办事项的list
-    val uncheckTodoList by lazy { ArrayList<TodoItemWrapper>() }
+    private val _allTodo = MutableLiveData<TodoListSyncTimeWrapper>()
+    private val _changedTodo = MutableLiveData<TodoListGetWrapper>()
+    private val _categoryTodo = MutableLiveData<TodoListGetWrapper>()
 
-    //已完成事项的list
-    val checkedTodoList by lazy { ArrayList<TodoItemWrapper>() }
+    val allTodo: LiveData<TodoListSyncTimeWrapper>
+        get() = _allTodo
+    val changedTodo: LiveData<TodoListGetWrapper>
+        get() = _changedTodo
+    val categoryTodo: LiveData<TodoListGetWrapper>
+        get() = _categoryTodo
+    private val _isEnabled = MutableLiveData<Boolean>()
+    val isEnabled: LiveData<Boolean> get() = _isEnabled
 
-    //用于展示的带title的wrapper
-    val wrapperList by lazy { ArrayList<TodoItemWrapper>() }
+    fun setEnabled(click:Boolean) {
+        _isEnabled.value = click
+        Log.d("TodoViewModel", "isEnabled set to ${_isEnabled.value}")
+    }
 
-    //原生的所有todo
-    val todoList by lazy { ArrayList<Todo>() }
+    init {
+        getAllTodo()
+    }
 
-    //从数据库加载数据
-    fun initDataList(
-            onLoadSuccess: () -> Unit,
-            onConflict: ((remoteSyncTime: Long, localSyncTime: Long) -> Unit)? = null
-    ) {
-        resetRepeatStatus()
-        val repeatTodoIdList = arrayListOf<Long>()
-        TodoModel.INSTANCE.getTodoList(
-                onSuccess = {
-                    wrapperList.clear()
-                    checkedTodoList.clear()
-                    uncheckTodoList.clear()
-                    todoList.clear()
-                    if (!it.isNullOrEmpty()) {
-                        for (todo in it) {
-                            //下面的逻辑是：如果到达了todo重复提醒的下一次的那一天，则将todo设定为尚未完成
-                            if (todo.remindMode.repeatMode != RemindMode.NONE) {
-                                if (needTodayDone(todo.remindMode)) {
-                                    //只有当todo本身是完成过的，并且不是在重复添加之后再完成的，才会被添加进待办事项
-                                    repeatTodoIdList.add(todo.todoId)
-                                    if (todo.repeatStatus != CHECKED_AFTER_REPEAT) {
-                                        todo.isChecked = 0
-                                        todo.repeatStatus = SET_UNCHECK_BY_REPEAT
-                                        TodoModel.INSTANCE.updateTodo(todo)
-                                    }
-                                }
-                            }
-                            if (todo.getIsChecked()) checkedTodoList.add(
-                                    TodoItemWrapper.todoWrapper(
-                                            todo
-                                    )
-                            )
-                            else uncheckTodoList.add(TodoItemWrapper.todoWrapper(todo))
-                        }
-                        setRepeatTodoList(repeatTodoIdList)
-                        todoList.addAll(it)
-                        wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_uncheck)))
-                        wrapperList.addAll(uncheckTodoList)
-                        wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_checked)))
-                        wrapperList.addAll(checkedTodoList)
-                    } else {
-                        wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_uncheck)))
-                        wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_checked)))
+    /**
+     * 得到全部todo
+     */
+    fun getAllTodo() {
+        if (isNetworkAvailable(appContext)) {
+            TodoRepository
+                .queryAllTodo()
+                .mapOrInterceptException { }
+                .doOnError {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val modifyTime = System.currentTimeMillis() / 1000
+                        val todoList = TodoDataBase.INSTANCE.todoDao().queryAll()
+                        _allTodo.postValue(TodoListSyncTimeWrapper(modifyTime, todoList))
                     }
-                    onLoadSuccess.invoke()
-                },
-                onConflict = onConflict
-        )
+                }
+                .safeSubscribeBy {
+                    _allTodo.postValue(it)
+                }
+        } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                val modifyTime = System.currentTimeMillis() / 1000
+                val todoList = TodoDataBase.INSTANCE.todoDao().queryAll()
+                _allTodo.postValue(TodoListSyncTimeWrapper(modifyTime, todoList))
+            }
+        }
+    }
+
+    /**
+     * 获取自上次同步到现在之间修改的所有todo
+     */
+    fun getChangedTodo(syncTime: Long) {
+        TodoRepository
+            .queryChangedTodo(syncTime)
+            .mapOrInterceptException { }
+            .doOnError { }
+            .safeSubscribeBy {
+                _changedTodo.postValue(it)
+            }
+    }
+
+    /**
+     * 上传todo到数据库
+     */
+    fun pushTodo(pushWrapper: TodoListPushWrapper) {
+        if (isNetworkAvailable(appContext)) {
+            TodoRepository
+                .pushTodo(pushWrapper)
+                .mapOrInterceptException { }
+                .doOnError {
+                    viewModelScope.launch {
+                        val modifyTime = System.currentTimeMillis() / 1000
+                        setLastModifyTime(modifyTime)
+                        pushWrapper.todoList.forEach { todo ->
+                            TodoDataBase.INSTANCE.todoDao().insert(todo)
+                        }
+                        getAllTodo()
+                    }
+                }
+                .safeSubscribeBy {
+                    if (it.syncTime == getLastModifyTime()) {
+                        setLastModifyTime(it.syncTime)
+                    }
+                    setLastSyncTime(it.syncTime)
+                    getAllTodo()
+                }
+        } else {
+            viewModelScope.launch {
+                val modifyTime = System.currentTimeMillis() / 1000
+                setLastModifyTime(modifyTime)
+                pushWrapper.todoList.forEach { todo ->
+                    TodoDataBase.INSTANCE.todoDao().insert(todo)
+                }
+                getAllTodo()
+            }
+        }
+
+
+    }
+
+    /**
+     * 获取最后修改的时间戳
+     */
+    fun getLastSyncTime(syncTime: Long) {
+        TodoRepository
+            .getLastSyncTime(syncTime)
+            .mapOrInterceptException { }
+            .doOnError { }
+            .safeSubscribeBy {
+            }
+    }
+
+    /**
+     * 删除todo
+     */
+    fun delTodo(delPushWrapper: DelPushWrapper) {
+        if (isNetworkAvailable(appContext)) {
+            TodoRepository
+                .delTodo(delPushWrapper)
+                .mapOrInterceptException { }
+                .doOnError {
+                    viewModelScope.launch {
+                        val modifyTime = System.currentTimeMillis() / 1000
+                        setLastModifyTime(modifyTime)
+                        delPushWrapper.delTodoList.forEach { todoId ->
+                            TodoDataBase.INSTANCE.todoDao().deleteTodoById(todoId)
+                        }
+                        getAllTodo()
+                    }
+                }
+                .safeSubscribeBy {
+                    if (it.syncTime == getLastModifyTime()) {
+                        setLastModifyTime(it.syncTime)
+                    }
+                    setLastSyncTime(it.syncTime)
+                    getAllTodo()
+                }
+        } else {
+            viewModelScope.launch {
+                val modifyTime = System.currentTimeMillis() / 1000
+                setLastModifyTime(modifyTime)
+                delPushWrapper.delTodoList.forEach { todoId ->
+                    TodoDataBase.INSTANCE.todoDao().deleteTodoById(todoId)
+                }
+                getAllTodo()
+            }
+        }
+
+
+    }
+
+    /**
+     * 得到分组的todo
+     */
+    fun getTodoByType(type: String) {
+        if (!isNetworkAvailable(appContext)) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val modifyTime = System.currentTimeMillis() / 1000
+                val todoList = TodoDataBase.INSTANCE.todoDao().queryByType(type)
+                _categoryTodo.postValue(TodoListGetWrapper(todoList, modifyTime))
+            }
+        } else {
+            TodoRepository
+                .getTodoByType(type)
+                .mapOrInterceptException { }
+                .doOnError {
+                    val modifyTime = System.currentTimeMillis() / 1000
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val todoList = TodoDataBase.INSTANCE.todoDao().queryByType(type)
+                        _categoryTodo.postValue(TodoListGetWrapper(todoList, modifyTime))
+                    }
+                }
+                .safeSubscribeBy {
+                    _categoryTodo.postValue(it)
+                }
+        }
     }
 
     /**
@@ -94,23 +216,29 @@ class TodoViewModel : BaseViewModel() {
         }
     }
 
-    fun addTodo(todo: Todo, onSuccess: () -> Unit) {
-        TodoModel.INSTANCE
-                .addTodo(todo) {
-                    todo.todoId = it
-                    uncheckTodoList.add(0, TodoItemWrapper.todoWrapper(todo))
-                    wrapperList.add(0, TodoItemWrapper.todoWrapper(todo))
-                    onSuccess.invoke()
-                }
+    /**
+     * 得到和设置本地最后同步的时间戳
+     */
+    private fun getLastSyncTime(): Long =
+        appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+
+    private fun setLastSyncTime(syncTime: Long) {
+        appContext.getSp("todo").edit().apply {
+            putLong("TODO_LAST_SYNC_TIME", syncTime)
+            commit()
+        }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        TodoModel.INSTANCE.rxjavaDisposables.forEach {
-            if (!it.isDisposed){
-                it.dispose()
+    /**
+     * 同步远端与本地数据
+     */
+    fun syncTodo() {
+        if (isNetworkAvailable(appContext)){
+            val syncTime = getLastSyncTime()
+            val modifyTime = getLastModifyTime()
+            if (syncTime != modifyTime){
+
             }
         }
-        TodoModel.INSTANCE.rxjavaDisposables.clear()
     }
 }

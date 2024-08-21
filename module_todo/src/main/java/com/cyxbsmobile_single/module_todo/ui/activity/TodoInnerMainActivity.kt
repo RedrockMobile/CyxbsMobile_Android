@@ -5,41 +5,24 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
-import com.cyxbsmobile_single.module_todo.component.CheckLineView
-import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoStudyFragment
-import com.cyxbsmobile_single.module_todo.util.isOutOfTime
-import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
-import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.dip
+import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 
 
@@ -56,21 +39,16 @@ class TodoInnerMainActivity : BaseActivity() {
     private val mVp: ViewPager2 by R.id.view_pager.view()
     private val addButton by R.id.todo_inner_home_bar_add.view<FloatingActionButton>()
     private val todoViewModel by viewModels<TodoViewModel>()
-    private val todoViewModeldata by viewModels<TodoViewModel2>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
-        initView()
         initTab()
         initClick()
         changedFlag = false
 
     }
 
-    private fun initView() {
-        todoViewModeldata.getAllTodo()
 
-    }
 
     private fun initClick() {
         todo_inner_home_bar_back.setOnClickListener {
@@ -142,22 +120,10 @@ class TodoInnerMainActivity : BaseActivity() {
         }
     }
 
-    private fun changeItemToChecked(itemView: View) {
-        itemView.apply {
-            findViewById<AppCompatEditText>(R.id.todo_tv_todo_title).setTextColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.todo_item_checked_color
-                )
-            )
-            findViewById<AppCompatImageView>(R.id.todo_iv_check).visibility = View.VISIBLE
-        }
-    }
-
     private fun onDateLoaded() {
 //        val adapter =
 //                DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
-        val callback = SlideCallback()
+     //   val callback = SlideCallback()
 
 //        todo_inner_home_bar_add.setOnClickListener {
 //            AddItemDialog(this) {
@@ -167,12 +133,12 @@ class TodoInnerMainActivity : BaseActivity() {
 //返回按钮点击事件
 
 
-        findViewById<ConstraintLayout>(R.id.todo_cl_item_main).setBackgroundColor(
-            ContextCompat.getColor(
-                this@TodoInnerMainActivity,
-                com.mredrock.cyxbs.common.R.color.common_white_background
-            )
-        )
+//        findViewById<ConstraintLayout>(R.id.todo_cl_item_main).setBackgroundColor(
+//            ContextCompat.getColor(
+//                this@TodoInnerMainActivity,
+//                com.mredrock.cyxbs.common.R.color.common_white_background
+//            )
+//        )
 
 
     }

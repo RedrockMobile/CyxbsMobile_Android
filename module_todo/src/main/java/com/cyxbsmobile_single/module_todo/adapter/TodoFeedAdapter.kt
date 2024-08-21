@@ -3,24 +3,11 @@ package com.cyxbsmobile_single.module_todo.adapter
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
-import android.widget.FrameLayout
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
-import com.cyxbsmobile_single.module_todo.component.CheckLineView
-import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 
 /**
@@ -39,7 +26,7 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val acti
     }
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
-        feedView = LayoutInflater.from(context).inflate(R.layout.todo_fragment_feed, parent, false)
+      //  feedView = LayoutInflater.from(context).inflate(R.layout.todo_fragment_feed, parent, false)
 //        todoViewModel.initDataList(
 //            onLoadSuccess = { refresh() }
 //        )
@@ -106,8 +93,8 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val acti
     //转换为没有代办的情况
     private fun changeToEmpty() {
         feedView.apply {
-            findViewById<RecyclerView>(R.id.todo_rv_todo_list).visibility = View.GONE
-            findViewById<AppCompatTextView>(R.id.todo_tv_feed_empty_notify).visibility = View.VISIBLE
+//            findViewById<RecyclerView>(R.id.todo_rv_todo_list).visibility = View.GONE
+//            findViewById<AppCompatTextView>(R.id.todo_tv_feed_empty_notify).visibility = View.VISIBLE
         }
     }
 }

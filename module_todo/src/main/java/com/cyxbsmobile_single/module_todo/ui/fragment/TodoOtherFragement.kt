@@ -14,7 +14,6 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.util.set
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +21,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
-import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
-import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel2
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 
 /**
@@ -46,7 +43,6 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private val acTopButton by R.id.button_bottom_left_other.view<FrameLayout>()
     private val checkall by R.id.todo_bottom_check_al_other.view<CheckBox>()
     private val mViewModel: TodoViewModel by activityViewModels()
-    private val viewModeldata: TodoViewModel2 by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -105,7 +101,7 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             deleteButton.setOnClickListener {
                 // 移除指定位置的 item
                 todoAllAdapter.deleteSelectedItems()
-                viewModeldata.delTodo( DelPushWrapper(  todoAllAdapter.selectItems.map { it.todoId },0))
+                mViewModel.delTodo( DelPushWrapper(  todoAllAdapter.selectItems.map { it.todoId },0))
                 dialog.dismiss()
             }
             dialog.show()
@@ -172,64 +168,64 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     //测试用的数据类
     private fun inittoList() {
 // 测试数据1
-        val todo1 = Todo(
-            todoId = 1L,
-            title = "Complete Android project",
-            detail = "Finish the RecyclerView implementation and test the swipe to delete functionality.",
-            isChecked = 0,
-            remindMode = RemindMode(
-                repeatMode = 1,
-                date = arrayListOf("2024-08-20"),
-                week = arrayListOf(),
-                day = arrayListOf(),
-                notifyDateTime = "2024-08-20 09:00:00"
-            ),
-            lastModifyTime = System.currentTimeMillis(),
-            type = "Work",
-            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
-        )
-
-// 测试数据2
-        val todo2 = Todo(
-            todoId = 2L,
-            title = "Grocery Shopping",
-            detail = "Buy milk, bread, eggs, and vegetables.",
-            isChecked = 0,
-            remindMode = RemindMode(
-                repeatMode = 0,
-                date = arrayListOf("2024-08-19"),
-                week = arrayListOf(),
-                day = arrayListOf(),
-                notifyDateTime = "2024-08-19 17:00:00"
-            ),
-            lastModifyTime = System.currentTimeMillis(),
-            type = "Personal",
-            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
-        )
-
-// 测试数据3
-        val todo3 = Todo(
-            todoId = 3L,
-            title = "Call the dentist",
-            detail = "Schedule an appointment for a routine check-up.",
-            isChecked = 0,
-            remindMode = RemindMode(
-                repeatMode = 2,
-                date = arrayListOf("2024-08-21"),
-                week = arrayListOf(),
-                day = arrayListOf(),
-                notifyDateTime = "2024-08-21 10:30:00"
-            ),
-            lastModifyTime = System.currentTimeMillis(),
-            type = "Health",
-            repeatStatus = Todo.NONE_WITH_REPEAT
-        )
-
-// 将这些 Todo 数据包装在 TodoListSyncTimeWrapper 中
-        todoListSyncTimeWrapper = TodoListSyncTimeWrapper(
-            syncTime = System.currentTimeMillis(),
-            todoArray = listOf(todo1, todo2, todo3)
-        )
+//        val todo1 = Todo(
+//            todoId = 1L,
+//            title = "Complete Android project",
+//            detail = "Finish the RecyclerView implementation and test the swipe to delete functionality.",
+//            isChecked = 0,
+//            remindMode = RemindMode(
+//                repeatMode = 1,
+//                date = arrayListOf("2024-08-20"),
+//                week = arrayListOf(),
+//                day = arrayListOf(),
+//                notifyDateTime = "2024-08-20 09:00:00"
+//            ),
+//            lastModifyTime = System.currentTimeMillis(),
+//            type = "Work",
+//            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
+//        )
+//
+//// 测试数据2
+//        val todo2 = Todo(
+//            todoId = 2L,
+//            title = "Grocery Shopping",
+//            detail = "Buy milk, bread, eggs, and vegetables.",
+//            isChecked = 0,
+//            remindMode = RemindMode(
+//                repeatMode = 0,
+//                date = arrayListOf("2024-08-19"),
+//                week = arrayListOf(),
+//                day = arrayListOf(),
+//                notifyDateTime = "2024-08-19 17:00:00"
+//            ),
+//            lastModifyTime = System.currentTimeMillis(),
+//            type = "Personal",
+//            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
+//        )
+//
+//// 测试数据3
+//        val todo3 = Todo(
+//            todoId = 3L,
+//            title = "Call the dentist",
+//            detail = "Schedule an appointment for a routine check-up.",
+//            isChecked = 0,
+//            remindMode = RemindMode(
+//                repeatMode = 2,
+//                date = arrayListOf("2024-08-21"),
+//                week = arrayListOf(),
+//                day = arrayListOf(),
+//                notifyDateTime = "2024-08-21 10:30:00"
+//            ),
+//            lastModifyTime = System.currentTimeMillis(),
+//            type = "Health",
+//            repeatStatus = Todo.NONE_WITH_REPEAT
+//        )
+//
+//// 将这些 Todo 数据包装在 TodoListSyncTimeWrapper 中
+//        todoListSyncTimeWrapper = TodoListSyncTimeWrapper(
+//            syncTime = System.currentTimeMillis(),
+//            todoArray = listOf(todo1, todo2, todo3)
+//        )
 
 
     }
