@@ -97,6 +97,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
             if (etAddTodo.text?.isNotEmpty() == true) {
                 todo.title = etAddTodo.text.toString()
                 onAddTodo(todo)
+                dismiss()
             } else {
                 toast("掌友，标题不能为空哦!")
             }

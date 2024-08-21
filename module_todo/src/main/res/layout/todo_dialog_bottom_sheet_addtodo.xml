@@ -147,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/todo_ic_addtodo_storage" />
+            android:src="@drawable/todo_ic_category_detail" />
 
     </LinearLayout>
 
