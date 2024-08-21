@@ -12,7 +12,6 @@ import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
@@ -21,9 +20,8 @@ import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
-import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 
 /**
  * description:
@@ -31,7 +29,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
  * date: 2024/8/20 17:31
  */
 @Route(path = DISCOVER_TODO_MAIN)
-class TodoInnerMainActivity: BaseActivity() {
+class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
 
     //在详情页面是否有做出修改的flag
     private var changedFlag = false
