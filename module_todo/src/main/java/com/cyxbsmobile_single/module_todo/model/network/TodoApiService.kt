@@ -5,8 +5,10 @@ import com.cyxbsmobile_single.module_todo.model.bean.SyncTime
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListGetWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -28,7 +30,7 @@ interface TodoApiService {
      */
     @GET("/magipoke-todo/list")
     fun queryAllTodo():
-            Single<ApiWrapper<TodoListSyncTimeWrapper>>
+            Observable<ApiWrapper<TodoListSyncTimeWrapper>>
 
     /**
      * 获取自上次同步到现在之间修改的所有todo
@@ -72,4 +74,11 @@ interface TodoApiService {
         type: String
     ):Single<ApiWrapper<TodoListGetWrapper>>
 
+    /**
+     * 置顶
+     */
+    @POST("/magipoke-todo/pin")
+    fun pinTodo(
+        @Body todoPinData: TodoPinData
+    ):Single<ApiWrapper<SyncTime>>
 }

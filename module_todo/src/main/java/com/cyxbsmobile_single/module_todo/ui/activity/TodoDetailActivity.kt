@@ -16,6 +16,5 @@ class TodoDetailActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.todo_activity_main)
     }
 }

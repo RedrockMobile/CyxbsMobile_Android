@@ -23,11 +23,15 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
-import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 
-
+/**
+ * description:
+ * author: sanhuzhen
+ * date: 2024/8/20 17:31
+ */
 @Route(path = DISCOVER_TODO_MAIN)
-class TodoInnerMainActivity : BaseActivity() {
+class TodoInnerMainActivity: BaseActivity() {
 
     //在详情页面是否有做出修改的flag
     private var changedFlag = false
@@ -143,6 +147,3 @@ class TodoInnerMainActivity : BaseActivity() {
 
     }
 }
-
-
-
