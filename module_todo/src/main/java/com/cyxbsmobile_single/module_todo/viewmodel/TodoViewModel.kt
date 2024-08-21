@@ -1,6 +1,5 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,6 +11,7 @@ import com.cyxbsmobile_single.module_todo.model.database.TodoDataBase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -24,24 +24,33 @@ class TodoViewModel : BaseViewModel() {
 
     private val _allTodo = MutableLiveData<TodoListSyncTimeWrapper>()
     private val _changedTodo = MutableLiveData<TodoListGetWrapper>()
-    private val _categoryTodo = MutableLiveData<TodoListGetWrapper>()
+    private val _categoryTodoStudy = MutableLiveData<TodoListGetWrapper>()
+    private val _categoryTodoLife = MutableLiveData<TodoListGetWrapper>()
+    private val _categoryTodoOther = MutableLiveData<TodoListGetWrapper>()
 
     val allTodo: LiveData<TodoListSyncTimeWrapper>
         get() = _allTodo
     val changedTodo: LiveData<TodoListGetWrapper>
         get() = _changedTodo
-    val categoryTodo: LiveData<TodoListGetWrapper>
-        get() = _categoryTodo
+    val categoryTodoStudy: LiveData<TodoListGetWrapper>
+        get() = _categoryTodoStudy
+    val categoryTodoLife: LiveData<TodoListGetWrapper>
+        get() = _categoryTodoLife
+    val categoryTodoOther: LiveData<TodoListGetWrapper>
+        get() = _categoryTodoOther
     private val _isEnabled = MutableLiveData<Boolean>()
     val isEnabled: LiveData<Boolean> get() = _isEnabled
 
     fun setEnabled(click:Boolean) {
         _isEnabled.value = click
-        Log.d("TodoViewModel", "isEnabled set to ${_isEnabled.value}")
+        LogUtils.d("TodoViewModel", "isEnabled set to ${_isEnabled.value}")
     }
 
     init {
         getAllTodo()
+        getTodoByLife()
+        getTodoByOther()
+        getTodoByStudy()
     }
 
     /**
@@ -159,18 +168,48 @@ class TodoViewModel : BaseViewModel() {
     /**
      * 获取分组的数据
      */
-    fun getTodoByType(type: String) {
+    fun getTodoByStudy() {
         TodoRepository
-            .getTodoByType(type)
+            .getTodoByStudy()
             .doOnError {
                 val modifyTime = System.currentTimeMillis() / 1000
                 viewModelScope.launch(Dispatchers.IO) {
-                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType(type)
-                    _categoryTodo.postValue(TodoListGetWrapper(todoList, modifyTime))
+                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType("学习")
+                    _categoryTodoStudy.postValue(TodoListGetWrapper(todoList, modifyTime))
                 }
             }
             .safeSubscribeBy {
-                _categoryTodo.postValue(it.data)
+                _categoryTodoStudy.postValue(it.data)
+            }
+    }
+
+    fun getTodoByLife() {
+        TodoRepository
+            .getTodoByLife()
+            .doOnError {
+                val modifyTime = System.currentTimeMillis() / 1000
+                viewModelScope.launch(Dispatchers.IO) {
+                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType("生活")
+                    _categoryTodoLife.postValue(TodoListGetWrapper(todoList, modifyTime))
+                }
+            }
+            .safeSubscribeBy {
+                _categoryTodoLife.postValue(it.data)
+            }
+    }
+
+    fun getTodoByOther() {
+        TodoRepository
+            .getTodoByOther()
+            .doOnError {
+                val modifyTime = System.currentTimeMillis() / 1000
+                viewModelScope.launch(Dispatchers.IO) {
+                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType("其他")
+                    _categoryTodoOther.postValue(TodoListGetWrapper(todoList, modifyTime))
+                }
+            }
+            .safeSubscribeBy {
+                _categoryTodoOther.postValue(it.data)
             }
     }
 
