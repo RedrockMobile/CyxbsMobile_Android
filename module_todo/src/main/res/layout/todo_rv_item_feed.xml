@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3dp"
+        android:paddingVertical="7dp">
+
+        <com.cyxbsmobile_single.module_todo.component.CheckLineView
+            android:id="@+id/todo_iv_todo_feed"
+            android:layout_width="0dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="16dp"
+            android:transitionName="check"
+            app:unchecked_line_color="@color/todo_feed_check_eclipse_color"
+            app:checked_line_color="@color/todo_check_line_color"
+            app:uncheck_line_width="1.5dp"
+            app:checked_line_width="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/todo_tv_feed_title"
+            app:layout_constraintEnd_toEndOf="@+id/todo_tv_feed_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/todo_tv_feed_title"
+            app:left_radius="8.5dp" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/todo_tv_feed_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:height="25dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:paddingEnd="1dp"
+            android:singleLine="true"
+            android:background="@null"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="15dp"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:textColor="@color/todo_check_line_color"
+            android:textSize="15sp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:transitionName="title"
+            tools:text="复习高数1145141919114514191911451419191145141919" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/todo_iv_feed_bell"
+            android:layout_width="11dp"
+            android:layout_height="13dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/todo_ic_addtodo_notice2"
+            app:layout_constraintStart_toStartOf="@+id/todo_tv_feed_title"
+            app:layout_constraintTop_toBottomOf="@+id/todo_tv_feed_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/todo_tv_feed_notify_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:textColor="@color/todo_item_nf_time_color"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@+id/todo_iv_feed_bell"
+            app:layout_constraintStart_toEndOf="@+id/todo_iv_feed_bell"
+            app:layout_constraintTop_toTopOf="@+id/todo_iv_feed_bell"
+            tools:text="2024年8月2日 12:00"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>
