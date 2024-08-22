@@ -67,6 +67,17 @@ class TimeSelectDialog(
         hourWheelPicker.data = (startTimeHour..23).toList()
         // 设置分钟选择器的值范围
         minuteWheelPicker.data = (startTimeMinute..59).toList()
+        hourWheelPicker.setOnItemSelectedListener { _, name, _->
+            when (name) {
+                startTimeHour -> {
+                    minuteWheelPicker.data = (startTimeMinute..59).toList()
+                }
+
+                else -> {
+                    minuteWheelPicker.data = (0..59).toList()
+                }
+            }
+        }
 
         // 如果时间选择的范围太小，取消滚动
         hourWheelPicker.isCyclic = (hourWheelPicker.data?.size ?: 0) > 7

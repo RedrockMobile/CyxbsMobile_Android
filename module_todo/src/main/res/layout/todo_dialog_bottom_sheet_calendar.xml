@@ -86,24 +86,24 @@
         android:layout_below="@id/todo_rl_calendar"
         android:layout_marginTop="50dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="60dp"
+        android:layout_marginRight="30dp"
         android:text="确定"
         android:background="@drawable/todo_shape_btn_confirm"
         android:textColor="@color/todo_confirm_button_text_color"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="40dp"
         android:textSize="18sp"
         android:gravity="center"/>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/todo_btn_cancel_calendar"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="30dp"
         android:layout_alignTop="@id/todo_btn_confirm_calendar"
         android:text="不设置"
         android:background="@drawable/todo_shape_btn_cancel"
         android:textColor="@color/todo_cancel_button_text_color"
         android:textSize="18sp"
         android:gravity="center"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="40dp"/>
 
 

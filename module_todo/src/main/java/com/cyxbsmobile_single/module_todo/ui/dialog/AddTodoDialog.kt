@@ -37,18 +37,9 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
 
-    // 是否显示重复
-    private var isRepeatUiVisible = false
-    private var isCategoryUiVisible = false
-
-
-    private val selectRepeatTimeList = mutableListOf<String>()
-
-    private val repeatTimeAdapter1 by lazy { RepeatTimeRvAdapter() }
-    private val repeatTimeAdapter2 by lazy { RepeatTimeRvAdapter() }
-
+    private var SelectRepeatTimeList = ArrayList<String>()
+    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter() }
     private val todo by lazy { Todo.generateEmptyTodo() }
-
     private val tvCancel by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_cancel)!! }
     private val tvSave by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_save)!! }
     private val etAddTodo by lazy { findViewById<AppCompatEditText>(R.id.todo_et_addtodo_title)!! }
@@ -56,11 +47,6 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     private val tvDeleteTime by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_notice_time_delete)!! }
     private val tvAddRepeat by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_repeat)!! }
     private val rvRepeatTime by lazy { findViewById<RecyclerView>(R.id.todo_rv_addtodo_repeat)!! }
-    private val rvSelectRepeatTime by lazy { findViewById<RecyclerView>(R.id.todo_rv_addtodo_repeat_list)!! }
-    private val rlSelectRepeatTime by lazy { findViewById<RelativeLayout>(R.id.todo_rl_addtodo_repeat)!! }
-    private val wpRepeatMode by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_repeat_mode)!! }
-    private val wpRepeatTime by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_repeat_time)!! }
-    private val btnAddRepeatTime by lazy { findViewById<AppCompatButton>(R.id.todo_btn_addtodo_repeat_add)!! }
     private val tvCategory by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_category_text)!! }
     private val llCategory by lazy { findViewById<LinearLayout>(R.id.todo_ll_addtodo_category)!! }
     private val llCategoryList by lazy { findViewById<LinearLayout>(R.id.todo_ll_addtodo_category_list)!! }
@@ -96,6 +82,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
         tvSave.setOnClickListener {
             if (etAddTodo.text?.isNotEmpty() == true) {
                 todo.title = etAddTodo.text.toString()
+                todo.todoId = System.currentTimeMillis() / 1000
                 onAddTodo(todo)
                 dismiss()
             } else {
@@ -126,84 +113,62 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
             todo.remindMode.notifyDateTime = ""
         }
         tvAddRepeat.setOnClickListener {
-            if (!isCategoryUiVisible) {
-                showSelectRepeatTime()
-            }
+            showSelectRepeatDialog()
         }
         llCategory.setOnClickListener {
-            if (!isCategoryUiVisible) {
-                showCategoryUI()
-            }
+            showCategoryUI()
         }
         btnAddtodoBt.setOnClickListener {
-            if (isRepeatUiVisible) {
-                selectRepeatTime()
-            } else {
-                selectCategory()
-            }
+            selectCategory()
             hideUI()
         }
         btnAddtodoBtCancel.setOnClickListener {
-            selectRepeatTimeList.clear()
             hideUI()
         }
-        btnAddRepeatTime.setOnClickListener {
-            addRepeatTime()
-        }
-
-        rvSelectRepeatTime.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = repeatTimeAdapter1.apply {
-                setOnItemClick { position ->
-                    if (position in selectRepeatTimeList.indices) {
-                        if (todo.remindMode.repeatMode == RemindMode.WEEK) {
-                            todo.remindMode.week.removeAt(position)
-                        } else if (todo.remindMode.repeatMode == RemindMode.MONTH) {
-                            todo.remindMode.day.removeAt(position)
-                        }
-                        selectRepeatTimeList.removeAt(position)
-                        // 提交新列表，并通知Adapter项已被删除
-                        repeatTimeAdapter1.submitList(selectRepeatTimeList.toList())
-                        repeatTimeAdapter2.submitList(selectRepeatTimeList.toList())
-                        repeatTimeAdapter1.notifyItemRemoved(position)
-                        repeatTimeAdapter2.notifyItemRemoved(position)
-                    }
-                }
-            }
-        }
-
         rvRepeatTime.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = repeatTimeAdapter2.apply {
+            adapter = repeatTimeAdapter.apply {
                 setOnItemClick { position ->
-                    if (position in selectRepeatTimeList.indices) {
+                    if (position in SelectRepeatTimeList.indices) {
+                        val updatedList = SelectRepeatTimeList.toMutableList()
+                        updatedList.removeAt(position)
+                        repeatTimeAdapter.submitList(updatedList)
+                        SelectRepeatTimeList = updatedList as ArrayList<String> // 更新数据源
                         if (todo.remindMode.repeatMode == RemindMode.WEEK) {
                             todo.remindMode.week.removeAt(position)
                         } else if (todo.remindMode.repeatMode == RemindMode.MONTH) {
                             todo.remindMode.day.removeAt(position)
                         }
-                        selectRepeatTimeList.removeAt(position)
-                        // 提交新列表，并通知Adapter项已被删除
-                        repeatTimeAdapter1.submitList(selectRepeatTimeList.toList())
-                        repeatTimeAdapter2.submitList(selectRepeatTimeList.toList())
-                        repeatTimeAdapter1.notifyItemRemoved(position)
-                        repeatTimeAdapter2.notifyItemRemoved(position)
-                        if (selectRepeatTimeList.isEmpty()) {
-                            tvAddRepeat.visibility = View.VISIBLE
-                        }
+                    }
+                    if (SelectRepeatTimeList.isEmpty()){
+                        rvRepeatTime.visibility = View.GONE
+                        tvAddRepeat.visibility = View.VISIBLE
                     }
                 }
             }
         }
+    }
+
+    private fun showSelectRepeatDialog() {
+        SelectRepeatDialog(context) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
+            todo.remindMode.repeatMode = repeatMode
+            if (repeatMode == RemindMode.WEEK) {
+                todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
+            } else {
+                todo.remindMode.day = selectRepeatTimeListIndex as ArrayList
+            }
+            SelectRepeatTimeList = selectRepeatTimeList as ArrayList<String>
+            repeatTimeAdapter.submitList(SelectRepeatTimeList)
+            if (SelectRepeatTimeList.isNotEmpty()){
+                rvRepeatTime.visibility = View.VISIBLE
+                tvAddRepeat.visibility = View.GONE
+            }
+        }.show()
     }
 
     private fun selectCategory() {
         tvCategory.text = wpCategory.data.get(wpCategory.currentItemPosition).toString()
         todo.type = tvCategory.text.toString()
-    }
-
-    private fun selectRepeatTime() {
-        repeatTimeAdapter2.submitList(selectRepeatTimeList)
     }
 
     //显示日历
@@ -243,118 +208,18 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
         }
     }
 
-    //显示选择重复时间的UI
-    private fun showSelectRepeatTime() {
-        isRepeatUiVisible = true
-        rlSelectRepeatTime.visibility = View.VISIBLE
-        btnAddtodoBt.visibility = View.VISIBLE
-        btnAddtodoBtCancel.visibility = View.VISIBLE
-        rvRepeatTime.visibility = View.VISIBLE
-        wpRepeatMode.data = listOf("每天", "每周", "每月", "", "", "", "")
-        wpRepeatMode.setSelectedItemPosition(0)
-        initWpData()
-    }
-
-    private fun initWpData() {
-        when (wpRepeatMode.currentItemPosition) {
-            0 -> {
-                wpRepeatTime.data = emptyList<String>()
-            }
-
-            1 -> {
-                wpRepeatTime.data =
-                    listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
-                wpRepeatTime.setSelectedItemPosition(0)
-            }
-
-            2 -> {
-                wpRepeatTime.data = (1..31).toList()
-                wpRepeatTime.setSelectedItemPosition(0)
-            }
-        }
-        wpRepeatMode.setOnItemSelectedListener { _, _, position ->
-            when (position) {
-                0 -> {
-                    wpRepeatTime.data = emptyList<String>()
-                }
-
-                1 -> {
-                    wpRepeatTime.data =
-                        listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
-                    wpRepeatTime.setSelectedItemPosition(0)
-                }
-
-                2 -> {
-                    wpRepeatTime.data = (1..31).toList()
-                    wpRepeatTime.setSelectedItemPosition(0)
-                }
-            }
-        }
-    }
-
     private fun showCategoryUI() {
-        isCategoryUiVisible = true
         llCategoryList.visibility = View.VISIBLE
         btnAddtodoBt.visibility = View.VISIBLE
         btnAddtodoBtCancel.visibility = View.VISIBLE
-
         wpCategory.data = listOf("学习", "生活", "其他")
     }
 
     private fun hideUI() {
-        isRepeatUiVisible = false
-        isCategoryUiVisible = false
-        rlSelectRepeatTime.visibility = View.GONE
         llCategoryList.visibility = View.GONE
         btnAddtodoBt.visibility = View.GONE
         btnAddtodoBtCancel.visibility = View.GONE
-        if (selectRepeatTimeList.isNotEmpty()) {
-            tvAddRepeat.visibility = View.GONE
-        }
     }
 
-    //添加重复时间
-    private fun addRepeatTime() {
 
-        if (selectRepeatTimeList.isEmpty()) {
-            todo.remindMode.repeatMode = RemindMode.NONE
-        }
-
-        val currentRepeatMode = wpRepeatMode.currentItemPosition.plus(1)
-
-        if (currentRepeatMode == todo.remindMode.repeatMode || todo.remindMode.repeatMode == RemindMode.NONE) {
-            todo.remindMode.repeatMode = currentRepeatMode
-            // 获取当前选中的重复时间
-            val currentRepeatTime = when (todo.remindMode.repeatMode) {
-                RemindMode.DAY -> "每天"
-                RemindMode.WEEK -> {
-                    todo.remindMode.week.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
-                    wpRepeatTime.data[wpRepeatTime.currentItemPosition].toString()
-                }
-
-                RemindMode.MONTH -> {
-                    val day =
-                        wpRepeatTime.data.get(wpRepeatTime.currentItemPosition).toString()
-                    todo.remindMode.day.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
-                    "每月${day}日"
-                }
-
-                else -> null
-            }
-
-            // 确保当前选中的重复时间不为空且不在列表中
-            if (!selectRepeatTimeList.contains(currentRepeatTime)) {
-                // 将新项插入到列表的开头
-                currentRepeatTime?.let { selectRepeatTimeList.add(0, it) }
-                repeatTimeAdapter1.submitList(ArrayList(selectRepeatTimeList)) {
-                    // 确保RecyclerView显示在第一个项目
-                    rvSelectRepeatTime.layoutManager?.scrollToPosition(0)
-                }  // 刷新适配器
-            }
-        } else {
-            toast("只能选择一种重复模式哦！")
-        }
-
-
-    }
 }
