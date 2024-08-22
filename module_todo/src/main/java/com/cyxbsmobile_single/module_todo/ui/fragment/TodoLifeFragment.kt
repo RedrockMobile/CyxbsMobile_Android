@@ -25,6 +25,8 @@ import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 
 /**
  * description ：清单下面四个页面之一
@@ -102,7 +104,13 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             deleteButton.setOnClickListener {
                 // 移除指定位置的 item
                 todoAllAdapter.deleteSelectedItems()
-                mViewModel.delTodo( DelPushWrapper(  todoAllAdapter.selectItems.map { it.todoId },0))
+                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                mViewModel.delTodo(
+                    DelPushWrapper(
+                        todoAllAdapter.selectItems.map { it.todoId },
+                        syncTime
+                    )
+                )
                 dialog.dismiss()
             }
             dialog.show()
@@ -160,8 +168,10 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         // Log.d("viemodeldata",it.toString())
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
-        mViewModel.allTodo.observe {
-            todoAllAdapter.submitList(it.todoArray)
+        mViewModel.categoryTodoLife.observe(viewLifecycleOwner) {
+            todoAllAdapter.submitList(it.todoList){
+                checkIfEmpty()
+            }
         }
         // }
 
@@ -257,6 +267,8 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                 dialog.dismiss()
             }
             deleteButton.setOnClickListener {
+                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime))
                 // 移除指定位置的 item
                 currentList.removeAt(position)
                 // 提交更新后的列表

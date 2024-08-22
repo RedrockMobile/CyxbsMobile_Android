@@ -27,10 +27,10 @@ class DragAndDropCallback(
         val item = adapter.getItem(position)
 
         // 检查当前项是否在置顶列表中
-        val isPinned = adapter.pinnedItems.contains(item)
+        val isPinned = item.isPinned
 
         // 如果是置顶项，则不允许拖动
-        if (isPinned) {
+        if (isPinned==1) {
             return 0
         }
 
@@ -52,10 +52,10 @@ class DragAndDropCallback(
         val targetItem = adapter.getItem(toPosition)
 
         // 如果源项或目标项在置顶列表中，则不允许拖动
-        val isPinnedSource = adapter.pinnedItems.contains(item)
-        val isPinnedTarget = adapter.pinnedItems.contains(targetItem)
+        val isPinnedSource = item.isPinned
+        val isPinnedTarget = targetItem.isPinned
 
-        if (isPinnedSource || isPinnedTarget) {
+        if (isPinnedSource==1 || isPinnedTarget==1) {
             return false
         }
 

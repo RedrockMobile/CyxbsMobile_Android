@@ -15,7 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.Collections
+import java.util.Locale
 
 /**
  * @Project: CyxbsMobile_Android
@@ -28,12 +31,10 @@ import java.util.Collections
 class TodoAllAdapter(private val listener: OnItemClickListener) :
     ListAdapter<Todo, TodoAllAdapter.ViewHolder>(ItemDiffCallback()), ItemTouchHelperAdapter {
 
-    var pinnedItems: MutableList<Todo> = mutableListOf()
     var isEnabled = false
-
-    //SparseBooleanArray适合处理较大的数据集合。
-  //  var itemSelectionState = SparseBooleanArray()
-   var selectItems:MutableList<Todo> = mutableListOf()
+    // 定义日期格式
+    private val dateFormat = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
+    var selectItems:MutableList<Todo> = mutableListOf()
 
 
 
@@ -61,6 +62,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             VIEW_TYPE_MANAGE -> R.layout.todo_rv_item_manage
             VIEW_TYPE_PINNED -> R.layout.todo_rv_item_todo_pinned
             VIEW_TYPE_DEFAULT -> R.layout.todo_rv_item_todo
+            VIEW_TYPE_DELAY ->R.layout.todo_rv_item_delay
             else -> throw IllegalArgumentException("Unknown view type")
         }
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
@@ -72,7 +74,6 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         // 遍历当前列表，从后往前删除选中的项
         for (i in itemCount - 1 downTo 0) {
             if (selectItems.contains(currentList[i])) {
-                pinnedItems.remove(currentList[i])
 //                selectItems.removeAt(i)
                 currentList.removeAt(i)
 
@@ -99,9 +100,9 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         val currentList = currentList.toMutableList()
         val selectedItems = selectItems
 
-        // 将选中的项添加到 pinnedItems 列表中
-        pinnedItems.addAll(selectedItems)
-
+        for (item in selectedItems) {
+            item.isPinned = 1
+        }
         // 从 currentList 中移除选中的项
         currentList.removeAll(selectedItems)
 
@@ -109,7 +110,9 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         currentList.addAll(0, selectedItems)
 
         // 提交更新后的列表并刷新 RecyclerView
-        submitList(currentList)
+        submitList(currentList){
+            notifyDataSetChanged()
+        }
         // 清空选中状态
         selectItems.clear()
     }
@@ -137,23 +140,39 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
 
     override fun getItemViewType(position: Int): Int {
-        // 如果启用了管理模式，所有项应使用管理模式布局
         val item = getItem(position)
-        return if (pinnedItems.contains(item)) {
-            VIEW_TYPE_PINNED
+
+        // 检查 notifyDateTime 是否为空或空字符串
+        val itemTime = if (!item.remindMode.notifyDateTime.isNullOrEmpty()) {
+            try {
+                dateFormat.parse(item.remindMode.notifyDateTime)?.time ?: 0L
+            } catch (e: ParseException) {
+                // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
+                e.printStackTrace()
+                System.currentTimeMillis()
+            }
         } else {
-            if (isEnabled) {
-              VIEW_TYPE_MANAGE
-            } else {
-                VIEW_TYPE_DEFAULT
+            0L
+        }
+
+        val currentTime = System.currentTimeMillis()
+
+        return if (currentTime > itemTime) {
+            VIEW_TYPE_DELAY
+        } else {
+            when {
+                item.isPinned == 1 -> VIEW_TYPE_PINNED
+                isEnabled -> VIEW_TYPE_MANAGE
+                else -> VIEW_TYPE_DEFAULT
             }
         }
     }
+
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
         val currentList = currentList.toMutableList()
 
         // 如果置顶的项参与交换，则不进行交换
-        if (pinnedItems.contains(currentList[fromPosition]) || pinnedItems.contains(currentList[toPosition])) {
+        if (currentList[fromPosition].isPinned==1 || currentList[toPosition].isPinned==1) {
             return
         }
         Collections.swap(currentList, fromPosition, toPosition)
@@ -184,7 +203,6 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         }
 
         fun bind(item: Todo) {
-
             listtext.text = item.title
             date.text = item.remindMode.notifyDateTime
             itemView.setOnClickListener {
@@ -199,13 +217,6 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             topbutton.setOnClickListener {
                 val currentPosition = bindingAdapterPosition
                 if (currentPosition != RecyclerView.NO_POSITION) {
-                    // 如果当前项已置顶，点击后取消置顶，否则置顶
-                    if (pinnedItems.contains(item)) {
-                        pinnedItems.remove(item)
-                    } else {
-                        pinnedItems.add(item)
-                    }
-                    submitList(currentList.toList()) // 确保整个列表被刷新
                     listener.ontopButtonClick(item, currentPosition)
                 }
             }
@@ -222,7 +233,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             }
 
             // 如果当前项是置顶项，则隐藏置顶按钮
-            topbutton.visibility = if (pinnedItems.contains(item)) View.GONE else View.VISIBLE
+            topbutton.visibility = if (item.isPinned==1) View.GONE else View.VISIBLE
 
 
         }
@@ -249,5 +260,6 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         private const val VIEW_TYPE_PINNED = 1
         private const val VIEW_TYPE_DEFAULT = 0
         private const val VIEW_TYPE_MANAGE = 2
+        private const val VIEW_TYPE_DELAY = 3
     }
 }
