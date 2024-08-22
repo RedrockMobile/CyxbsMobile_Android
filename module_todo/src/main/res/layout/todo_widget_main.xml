@@ -19,7 +19,7 @@
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/todo_calendar_header_color"/>
+            android:textColor="@color/config_level_two_font_color"/>
 
         <TextView
             android:layout_width="0dp"
