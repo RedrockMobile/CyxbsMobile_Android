@@ -159,7 +159,9 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         // Log.d("viemodeldata",it.toString())
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
-        todoAllAdapter.submitList(todoListSyncTimeWrapper.todoArray)
+        mViewModel.allTodo.observe {
+            todoAllAdapter.submitList(it.todoArray)
+        }
         // }
 
         //}

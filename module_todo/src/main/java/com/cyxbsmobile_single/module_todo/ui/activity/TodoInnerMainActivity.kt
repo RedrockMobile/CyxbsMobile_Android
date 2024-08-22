@@ -12,6 +12,8 @@ import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
+import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
@@ -22,6 +24,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 
 /**
  * description:
@@ -67,6 +71,13 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
             manageButton.visibility = View.VISIBLE
             addButton.visibility=View.VISIBLE
             todoViewModel.setEnabled(false)
+        }
+        todo_inner_home_bar_add.setOnClickListener {
+            AddTodoDialog(this){
+                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                val firstPush = if (syncTime == 0L) 1 else 0
+                todoViewModel.pushTodo(TodoListPushWrapper(listOf(it),syncTime,TodoListPushWrapper.NONE_FORCE,firstPush))
+            }.show()
         }
 
     }
