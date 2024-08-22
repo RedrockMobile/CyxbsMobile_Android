@@ -24,6 +24,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -117,6 +118,10 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
         acTopButton.setOnClickListener {
             todoAllAdapter.topSelectedItems()
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            for (item in todoAllAdapter.selectItems) {
+                mViewModel.pinTodo(TodoPinData(1,1, syncTime.toInt(), item.todoId.toInt()))
+            }
 
         }
         checkall.setOnCheckedChangeListener { _, isChecked ->

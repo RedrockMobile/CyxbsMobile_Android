@@ -32,10 +32,10 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     ListAdapter<Todo, TodoAllAdapter.ViewHolder>(ItemDiffCallback()), ItemTouchHelperAdapter {
 
     var isEnabled = false
+
     // 定义日期格式
     private val dateFormat = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
-    var selectItems:MutableList<Todo> = mutableListOf()
-
+    var selectItems: MutableList<Todo> = mutableListOf()
 
 
     fun updateEnabled(enabled: Boolean) {
@@ -62,11 +62,11 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             VIEW_TYPE_MANAGE -> R.layout.todo_rv_item_manage
             VIEW_TYPE_PINNED -> R.layout.todo_rv_item_todo_pinned
             VIEW_TYPE_DEFAULT -> R.layout.todo_rv_item_todo
-            VIEW_TYPE_DELAY ->R.layout.todo_rv_item_delay
+            VIEW_TYPE_DELAY -> R.layout.todo_rv_item_delay
             else -> throw IllegalArgumentException("Unknown view type")
         }
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        return ViewHolder(view, listener,viewType)
+        return ViewHolder(view, listener, viewType)
     }
 
     fun deleteSelectedItems() {
@@ -81,21 +81,24 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         }
         submitList(currentList)
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    fun selectedall(){
+    fun selectedall() {
         // 清空当前的选中项
         selectItems.clear()
         // 将所有项添加到 selectItems 中
         selectItems.addAll(currentList)
         notifyDataSetChanged()
     }
+
     @SuppressLint("NotifyDataSetChanged")
-    fun toSelectedall(){
+    fun toSelectedall() {
         // 清空当前的状态
         // 清空当前的选中项
         selectItems.clear()
         notifyDataSetChanged()
     }
+
     fun topSelectedItems() {
         val currentList = currentList.toMutableList()
         val selectedItems = selectItems
@@ -110,7 +113,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         currentList.addAll(0, selectedItems)
 
         // 提交更新后的列表并刷新 RecyclerView
-        submitList(currentList){
+        submitList(currentList) {
             notifyDataSetChanged()
         }
         // 清空选中状态
@@ -121,7 +124,10 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         val isSelected = selectItems.contains(item)
-        Log.d("TodoAllAdapter", "onBindViewHolder - Position: $position, isEnabled: $isEnabled, isSelected: $isSelected")
+        Log.d(
+            "TodoAllAdapter",
+            "onBindViewHolder - Position: $position, isEnabled: $isEnabled, isSelected: $isSelected"
+        )
         if (isEnabled) {
             holder.checkbox?.isChecked = isSelected
             holder.checkbox?.setOnCheckedChangeListener { _, isChecked ->
@@ -133,16 +139,15 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             }
 
         } else {
-           holder.defaultcheckbox
+            holder.defaultcheckbox
         }
         holder.bind(item)
     }
 
 
     override fun getItemViewType(position: Int): Int {
+        // 如果启用了管理模式，所有项应使用管理模式布局
         val item = getItem(position)
-
-        // 检查 notifyDateTime 是否为空或空字符串
         val itemTime = if (!item.remindMode.notifyDateTime.isNullOrEmpty()) {
             try {
                 dateFormat.parse(item.remindMode.notifyDateTime)?.time ?: 0L
@@ -154,16 +159,19 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         } else {
             0L
         }
-
         val currentTime = System.currentTimeMillis()
-
-        return if (currentTime > itemTime) {
-            VIEW_TYPE_DELAY
+        return if (isEnabled) {
+            VIEW_TYPE_MANAGE
         } else {
-            when {
-                item.isPinned == 1 -> VIEW_TYPE_PINNED
-                isEnabled -> VIEW_TYPE_MANAGE
-                else -> VIEW_TYPE_DEFAULT
+            if (currentTime > itemTime) {
+                VIEW_TYPE_DELAY
+            } else {
+                if (item.isPinned == 1) {
+                    VIEW_TYPE_PINNED
+                } else {
+                    VIEW_TYPE_DEFAULT
+                }
+
             }
         }
     }
@@ -172,7 +180,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         val currentList = currentList.toMutableList()
 
         // 如果置顶的项参与交换，则不进行交换
-        if (currentList[fromPosition].isPinned==1 || currentList[toPosition].isPinned==1) {
+        if (currentList[fromPosition].isPinned == 1 || currentList[toPosition].isPinned == 1) {
             return
         }
         Collections.swap(currentList, fromPosition, toPosition)
@@ -183,20 +191,24 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         return super.getItem(position)
     }
 
-    inner class ViewHolder(itemView: View, private val listener: OnItemClickListener, private val viewType: Int) :
+    inner class ViewHolder(
+        itemView: View,
+        private val listener: OnItemClickListener,
+        private val viewType: Int
+    ) :
         RecyclerView.ViewHolder(itemView) {
 
         val listtext: TextView = itemView.findViewById(R.id.todo_title_text)
         private val date: TextView = itemView.findViewById(R.id.todo_notify_time)
         private val deletebutton: LinearLayout = itemView.findViewById(R.id.todo_delete)
         private val topbutton: LinearLayout = itemView.findViewById(R.id.todo_item_totop)
-        private val icRight:ImageView?=itemView.findViewById(R.id.todo_iv_check)
+        private val icRight: ImageView? = itemView.findViewById(R.id.todo_iv_check)
         val defaultcheckbox: CheckLineView? = if (!isEnabled) {
             itemView.findViewById(R.id.todo_item_check) as? CheckLineView
         } else {
             null
         }
-        val checkbox: CheckBox? = if ( isEnabled) {
+        val checkbox: CheckBox? = if (isEnabled) {
             itemView.findViewById(R.id.todo_item_check) as? CheckBox
         } else {
             null
@@ -220,10 +232,15 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                     listener.ontopButtonClick(item, currentPosition)
                 }
             }
-            if(!isEnabled) {
+            if (!isEnabled) {
                 defaultcheckbox?.setOnClickListener {
                     defaultcheckbox.setStatusWithAnime(true)
-                    listtext.setTextColor(ContextCompat.getColor(itemView.context, R.color.todo_check_item_color))
+                    listtext.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.todo_check_item_color
+                        )
+                    )
                     icRight?.let {
                         it.visibility = View.VISIBLE
                     }
@@ -233,7 +250,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             }
 
             // 如果当前项是置顶项，则隐藏置顶按钮
-            topbutton.visibility = if (item.isPinned==1) View.GONE else View.VISIBLE
+            topbutton.visibility = if (item.isPinned == 1) View.GONE else View.VISIBLE
 
 
         }
