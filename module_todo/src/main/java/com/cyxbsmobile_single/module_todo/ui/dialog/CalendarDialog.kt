@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -132,12 +133,12 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
     private fun setDayOfCalendar() {
         glCalendar.removeAllViews()
 
+
         calendar.set(Calendar.DAY_OF_MONTH, 1)
         val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 //获取当前月份第一天是星期几
 
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) //获取当前月份的天数
 
-        calendar.set(Calendar.DAY_OF_MONTH, currentDay)
 
         //填充之前的空白天数
         for (i in 1 until firstDayOfWeek) {
@@ -148,26 +149,73 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
         //填充当前月份的天数
         for (day in 1..daysInMonth) {
             val dayView = createDayTextView(day)
-            dayView.setOnClickListener {
-                if (calendar.get(Calendar.YEAR) > currentYear || (calendar.get(Calendar.YEAR) == currentYear && calendar.get(
-                        Calendar.MONTH
-                    ) > currentMonth) || (calendar.get(Calendar.YEAR) == currentYear && calendar.get(
-                        Calendar.MONTH
-                    ) == currentMonth && day >= currentDay)
-                ) {
-                    //用户点击日期时触发
-                    calendar.set(Calendar.DAY_OF_MONTH, day)
-                    selectedDayView?.background = null
-                    selectedDayView?.setTextColor(R.color.todo_calendar_header_color)
-                    dayView.background = ContextCompat.getDrawable(
-                        context, R.drawable.todo_shape_bg_day_select
-                    ) //根据需要设置背景
-                    dayView.setTextColor(Color.WHITE)
-                    selectedDayView = dayView
-                }
-            }
+            selectDay(dayView, day)
             glCalendar.addView(dayView, createGridLayoutParam())
         }
+
+    }
+
+    private fun selectDay(dayView: TextView, day: Int) {
+        val isCurrentYear = calendar.get(Calendar.YEAR) == currentYear
+        val isCurrentMonth = calendar.get(Calendar.MONTH) == currentMonth
+        val afterCurrentMonth = calendar.get(Calendar.MONTH) > currentMonth
+        val isFirstDay = day == 1
+
+        // 检查是否选中
+        val isSelected = ((isCurrentYear && isCurrentMonth && day == currentDay) ||
+                (!isCurrentYear && isFirstDay&& afterCurrentMonth) ||
+                (isCurrentYear && afterCurrentMonth && isFirstDay))
+
+        if (isSelected) {
+            calendar.set(Calendar.DAY_OF_MONTH, day)
+            applySelectedStyle(dayView)
+        }
+
+        dayView.setOnClickListener {
+            if (isDateSelectable(day)) {
+                calendar.set(Calendar.DAY_OF_MONTH, day)
+                deselectCurrentDay()
+                applySelectedStyle(dayView)
+            }
+        }
+    }
+
+    private fun applySelectedStyle(dayView: TextView) {
+        dayView.apply {
+            selectedDayView?.let {
+                it.background = null
+                it.setTextColor(
+                    if (calendar.get(Calendar.YEAR) == currentYear &&
+                        calendar.get(Calendar.MONTH) == currentMonth &&
+                        it.text.toString().toInt() == currentDay
+                    ) Color.BLUE else Color.BLACK
+                )
+            }
+            selectedDayView = this
+            background = ContextCompat.getDrawable(context, R.drawable.todo_shape_bg_day_select)
+            setTextColor(Color.WHITE)
+        }
+    }
+
+    private fun deselectCurrentDay() {
+        selectedDayView?.apply {
+            background = null
+            setTextColor(
+                if (calendar.get(Calendar.YEAR) == currentYear &&
+                    calendar.get(Calendar.MONTH) == currentMonth &&
+                    text.toString().toInt() == currentDay
+                ) Color.BLUE else Color.BLACK
+            )
+        }
+    }
+
+    //判断日期是否可选
+    private fun isDateSelectable(day: Int): Boolean {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        return year > currentYear ||
+                (year == currentYear && month > currentMonth) ||
+                (year == currentYear && month == currentMonth && day >= currentDay)
     }
 
     //创建日期TextView
@@ -177,23 +225,26 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
             text = day.toString()
             textSize = 16f
             gravity = Gravity.CENTER
-            setPadding(10, 10, 10, 10)
+            setPadding(20, 20, 20, 20)
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val dayColor = when {
                 year > currentYear -> Color.BLACK
                 year < currentYear -> Color.GRAY
                 month < currentMonth -> Color.GRAY
-                month > currentMonth -> R.color.todo_calendar_header_color
-                day > currentDay -> R.color.todo_calendar_header_color
+                month > currentMonth -> Color.BLACK
+                day > currentDay -> Color.BLACK
                 day < currentDay -> Color.GRAY
                 else -> {
                     if (selectedDayView == null) {
                         selectedDayView = this
                         background =
                             ContextCompat.getDrawable(context, R.drawable.todo_shape_bg_day_select)
+                        Color.WHITE
+                    } else {
+                        Color.BLUE
                     }
-                    Color.BLUE
+
                 }
             }
 
@@ -201,14 +252,13 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
         }
     }
 
-    //创建GridLayout的布局参数
+    // 创建 GridLayout 的布局参数，使单元格等宽高
     private fun createGridLayoutParam(): GridLayout.LayoutParams {
         return GridLayout.LayoutParams().apply {
-            width = GridLayout.LayoutParams.WRAP_CONTENT
+            width = 0
             height = GridLayout.LayoutParams.WRAP_CONTENT
             columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            rowSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL)
-            setMargins(25, 25, 25, 25)
+            setMargins(25, 25, 25, 25) // 设置单元格间的间距
         }
     }
 

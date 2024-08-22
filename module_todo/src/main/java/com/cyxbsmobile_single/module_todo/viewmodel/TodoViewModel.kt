@@ -121,15 +121,13 @@ class TodoViewModel : BaseViewModel() {
             .safeSubscribeBy {
                 getAllTodo()
                 viewModelScope.launch {
-                    val modifyTime = System.currentTimeMillis() / 1000
-                    setLastModifyTime(modifyTime)
+                    setLastModifyTime(it.data.syncTime)
                     pushWrapper.todoList.forEach { todo ->
                         TodoDataBase.INSTANCE.todoDao().insert(todo)
                     }
                 }
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
-                    setLastModifyTime(this)
                 }
             }
     }
