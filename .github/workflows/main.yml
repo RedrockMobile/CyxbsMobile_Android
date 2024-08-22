@@ -94,7 +94,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: result_apk
           path: module_app/build/outputs/apk/release/module_app-release.apk

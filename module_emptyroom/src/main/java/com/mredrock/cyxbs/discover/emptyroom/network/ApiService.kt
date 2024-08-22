@@ -10,9 +10,11 @@ import retrofit2.http.*
 interface ApiService {
     @FormUrlEncoded
     @POST("/magipoke-jwzx/roomEmpty")
-    fun getEmpyRooms(@Field("week") week: Int,
-                      @Field("weekDayNum") weekday: Int,
-                      @Field("buildNum") buildNum: Int,
-                      @Field("sectionNum") section: String): Observable<RedrockApiWrapper<List<String>>>
+    fun getEmpyRooms(
+        @Field("weekDayNum") weekday: String,
+        @Field("sectionNum") section: String,
+        @Field("buildNum") buildNum: String,
+        @Field("week") week: String
+    ): Observable<RedrockApiWrapper<List<String>>>
 
 }
