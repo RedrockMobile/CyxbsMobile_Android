@@ -159,8 +159,10 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
             }
             SelectRepeatTimeList = selectRepeatTimeList as ArrayList<String>
             repeatTimeAdapter.submitList(SelectRepeatTimeList)
-            rvRepeatTime.visibility = View.VISIBLE
-            tvAddRepeat.visibility = View.GONE
+            if (SelectRepeatTimeList.isNotEmpty()){
+                rvRepeatTime.visibility = View.VISIBLE
+                tvAddRepeat.visibility = View.GONE
+            }
         }.show()
     }
 

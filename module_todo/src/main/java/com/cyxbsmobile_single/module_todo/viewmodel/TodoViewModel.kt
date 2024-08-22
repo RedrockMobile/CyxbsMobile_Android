@@ -7,6 +7,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListGetWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.model.database.TodoDataBase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -208,6 +209,20 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 _categoryTodoOther.postValue(it.data)
+            }
+    }
+
+    /**
+     * 置顶
+     */
+    fun pinTodo(todoPinData: TodoPinData){
+        TodoRepository
+            .pinTodo(todoPinData)
+            .doOnError {
+
+            }
+            .safeSubscribeBy {
+                getAllTodo()
             }
     }
 
