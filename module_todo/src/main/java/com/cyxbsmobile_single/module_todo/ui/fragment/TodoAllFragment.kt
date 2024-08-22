@@ -23,6 +23,7 @@ import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
@@ -120,7 +121,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             todoAllAdapter.topSelectedItems()
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             for (item in todoAllAdapter.selectItems) {
-                mViewModel.pinTodo(TodoPinData(1,1, syncTime.toInt(), item.todoId.toInt()))
+                mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
             }
 
         }
@@ -304,6 +305,12 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             // 滚动到顶部以显示置顶的项
             mRecyclerView.scrollToPosition(0)
         }
+    }
+
+    override fun onFinishCheck(item: Todo) {
+        item.isChecked = 1
+        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+        mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 1))
     }
 
 

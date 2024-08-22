@@ -163,7 +163,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         return if (isEnabled) {
             VIEW_TYPE_MANAGE
         } else {
-            if (currentTime > itemTime) {
+            if (currentTime > itemTime &&itemTime!=0L) {
                 VIEW_TYPE_DELAY
             } else {
                 if (item.isPinned == 1) {
@@ -217,6 +217,18 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         fun bind(item: Todo) {
             listtext.text = item.title
             date.text = item.remindMode.notifyDateTime
+            if (item.isChecked==1){
+                defaultcheckbox?.setStatusWithAnime(true)
+                listtext.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.todo_check_item_color
+                    )
+                )
+                icRight?.let {
+                    it.visibility = View.VISIBLE
+                }
+            }
             itemView.setOnClickListener {
                 listener.onItemClick(item)
             }
@@ -246,6 +258,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                     }
                     // 禁用点击事件
                     defaultcheckbox.setOnClickListener(null)
+                listener.onFinishCheck(item)
                 }
             }
 
@@ -271,6 +284,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         fun onItemClick(item: Todo)
         fun ondeleteButtonClick(item: Todo, position: Int)
         fun ontopButtonClick(item: Todo, position: Int)
+        fun onFinishCheck(item:Todo)
     }
 
     companion object {

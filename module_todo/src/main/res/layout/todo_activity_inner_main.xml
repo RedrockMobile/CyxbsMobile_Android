@@ -47,10 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="16dp"
+                android:layout_marginRight="16dp"
                 android:background="@drawable/todo_ic_rectangle"
-                android:padding="8dp"
                 android:visibility="visible">
 
                 <!-- 矢量图标 -->
@@ -59,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="9dp"
+                    android:layout_marginLeft="10.27dp"
                     android:src="@drawable/todo_ic_pic_manage" />
 
                 <!-- 文字 -->
@@ -67,8 +65,8 @@
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginStart="26dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="25dp"
                     android:text="@string/todo_string_management"
                     android:textColor="@color/todo_list"
                     android:textSize="12sp" />
@@ -80,10 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="16dp"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="16dp"
                 android:background="@drawable/todo_ic_rectangle_change"
-                android:padding="8dp"
                 android:visibility="gone">
 
                 <!-- 矢量图标 -->
@@ -100,7 +97,7 @@
                     android:id="@+id/text_change"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="26dp"
                     android:text="@string/todo_string_management_change"
                     android:textColor="@color/todo_list_change"
@@ -115,8 +112,19 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="37.5dp"
+            android:layout_marginEnd="37.5dp"
+            app:tabGravity="fill"
+            app:tabIndicator="@drawable/todo_ic_tab_indicator"
+            app:tabIndicatorColor="@android:color/transparent"
+            app:tabIndicatorHeight="3dp"
+            android:backgroundTint="@android:color/transparent"
+            android:theme="@style/Theme.MaterialComponents"
+            app:tabMode="fixed"
             app:tabIndicatorFullWidth="false"
+            app:tabRippleColor="@android:color/transparent"
             app:tabTextAppearance="@style/todo_TabTextAppearance" />
+
 
         <!-- ViewPager2 -->
         <androidx.viewpager2.widget.ViewPager2

@@ -22,6 +22,7 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
@@ -35,7 +36,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.getSp
  * date : 2024/8/11 20:16
  * version: 1.0
  */
-class TodoStudyFragment: BaseFragment(), TodoAllAdapter.OnItemClickListener {
+class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
     private val mRecyclerView by R.id.todo_studyrv.view<SwipeDeleteRecyclerView>()
     private val emptyview by R.id.empty_view.view<View>()
@@ -117,11 +118,10 @@ class TodoStudyFragment: BaseFragment(), TodoAllAdapter.OnItemClickListener {
         acTopButton.setOnClickListener {
             todoAllAdapter.topSelectedItems()
         }
-        checkall.setOnCheckedChangeListener{_, isChecked ->
-            if (isChecked){
+        checkall.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 todoAllAdapter.selectedall()
-            }
-            else{
+            } else {
                 todoAllAdapter.toSelectedall()
             }
         }
@@ -168,7 +168,7 @@ class TodoStudyFragment: BaseFragment(), TodoAllAdapter.OnItemClickListener {
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
         mViewModel.categoryTodoStudy.observe(viewLifecycleOwner) {
-            todoAllAdapter.submitList(it.todoList){
+            todoAllAdapter.submitList(it.todoList) {
                 checkIfEmpty()
             }
         }
@@ -299,5 +299,10 @@ class TodoStudyFragment: BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
     }
 
+    override fun onFinishCheck(item: Todo) {
+        item.isChecked = 1
+        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+        mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 1))
+    }
 
 }
