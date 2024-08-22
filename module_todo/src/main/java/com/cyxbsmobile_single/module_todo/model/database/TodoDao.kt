@@ -1,49 +1,49 @@
 package com.cyxbsmobile_single.module_todo.model.database
 
-import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteQuery
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
+
 
 /**
- * Author: RayleighZ
- * Time: 2021-08-01 17:02
+ * description: 修改数据库
+ * author: sanhuzhen
+ * date: 2024/8/20 14:11
  */
 @Dao
 interface TodoDao {
+
+    /**
+     * 插入数据，如果存在则替换
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTodoList(todoList: List<Todo>)
+    suspend fun insertAll(todoList: List<Todo>?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTodo(todo: Todo): Single<Long>
+    suspend fun insert(todo: Todo?)
 
-    @Query("SELECT * FROM todo_list ORDER by lastModifyTime desc")
-    fun queryAllTodo(): Flowable<List<Todo>>
-
-    @Query("SELECT * FROM todo_list WHERE todoId = :todoId")
-    fun queryTodoById(todoId: Long): Flowable<Todo>
-
-    @Query("SELECT * FROM todo_list WHERE isChecked = :isChecked ORDER by lastModifyTime desc")
-    fun queryTodoByWeatherDone(isChecked: Int): Flowable<List<Todo>>
-
-//    //分页查找未完成事项
-//    @Query("SELECT * FROM todo_list WHERE isChecked = :isChecked ORDER by lastModifyTime limit :size offset :page-1 * :size")
-//    fun queryTodoByWeatherDone(isChecked: Boolean, page: Int, size: Int): Flowable<List<Todo>>
-
-
-    @RawQuery(observedEntities = [Todo::class])
-    fun queryTodoByIdList(query: SupportSQLiteQuery): Flowable<List<Todo>>
-
+    /**
+     * 删除数据
+     */
     @Query("DELETE FROM todo_list")
-    fun deleteAllTodo()
+    suspend fun deleteAll()
 
     @Query("DELETE FROM todo_list WHERE todoId = :todoId")
-    fun deleteTodoById(todoId: Long)
+    suspend fun deleteTodoById(todoId: Long?)
 
-    @Update
-    fun updateTodo(todo: Todo)
+    /**
+     * 查询所有数据
+     */
+    @Query("select * from todo_list")
+    suspend fun queryAll(): List<Todo>?
+    /**
+     * 查询分组的数据
+     */
+    @Query("select * from todo_list where type=:type")
+    suspend fun queryByType(type: String): List<Todo>?
 
-    @Update
-    fun updateTodoList(todoList: List<Todo>)
+
 }

@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:textColor="@color/common_level_one_font_color"
+            android:textColor="@color/todo_calendar_header_color"
             android:textSize="14sp"
             tools:text="复习高数" />
     </LinearLayout>
