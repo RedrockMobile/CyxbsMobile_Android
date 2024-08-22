@@ -10,11 +10,16 @@ import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.model.database.TodoDataBase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 /**
  * description:
@@ -72,7 +77,8 @@ class TodoViewModel : BaseViewModel() {
                 }
             }
             .safeSubscribeBy {
-                _allTodo.postValue(it.data)
+                toast("jsdfhwejkfb")
+                _allTodo.postValue(TodoListSyncTimeWrapper(it.data.syncTime,it.data.todoArray))
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)
@@ -178,6 +184,7 @@ class TodoViewModel : BaseViewModel() {
                 }
             }
             .safeSubscribeBy {
+                toast("sdkuivh")
                 _categoryTodoStudy.postValue(it.data)
             }
     }

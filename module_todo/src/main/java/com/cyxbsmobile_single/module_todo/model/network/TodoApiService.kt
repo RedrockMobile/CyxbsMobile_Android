@@ -29,12 +29,13 @@ interface TodoApiService {
     companion object {
         val INSTANCE by lazy { ApiGenerator.getApiService(TodoApiService::class) }
     }
+
     /**
      * 从数据库获取全部todo
      */
     @GET("/magipoke-todo/list")
     fun queryAllTodo():
-            Observable<ApiWrapper<TodoListSyncTimeWrapper>>
+            Single<ApiWrapper<TodoListSyncTimeWrapper>>
 
     /**
      * 获取自上次同步到现在之间修改的所有todo
@@ -72,17 +73,26 @@ interface TodoApiService {
     /**
      * 获取分组的数据
      */
-    @GET("/magipoke-todo/type-list?type=study")
-    fun getTodoListByStudy():
-            Single<ApiWrapper<TodoListGetWrapper>>
+    @FormUrlEncoded
+    @POST("/magipoke-todo/type-list")
+    fun getTodoListByStudy(
+        @Field("type")
+        type: String = "study"
+    ): Single<ApiWrapper<TodoListGetWrapper>>
 
-    @GET("/magipoke-todo/type-list?type=life")
-    fun getTodoListByLife():
-            Single<ApiWrapper<TodoListGetWrapper>>
+    @FormUrlEncoded
+    @POST("/magipoke-todo/type-list")
+    fun getTodoListByLife(
+        @Field("type")
+        type: String = "life"
+    ): Single<ApiWrapper<TodoListGetWrapper>>
 
-    @GET("/magipoke-todo/type-list?type=other")
-    fun getTodoListByOther():
-            Single<ApiWrapper<TodoListGetWrapper>>
+    @FormUrlEncoded
+    @POST("/magipoke-todo/type-list")
+    fun getTodoListByOther(
+        @Field("type")
+        type: String = "other"
+    ): Single<ApiWrapper<TodoListGetWrapper>>
 
     /**
      * 置顶
@@ -90,5 +100,5 @@ interface TodoApiService {
     @POST("/magipoke-todo/pin")
     fun pinTodo(
         @Body todoPinData: TodoPinData
-    ):Single<ApiWrapper<SyncTime>>
+    ): Single<ApiWrapper<SyncTime>>
 }
