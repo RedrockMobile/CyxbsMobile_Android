@@ -8,26 +8,25 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
-import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.ui.dialog.DetailAlarmDialog
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoDetailViewModel
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
 
 
 @Route(path = TODO_TODO_DETAIL)
@@ -35,37 +34,24 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
     lateinit var todo: Todo
     private lateinit var repeatAdapter: RepeatInnerAdapter
-    private var backTime = 2
 
     private val todo_inner_detail_remark_ed by R.id.todo_inner_detail_remark_ed.view<AppCompatEditText>()
-    private val todo_tv_todo_title by R.id.todo_tv_todo_title.view<AppCompatEditText>()
-    private val todo_tv_inner_detail_time by R.id.todo_tv_inner_detail_time.view<AppCompatTextView>()
+    private val todo_detail_et_todo_title by R.id.todo_detail_et_todo_title.view<AppCompatEditText>()
+    private val todo_detail_tv_deadline by R.id.todo_detail_tv_deadline.view<AppCompatTextView>()
     private val todo_inner_detail_back by R.id.todo_inner_detail_back.view<TextView>()
-    private val todo_tv_inner_detail_del_todo by R.id.todo_tv_inner_detail_del_todo.view<AppCompatTextView>()
+    private val todo_detail_line by R.id.todo_detail_line.view<View>()
+    private val todo_detail_tv_classify by R.id.todo_detail_tv_classify.view<TextView>()
     private val todo_rv_inner_detail_repeat_time by R.id.todo_rv_inner_detail_repeat_time.view<RecyclerView>()
-    private val todo_iv_todo_item by R.id.todo_iv_todo_item.view<CheckLineView>()
+    private val todo_thing_detail_no_save by R.id.todo_thing_detail_no_save.view<TextView>()
     private val todo_thing_detail_save by R.id.todo_thing_detail_save.view<TextView>()
-    private val todo_iv_check by R.id.todo_iv_check.view<AppCompatImageView>()
 
     companion object {
         fun startActivity(todo: Todo, context: Context) {
             context.startActivity(
-                    Intent(context, TodoDetailActivity::class.java).apply {
-                        putExtra("todo", Gson().toJson(todo))
-                    }
+                Intent(context, TodoDetailActivity::class.java).apply {
+                    putExtra("todo", Gson().toJson(todo))
+                }
             )
-        }
-    }
-
-
-    //统一处理此条todo的点击事件（试图修改）
-    //如果已经完成，则不handle这次点击事件
-    private fun onClickProxy(view: View, onClick: (View) -> Unit) {
-        if (todo.getIsChecked()) {
-            //已经check，不允许修改
-            toast(getString(R.string.todo_string_cant_modify))
-        } else {
-            onClick.invoke(view)
         }
     }
 
@@ -89,17 +75,17 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             //如果来自端内跳转, 则重新加载todo
             val todoId = intent.getStringExtra("todo_id").toString().toLong()
             if (todoId <= 0) {
-                toast("没有这条代办的信息哦")
+                "没有这条代办的信息哦".toast()
                 finish()
             }
             TodoModel.INSTANCE.getTodoById(todoId,
-                    onSuccess = {
-                        todo = it
-                        initTodo()
-                    },
-                    onError = {
-                        toast("没有这条代办的信息哦")
-                    }
+                onSuccess = {
+                    todo = it
+                    initTodo()
+                },
+                onError = {
+                    "没有这条代办的信息哦".toast()
+                }
             )
         } else {
             todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
@@ -109,82 +95,61 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     }
 
     private fun initView() {
-        todo_tv_todo_title.setText(todo.title)
-        todo_tv_todo_title.addTextChangedListener {
+        todo_detail_et_todo_title.setText(todo.title)
+        todo_detail_et_todo_title.addTextChangedListener {
             if (it.toString() != todo.title) {
                 //判定为做出了修改
-                backTime = 2
                 todo.title = it.toString()
                 changeModifyStatus(true)
             }
         }
         todo_inner_detail_remark_ed.setText(todo.detail)
-        setCheckedStatus()
 
         if (todo.remindMode.notifyDateTime == "") {
-            todo_tv_inner_detail_time.hint = "设置提醒时间"
+            todo_detail_tv_deadline.hint = "设置提醒时间"
         } else {
-            todo_tv_inner_detail_time.text = todo.remindMode.notifyDateTime
+            todo_detail_tv_deadline.text = todo.remindMode.notifyDateTime
         }
     }
 
     private fun initClick() {
         todo_inner_detail_back.setOnClickListener {
             if (viewModel.isChanged) {
-                backTime--
-                if (backTime == 0) {
-                    finish()
-                } else {
-                    toast("你的修改未保存")
-                }
+                DetailAlarmDialog.Builder(this)
+                    .setPositiveClick {
+                        finish()
+                    }.setNegativeClick {
+                        dismiss()
+                    }.show()
             } else {
                 finish()
             }
         }
 
-        todo_tv_inner_detail_del_todo.setOnClickListener {
-            onClickProxy(it) {
-                viewModel.delTodo(todo) {
-                    this.sendBroadcast(
-                            Intent("cyxbs.widget.todo.refresh").apply {
-                                component = ComponentName(this@TodoDetailActivity, TodoWidget::class.java)
-                            }
-                    )
-                    finish()
-                }
-            }
-        }
-
-        todo_tv_inner_detail_time.setOnClickListener {
-            onClickProxy(it) {
-                backTime = 2
-                AddItemDialog(context = this) { todo ->
-                    todo.remindMode.notifyDateTime = todo.remindMode.notifyDateTime
-                    todo_tv_inner_detail_time.text = todo.remindMode.notifyDateTime
-                    changeModifyStatus()
-                }.apply {
-                    setAsSinglePicker(AddItemDialog.CurOperate.NOTIFY)
-                    showNotifyDatePicker()
-                    //此方法应当在show之后执行，不然的话rv加载不出来
-                    resetNotifyTime(todo)
-                }.show()
-            }
+        todo_detail_tv_deadline.setOnClickListener {
+            AddItemDialog(context = this) { todo ->
+                todo.remindMode.notifyDateTime = todo.remindMode.notifyDateTime
+                todo_detail_tv_deadline.text = todo.remindMode.notifyDateTime
+                changeModifyStatus()
+            }.apply {
+                setAsSinglePicker(AddItemDialog.CurOperate.NOTIFY)
+                showNotifyDatePicker()
+                //此方法应当在show之后执行，不然的话rv加载不出来
+                resetNotifyTime(todo)
+            }.show()
         }
 
         repeatAdapter = RepeatInnerAdapter(ArrayList(remindMode2RemindList(todo.remindMode))) {
-            onClickProxy(it) {
-                backTime = 2
-                AddItemDialog(context = this) { todo ->
-                    repeatAdapter.resetAll(remindMode2RemindList(todo.remindMode))
-                    todo.remindMode = todo.remindMode
-                    changeModifyStatus()
-                }.apply {
-                    setAsSinglePicker(AddItemDialog.CurOperate.REPEAT)
-                    showRepeatDatePicker()
-                    //此方法应当在show之后执行，不然的话rv加载不出来
-                    resetAllRepeatMode(todo)
-                }.show()
-            }
+            AddItemDialog(context = this) { todo ->
+                repeatAdapter.resetAll(remindMode2RemindList(todo.remindMode))
+                todo.remindMode = todo.remindMode
+                changeModifyStatus()
+            }.apply {
+                setAsSinglePicker(AddItemDialog.CurOperate.REPEAT)
+                showRepeatDatePicker()
+                //此方法应当在show之后执行，不然的话rv加载不出来
+                resetAllRepeatMode(todo)
+            }.show()
         }
 
         todo_rv_inner_detail_repeat_time.adapter = repeatAdapter
@@ -192,77 +157,59 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             orientation = LinearLayoutManager.HORIZONTAL
         }
 
+        todo_detail_tv_classify.setOnClickListener {
+            
+        }
+
         todo_thing_detail_save.setOnClickListener {
+            //如果没输入标题，就ban掉
+            if (todo_detail_et_todo_title.text.toString().isEmpty()) {
+                "掌友，标题不能为空哦".toastWithYOffset(67)
+                return@setOnClickListener
+            }
             todo.detail = todo_inner_detail_remark_ed.text.toString()
             todo.lastModifyTime = System.currentTimeMillis()
             viewModel.updateTodo(todo) {
                 this.sendBroadcast(
-                        Intent("cyxbs.widget.todo.refresh").apply {
-                            component = ComponentName(this@TodoDetailActivity, TodoWidget::class.java)
-                        }
+                    Intent("cyxbs.widget.todo.refresh").apply {
+                        component = ComponentName(this@TodoDetailActivity, TodoWidget::class.java)
+                    }
                 )
                 finish()
             }
         }
 
-        todo_inner_detail_remark_ed.addTextChangedListener {
-            backTime = 2
-            changeModifyStatus(it.toString() != viewModel.rawTodo?.detail)
-        }
-
-        todo_iv_todo_item.setOnClickListener {
-            //改变todo的check状态
-            todo.isChecked = 1 - todo.isChecked
-            if (todo.getIsChecked()){
-                if (todo.repeatStatus == Todo.SET_UNCHECK_BY_REPEAT){
-                    todo.repeatStatus = Todo.CHECKED_AFTER_REPEAT
-                }
-            } else {
-                if (todo.repeatStatus == Todo.CHECKED_AFTER_REPEAT){
-                    todo.repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
+        todo_inner_detail_remark_ed.apply {
+            addTextChangedListener {
+                changeModifyStatus(it.toString() != viewModel.rawTodo?.detail)
+                if (it != null) {
+                    if (it.length == 100) {
+                        "已超100字，无法再输入".toastWithYOffset(todo_detail_line.top)
+                    }
                 }
             }
-            changeModifyStatus()
-            backTime = 2
-            setCheckedStatus()
         }
     }
 
     private fun changeModifyStatus() {
         viewModel.judgeChange(todo)
-        todo_thing_detail_save.text =
-                if (viewModel.isChanged) "保存"
-                else ""
-
+        if (viewModel.isChanged) {
+            todo_thing_detail_no_save.visibility = View.GONE
+            todo_thing_detail_save.visibility = View.VISIBLE
+        } else {
+            todo_thing_detail_save.visibility = View.GONE
+            todo_thing_detail_no_save.visibility = View.VISIBLE
+        }
     }
 
     private fun changeModifyStatus(isChanged: Boolean) {
         viewModel.isChanged = isChanged
-        todo_thing_detail_save.text =
-                if (viewModel.isChanged) "保存"
-                else ""
-    }
-
-    override fun onBackPressed() {
         if (viewModel.isChanged) {
-            backTime--
-            if (backTime == 0) {
-                super.onBackPressed()
-            } else {
-                toast("你的修改未保存")
-            }
+            todo_thing_detail_no_save.visibility = View.GONE
+            todo_thing_detail_save.visibility = View.VISIBLE
         } else {
-            super.onBackPressed()
+            todo_thing_detail_save.visibility = View.GONE
+            todo_thing_detail_no_save.visibility = View.VISIBLE
         }
-    }
-
-    private fun setCheckedStatus() {
-        //设置备注et是否可以点击
-        todo_inner_detail_remark_ed.isEnabled = !todo.getIsChecked()
-        todo_iv_check.visibility = if (todo.getIsChecked()) View.VISIBLE else View.GONE
-        todo_tv_todo_title.setTextColor(
-                if (todo.getIsChecked()) ContextCompat.getColor(this, R.color.todo_item_checked_color)
-                else ContextCompat.getColor(this, R.color.todo_check_line_color)
-        )
     }
 }

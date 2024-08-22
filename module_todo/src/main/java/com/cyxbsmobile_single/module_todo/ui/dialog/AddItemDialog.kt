@@ -28,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -225,7 +226,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_tv_add_thing_save.setOnClickListener {
             //如果没输入标题，就ban掉
             if (todo_et_todo_title.text.toString().isEmpty()) {
-                toast("掌友，标题不能为空哦")
+                "掌友，标题不能为空哦".toast()
                 return@setOnClickListener
             }
             todo.title = todo_et_todo_title.text.toString()

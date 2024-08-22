@@ -13,10 +13,10 @@ import com.cyxbsmobile_single.module_todo.R
 class RepeatInnerAdapter(
     private val dataList: ArrayList<String>,
     private val onItemClick: (view: View) -> Unit
-) : SimpleTextAdapter(dataList, R.layout.todo_rv_item_simple_text) {
+) : SimpleTextAdapter(dataList, R.layout.todo_rv_item_detail_repeat_time) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.apply {
-            val todo_tv_simple_text = findViewById<AppCompatTextView>(R.id.todo_tv_simple_text)
+            val todo_tv_simple_text = findViewById<AppCompatTextView>(R.id.todo_detail_tv_repeat_time)
             todo_tv_simple_text.text = dataList[position]
             if (dataList[position] == "设置提醒时间"){
                 todo_tv_simple_text.setTextColor(ContextCompat.getColor(context, R.color.todo_inner_add_thing_et_hint_color))
