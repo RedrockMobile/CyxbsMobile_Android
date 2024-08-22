@@ -150,69 +150,6 @@
             android:src="@drawable/todo_ic_category_detail" />
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/todo_rl_addtodo_repeat"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_below="@id/todo_iv_addtodo_repeat"
-        android:layout_marginTop="5dp"
-        android:background="@color/colorPrimary"
-        android:visibility="gone">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/todo_rv_addtodo_repeat_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:itemCount="1"
-            tools:listitem="@layout/todo_rv_item_repeat_time_item" />
-
-        <ImageView
-            android:id="@+id/todo_iv_addtodo_repeat_index"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
-            android:src="@drawable/todo_ic_inner_add_thing_time_index" />
-
-        <com.aigestudio.wheelpicker.WheelPicker
-            android:id="@+id/todo_wp_addtodo_repeat_mode"
-            android:layout_width="50dp"
-            android:layout_height="200dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
-            android:layout_toRightOf="@id/todo_iv_addtodo_repeat_index"
-            app:wheel_atmospheric="true"
-            app:wheel_item_align="center"
-            app:wheel_cyclic="true"
-            app:wheel_item_text_color="@color/todo_calendar_header_color"
-            app:wheel_item_text_size="20sp"
-            app:wheel_visible_item_count="7" />
-
-        <com.aigestudio.wheelpicker.WheelPicker
-            android:id="@+id/todo_wp_addtodo_repeat_time"
-            android:layout_width="50dp"
-            android:layout_height="200dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@id/todo_wp_addtodo_repeat_mode"
-            app:wheel_atmospheric="true"
-            app:wheel_item_align="center"
-            app:wheel_cyclic="true"
-            app:wheel_item_text_color="@color/todo_calendar_header_color"
-            app:wheel_item_text_size="20sp"
-            app:wheel_visible_item_count="7" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/todo_btn_addtodo_repeat_add"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@id/todo_wp_addtodo_repeat_time"
-            android:background="@drawable/todo_ic_addtodo_add" />
-    </RelativeLayout>
-
     <RelativeLayout
         android:id="@+id/todo_rl_addtodo_category_list"
         android:layout_width="match_parent"

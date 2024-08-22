@@ -2,18 +2,13 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
-import android.window.OnBackInvokedCallback
-import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +18,6 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeRvAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.util.addWithoutRepeat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.lib.utils.extensions.toast
@@ -140,7 +134,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
                             todo.remindMode.day.removeAt(position)
                         }
                     }
-                    if (SelectRepeatTimeList.isEmpty()){
+                    if (SelectRepeatTimeList.isEmpty()) {
                         rvRepeatTime.visibility = View.GONE
                         tvAddRepeat.visibility = View.VISIBLE
                     }
@@ -159,7 +153,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
             }
             SelectRepeatTimeList = selectRepeatTimeList as ArrayList<String>
             repeatTimeAdapter.submitList(SelectRepeatTimeList)
-            if (SelectRepeatTimeList.isNotEmpty()){
+            if (SelectRepeatTimeList.isNotEmpty()) {
                 rvRepeatTime.visibility = View.VISIBLE
                 tvAddRepeat.visibility = View.GONE
             }
@@ -167,7 +161,11 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     }
 
     private fun selectCategory() {
-        tvCategory.text = wpCategory.data.get(wpCategory.currentItemPosition).toString()
+        tvCategory.text = when (wpCategory.currentItemPosition) {
+            0 -> "study"
+            1 -> "life"
+            else -> "other"
+        }
         todo.type = tvCategory.text.toString()
     }
 

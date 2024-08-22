@@ -11,8 +11,12 @@ import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.HTTP
+import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -68,15 +72,15 @@ interface TodoApiService {
     /**
      * 获取分组的数据
      */
-    @GET("/magipoke-todo/type-list?type=学习")
+    @GET("/magipoke-todo/type-list?type=study")
     fun getTodoListByStudy():
             Single<ApiWrapper<TodoListGetWrapper>>
 
-    @GET("/magipoke-todo/type-list?type=生活")
+    @GET("/magipoke-todo/type-list?type=life")
     fun getTodoListByLife():
             Single<ApiWrapper<TodoListGetWrapper>>
 
-    @GET("/magipoke-todo/type-list?type=其他")
+    @GET("/magipoke-todo/type-list?type=other")
     fun getTodoListByOther():
             Single<ApiWrapper<TodoListGetWrapper>>
 
