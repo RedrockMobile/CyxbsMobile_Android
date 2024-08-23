@@ -5,6 +5,7 @@
     android:id="@+id/todo_fl_todo_back"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:orientation="horizontal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
