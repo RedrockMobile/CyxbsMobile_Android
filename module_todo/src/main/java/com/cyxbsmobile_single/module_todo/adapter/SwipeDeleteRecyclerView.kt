@@ -64,8 +64,8 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
                     return true
                 }
 
-                if (Math.abs(deltaY) > mTouchSlop) {
-                    return false
+                if (Math.abs(deltaY) > mTouchSlop &&Math.abs(deltaY)>Math.abs(deltaX)) {
+                    return true
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {

@@ -24,6 +24,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -64,7 +65,6 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         todoAllAdapter = TodoAllAdapter(this)
         mRecyclerView.adapter = todoAllAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        inittoList()
         initList()
 //        todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
         val callback = DragAndDropCallback(mRecyclerView, todoAllAdapter)
@@ -116,6 +116,12 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             dialog.show()
         }
         acTopButton.setOnClickListener {
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            Log.d("SwipeDeleteRecyclerView", "Pinning item: ${todoAllAdapter.selectItems}")
+
+            for (item in todoAllAdapter.selectItems) {
+                mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
+            }
             todoAllAdapter.topSelectedItems()
         }
         checkall.setOnCheckedChangeListener { _, isChecked ->
@@ -163,82 +169,12 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     private fun initList() {
-        //viewModeldata.allTodo.observe(viewLifecycleOwner) {
-        // Log.d("viemodeldata",it.toString())
-        //todoAllAdapter.submitList( it.todoArray)
-        // if (it.todoArray==null){
+
         mViewModel.categoryTodoStudy.observe(viewLifecycleOwner) {
             todoAllAdapter.submitList(it.todoArray) {
                 checkIfEmpty()
             }
         }
-        // }
-
-        //}
-    }
-
-    //测试用的数据类
-    private fun inittoList() {
-// 测试数据1
-//        val todo1 = Todo(
-//            todoId = 1L,
-//            title = "Complete Android project",
-//            detail = "Finish the RecyclerView implementation and test the swipe to delete functionality.",
-//            isChecked = 0,
-//            remindMode = RemindMode(
-//                repeatMode = 1,
-//                date = arrayListOf("2024-08-20"),
-//                week = arrayListOf(),
-//                day = arrayListOf(),
-//                notifyDateTime = "2024-08-20 09:00:00"
-//            ),
-//            lastModifyTime = System.currentTimeMillis(),
-//            type = "Work",
-//            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT,
-//        )
-//
-//// 测试数据2
-//        val todo2 = Todo(
-//            todoId = 2L,
-//            title = "Grocery Shopping",
-//            detail = "Buy milk, bread, eggs, and vegetables.",
-//            isChecked = 0,
-//            remindMode = RemindMode(
-//                repeatMode = 0,
-//                date = arrayListOf("2024-08-19"),
-//                week = arrayListOf(),
-//                day = arrayListOf(),
-//                notifyDateTime = "2024-08-19 17:00:00"
-//            ),
-//            lastModifyTime = System.currentTimeMillis(),
-//            type = "Personal",
-//            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
-//        )
-//
-//// 测试数据3
-//        val todo3 = Todo(
-//            todoId = 3L,
-//            title = "Call the dentist",
-//            detail = "Schedule an appointment for a routine check-up.",
-//            isChecked = 0,
-//            remindMode = RemindMode(
-//                repeatMode = 2,
-//                date = arrayListOf("2024-08-21"),
-//                week = arrayListOf(),
-//                day = arrayListOf(),
-//                notifyDateTime = "2024-08-21 10:30:00"
-//            ),
-//            lastModifyTime = System.currentTimeMillis(),
-//            type = "Health",
-//            repeatStatus = Todo.NONE_WITH_REPEAT
-//        )
-//
-//// 将这些 Todo 数据包装在 TodoListSyncTimeWrapper 中
-//        todoListSyncTimeWrapper = TodoListSyncTimeWrapper(
-//            syncTime = System.currentTimeMillis(),
-//            todoArray = listOf(todo1, todo2, todo3)
-//        )
-
 
     }
 
@@ -297,6 +233,9 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         // 将项添加到列表的顶部
         currentList.add(0, item)
 
+        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+
+        mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
         // 提交更新后的列表
         todoAllAdapter.submitList(currentList) {
             // 滚动到顶部以显示置顶的项
