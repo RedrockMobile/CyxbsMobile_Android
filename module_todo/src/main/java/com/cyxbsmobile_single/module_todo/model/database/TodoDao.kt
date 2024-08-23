@@ -45,5 +45,9 @@ interface TodoDao {
     @Query("select * from todo_list where type=:type")
     suspend fun queryByType(type: String): List<Todo>?
 
-
+    /**
+     * 按ID查询数据
+     */
+    @Query("select * from todo_list where todoId = :todoId")
+    suspend fun queryTodoById(todoId: Long?): Todo?
 }

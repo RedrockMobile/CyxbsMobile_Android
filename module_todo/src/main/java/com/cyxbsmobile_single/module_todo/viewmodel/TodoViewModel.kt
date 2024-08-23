@@ -1,20 +1,30 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListGetWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.model.database.TodoDataBase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.base.utils.safeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
+import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 /**
  * description:
@@ -25,39 +35,50 @@ class TodoViewModel : BaseViewModel() {
 
     private val _allTodo = MutableLiveData<TodoListSyncTimeWrapper>()
     private val _changedTodo = MutableLiveData<TodoListGetWrapper>()
-    private val _categoryTodoStudy = MutableLiveData<TodoListGetWrapper>()
-    private val _categoryTodoLife = MutableLiveData<TodoListGetWrapper>()
-    private val _categoryTodoOther = MutableLiveData<TodoListGetWrapper>()
+    private val _categoryTodoStudy = MutableLiveData<TodoListSyncTimeWrapper>()
+    private val _categoryTodoLife = MutableLiveData<TodoListSyncTimeWrapper>()
+    private val _categoryTodoOther = MutableLiveData<TodoListSyncTimeWrapper>()
 
     val allTodo: LiveData<TodoListSyncTimeWrapper>
         get() = _allTodo
     val changedTodo: LiveData<TodoListGetWrapper>
         get() = _changedTodo
-    val categoryTodoStudy: LiveData<TodoListGetWrapper>
+    val categoryTodoStudy: LiveData<TodoListSyncTimeWrapper>
         get() = _categoryTodoStudy
-    val categoryTodoLife: LiveData<TodoListGetWrapper>
+    val categoryTodoLife: LiveData<TodoListSyncTimeWrapper>
         get() = _categoryTodoLife
-    val categoryTodoOther: LiveData<TodoListGetWrapper>
+    val categoryTodoOther: LiveData<TodoListSyncTimeWrapper>
         get() = _categoryTodoOther
     private val _isEnabled = MutableLiveData<Boolean>()
     val isEnabled: LiveData<Boolean> get() = _isEnabled
 
-    fun setEnabled(click:Boolean) {
+    private val _isChanged = MutableLiveData<Boolean>()
+    val isChanged: LiveData<Boolean> get() = _isChanged
+    var rawTodo: Todo? = null
+
+    fun setEnabled(click: Boolean) {
         _isEnabled.value = click
         LogUtils.d("TodoViewModel", "isEnabled set to ${_isEnabled.value}")
     }
 
+    fun setChangeState(state: Boolean) {
+        _isChanged.value = state
+    }
+
+    fun judgeChange(todoAfterChange: Todo) {
+        _isChanged.value = todoAfterChange != rawTodo
+    }
+
     init {
         getAllTodo()
-        getTodoByLife()
-        getTodoByOther()
-        getTodoByStudy()
+
+        _isChanged.value = false
     }
 
     /**
      * 获取所有待办事项
      */
-    fun getAllTodo(){
+    fun getAllTodo() {
         TodoRepository
             .queryAllTodo()
             .doOnError {
@@ -65,14 +86,32 @@ class TodoViewModel : BaseViewModel() {
                     val modifyTime = System.currentTimeMillis() / 1000
                     val todoList = TodoDataBase.INSTANCE.todoDao().queryAll()
                     _allTodo.postValue(todoList?.let { it1 ->
-                        TodoListSyncTimeWrapper(modifyTime,
-                            it1
+                        TodoListSyncTimeWrapper(
+                            it1, modifyTime
                         )
                     })
                 }
             }
             .safeSubscribeBy {
-                _allTodo.postValue(it.data)
+                _allTodo.postValue(TodoListSyncTimeWrapper(it.data.todoArray, it.data.syncTime))
+                _categoryTodoStudy.postValue(
+                    TodoListSyncTimeWrapper(
+                        it.data.todoArray.filter { todo -> todo.type == "study" },
+                        it.data.syncTime
+                    )
+                )
+                _categoryTodoLife.postValue(
+                    TodoListSyncTimeWrapper(
+                        it.data.todoArray.filter { todo -> todo.type == "life" },
+                        it.data.syncTime
+                    )
+                )
+                _categoryTodoOther.postValue(
+                    TodoListSyncTimeWrapper(
+                        it.data.todoArray.filter { todo -> todo.type == "other" },
+                        it.data.syncTime
+                    )
+                )
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)
@@ -103,6 +142,7 @@ class TodoViewModel : BaseViewModel() {
                 setLastSyncTime(it.data.syncTime)
             }
     }
+
     /**
      * 推送todo
      */
@@ -132,6 +172,44 @@ class TodoViewModel : BaseViewModel() {
                 }
             }
     }
+
+    /**
+     * 详情页更新todo
+     */
+    fun updateTodo(todo: Todo) {
+        val syncTime = getLastSyncTime2()
+        val pushWrapper = TodoListPushWrapper(
+            todoList = listOf(todo),
+            syncTime = syncTime,
+            force = TodoListPushWrapper.NONE_FORCE,
+            firsPush = if (syncTime == 0L) 1 else 0
+        )
+
+        TodoRepository.pushTodo(pushWrapper)
+            .doOnError {
+                viewModelScope.launch {
+                    val modifyTime = System.currentTimeMillis() / 1000
+                    setLastModifyTime(modifyTime)
+                    pushWrapper.todoList.forEach { todo ->
+                        TodoDataBase.INSTANCE.todoDao().insert(todo)
+                    }
+                }
+            }.safeSubscribeBy {
+                viewModelScope.launch {
+                    setLastModifyTime(it.data.syncTime)
+                    pushWrapper.todoList.forEach { todo ->
+                        TodoDataBase.INSTANCE.todoDao().insert(todo)
+                    }
+                }
+                it.data.syncTime.apply {
+                    setLastSyncTime(this)
+                    setLastModifyTime(this)
+                }
+            }
+        rawTodo = todo
+    }
+
+
     /**
      * 删除todo
      */
@@ -165,57 +243,9 @@ class TodoViewModel : BaseViewModel() {
     }
 
     /**
-     * 获取分组的数据
-     */
-    fun getTodoByStudy() {
-        TodoRepository
-            .getTodoByStudy()
-            .doOnError {
-                val modifyTime = System.currentTimeMillis() / 1000
-                viewModelScope.launch(Dispatchers.IO) {
-                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType("学习")
-                    _categoryTodoStudy.postValue(TodoListGetWrapper(todoList, modifyTime))
-                }
-            }
-            .safeSubscribeBy {
-                _categoryTodoStudy.postValue(it.data)
-            }
-    }
-
-    fun getTodoByLife() {
-        TodoRepository
-            .getTodoByLife()
-            .doOnError {
-                val modifyTime = System.currentTimeMillis() / 1000
-                viewModelScope.launch(Dispatchers.IO) {
-                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType("生活")
-                    _categoryTodoLife.postValue(TodoListGetWrapper(todoList, modifyTime))
-                }
-            }
-            .safeSubscribeBy {
-                _categoryTodoLife.postValue(it.data)
-            }
-    }
-
-    fun getTodoByOther() {
-        TodoRepository
-            .getTodoByOther()
-            .doOnError {
-                val modifyTime = System.currentTimeMillis() / 1000
-                viewModelScope.launch(Dispatchers.IO) {
-                    val todoList = TodoDataBase.INSTANCE.todoDao().queryByType("其他")
-                    _categoryTodoOther.postValue(TodoListGetWrapper(todoList, modifyTime))
-                }
-            }
-            .safeSubscribeBy {
-                _categoryTodoOther.postValue(it.data)
-            }
-    }
-
-    /**
      * 置顶
      */
-    fun pinTodo(todoPinData: TodoPinData){
+    fun pinTodo(todoPinData: TodoPinData) {
         TodoRepository
             .pinTodo(todoPinData)
             .doOnError {
@@ -256,7 +286,7 @@ class TodoViewModel : BaseViewModel() {
      * 同步远端与本地数据
      */
     fun syncTodo() {
-        if (getLastSyncTime2() != getLastModifyTime()){
+        if (getLastSyncTime2() != getLastModifyTime()) {
 
         }
     }

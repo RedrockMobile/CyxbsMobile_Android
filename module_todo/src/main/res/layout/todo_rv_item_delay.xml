@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="23dp"
             android:layout_marginStart="15dp"
-            app:unchecked_line_color="@color/todo_inner_check_eclipse_color"
+            app:unchecked_line_color="@color/todo_item_checked_delay_color"
             app:checked_line_color="@color/todo_inner_checked_line_color"
             app:checked_line_width="2dp"
             android:transitionName="check"
@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/todo_title_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="18dp"
@@ -56,7 +56,7 @@
             android:focusable="false"
             android:background="@null"
             android:paddingEnd="1dp"
-            android:textColor="@color/todo_check_line_color"
+            android:textColor="@color/todo_check_line_delay_color"
             android:textSize="18sp"
             android:singleLine="true"
             android:maxEms="16"

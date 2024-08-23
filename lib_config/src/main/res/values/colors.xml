@@ -27,6 +27,8 @@
     <color name="config_alpha_level_two_font_color">#9915315B</color>
     <!--    44%透明度的二级字体-->
     <color name="config_alpha_forty_level_two_font_color">#7015315B</color>
+  <!--    40%透明度的二级字体-->
+    <color name="config_alpha_forty_level_three_font_color">#142C52</color>
 
     <!--    公共dialog背景-->
     <color name="config_dialog_bg">#FFFFFF</color>
