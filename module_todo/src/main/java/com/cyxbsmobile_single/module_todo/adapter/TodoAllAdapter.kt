@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -163,7 +164,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         return if (isEnabled) {
             VIEW_TYPE_MANAGE
         } else {
-            if (currentTime > itemTime &&itemTime!=0L) {
+            if (currentTime > itemTime && itemTime != 0L) {
                 VIEW_TYPE_DELAY
             } else {
                 if (item.isPinned == 1) {
@@ -217,7 +218,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         fun bind(item: Todo) {
             listtext.text = item.title
             date.text = item.remindMode.notifyDateTime
-            if (item.isChecked==1){
+            if (item.isChecked == 1) {
                 defaultcheckbox?.setStatusWithAnime(true)
                 listtext.setTextColor(
                     ContextCompat.getColor(
@@ -243,6 +244,10 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                 if (currentPosition != RecyclerView.NO_POSITION) {
                     listener.ontopButtonClick(item, currentPosition)
                 }
+
+            }
+            listtext.setOnClickListener {
+                listener.onItemClick(item)
             }
             if (!isEnabled) {
                 defaultcheckbox?.setOnClickListener {
@@ -258,7 +263,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                     }
                     // 禁用点击事件
                     defaultcheckbox.setOnClickListener(null)
-                listener.onFinishCheck(item)
+                    listener.onFinishCheck(item)
                 }
             }
 
@@ -282,9 +287,10 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
     interface OnItemClickListener {
         fun onItemClick(item: Todo)
+        fun onListtextClick(item: Todo)
         fun ondeleteButtonClick(item: Todo, position: Int)
         fun ontopButtonClick(item: Todo, position: Int)
-        fun onFinishCheck(item:Todo)
+        fun onFinishCheck(item: Todo)
     }
 
     companion object {

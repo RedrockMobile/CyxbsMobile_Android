@@ -1,11 +1,13 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -23,6 +25,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import kotlin.properties.Delegates
 
@@ -122,7 +125,23 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
         tab3?.customView = tab3View
         tab4View = LayoutInflater.from(this).inflate(R.layout.todo_activity_tab4, null)
         tab4?.customView = tab4View
+        val onTabSelectedListener = object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                tab.customView?.findViewById<TextView>(R.id.todo_tv_tl_tab)
+                    ?.setTextColor(ColorStateList.valueOf(com.mredrock.cyxbs.config.R.color.config_level_one_font_color.color))
+            }
 
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                tab.customView?.findViewById<TextView>(R.id.todo_tv_tl_tab)
+                    ?.setTextColor(ColorStateList.valueOf(com.mredrock.cyxbs.config.R.color.config_alpha_forty_level_two_font_color.color))
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        }
+        mTabLayout.addOnTabSelectedListener(onTabSelectedListener)
+    }
         //选中字体加粗
 //        mTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 //            override fun onTabSelected(tab: TabLayout.Tab) {
@@ -144,19 +163,19 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (changedFlag) {
-            //私以为都在子线程进行，不会ANR
-//            viewModel.initDataList(
-//                    onLoadSuccess = {
-//                        onDateLoaded()
-//                    }
-//            )
-        }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        if (changedFlag) {
+//            //私以为都在子线程进行，不会ANR
+////            viewModel.initDataList(
+////                    onLoadSuccess = {
+////                        onDateLoaded()
+////                    }
+////            )
+//        }
+//    }
 
-    private fun onDateLoaded() {
+  //  private fun onDateLoaded() {
 //        val adapter =
 //                DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
      //   val callback = SlideCallback()
@@ -177,6 +196,6 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
 //        )
 
 
-    }
-
-}
+//    }
+//
+//}

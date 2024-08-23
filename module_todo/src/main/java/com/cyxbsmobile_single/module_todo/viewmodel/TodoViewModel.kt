@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -185,6 +186,7 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 toast("sdkuivh")
+                Log.d("bystudy", "getTodoByStudy:${it.data} ")
                 _categoryTodoStudy.postValue(it.data)
             }
     }
@@ -201,6 +203,7 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 _categoryTodoLife.postValue(it.data)
+
             }
     }
 
