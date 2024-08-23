@@ -9,7 +9,6 @@ import java.io.Serializable
  */
 data class TodoListSyncTimeWrapper(
     @SerializedName("changed_todo_array")
-    var todoArray: List<Todo>,
-    @SerializedName("sync_time")
+    var todoArray: List<Todo>,  @SerializedName("sync_time")
     val syncTime: Long
 ): Serializable

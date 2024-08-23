@@ -22,9 +22,12 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 
 /**
  * description ：清单下面四个页面之一
@@ -60,7 +63,6 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         todoAllAdapter = TodoAllAdapter(this)
         mRecyclerView.adapter = todoAllAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        inittoList()
         initList()
 //        todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
         val callback = DragAndDropCallback(mRecyclerView, todoAllAdapter)
@@ -101,7 +103,13 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             deleteButton.setOnClickListener {
                 // 移除指定位置的 item
                 todoAllAdapter.deleteSelectedItems()
-                mViewModel.delTodo( DelPushWrapper(  todoAllAdapter.selectItems.map { it.todoId },0))
+                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                mViewModel.delTodo(
+                    DelPushWrapper(
+                        todoAllAdapter.selectItems.map { it.todoId },
+                        syncTime
+                    )
+                )
                 dialog.dismiss()
             }
             dialog.show()
@@ -109,11 +117,10 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         acTopButton.setOnClickListener {
             todoAllAdapter.topSelectedItems()
         }
-        checkall.setOnCheckedChangeListener{_, isChecked ->
-            if (isChecked){
+        checkall.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 todoAllAdapter.selectedall()
-            }
-            else{
+            } else {
                 todoAllAdapter.toSelectedall()
             }
         }
@@ -159,81 +166,25 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         // Log.d("viemodeldata",it.toString())
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
-        todoAllAdapter.submitList(todoListSyncTimeWrapper.todoArray)
+        mViewModel.categoryTodoOther.observe(viewLifecycleOwner) {
+            todoAllAdapter.submitList(it.todoArray) {
+                checkIfEmpty()
+            }
+        }
         // }
 
         //}
-    }
-
-    //测试用的数据类
-    private fun inittoList() {
-// 测试数据1
-//        val todo1 = Todo(
-//            todoId = 1L,
-//            title = "Complete Android project",
-//            detail = "Finish the RecyclerView implementation and test the swipe to delete functionality.",
-//            isChecked = 0,
-//            remindMode = RemindMode(
-//                repeatMode = 1,
-//                date = arrayListOf("2024-08-20"),
-//                week = arrayListOf(),
-//                day = arrayListOf(),
-//                notifyDateTime = "2024-08-20 09:00:00"
-//            ),
-//            lastModifyTime = System.currentTimeMillis(),
-//            type = "Work",
-//            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
-//        )
-//
-//// 测试数据2
-//        val todo2 = Todo(
-//            todoId = 2L,
-//            title = "Grocery Shopping",
-//            detail = "Buy milk, bread, eggs, and vegetables.",
-//            isChecked = 0,
-//            remindMode = RemindMode(
-//                repeatMode = 0,
-//                date = arrayListOf("2024-08-19"),
-//                week = arrayListOf(),
-//                day = arrayListOf(),
-//                notifyDateTime = "2024-08-19 17:00:00"
-//            ),
-//            lastModifyTime = System.currentTimeMillis(),
-//            type = "Personal",
-//            repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
-//        )
-//
-//// 测试数据3
-//        val todo3 = Todo(
-//            todoId = 3L,
-//            title = "Call the dentist",
-//            detail = "Schedule an appointment for a routine check-up.",
-//            isChecked = 0,
-//            remindMode = RemindMode(
-//                repeatMode = 2,
-//                date = arrayListOf("2024-08-21"),
-//                week = arrayListOf(),
-//                day = arrayListOf(),
-//                notifyDateTime = "2024-08-21 10:30:00"
-//            ),
-//            lastModifyTime = System.currentTimeMillis(),
-//            type = "Health",
-//            repeatStatus = Todo.NONE_WITH_REPEAT
-//        )
-//
-//// 将这些 Todo 数据包装在 TodoListSyncTimeWrapper 中
-//        todoListSyncTimeWrapper = TodoListSyncTimeWrapper(
-//            syncTime = System.currentTimeMillis(),
-//            todoArray = listOf(todo1, todo2, todo3)
-//        )
-
-
     }
 
     //处理点击事件
     override fun onItemClick(item: Todo) {
         Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
         Log.d("click", "点击事件触发")
+    }
+
+    override fun onListtextClick(item: Todo) {
+        Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -254,6 +205,8 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                 dialog.dismiss()
             }
             deleteButton.setOnClickListener {
+                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime))
                 // 移除指定位置的 item
                 currentList.removeAt(position)
                 // 提交更新后的列表
@@ -285,5 +238,10 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
     }
 
+    override fun onFinishCheck(item: Todo) {
+        item.isChecked = 1
+        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+        mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 1))
+    }
 
 }

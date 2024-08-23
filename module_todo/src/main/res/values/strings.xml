@@ -15,6 +15,10 @@
     <string name="todo_string_management_change">退出管理</string>
     <string name="todo_string_delete">删除</string>
     <string name="todo_string_totop">置顶</string>
+    <string name="todo_string_tab1">全部</string>
+    <string name="todo_string_tab2">学习</string>
+    <string name="todo_string_tab3">生活</string>
+    <string name="todo_string_tab4">其他</string>
     <string name="todo_dialog_textone">确定是否删除</string>
     <string name="todo_dialog_texttwo">删除后无法恢复</string>
     <string name="todo_dialog_textthree">取消</string>
