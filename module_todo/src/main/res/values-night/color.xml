@@ -43,4 +43,5 @@
 
     <!--    当todo本地和远程的仓库冲突时，提醒用的按钮的颜色-->
     <color name="todo_on_conflict_button_color">#2CDEFF</color>
+    <color name="todo_fragment_color">#000</color>
 </resources>
