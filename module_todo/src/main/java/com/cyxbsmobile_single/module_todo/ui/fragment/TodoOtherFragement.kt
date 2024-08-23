@@ -183,6 +183,11 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         Log.d("click", "点击事件触发")
     }
 
+    override fun onListtextClick(item: Todo) {
+        Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
+
+    }
+
     @SuppressLint("MissingInflatedId")
     override fun ondeleteButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
