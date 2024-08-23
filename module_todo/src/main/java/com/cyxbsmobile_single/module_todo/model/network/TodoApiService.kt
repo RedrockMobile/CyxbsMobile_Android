@@ -73,26 +73,30 @@ interface TodoApiService {
     /**
      * 获取分组的数据
      */
-    @FormUrlEncoded
+
     @POST("/magipoke-todo/type-list")
+    @FormUrlEncoded
+    @Headers("Content-Type: application/x-www-form-urlencoded")
     fun getTodoListByStudy(
         @Field("type")
         type: String = "study"
-    ): Single<ApiWrapper<TodoListGetWrapper>>
+    ): Single<ApiWrapper<TodoListSyncTimeWrapper>>
 
-    @FormUrlEncoded
+
     @POST("/magipoke-todo/type-list")
+    @FormUrlEncoded
     fun getTodoListByLife(
         @Field("type")
         type: String = "life"
-    ): Single<ApiWrapper<TodoListGetWrapper>>
+    ): Single<ApiWrapper<TodoListSyncTimeWrapper>>
 
-    @FormUrlEncoded
+
     @POST("/magipoke-todo/type-list")
+    @FormUrlEncoded
     fun getTodoListByOther(
         @Field("type")
         type: String = "other"
-    ): Single<ApiWrapper<TodoListGetWrapper>>
+    ): Single<ApiWrapper<TodoListSyncTimeWrapper>>
 
     /**
      * 置顶
