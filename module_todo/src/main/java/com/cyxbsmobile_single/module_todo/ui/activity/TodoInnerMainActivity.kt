@@ -1,15 +1,11 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
 import android.annotation.SuppressLint
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -28,6 +24,7 @@ import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import kotlin.properties.Delegates
 
 /**
  * description:
@@ -41,11 +38,19 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
     private var changedFlag = false
     private val todo_inner_home_bar_add by R.id.todo_inner_home_bar_add.view<ImageView>()
     private val todo_inner_home_bar_back by R.id.todo_inner_home_bar_back.view<ImageView>()
-    private val mTabLayout: TabLayout by R.id.tab_layout.view()
+    private val mTabLayout: TabLayout by R.id.todo_tab_layout.view()
     private val manageButton by R.id.todo_custom_button.view<FrameLayout>()
     private val changeManageButton by R.id.todo_custom_button_change.view<FrameLayout>()
     private val mVp: ViewPager2 by R.id.view_pager.view()
     private val addButton by R.id.todo_inner_home_bar_add.view<FloatingActionButton>()
+    private var tab1View by Delegates.notNull<View>()
+
+    private var tab2View by Delegates.notNull<View>()
+
+    private var tab3View by Delegates.notNull<View>()
+
+    private var tab4View by Delegates.notNull<View>()
+
     private val todoViewModel by viewModels<TodoViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,34 +97,48 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
             .add { TodoOtherFragement() }
             .add { TodoLifeFragment() }
             .add { TodoStudyFragment() }
-        TabLayoutMediator(mTabLayout, mVp) { tab, position ->
-            val tabView = LayoutInflater.from(this).inflate(R.layout.todo_custom_tab, null)
-            val tabTextView = tabView.findViewById<TextView>(R.id.tabTextView)
-            when (position) {
-                0 -> tabTextView.text = "全部"
-                1 -> tabTextView.text = "学习"
-                2 -> tabTextView.text = "生活"
-                else -> tabTextView.text = "其他"
-            }
-            tab.customView = tabView
+        val tabs = arrayOf(
+            getString(R.string.todo_string_tab1),
+            getString(R.string.todo_string_tab2),
+            getString(R.string.todo_string_tab3),
+            getString(R.string.todo_string_tab4),
+        )
+        TabLayoutMediator(
+            mTabLayout, mVp
+        ) { tab,
+            position ->
+            tab.text = tabs[position]
         }.attach()
+        //设置tabView
+        val tab1 = mTabLayout.getTabAt(0)
+        val tab2 = mTabLayout.getTabAt(1)
+        val tab3 = mTabLayout.getTabAt(2)
+        val tab4 = mTabLayout.getTabAt(3)
+        tab1View = LayoutInflater.from(this).inflate(R.layout.todo_activity_tab1, null)
+        tab1?.customView = tab1View
+        tab2View = LayoutInflater.from(this).inflate(R.layout.todo_activity_tab2, null)
+        tab2?.customView = tab2View
+        tab3View = LayoutInflater.from(this).inflate(R.layout.todo_activity_tab3, null)
+        tab3?.customView = tab3View
+        tab4View = LayoutInflater.from(this).inflate(R.layout.todo_activity_tab4, null)
+        tab4?.customView = tab4View
 
         //选中字体加粗
-        mTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                val tabTextView = tab.customView as TextView?
-                tabTextView?.setTypeface(null, Typeface.BOLD)
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-                val tabTextView = tab.customView as TextView?
-                tabTextView?.setTypeface(null, Typeface.NORMAL)
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-
-            }
-        })
+//        mTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab) {
+//                val tabTextView = tab.customView as TextView?
+//                tabTextView?.setTypeface(null, Typeface.BOLD)
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab) {
+//                val tabTextView = tab.customView as TextView?
+//                tabTextView?.setTypeface(null, Typeface.NORMAL)
+//            }
+//
+//            override fun onTabReselected(tab: TabLayout.Tab) {
+//
+//            }
+//        })
 //        mTabLayout.setTabIndicatorFullWidth(false);
 
 
@@ -159,4 +178,5 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
 
 
     }
+
 }
