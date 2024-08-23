@@ -8,8 +8,8 @@ import java.io.Serializable
  * Time: 2021-08-29 0:13
  */
 data class TodoListSyncTimeWrapper(
-    @SerializedName("sync_time")
-    val syncTime: Long,
     @SerializedName("changed_todo_array")
-    var todoArray: List<Todo>
+    var todoArray: List<Todo>,
+    @SerializedName("sync_time")
+    val syncTime: Long
 ): Serializable

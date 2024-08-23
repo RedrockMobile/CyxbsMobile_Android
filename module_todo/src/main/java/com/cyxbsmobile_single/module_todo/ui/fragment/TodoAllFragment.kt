@@ -38,7 +38,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
     private val mRecyclerView by R.id.todo_allrv.view<SwipeDeleteRecyclerView>()
     private val emptyview by R.id.empty_view.view<View>()
-    private lateinit var todoListSyncTimeWrapper: TodoListSyncTimeWrapper
+//    private lateinit var todoListSyncTimeWrapper: TodoListSyncTimeWrapper
     private val mViewModel: TodoViewModel by activityViewModels()
     private val emptyBottom by R.id.todo_bottom_action_layout_all.view<LinearLayoutCompat>()
     private val acDeleteButton by R.id.button_bottom_right_all.view<FrameLayout>()
@@ -160,7 +160,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         // Log.d("viemodeldata",it.toString())
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
-        todoAllAdapter.submitList(todoListSyncTimeWrapper.todoArray)
+//        todoAllAdapter.submitList(todoListSyncTimeWrapper.todoArray)
         // }
 
         //}

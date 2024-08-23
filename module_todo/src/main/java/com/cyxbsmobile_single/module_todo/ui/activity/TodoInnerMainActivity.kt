@@ -1,6 +1,8 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,16 +14,21 @@ import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
+import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoStudyFragment
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 
 /**
  * description:
@@ -53,6 +60,20 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
 
 
     private fun initClick() {
+        todo_inner_home_bar_add.setOnClickListener {
+            todoViewModel.getTodoByStudy()
+            AddTodoDialog(this){
+                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                val firstPush = if (syncTime == 0L) 1 else 0
+                todoViewModel.pushTodo(TodoListPushWrapper(listOf(it),syncTime,TodoListPushWrapper.NONE_FORCE,firstPush))
+                //通知小组件更新数据
+                this.sendBroadcast(
+                    Intent("cyxbs.widget.todo.refresh").apply {
+                        component = ComponentName(appContext, TodoWidget::class.java)
+                    }
+                )
+            }.show()
+        }
         todo_inner_home_bar_back.setOnClickListener {
             finish()
         }
