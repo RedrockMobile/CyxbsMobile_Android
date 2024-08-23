@@ -39,11 +39,12 @@ interface TodoDao {
      */
     @Query("select * from todo_list")
     suspend fun queryAll(): List<Todo>?
+
     /**
-     * 查询分组的数据
+     * 查询指定id的数据
      */
-    @Query("select * from todo_list where type=:type")
-    suspend fun queryByType(type: String): List<Todo>?
+    @Query("select * from todo_list where todoId=:todoId")
+    suspend fun queryById(todoId: Int?): Todo?
 
 
 }

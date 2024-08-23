@@ -161,12 +161,12 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     }
 
     private fun selectCategory() {
-        tvCategory.text = when (wpCategory.currentItemPosition) {
+        tvCategory.text = wpCategory.data.get(wpCategory.currentItemPosition).toString()
+        todo.type = when (wpCategory.currentItemPosition) {
             0 -> "study"
             1 -> "life"
             else -> "other"
         }
-        todo.type = tvCategory.text.toString()
     }
 
     //显示日历
