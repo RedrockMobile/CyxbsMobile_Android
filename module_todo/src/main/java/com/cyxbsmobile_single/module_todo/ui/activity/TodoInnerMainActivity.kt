@@ -97,9 +97,9 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
     private fun initTab() {
         mVp.adapter = FragmentVpAdapter(this)
             .add { TodoAllFragment() }
-            .add { TodoOtherFragement() }
-            .add { TodoLifeFragment() }
             .add { TodoStudyFragment() }
+            .add { TodoLifeFragment() }
+            .add { TodoOtherFragement() }
         val tabs = arrayOf(
             getString(R.string.todo_string_tab1),
             getString(R.string.todo_string_tab2),

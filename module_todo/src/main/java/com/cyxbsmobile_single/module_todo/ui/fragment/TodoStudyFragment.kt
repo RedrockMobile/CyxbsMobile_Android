@@ -168,8 +168,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
         mViewModel.categoryTodoStudy.observe(viewLifecycleOwner) {
-            Log.d("initdata", "initList: ${it.todoList}")
-            todoAllAdapter.submitList(it.todoList) {
+            todoAllAdapter.submitList(it.todoArray) {
                 checkIfEmpty()
             }
         }

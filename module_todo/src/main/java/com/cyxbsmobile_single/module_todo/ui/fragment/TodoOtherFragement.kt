@@ -167,9 +167,8 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
         mViewModel.categoryTodoOther.observe(viewLifecycleOwner) {
-            todoAllAdapter.submitList(it.todoList) {
+            todoAllAdapter.submitList(it.todoArray) {
                 checkIfEmpty()
-                Log.d("initdata", "initList: ${it.todoList}")
             }
         }
         // }

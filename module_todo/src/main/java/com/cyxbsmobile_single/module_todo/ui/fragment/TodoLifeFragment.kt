@@ -169,7 +169,7 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         //todoAllAdapter.submitList( it.todoArray)
         // if (it.todoArray==null){
         mViewModel.categoryTodoLife.observe(viewLifecycleOwner) {
-            todoAllAdapter.submitList(it.todoList) {
+            todoAllAdapter.submitList(it.todoArray) {
                 checkIfEmpty()
             }
         }
