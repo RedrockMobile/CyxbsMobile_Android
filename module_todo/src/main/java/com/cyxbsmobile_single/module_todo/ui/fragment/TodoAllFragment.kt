@@ -27,6 +27,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
+import com.cyxbsmobile_single.module_todo.ui.dialog.DetailAlarmDialog
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -89,38 +90,27 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     private fun initClick() {
-
-
         acDeleteButton.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            val inflater = layoutInflater
-            val dialogView = inflater.inflate(R.layout.todo_dialog_custom, null)
-            builder.setView(dialogView)
-            val closeButton = dialogView.findViewById<Button>(R.id.todo_dialog_positive_button)
-            val deleteButton = dialogView.findViewById<Button>(R.id.todo_dialog_negative_button)
-            // 创建并显示对话框
-            val dialog = builder.create()
-            closeButton.setOnClickListener {
-                dialog.dismiss()
-            }
-            deleteButton.setOnClickListener {
-                // 移除指定位置的 item
-                todoAllAdapter.deleteSelectedItems()
-                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                mViewModel.delTodo(
-                    DelPushWrapper(
+            DeleteTodoDialog.Builder(requireContext())
+                .setPositiveClick {
+                    // 移除指定位置的 item
+                    todoAllAdapter.deleteSelectedItems()
+                    val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                    mViewModel.delTodo(
+                        DelPushWrapper(
+                            todoAllAdapter.selectItems.map { it.todoId },
+                            syncTime
+                        )
 
-                        todoAllAdapter.selectItems.map { it.todoId },
-                        syncTime
                     )
+                    for (item in todoAllAdapter.selectItems) {
+                        Log.d("SwipeDeleteRecyclerView", "deletePinning item: ${item.todoId}")
+                    }
+                    dismiss()
+                }.setNegativeClick {
+                    dismiss()
+                }.show()
 
-                )
-                for (item in todoAllAdapter.selectItems) {
-                    Log.d("SwipeDeleteRecyclerView", "deletePinning item: ${item.todoId}")
-                }
-                dialog.dismiss()
-            }
-            dialog.show()
         }
         acTopButton.setOnClickListener {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
@@ -191,7 +181,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     override fun onListtextClick(item: Todo) {
         TodoDetailActivity.startActivity(item, requireContext())
-
     }
 
     @SuppressLint("MissingInflatedId")
@@ -200,28 +189,19 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
         // 检查索引是否在当前列表的有效范围内
         if (position >= 0 && position < currentList.size) {
-            val builder = AlertDialog.Builder(requireContext())
-            val inflater = layoutInflater
-            val dialogView = inflater.inflate(R.layout.todo_dialog_custom, null)
-            builder.setView(dialogView)
-            val closeButton = dialogView.findViewById<Button>(R.id.todo_dialog_positive_button)
-            val deleteButton = dialogView.findViewById<Button>(R.id.todo_dialog_negative_button)
-            // 创建并显示对话框
-            val dialog = builder.create()
-            closeButton.setOnClickListener {
-                dialog.dismiss()
-            }
-            deleteButton.setOnClickListener {
-                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime))
-                // 移除指定位置的 item
-                currentList.removeAt(position)
-                // 提交更新后的列表
-                todoAllAdapter.submitList(currentList)
+            DeleteTodoDialog.Builder(requireContext())
+                .setPositiveClick {
+                    val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                    mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime))
+                    // 移除指定位置的 item
+                    currentList.removeAt(position)
+                    // 提交更新后的列表
+                    todoAllAdapter.submitList(currentList)
+                    dismiss()
+                }.setNegativeClick {
+                    dismiss()
+                }.show()
 
-                dialog.dismiss()
-            }
-            dialog.show()
 
         } else {
             // 如果索引无效，记录错误日志

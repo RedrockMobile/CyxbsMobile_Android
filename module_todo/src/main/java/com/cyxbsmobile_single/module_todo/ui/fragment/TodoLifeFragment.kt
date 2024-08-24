@@ -91,30 +91,26 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
 
         acDeleteButton.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            val inflater = layoutInflater
-            val dialogView = inflater.inflate(R.layout.todo_dialog_custom, null)
-            builder.setView(dialogView)
-            val closeButton = dialogView.findViewById<Button>(R.id.todo_dialog_positive_button)
-            val deleteButton = dialogView.findViewById<Button>(R.id.todo_dialog_negative_button)
-            // 创建并显示对话框
-            val dialog = builder.create()
-            closeButton.setOnClickListener {
-                dialog.dismiss()
-            }
-            deleteButton.setOnClickListener {
-                // 移除指定位置的 item
-                todoAllAdapter.deleteSelectedItems()
-                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                mViewModel.delTodo(
-                    DelPushWrapper(
-                        todoAllAdapter.selectItems.map { it.todoId },
-                        syncTime
+            DeleteTodoDialog.Builder(requireContext())
+                .setPositiveClick {
+                    // 移除指定位置的 item
+                    todoAllAdapter.deleteSelectedItems()
+                    val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                    mViewModel.delTodo(
+                        DelPushWrapper(
+                            todoAllAdapter.selectItems.map { it.todoId },
+                            syncTime
+                        )
+
                     )
-                )
-                dialog.dismiss()
-            }
-            dialog.show()
+                    for (item in todoAllAdapter.selectItems) {
+                        Log.d("SwipeDeleteRecyclerView", "deletePinning item: ${item.todoId}")
+                    }
+                    dismiss()
+                }.setNegativeClick {
+                    dismiss()
+                }.show()
+
         }
         acTopButton.setOnClickListener {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
@@ -195,28 +191,19 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
         // 检查索引是否在当前列表的有效范围内
         if (position >= 0 && position < currentList.size) {
-            val builder = AlertDialog.Builder(requireContext())
-            val inflater = layoutInflater
-            val dialogView = inflater.inflate(R.layout.todo_dialog_custom, null)
-            builder.setView(dialogView)
-            val closeButton = dialogView.findViewById<Button>(R.id.todo_dialog_positive_button)
-            val deleteButton = dialogView.findViewById<Button>(R.id.todo_dialog_negative_button)
-            // 创建并显示对话框
-            val dialog = builder.create()
-            closeButton.setOnClickListener {
-                dialog.dismiss()
-            }
-            deleteButton.setOnClickListener {
-                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime))
-                // 移除指定位置的 item
-                currentList.removeAt(position)
-                // 提交更新后的列表
-                todoAllAdapter.submitList(currentList)
+            DeleteTodoDialog.Builder(requireContext())
+                .setPositiveClick {
+                    val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                    mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime))
+                    // 移除指定位置的 item
+                    currentList.removeAt(position)
+                    // 提交更新后的列表
+                    todoAllAdapter.submitList(currentList)
+                    dismiss()
+                }.setNegativeClick {
+                    dismiss()
+                }.show()
 
-                dialog.dismiss()
-            }
-            dialog.show()
 
         } else {
             // 如果索引无效，记录错误日志
