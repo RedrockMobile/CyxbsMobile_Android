@@ -122,8 +122,8 @@
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
-            app:tabPaddingEnd="21.1dp"
-            app:tabPaddingStart="21.1dp"
+            app:tabPaddingEnd="21dp"
+            app:tabPaddingStart="21dp"
             app:tabRippleColor="@android:color/transparent"
             app:tabTextAppearance="@style/todo_TabTextAppearance" />
 

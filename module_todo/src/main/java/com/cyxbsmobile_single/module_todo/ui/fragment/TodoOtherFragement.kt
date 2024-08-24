@@ -24,6 +24,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
+import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -115,6 +116,12 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             dialog.show()
         }
         acTopButton.setOnClickListener {
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            Log.d("SwipeDeleteRecyclerView", "Pinning item: ${todoAllAdapter.selectItems}")
+
+            for (item in todoAllAdapter.selectItems) {
+                mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
+            }
             todoAllAdapter.topSelectedItems()
         }
         checkall.setOnCheckedChangeListener { _, isChecked ->
@@ -162,18 +169,13 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     private fun initList() {
-        //viewModeldata.allTodo.observe(viewLifecycleOwner) {
-        // Log.d("viemodeldata",it.toString())
-        //todoAllAdapter.submitList( it.todoArray)
-        // if (it.todoArray==null){
+
         mViewModel.categoryTodoOther.observe(viewLifecycleOwner) {
             todoAllAdapter.submitList(it.todoArray) {
                 checkIfEmpty()
             }
         }
-        // }
 
-        //}
     }
 
     //处理点击事件
@@ -231,6 +233,9 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         // 将项添加到列表的顶部
         currentList.add(0, item)
 
+        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+
+        mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
         // 提交更新后的列表
         todoAllAdapter.submitList(currentList) {
             // 滚动到顶部以显示置顶的项
