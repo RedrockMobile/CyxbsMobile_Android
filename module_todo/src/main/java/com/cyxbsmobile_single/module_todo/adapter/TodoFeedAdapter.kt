@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,9 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity.Companion.startActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * description:
@@ -36,6 +40,8 @@ class TodoFeedAdapter :
         }
     }
 
+    // 定义日期格式
+    private val dateFormat = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
     private var mClick: ((Todo) -> Unit)? = null
     fun onFinishCheck(listener: (Todo) -> Unit) {
         mClick = listener
@@ -47,12 +53,11 @@ class TodoFeedAdapter :
         val todoFeedTime = itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_notify_time)
         val icRight = itemView.findViewById<ImageView>(R.id.todo_iv_check_feed)
         val defaultCheckbox = itemView.findViewById<CheckLineView>(R.id.todo_iv_todo_feed)
-
         init {
             defaultCheckbox.setOnClickListener {
                 val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION && position < currentList.size) {
-                    defaultCheckbox.setStatusWithAnime(true) {
+                    defaultCheckbox.setStatusWithAnime(true){
                         mClick?.invoke(currentList[position])
                     }
                     todoTitle.setTextColor(
@@ -61,17 +66,27 @@ class TodoFeedAdapter :
                             R.color.todo_check_item_color
                         )
                     )
+                    todoFeedTime.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.todo_check_item_color
+                        )
+                    )
+                    todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_notice2)
                     icRight.visible()
                 }
             }
             itemView.setOnClickListener {
-                TodoDetailActivity.startActivity(getItem(absoluteAdapterPosition), itemView.context)
+                startActivity(getItem(absoluteAdapterPosition),itemView.context)
             }
         }
 
         fun bind(todo: Todo) {
             todoTitle.text = todo.title
-            defaultCheckbox.setStatusWithAnime(false)
+            defaultCheckbox.apply {
+                setStatusWithAnime(false)
+                uncheckedColor = com.mredrock.cyxbs.config.R.color.config_level_two_font_color
+            }
             todoTitle.setTextColor(
                 ContextCompat.getColor(
                     itemView.context,
@@ -85,6 +100,24 @@ class TodoFeedAdapter :
                 todoFeedTime.gone()
             } else {
                 todoFeedTime.text = todo.remindMode.notifyDateTime
+                val itemTime = if (!todo.remindMode.notifyDateTime.isNullOrEmpty()) {
+                    try {
+                        dateFormat.parse(todo.remindMode.notifyDateTime)?.time ?: 0L
+                    } catch (e: ParseException) {
+                        // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
+                        e.printStackTrace()
+                        System.currentTimeMillis()
+                    }
+                } else {
+                    0L
+                }
+                val currentTime = System.currentTimeMillis()
+                if (currentTime > itemTime && itemTime != 0L){
+                    defaultCheckbox.uncheckedColor = Color.RED
+                    todoTitle.setTextColor(Color.RED)
+                    todoFeedTime.setTextColor(Color.RED)
+                    todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_overtime_notice)
+                }
             }
         }
     }
