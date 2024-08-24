@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -39,15 +38,11 @@ interface TodoDao {
      */
     @Query("select * from todo_list")
     suspend fun queryAll(): List<Todo>?
-    /**
-     * 查询分组的数据
-     */
-    @Query("select * from todo_list where type=:type")
-    suspend fun queryByType(type: String): List<Todo>?
 
     /**
-     * 按ID查询数据
+     * 查询指定id的数据
      */
-    @Query("select * from todo_list where todoId = :todoId")
-    suspend fun queryTodoById(todoId: Long?): Todo?
+    @Query("select * from todo_list where todoId=:todoId")
+    suspend fun queryById(todoId: Int?): Todo?
+
 }

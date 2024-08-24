@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +14,17 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.TodoFeedAdapter
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_FEED
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 
 /**
  * description: 首页的邮子清单
@@ -28,6 +34,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
 @Route(path = DISCOVER_TODO_FEED)
 class TodoFeedFragment : BaseFragment() {
 
+
+    private val todoList = ArrayList<Todo>()
     private val mRv by R.id.todo_rv_feed_todo_list.view<RecyclerView>()
     private val mTv by R.id.todo_tv_feed_empty_notify.view<TextView>()
     private val mCl by R.id.todo_cl_todo_feed.view<ConstraintLayout>()
@@ -48,25 +56,41 @@ class TodoFeedFragment : BaseFragment() {
         initView()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         mCl.setOnClickListener {
             ARouter.getInstance().build(DISCOVER_TODO_MAIN).navigation()
         }
         mRv.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = mAdapter
+            adapter = mAdapter.apply {
+                onFinishCheck {
+                    it.isChecked = 1
+                    val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                    mViewModel.apply {
+                        pushTodo(TodoListPushWrapper(listOf(it), syncTime, 1, 0))
+                        getAllTodo()
+                    }
+                }
+            }
         }
         mViewModel.allTodo.observe(viewLifecycleOwner) {
-            if (it.todoArray.isEmpty()) {
-                mRv.gone()
+            val filteredList = it.todoArray.filter { todo -> todo.isChecked == 0 }
+                .take(3) // 只取未选中的前3个
+            todoList.apply {
+                clear()
+                addAll(filteredList)
+            }
+            LogUtils.d("TodoFeedFragment", "推送成功 ${todoList}")
+            if (todoList.isEmpty()) {
                 mTv.visible()
+                mRv.gone()
+                mTv.text = "还没有待做事项哦~快去添加吧！"
             } else {
                 mRv.visible()
                 mTv.gone()
-                val list = it.todoArray.filter { todo -> todo.isChecked == 0 }
-                    .take(3) // 只取未选中的前3个
-                mAdapter.submitList(list)
             }
+            mAdapter.submitList(filteredList.toList())
         }
     }
 

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/todo_ll_widget_main"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/todo_shape_widget_back_ground"
     android:orientation="vertical"

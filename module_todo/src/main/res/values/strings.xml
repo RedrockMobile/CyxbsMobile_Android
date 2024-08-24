@@ -5,6 +5,7 @@
     <string name="todo_detail_thing_title_et_hint">设置待办名称</string>
     <string name="todo_inner_detail_remark_hint_text">输入备注信息</string>
     <string name="todo_feed_title">邮子清单</string>
+    <string name="todo_feed_loading">查询中…</string>
     <string name="todo_string_empty_todo_notify">还没有待做事项哦~快去添加吧！</string>
     <string name="todo_string_empty_uncheck_notify">还没有待做事项哦，快去添加吧！</string>
     <string name="todo_string_uncheck">待办</string>
