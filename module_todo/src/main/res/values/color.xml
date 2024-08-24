@@ -2,11 +2,14 @@
 <resources>
     <color name="todo_check_line_color">#15315B</color>
     <color name="todo_inner_add_save_text_color">#2923D2</color>
-    <color name="todo_inner_add_thing_et_shape_color">#9AE8F1FC</color>
+    <color name="todo_inner_add_thing_et_shape_color">#E8F1FC</color>
     <color name="todo_inner_add_thing_et_hint_color">#6815315B</color>
     <color name="todo_inner_add_thing_nf_tv_unclick_color">#802A4E84</color>
     <color name="todo_inner_add_thing_nf_tv_click_color">#662A4E84</color>
     <color name="todo_inner_add_thing_repeat_time_item_shape_color">#F2F3F7</color>
+    <color name="todo_detail_classify_color">#514DEB</color>
+    <color name="todo_detail_thing_fill_color">#515689</color>
+    <color name="todo_detail_thing_hind_color">#9195B7</color>
     <!--    选择年份点击之后的item的shape的颜色-->
     <color name="todo_add_todo_year_clicked_color">#EDF4FD</color>
     <!--    选择年份未点击的item的shape的颜色-->

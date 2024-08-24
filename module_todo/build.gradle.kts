@@ -4,21 +4,16 @@ plugins {
 
 
 dependWheelPicker()
-dependLibBase()
-dependLibConfig()
-dependLibUtils()
-dependApiStore()
-//使用ARouter
-useARouter()
-
-dependRoom()
-
-//网络请求的库，有retrofit，okp，gson
 dependNetwork()
-//rxJava
 dependRxjava()
+dependRoom()
+dependRoomRxjava()
 
-//使用viewmodel livedata
-dependLifecycleKtx()
-//android常用库
-dependAndroidView()
+dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
+dependLibUtils()
+dependLibConfig()
+
+useARouter()
+dependencies {
+    implementation(project(":lib_base"))
+}
