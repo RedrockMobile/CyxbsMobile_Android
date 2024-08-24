@@ -19,7 +19,7 @@
             android:layout_marginStart="16dp"
             android:transitionName="check"
             app:unchecked_line_color="@color/todo_feed_check_eclipse_color"
-            app:checked_line_color="@color/config_level_two_font_color"
+            app:checked_line_color="@color/todo_inner_checked_line_color"
             app:uncheck_line_width="1.5dp"
             app:checked_line_width="1dp"
             app:layout_constraintBottom_toBottomOf="@+id/todo_tv_feed_title"
