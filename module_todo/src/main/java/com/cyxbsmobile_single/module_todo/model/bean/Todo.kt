@@ -38,7 +38,7 @@ data class Todo(
                 0,
                 RemindMode.generateDefaultRemindMode(),
                 System.currentTimeMillis(),
-                "All",
+                "other",
                 0
             )
         }

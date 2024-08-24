@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
+            android:layout_marginTop="15dp"
             android:text="@string/todo_feed_title"
             android:textColor="@color/config_level_two_font_color"
             android:textSize="18sp"
@@ -29,7 +30,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -49,10 +51,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="39dp"
             android:layout_marginBottom="39dp"
-            android:visibility="gone"
-            android:textColor="@color/todo_item_checked_color"
+            android:textColor="@color/config_level_one_font_color"
             android:textSize="15sp"
-            android:text="@string/todo_string_empty_todo_notify"
+            android:alpha="0.6"
+            android:text="@string/todo_feed_loading"
             app:layout_constraintBottom_toBottomOf="@+id/todo_rv_feed_todo_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
