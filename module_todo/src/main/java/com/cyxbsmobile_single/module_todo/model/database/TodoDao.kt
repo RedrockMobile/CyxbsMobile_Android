@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -45,6 +44,5 @@ interface TodoDao {
      */
     @Query("select * from todo_list where todoId=:todoId")
     suspend fun queryById(todoId: Int?): Todo?
-
 
 }

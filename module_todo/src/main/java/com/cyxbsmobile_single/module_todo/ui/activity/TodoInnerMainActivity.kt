@@ -65,7 +65,6 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
     }
 
 
-
     private fun initClick() {
         todo_inner_home_bar_back.setOnClickListener {
             finish()
@@ -73,20 +72,27 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
         manageButton.setOnClickListener {
             manageButton.visibility = View.GONE
             changeManageButton.visibility = View.VISIBLE
-            addButton.visibility=View.GONE
+            addButton.visibility = View.GONE
             todoViewModel.setEnabled(true)
         }
         changeManageButton.setOnClickListener {
             changeManageButton.visibility = View.GONE
             manageButton.visibility = View.VISIBLE
-            addButton.visibility=View.VISIBLE
+            addButton.visibility = View.VISIBLE
             todoViewModel.setEnabled(false)
         }
         todo_inner_home_bar_add.setOnClickListener {
-            AddTodoDialog(this){
+            AddTodoDialog(this) {
                 val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
                 val firstPush = if (syncTime == 0L) 1 else 0
-                todoViewModel.pushTodo(TodoListPushWrapper(listOf(it),syncTime,TodoListPushWrapper.NONE_FORCE,firstPush))
+                todoViewModel.pushTodo(
+                    TodoListPushWrapper(
+                        listOf(it),
+                        syncTime,
+                        TodoListPushWrapper.NONE_FORCE,
+                        firstPush
+                    )
+                )
             }.show()
         }
 
@@ -142,60 +148,5 @@ class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
         }
         mTabLayout.addOnTabSelectedListener(onTabSelectedListener)
     }
-        //选中字体加粗
-//        mTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab) {
-//                val tabTextView = tab.customView as TextView?
-//                tabTextView?.setTypeface(null, Typeface.BOLD)
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab) {
-//                val tabTextView = tab.customView as TextView?
-//                tabTextView?.setTypeface(null, Typeface.NORMAL)
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab) {
-//
-//            }
-//        })
-//        mTabLayout.setTabIndicatorFullWidth(false);
 
-
-    }
-
-//    override fun onResume() {
-//        super.onResume()
-//        if (changedFlag) {
-//            //私以为都在子线程进行，不会ANR
-////            viewModel.initDataList(
-////                    onLoadSuccess = {
-////                        onDateLoaded()
-////                    }
-////            )
-//        }
-//    }
-
-  //  private fun onDateLoaded() {
-//        val adapter =
-//                DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
-     //   val callback = SlideCallback()
-
-//        todo_inner_home_bar_add.setOnClickListener {
-//            AddItemDialog(this) {
-//                adapter.addTodo(it)
-//            }.show()
-//        }
-//返回按钮点击事件
-
-
-//        findViewById<ConstraintLayout>(R.id.todo_cl_item_main).setBackgroundColor(
-//            ContextCompat.getColor(
-//                this@TodoInnerMainActivity,
-//                com.mredrock.cyxbs.common.R.color.common_white_background
-//            )
-//        )
-
-
-//    }
-//
-//}
+}
