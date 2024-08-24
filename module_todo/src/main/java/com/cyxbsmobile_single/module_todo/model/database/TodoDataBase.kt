@@ -35,52 +35,52 @@ abstract class TodoDatabase : RoomDatabase() {
                     "todo_db"
                 )
                     .fallbackToDestructiveMigration()
-                    .addCallback(object : RoomDatabase.Callback() {
+                    .addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
                             Executors.newSingleThreadExecutor().execute {
                                 val database = INSTANCE ?: return@execute
-                                // 在数据库创建时插入默认数据
-                                database.runInTransaction {
-                                    val dao = database.todoDao()
-                                    val defaultTodos = listOf(
-                                        Todo(
-                                            1,
-                                            "长按可以拖动我哟",
-                                            "",
-                                            0,
-                                            generateDefaultRemindMode(),
-                                            System.currentTimeMillis(),
-                                            "生活",
-                                            0
-                                        ),
-                                        Todo(
-                                            2,
-                                            "左滑可置顶或者删除",
-                                            "",
-                                            0,
-                                            generateDefaultRemindMode(),
-                                            System.currentTimeMillis(),
-                                            "工作",
-                                            0
-                                        ),
-                                        Todo(
-                                            3,
-                                            "点击查看代办详情",
-                                            "",
-                                            0,
-                                            generateDefaultRemindMode(),
-                                            System.currentTimeMillis(),
-                                            "学习",
-                                            0
+                                if (appContext.getSp("todo")
+                                        .getLong("TODO_LAST_MODIFY_TIME", 0L) == 0L
+                                ) {
+                                    // 在数据库创建时插入默认数据
+                                    database.runInTransaction {
+                                        val dao = database.todoDao()
+                                        val defaultTodos = listOf(
+                                            Todo(
+                                                1,
+                                                "长按可以拖动我哟",
+                                                "",
+                                                0,
+                                                generateDefaultRemindMode(),
+                                                System.currentTimeMillis(),
+                                                "生活",
+                                                0
+                                            ),
+                                            Todo(
+                                                2,
+                                                "左滑可置顶或者删除",
+                                                "",
+                                                0,
+                                                generateDefaultRemindMode(),
+                                                System.currentTimeMillis(),
+                                                "工作",
+                                                0
+                                            ),
+                                            Todo(
+                                                3,
+                                                "点击查看代办详情",
+                                                "",
+                                                0,
+                                                generateDefaultRemindMode(),
+                                                System.currentTimeMillis(),
+                                                "学习",
+                                                0
+                                            )
                                         )
-                                    )
-                                    processLifecycleScope.launch(Dispatchers.IO) {
-                                        dao.insertAll(defaultTodos)
-                                    }
-                                    appContext.getSp("todo").edit().apply {
-                                        putLong("TODO_LAST_MODIFY_TIME", 0)
-                                        commit()
+                                        processLifecycleScope.launch(Dispatchers.IO) {
+                                            dao.insertAll(defaultTodos)
+                                        }
                                     }
                                 }
                             }

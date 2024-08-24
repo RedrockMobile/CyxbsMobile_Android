@@ -45,4 +45,7 @@ interface TodoDao {
     @Query("select * from todo_list where todoId=:todoId")
     suspend fun queryById(todoId: Int?): Todo?
 
+    @Query("select * from todo_list where type=:type")
+    suspend fun queryByType(type: String?): List<Todo>?
+
 }
