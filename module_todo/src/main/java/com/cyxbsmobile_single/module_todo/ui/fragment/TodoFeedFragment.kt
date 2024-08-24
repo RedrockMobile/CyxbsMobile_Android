@@ -44,8 +44,7 @@ class TodoFeedFragment : BaseFragment() {
 
     private val mViewModel: TodoViewModel by activityViewModels()
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.todo_fragment_todo_feed, container, false)
@@ -75,8 +74,9 @@ class TodoFeedFragment : BaseFragment() {
             }
         }
         mViewModel.allTodo.observe(viewLifecycleOwner) {
-            val filteredList = it.todoArray.filter { todo -> todo.isChecked == 0 }
-                .take(3) // 只取未选中的前3个
+            val filteredList =
+                it.todoArray.filter { todo -> todo.isChecked == 0 && todo.todoId > 3 }
+                    .take(3) // 只取未选中的前3个
             todoList.apply {
                 clear()
                 addAll(filteredList)

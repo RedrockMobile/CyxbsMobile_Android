@@ -290,39 +290,80 @@ class TodoViewModel : BaseViewModel() {
 
         // 本地数据为空，直接同步远端
         if (getLastModifyTime() == 0L) {
-            viewModelScope.launch(Dispatchers.IO) {
-                TodoDatabase.instance.todoDao().apply {
-                    deleteAll()
-                    insertAll(allTodo.value?.todoArray)
-                }
+            if (allTodo.value?.todoArray?.isEmpty() == false) {
+                syncWithRemote()
             }
-        } else {
-            //如果远端数据为空，直接同步本地数据
-            if (getLastSyncTime() == 0L) {
-                viewModelScope.launch(Dispatchers.IO) {
-                    TodoDatabase.instance.todoDao().apply {
-                        pushTodo(TodoListPushWrapper(queryAll()!!, getLastModifyTime(), 1, 0))
-                    }
-                }
-            } else {
-                if (getLastSyncTime() == getLastModifyTime()) {
-                    return
-                } else {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val syncTime = getLastSyncTime()
-                        val modifyTime = getLastModifyTime()
-                        if (modifyTime > syncTime) {
-                            // 本地数据比远端数据新，先同步远端数据
-                            TodoDatabase.instance.todoDao().apply {
-                                pushTodo(TodoListPushWrapper(queryAll()!!, syncTime, 1, 0))
-                            }
-                        } else {
-                            // 远端数据比本地数据新，先同步本地数据
-                        }
-                    }
-                }
-            }
+            return
+        }
 
+        // 如果远端数据为空，直接同步本地数据
+        if (getLastSyncTime() == 0L) {
+            syncWithLocal()
+            return
+        }
+
+        // 检查同步时间
+        val syncTime = getLastSyncTime()
+        val modifyTime = getLastModifyTime()
+
+        if (syncTime == modifyTime) {
+            return // 数据已同步，无需操作
+        }
+
+        // 根据时间戳决定同步方向
+        if (modifyTime > syncTime) {
+            syncRemoteFromLocal(syncTime, modifyTime)
+        } else {
+            if (allTodo.value?.todoArray?.isNotEmpty() == true) {
+                syncLocalFromRemote()
+            }
+        }
+
+        getAllTodo()
+    }
+
+    private fun syncWithRemote() {
+        viewModelScope.launch(Dispatchers.IO) {
+            TodoDatabase.instance.todoDao().apply {
+                deleteAll()
+                insertAll(allTodo.value?.todoArray)
+            }
         }
     }
+
+    private fun syncWithLocal() {
+        viewModelScope.launch(Dispatchers.IO) {
+            TodoDatabase.instance.todoDao().apply {
+                pushTodo(TodoListPushWrapper(queryAll()!!, getLastModifyTime(), 1, 0))
+            }
+        }
+    }
+
+    private fun syncRemoteFromLocal(syncTime: Long, modifyTime: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            TodoDatabase.instance.todoDao().apply {
+                pushTodo(TodoListPushWrapper(queryAll()!!, syncTime, 1, 0))
+
+                // 得到本地数据库中被删除的元素
+                val deletedIds = allTodo.value?.todoArray
+                    ?.filterNot { it in queryAll()!! }
+                    ?.map { it.todoId }
+                    ?.toLongArray() ?: longArrayOf()
+
+                if (deletedIds.isNotEmpty()) {
+                    delTodo(DelPushWrapper(deletedIds.toList(), syncTime))
+                }
+            }
+        }
+    }
+
+    private fun syncLocalFromRemote() {
+        viewModelScope.launch(Dispatchers.IO) {
+            TodoDatabase.instance.todoDao().apply {
+                deleteAll()
+                insertAll(allTodo.value?.todoArray)
+            }
+        }
+    }
+
 }
