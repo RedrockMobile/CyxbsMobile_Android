@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 
@@ -46,11 +47,12 @@ class TodoFeedAdapter :
         val todoFeedTime = itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_notify_time)
         val icRight = itemView.findViewById<ImageView>(R.id.todo_iv_check_feed)
         val defaultCheckbox = itemView.findViewById<CheckLineView>(R.id.todo_iv_todo_feed)
+
         init {
             defaultCheckbox.setOnClickListener {
                 val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION && position < currentList.size) {
-                    defaultCheckbox.setStatusWithAnime(true){
+                    defaultCheckbox.setStatusWithAnime(true) {
                         mClick?.invoke(currentList[position])
                     }
                     todoTitle.setTextColor(
@@ -62,7 +64,11 @@ class TodoFeedAdapter :
                     icRight.visible()
                 }
             }
+            itemView.setOnClickListener {
+                TodoDetailActivity.startActivity(getItem(absoluteAdapterPosition), itemView.context)
+            }
         }
+
         fun bind(todo: Todo) {
             todoTitle.text = todo.title
             defaultCheckbox.setStatusWithAnime(false)

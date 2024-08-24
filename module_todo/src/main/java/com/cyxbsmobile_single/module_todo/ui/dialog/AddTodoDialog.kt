@@ -33,7 +33,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
 
 
     private var SelectRepeatTimeList = ArrayList<String>()
-    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter() }
+    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter(0) }
     private val todo by lazy { Todo.generateEmptyTodo() }
     private val tvCancel by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_cancel)!! }
     private val tvSave by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_save)!! }

@@ -21,17 +21,14 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeRvAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
-import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.CalendarDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.DetailAlarmDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.SelectRepeatDialog
+import com.cyxbsmobile_single.module_todo.util.transformRepeat
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.google.gson.Gson
 import com.mredrock.cyxbs.config.route.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
 
 /**
@@ -42,7 +39,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
 @Route(path = TODO_TODO_DETAIL)
 class TodoDetailActivity : BaseActivity() {
     lateinit var todo: Todo
-    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter() }
+    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter(1) }
     private var SelectRepeatTimeList = ArrayList<String>()
     private val viewModel by viewModels<TodoViewModel>()
 
@@ -101,8 +98,54 @@ class TodoDetailActivity : BaseActivity() {
 
         etTitle.setText(todo.title)
         edRemark.setText(todo.detail)
+        tvClassify.text = when (todo.type) {
+            "study" -> "学习"
+            "life" -> "生活"
+            else -> "其他"
+        }
         tvDeadline.text = todo.remindMode.notifyDateTime
 
+        val repeatMode: Int = todo.remindMode.repeatMode
+        if (todo.remindMode.repeatMode == RemindMode.NONE) {
+            tvRepeatTime.visibility = View.VISIBLE
+        } else {
+            tvRepeatTime.visibility = View.GONE
+            val selectRepeatTimeList: List<String> = if (repeatMode == RemindMode.WEEK) {
+                todo.remindMode.week
+            } else {
+                todo.remindMode.day
+            }.map {
+                it.toString()
+            }
+            SelectRepeatTimeList = transformRepeat(selectRepeatTimeList, repeatMode)
+
+            repeatTimeAdapter.submitList(SelectRepeatTimeList)
+        }
+
+        rvRepeatTime.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = repeatTimeAdapter.apply {
+                setOnItemClick { position ->
+                    if (position in SelectRepeatTimeList.indices) {
+                        val updatedList = SelectRepeatTimeList.toMutableList()
+                        updatedList.removeAt(position)
+                        repeatTimeAdapter.submitList(updatedList)
+                        SelectRepeatTimeList = updatedList as ArrayList<String> // 更新数据源
+                        if (todo.remindMode.repeatMode == RemindMode.WEEK) {
+                            todo.remindMode.week.removeAt(position)
+                        } else if (todo.remindMode.repeatMode == RemindMode.MONTH) {
+                            todo.remindMode.day.removeAt(position)
+                        }
+                    }
+                    if (SelectRepeatTimeList.isEmpty()) {
+                        rvRepeatTime.visibility = View.INVISIBLE
+                        tvRepeatTime.visibility = View.VISIBLE
+                        viewModel.setChangeState(true)
+                        todo.remindMode.repeatMode = RemindMode.NONE
+                    }
+                }
+            }
+        }
     }
 
     @SuppressLint("DefaultLocale", "SetTextI18n")
@@ -145,20 +188,23 @@ class TodoDetailActivity : BaseActivity() {
                         }
                     }
                     setTextColor(getColor(R.color.todo_addtodo_inner_text_color))
-                    viewModel.judgeChange(todo)
+                    viewModel.setChangeState(tvDeadline.text != viewModel.rawTodo?.remindMode?.notifyDateTime)
                 }
             }.show()
         }
 
-        rvRepeatTime.setOnClickListener {
+        tvRepeatTime.setOnClickListener {
             SelectRepeatDialog(this) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
                 todo.remindMode.repeatMode = repeatMode
+
                 if (repeatMode == RemindMode.WEEK) {
                     todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
                 } else {
-                    todo.remindMode.day = selectRepeatTimeListIndex as ArrayList
+                    todo.remindMode.day = selectRepeatTimeListIndex as ArrayList<Int>
                 }
-                SelectRepeatTimeList = selectRepeatTimeList as ArrayList<String>
+                viewModel.setChangeState(SelectRepeatTimeList != selectRepeatTimeList as ArrayList<String>)
+                SelectRepeatTimeList = selectRepeatTimeList
+
                 repeatTimeAdapter.submitList(SelectRepeatTimeList)
                 if (SelectRepeatTimeList.isNotEmpty()) {
                     rvRepeatTime.visibility = View.VISIBLE
@@ -188,18 +234,21 @@ class TodoDetailActivity : BaseActivity() {
         }
 
         btnConfirm.setOnClickListener {
-            tvClassify.text = when (wpClassify.currentItemPosition) {
-                0 -> "study"
-                1 -> "life"
+            tvClassify.apply {
+                text = when (wpClassify.currentItemPosition) {
+                    0 -> "学习"
+                    1 -> "生活"
+                    else -> "其他"
+                }
+            }
+            todo.type = when (tvClassify.text) {
+                "学习" -> "study"
+                "生活" -> "life"
                 else -> "other"
             }
-            todo.type = when(tvClassify.text){
-                "学习"-> "study"
-                "生活"-> "life"
-                else-> "other"
-            }
+            viewModel.setChangeState(tvClassify.text != viewModel.rawTodo?.type)
+
             hideClassify()
-            viewModel.judgeChange(todo)
         }
 
         btnCancel.setOnClickListener {

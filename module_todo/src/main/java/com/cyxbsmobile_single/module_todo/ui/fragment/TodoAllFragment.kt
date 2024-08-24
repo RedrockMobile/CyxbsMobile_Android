@@ -191,7 +191,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     override fun onListtextClick(item: Todo) {
         TodoDetailActivity.startActivity(item, requireContext())
-
     }
 
     @SuppressLint("MissingInflatedId")

@@ -25,7 +25,7 @@ class SelectRepeatDialog(context: Context, val selectRepeat: (List<Int>, List<St
     private val selectRepeatTimeListIndex = arrayListOf<Int>()
     private var repeatMode = RemindMode.NONE
 
-    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter() }
+    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter(0) }
     private val wpRepeatMode by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_repeat_mode)!! }
     private val wpRepeatTime by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_repeat_time)!! }
     private val rvSelectRepeatTime by lazy { findViewById<RecyclerView>(R.id.todo_rv_addtodo_repeat_list)!! }

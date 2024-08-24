@@ -7,7 +7,6 @@
  */
 import android.graphics.Canvas
 import android.view.View
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R

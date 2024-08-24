@@ -170,7 +170,7 @@ class TodoViewModel : BaseViewModel() {
         val pushWrapper = TodoListPushWrapper(
             todoList = listOf(todo),
             syncTime = syncTime,
-            force = TodoListPushWrapper.NONE_FORCE,
+            force = TodoListPushWrapper.IS_FORCE,
             firsPush = if (syncTime == 0L) 1 else 0
         )
 
