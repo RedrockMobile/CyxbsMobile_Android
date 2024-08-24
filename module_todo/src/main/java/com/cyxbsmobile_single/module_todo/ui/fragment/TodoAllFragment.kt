@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.ui.fragment
 import DragAndDropCallback
 import TodoAllAdapter
 import android.annotation.SuppressLint
+import android.app.PendingIntent.OnFinished
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -65,7 +66,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         todoAllAdapter = TodoAllAdapter(this)
         mRecyclerView.adapter = todoAllAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(context)
-        //inittoList()
         initList()
 //        todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
         val callback = DragAndDropCallback(mRecyclerView, todoAllAdapter)
@@ -186,14 +186,12 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     //处理点击事件
     override fun onItemClick(item: Todo) {
-        Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
         TodoDetailActivity.startActivity(item, requireContext())
-        Log.d("click", "点击事件触发")
     }
 
     override fun onListtextClick(item: Todo) {
-        Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
         TodoDetailActivity.startActivity(item, requireContext())
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -259,5 +257,9 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 1))
     }
 
+    override fun onResume() {
+        mViewModel.getAllTodo()
+        super.onResume()
+    }
 
 }

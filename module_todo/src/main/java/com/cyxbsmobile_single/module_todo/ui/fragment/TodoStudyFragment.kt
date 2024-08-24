@@ -25,6 +25,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -180,12 +181,11 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     //处理点击事件
     override fun onItemClick(item: Todo) {
-        Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
-        Log.d("click", "点击事件触发")
+        TodoDetailActivity.startActivity(item, requireContext())
     }
 
     override fun onListtextClick(item: Todo) {
-        Toast.makeText(context, "不好意思，多模块还没做", Toast.LENGTH_SHORT).show()
+        TodoDetailActivity.startActivity(item, requireContext())
 
     }
 
