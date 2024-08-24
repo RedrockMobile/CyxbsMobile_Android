@@ -55,6 +55,7 @@ class DetailActivity : BaseActivity() {
     private val tvSecond by R.id.ufield_tv_second.view<TextView>()
     private val tvTimeHead by R.id.ufield_tv_timehead.view<TextView>()
     private val ivBack by R.id.ufield_iv_back.view<ImageView>()
+    private val tvAddTodo by R.id.ufield_tv_addtodo.view<TextView>()
     private lateinit var layout: ConstraintLayout
     private var countDownTimer: CountDownTimer = object : CountDownTimer(1, 1000) {
         override fun onTick(p0: Long) {
@@ -178,7 +179,20 @@ class DetailActivity : BaseActivity() {
                     viewModel.wantToSee(id)
                 }
             }
+            tvAddTodo.apply {
+                setBackgroundResource(R.drawable.ufield_shape_addtodo)
+                setOnClickListener {
+                    if(tvAddTodo.text == "加入待办"){
+                        tvAddTodo.setTextColor(ContextCompat.getColor(this@DetailActivity,R.color.uField_text_haveadd))
+                        tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+                    }
+                    else if(tvAddTodo.text == "已加入待办"){
+                        tvAddTodo.setTextColor(ContextCompat.getColor(this@DetailActivity,R.color.uField_text_add))
+                        tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_addtodo)
+                    }
+                }
 
+            }
         }
 
     }

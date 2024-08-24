@@ -129,4 +129,23 @@
         tools:ignore="HardcodedText,SpUsage"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/affair_tv_add_affair_addTodo"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:paddingStart="13dp"
+        android:paddingEnd="13dp"
+        android:text="加入待办"
+        android:background="@drawable/affair_shape_item_text_bg"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="14dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/affair_tv_add_affair_remind"
+        tools:ignore="HardcodedText,SpUsage"
+        tools:visibility="visible"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

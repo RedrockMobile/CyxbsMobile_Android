@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.affair.model
 
 import android.annotation.SuppressLint
 import com.google.gson.Gson
+import com.mredrock.cyxbs.affair.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.affair.bean.toAffairDateBean
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.affair.room.*
@@ -20,6 +21,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.throwApiExceptionIfFail
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -288,6 +290,13 @@ object AffairRepository {
       }
     }
   }
+
+  fun addTodo(pushWrapper: TodoListPushWrapper) = AffairApiService
+      .INSTANCE
+      .pushTodo(pushWrapper)
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+
   
   /**
    * 发送本地临时保存的事务

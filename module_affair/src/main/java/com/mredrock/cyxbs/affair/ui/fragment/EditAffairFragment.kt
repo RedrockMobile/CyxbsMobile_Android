@@ -32,101 +32,111 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
  */
 class EditAffairFragment : BaseFragment(R.layout.affair_fragment_edit_affair) {
 
-  companion object {
-    fun newInstance(onlyId: Int): EditAffairFragment {
-      return EditAffairFragment().apply {
-        arguments = bundleOf(
-          this::mAffairOnlyId.name to onlyId
-        )
-      }
-    }
-  }
-  
-  private val mAffairOnlyId by arguments<Int>()
-  
-  private val mViewModel by viewModels<EditAffairViewModel>()
-  private val mActivityViewModel by activityViewModels<AffairViewModel>()
-  
-  private val mEtTitle: EditText by R.id.affair_et_edit_affair_title.view()
-  private val mEtContent: EditText by R.id.affair_et_edit_affair_content.view()
-  private val mTvRemind: TextView by R.id.affair_tv_edit_affair_remind.view()
-  
-  private val mRvDuration: RecyclerView by R.id.affair_rv_edit_affair_duration.view()
-  private val mRvDurationAdapter = AffairDurationAdapter()
-  
-  private var mRemindMinute = 0 // 提醒时间的分钟数，用于临时保存后进行网络请求
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    mViewModel.findAffairEntity(mAffairOnlyId)
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    initRecyclerView()
-    initListener()
-    initObserve()
-  }
-  
-  private fun initRecyclerView() {
-    mRvDuration.adapter = mRvDurationAdapter
-    mRvDuration.layoutManager =
-      FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
-  }
-
-  private fun initListener() {
-    mEtContent.setOnEditorActionListener(object : TextView.OnEditorActionListener {
-      override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
-        return if (p1 == EditorInfo.IME_ACTION_NEXT) {
-          mActivityViewModel.clickNextBtn()
-          return true
-        } else false
-      }
-    })
-    
-    mTvRemind.setOnSingleClickListener {
-      val dialog = RemindSelectDialog(requireActivity()) { text, minute ->
-        //获取权限
-        doPermissionAction(
-          Manifest.permission.READ_CALENDAR,
-          Manifest.permission.WRITE_CALENDAR
-        ) {
-          reason = "设置提醒需要访问您的日历哦~"
-          doAfterGranted {
-            mTvRemind.text = text
-            mRemindMinute = minute
-          }
-          doAfterRefused {
-            "申请权限被拒绝".toast()
-          }
+    companion object {
+        fun newInstance(onlyId: Int): EditAffairFragment {
+            return EditAffairFragment().apply {
+                arguments = bundleOf(
+                    this::mAffairOnlyId.name to onlyId
+                )
+            }
         }
-      }
-      dialog.show()
     }
-  }
 
-  private fun initObserve() {
-    mActivityViewModel.clickAffect.collectLaunch {
-      if (mEtTitle.text.isBlank()) {
-        toast("掌友，标题不能为空哟！")
-      } else {
-        mViewModel.updateAffair(
-          mAffairOnlyId,
-          mRemindMinute,
-          mEtTitle.text.toString(),
-          mEtContent.text.toString(),
-          mRvDurationAdapter.currentList.toAtWhatTime()
-        )
-        requireActivity().finish()
-      }
+    private val mAffairOnlyId by arguments<Int>()
+
+    private val mViewModel by viewModels<EditAffairViewModel>()
+    private val mActivityViewModel by activityViewModels<AffairViewModel>()
+
+    private val mEtTitle: EditText by R.id.affair_et_edit_affair_title.view()
+    private val mEtContent: EditText by R.id.affair_et_edit_affair_content.view()
+    private val mTvRemind: TextView by R.id.affair_tv_edit_affair_remind.view()
+    private val mTvAddTodo: TextView by R.id.affair_tv_edit_affair_addTodo.view()
+
+    private val mRvDuration: RecyclerView by R.id.affair_rv_edit_affair_duration.view()
+    private val mRvDurationAdapter = AffairDurationAdapter()
+
+    private var mRemindMinute = 0 // 提醒时间的分钟数，用于临时保存后进行网络请求
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mViewModel.findAffairEntity(mAffairOnlyId)
     }
-    
-    mViewModel.affairEntity.observe {
-      mEtTitle.setText(it.title)
-      mEtContent.setText(it.content)
-      mRvDurationAdapter.submitList(it.toAffairAdapterData())
-      mRemindMinute = it.time
-      mTvRemind.text = RemindSelectDialog.getTextByMinute(it.time)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
+        initListener()
+        initObserve()
     }
-  }
+
+    private fun initRecyclerView() {
+        mRvDuration.adapter = mRvDurationAdapter
+        mRvDuration.layoutManager =
+            FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
+    }
+
+    private fun initListener() {
+        mEtContent.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
+                return if (p1 == EditorInfo.IME_ACTION_NEXT) {
+                    mActivityViewModel.clickNextBtn()
+                    return true
+                } else false
+            }
+        })
+
+        mTvRemind.setOnSingleClickListener {
+            val dialog = RemindSelectDialog(requireActivity()) { text, minute ->
+                //获取权限
+                doPermissionAction(
+                    Manifest.permission.READ_CALENDAR,
+                    Manifest.permission.WRITE_CALENDAR
+                ) {
+                    reason = "设置提醒需要访问您的日历哦~"
+                    doAfterGranted {
+                        mTvRemind.text = text
+                        mRemindMinute = minute
+                    }
+                    doAfterRefused {
+                        "申请权限被拒绝".toast()
+                    }
+                }
+            }
+            dialog.show()
+        }
+
+        mTvAddTodo.setOnSingleClickListener {
+            if (mTvAddTodo.text == "加入待办") {
+
+                mTvAddTodo.text = "取消待办"
+            } else {
+                mTvAddTodo.text = "加入待办"
+            }
+        }
+    }
+
+    private fun initObserve() {
+        mActivityViewModel.clickAffect.collectLaunch {
+            if (mEtTitle.text.isBlank()) {
+                toast("掌友，标题不能为空哟！")
+            } else {
+                mViewModel.updateAffair(
+                    mAffairOnlyId,
+                    mRemindMinute,
+                    mEtTitle.text.toString(),
+                    mEtContent.text.toString(),
+                    mRvDurationAdapter.currentList.toAtWhatTime()
+                )
+                requireActivity().finish()
+            }
+        }
+
+        mViewModel.affairEntity.observe {
+            mEtTitle.setText(it.title)
+            mEtContent.setText(it.content)
+            mRvDurationAdapter.submitList(it.toAffairAdapterData())
+            mRemindMinute = it.time
+            mTvRemind.text = RemindSelectDialog.getTextByMinute(it.time)
+        }
+    }
 }
