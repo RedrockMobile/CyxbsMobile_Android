@@ -47,26 +47,6 @@ object TodoRepository {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    fun getTodoByStudy() = TodoApiService
-        .INSTANCE
-        .getTodoListByStudy()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-
-    fun getTodoByLife() = TodoApiService
-        .INSTANCE
-        .getTodoListByLife()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-
-    fun getTodoByOther() = TodoApiService
-        .INSTANCE
-        .getTodoListByOther()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-
-
-
     fun pinTodo(todoPinData: TodoPinData) = TodoApiService
         .INSTANCE
         .pinTodo(todoPinData)

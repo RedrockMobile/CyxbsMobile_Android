@@ -18,6 +18,7 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeRvAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.util.getColor
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.lib.utils.extensions.toast
@@ -161,12 +162,12 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     }
 
     private fun selectCategory() {
-        tvCategory.text = when (wpCategory.currentItemPosition) {
+        tvCategory.text = wpCategory.data.get(wpCategory.currentItemPosition).toString()
+        todo.type = when (wpCategory.currentItemPosition) {
             0 -> "study"
             1 -> "life"
             else -> "other"
         }
-        todo.type = tvCategory.text.toString()
     }
 
     //显示日历
@@ -200,9 +201,9 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     //更新颜色
     private fun updateTextColor(s: CharSequence) {
         if (s.isEmpty()) {
-            tvSave.setTextColor(context.resources.getColor(R.color.todo_addtodo_save_text_none_color))
+            tvSave.setTextColor(getColor(R.color.todo_addtodo_save_text_none_color))
         } else {
-            tvSave.setTextColor(context.resources.getColor(R.color.todo_addtodo_save_text_color))
+            tvSave.setTextColor(getColor(R.color.todo_addtodo_save_text_color))
         }
     }
 
