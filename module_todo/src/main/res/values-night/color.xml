@@ -44,4 +44,15 @@
     <!--    当todo本地和远程的仓库冲突时，提醒用的按钮的颜色-->
     <color name="todo_on_conflict_button_color">#2CDEFF</color>
     <color name="todo_fragment_color">#000</color>
+
+    <!--    选择时间时的取消按钮的颜色-->
+    <color name="todo_cancel_button_color">#705A5A5A</color>
+
+    <!--    选择时间时的确认按钮的颜色-->
+    <color name="todo_confirm_button_color">#4841E2</color>
+
+    <!--    日历当前日期字体的颜色-->
+    <color name="todo_calendar_change_month_color">#5A5A5A</color>
+
+    <color name="todo_item_topitem">#705A5A5A</color>
 </resources>

@@ -12,8 +12,7 @@
         android:id="@+id/todo_rl_addtodo_repeat"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="5dp"
-        android:background="@color/colorPrimary">
+        android:layout_marginTop="5dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todo_rv_addtodo_repeat_list"
@@ -40,7 +39,7 @@
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
             app:wheel_cyclic="true"
-            app:wheel_item_text_color="@color/todo_calendar_header_color"
+            app:wheel_item_text_color="@color/config_level_two_font_color"
             app:wheel_item_text_size="20sp"
             app:wheel_visible_item_count="7" />
 
@@ -54,7 +53,7 @@
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
             app:wheel_cyclic="true"
-            app:wheel_item_text_color="@color/todo_calendar_header_color"
+            app:wheel_item_text_color="@color/config_level_two_font_color"
             app:wheel_item_text_size="20sp"
             app:wheel_visible_item_count="7" />
 

@@ -237,7 +237,7 @@
                 android:layout_height="100dp"
                 app:wheel_atmospheric="true"
                 app:wheel_item_align="center"
-                app:wheel_item_text_color="@color/todo_calendar_header_color"
+                app:wheel_item_text_color="@color/config_level_two_font_color"
                 app:wheel_item_text_size="20sp"
                 app:wheel_selected_item_position="1"
                 app:wheel_visible_item_count="3" />

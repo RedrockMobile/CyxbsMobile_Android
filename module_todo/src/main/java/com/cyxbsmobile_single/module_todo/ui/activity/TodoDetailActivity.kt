@@ -187,7 +187,7 @@ class TodoDetailActivity : BaseActivity() {
                             "${year}年${month}月${day}日"
                         }
                     }
-                    setTextColor(getColor(R.color.todo_addtodo_inner_text_color))
+                    setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
                     viewModel.setChangeState(tvDeadline.text != viewModel.rawTodo?.remindMode?.notifyDateTime)
                 }
             }.show()

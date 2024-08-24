@@ -77,7 +77,8 @@
     <color name="todo_calendar_header_color">#15315B</color>
     <!--    日历当前日期字体的颜色-->
     <color name="todo_calendar_current_day_tv_color">#2923D2</color>
-
+    <!--    日历当前日期字体的颜色-->
+    <color name="todo_calendar_change_month_color">#EEF5FD</color>
     <!--    添加任务时的保存字体的颜色-->
     <color name="todo_addtodo_save_text_none_color">#BEBEBE</color>
     <color name="todo_addtodo_save_text_color">#15315B</color>

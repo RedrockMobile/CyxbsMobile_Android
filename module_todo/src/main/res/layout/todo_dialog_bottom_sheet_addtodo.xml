@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="取消"
-            android:textColor="@color/todo_calendar_header_color" />
+            android:textColor="@color/config_level_two_font_color" />
 
         <TextView
             android:id="@+id/todo_tv_addtodo_save"
@@ -179,7 +179,7 @@
                 app:wheel_atmospheric="true"
                 app:wheel_selected_item_position="1"
                 app:wheel_item_align="center"
-                app:wheel_item_text_color="@color/todo_calendar_header_color"
+                app:wheel_item_text_color="@color/config_level_two_font_color"
                 app:wheel_item_text_size="20sp"
                 app:wheel_visible_item_count="3" />
         </LinearLayout>

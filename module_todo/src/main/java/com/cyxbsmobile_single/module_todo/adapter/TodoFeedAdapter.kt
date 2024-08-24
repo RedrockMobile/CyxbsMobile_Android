@@ -85,7 +85,7 @@ class TodoFeedAdapter :
             todoTitle.text = todo.title
             defaultCheckbox.apply {
                 setStatusWithAnime(false)
-                uncheckedColor = com.mredrock.cyxbs.config.R.color.config_level_two_font_color
+                uncheckedColor = Color.GRAY
             }
             todoTitle.setTextColor(
                 ContextCompat.getColor(

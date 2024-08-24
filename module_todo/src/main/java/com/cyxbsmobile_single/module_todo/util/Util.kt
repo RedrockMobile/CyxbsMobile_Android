@@ -49,7 +49,7 @@ fun digitToChinese(digit: String): String {
         "4" -> "四"
         "5" -> "五"
         "6" -> "六"
-        "7" -> "七"
+        "7" -> "日"
         "8" -> "八"
         "9" -> "九"
         else -> ""
