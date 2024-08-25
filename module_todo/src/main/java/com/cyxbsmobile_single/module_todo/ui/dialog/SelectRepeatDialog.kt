@@ -119,7 +119,7 @@ class SelectRepeatDialog(context: Context, val selectRepeat: (List<Int>, List<St
         if (currentRepeatMode == repeatMode || repeatMode == RemindMode.NONE) {
             repeatMode = currentRepeatMode
             // 获取当前选中的重复时间
-            if (wpRepeatTime.currentItemPosition in 0..wpRepeatTime.data.size){
+            if (wpRepeatTime.currentItemPosition in 0..wpRepeatTime.data.size || wpRepeatTime.data.isEmpty()){
                 val currentRepeatTime = when (repeatMode) {
                     RemindMode.DAY -> "每天"
                     RemindMode.WEEK -> {
