@@ -142,7 +142,7 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
       } else {
         mTvAddTodo.text = "加入待办"
       }
-    }
+      }
   }
   
   private fun initObserve() {
@@ -158,7 +158,7 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
           mPageManager.getContent(),
           mRvDurationAdapter.currentList.toAtWhatTime(),
         )
-        if(mTvAddTodo.text == "取消待办"){
+        if(mTvAddTodo.text == "加入待办"){
           mViewModel.addTodo(translationToTodo())
         }
         requireActivity().finish()
@@ -168,7 +168,7 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
     }
   }
   private fun translationToTodo() = Todo(
-      0,
+      System.currentTimeMillis()/1000,
       mPageManager.getTitle(),
       mPageManager.getContent(),
       0,
