@@ -107,8 +107,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="212dp"
-        android:letterSpacing="0.05"
         android:hint="设置截止时间"
+        android:letterSpacing="0.05"
         android:textColor="@color/todo_check_line_color" />
 
     <View
@@ -154,8 +154,7 @@
         android:paddingBottom="8dp"
         android:text="设置重复时间"
         android:textColor="#992D4D80"
-        android:textSize="14sp"
-        android:visibility="invisible" />
+        android:textSize="14sp" />
 
     <View
         android:id="@+id/todo_detail_line"
@@ -237,7 +236,7 @@
                 android:layout_height="100dp"
                 app:wheel_atmospheric="true"
                 app:wheel_item_align="center"
-                app:wheel_item_text_color="@color/todo_calendar_header_color"
+                app:wheel_item_text_color="@color/config_level_two_font_color"
                 app:wheel_item_text_size="20sp"
                 app:wheel_selected_item_position="1"
                 app:wheel_visible_item_count="3" />

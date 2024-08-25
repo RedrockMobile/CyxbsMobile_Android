@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
-            app:wheel_item_text_color="@color/todo_calendar_header_color"
+            app:wheel_item_text_color="@color/config_level_two_font_color"
             app:wheel_item_text_size="20sp"
             app:wheel_atmospheric="true"
             app:wheel_cyclic="true"
@@ -42,7 +42,7 @@
             android:layout_centerVertical="true"
             android:textSize="20sp"
             android:layout_marginLeft="3dp"
-            android:textColor="@color/todo_calendar_header_color"
+            android:textColor="@color/config_level_two_font_color"
             android:layout_toRightOf="@id/todo_wheelpicker_hour_timeselector"/>
 
         <com.aigestudio.wheelpicker.WheelPicker
@@ -56,7 +56,7 @@
             app:wheel_atmospheric="true"
             app:wheel_cyclic="true"
             app:wheel_visible_item_count="7"
-            app:wheel_item_text_color="@color/todo_calendar_header_color"/>
+            app:wheel_item_text_color="@color/config_level_two_font_color"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:layout_centerVertical="true"
             android:textSize="20sp"
             android:layout_marginLeft="3dp"
-            android:textColor="@color/todo_calendar_header_color"/>
+            android:textColor="@color/config_level_two_font_color"/>
     </RelativeLayout>
 
     <androidx.appcompat.widget.AppCompatButton

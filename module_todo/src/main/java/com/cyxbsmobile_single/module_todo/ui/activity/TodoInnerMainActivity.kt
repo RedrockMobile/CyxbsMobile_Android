@@ -35,7 +35,7 @@ import kotlin.properties.Delegates
  * date: 2024/8/20 17:31
  */
 @Route(path = DISCOVER_TODO_MAIN)
-class TodoInnerMainActivity: com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
+class TodoInnerMainActivity : com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
 
     //在详情页面是否有做出修改的flag
     private var changedFlag = false

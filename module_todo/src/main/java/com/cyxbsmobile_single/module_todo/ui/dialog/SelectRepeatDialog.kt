@@ -25,7 +25,7 @@ class SelectRepeatDialog(context: Context, val selectRepeat: (List<Int>, List<St
     private val selectRepeatTimeListIndex = arrayListOf<Int>()
     private var repeatMode = RemindMode.NONE
 
-    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter() }
+    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter(0) }
     private val wpRepeatMode by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_repeat_mode)!! }
     private val wpRepeatTime by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_repeat_time)!! }
     private val rvSelectRepeatTime by lazy { findViewById<RecyclerView>(R.id.todo_rv_addtodo_repeat_list)!! }
@@ -119,31 +119,32 @@ class SelectRepeatDialog(context: Context, val selectRepeat: (List<Int>, List<St
         if (currentRepeatMode == repeatMode || repeatMode == RemindMode.NONE) {
             repeatMode = currentRepeatMode
             // 获取当前选中的重复时间
-            val currentRepeatTime = when (repeatMode) {
-                RemindMode.DAY -> "每天"
-                RemindMode.WEEK -> {
-                    selectRepeatTimeListIndex.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
-                    wpRepeatTime.data[wpRepeatTime.currentItemPosition].toString()
+            if (wpRepeatTime.currentItemPosition in 0..wpRepeatTime.data.size || wpRepeatTime.data.isEmpty()){
+                val currentRepeatTime = when (repeatMode) {
+                    RemindMode.DAY -> "每天"
+                    RemindMode.WEEK -> {
+                        selectRepeatTimeListIndex.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
+                        wpRepeatTime.data[wpRepeatTime.currentItemPosition].toString()
+                    }
+
+                    RemindMode.MONTH -> {
+                        val day =
+                            wpRepeatTime.data.get(wpRepeatTime.currentItemPosition).toString()
+                        selectRepeatTimeListIndex.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
+                        "每月${day}日"
+                    }
+
+                    else -> null
                 }
-
-                RemindMode.MONTH -> {
-                    val day =
-                        wpRepeatTime.data.get(wpRepeatTime.currentItemPosition).toString()
-                    selectRepeatTimeListIndex.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
-                    "每月${day}日"
+                // 确保当前选中的重复时间不为空且不在列表中
+                if (!selectRepeatTimeList.contains(currentRepeatTime)) {
+                    // 将新项插入到列表的开头
+                    currentRepeatTime?.let { selectRepeatTimeList.add(0, it) }
+                    repeatTimeAdapter.submitList(ArrayList(selectRepeatTimeList)) {
+                        // 确保RecyclerView显示在第一个项目
+                        rvSelectRepeatTime.layoutManager?.scrollToPosition(0)
+                    }  // 刷新适配器
                 }
-
-                else -> null
-            }
-
-            // 确保当前选中的重复时间不为空且不在列表中
-            if (!selectRepeatTimeList.contains(currentRepeatTime)) {
-                // 将新项插入到列表的开头
-                currentRepeatTime?.let { selectRepeatTimeList.add(0, it) }
-                repeatTimeAdapter.submitList(ArrayList(selectRepeatTimeList)) {
-                    // 确保RecyclerView显示在第一个项目
-                    rvSelectRepeatTime.layoutManager?.scrollToPosition(0)
-                }  // 刷新适配器
             }
         } else {
             toast("只能选择一种重复模式哦！")

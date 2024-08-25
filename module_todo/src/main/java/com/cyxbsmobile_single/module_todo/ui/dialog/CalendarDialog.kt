@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -157,14 +156,15 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
 
     private fun selectDay(dayView: TextView, day: Int) {
         val isCurrentYear = calendar.get(Calendar.YEAR) == currentYear
+        val isAfterCurrentYear = calendar.get(Calendar.YEAR) > currentYear
         val isCurrentMonth = calendar.get(Calendar.MONTH) == currentMonth
         val afterCurrentMonth = calendar.get(Calendar.MONTH) > currentMonth
         val isFirstDay = day == 1
 
         // 检查是否选中
         val isSelected = ((isCurrentYear && isCurrentMonth && day == currentDay) ||
-                (!isCurrentYear && isFirstDay&& afterCurrentMonth) ||
-                (isCurrentYear && afterCurrentMonth && isFirstDay))
+                (!isCurrentYear && isFirstDay && afterCurrentMonth) ||
+                (isCurrentYear && afterCurrentMonth && isFirstDay)) || (isAfterCurrentYear && isFirstDay)
 
         if (isSelected) {
             calendar.set(Calendar.DAY_OF_MONTH, day)

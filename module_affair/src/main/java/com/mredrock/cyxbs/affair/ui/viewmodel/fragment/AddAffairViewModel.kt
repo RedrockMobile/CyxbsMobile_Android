@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mredrock.cyxbs.affair.bean.Todo
 import com.mredrock.cyxbs.affair.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.net.AffairApiService
@@ -38,7 +39,11 @@ class AddAffairViewModel : BaseViewModel() {
       }
   }
 
-  fun addTodo(pushWrapper: TodoListPushWrapper) {
+  fun addTodo(todo: Todo) {
+    val pushWrapper = TodoListPushWrapper(
+      listOf(todo),
+      getLastSyncTime()
+    )
     AffairRepository.addTodo(pushWrapper)
       .safeSubscribeBy {
         "加入待办".toast()

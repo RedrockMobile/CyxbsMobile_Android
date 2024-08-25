@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aigestudio.wheelpicker.WheelPicker
@@ -21,7 +22,9 @@ import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.util.getColor
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
  * description: 增加todo的Dialog
@@ -33,7 +36,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
 
 
     private var SelectRepeatTimeList = ArrayList<String>()
-    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter() }
+    private val repeatTimeAdapter by lazy { RepeatTimeRvAdapter(0) }
     private val todo by lazy { Todo.generateEmptyTodo() }
     private val tvCancel by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_cancel)!! }
     private val tvSave by lazy { findViewById<TextView>(R.id.todo_tv_addtodo_save)!! }
@@ -102,9 +105,14 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
         tvDeleteTime.setOnClickListener {
             tvAddNoticeTime.apply {
                 text = "设置截止时间"
-                setTextColor(context.resources.getColor(R.color.todo_addtodo_save_text_none_color))
+                setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.todo_addtodo_save_text_none_color
+                    )
+                )
             }
-            tvDeleteTime.visibility = View.GONE
+            tvDeleteTime.gone()
             todo.remindMode.notifyDateTime = ""
         }
         tvAddRepeat.setOnClickListener {
@@ -127,7 +135,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
                     if (position in SelectRepeatTimeList.indices) {
                         val updatedList = SelectRepeatTimeList.toMutableList()
                         updatedList.removeAt(position)
-                        repeatTimeAdapter.submitList(updatedList)
+                        repeatTimeAdapter.submitList(updatedList.toList())
                         SelectRepeatTimeList = updatedList as ArrayList<String> // 更新数据源
                         if (todo.remindMode.repeatMode == RemindMode.WEEK) {
                             todo.remindMode.week.removeAt(position)
@@ -136,8 +144,8 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
                         }
                     }
                     if (SelectRepeatTimeList.isEmpty()) {
-                        rvRepeatTime.visibility = View.GONE
-                        tvAddRepeat.visibility = View.VISIBLE
+                        rvRepeatTime.gone()
+                        tvAddRepeat.visible()
                     }
                 }
             }
@@ -155,8 +163,8 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
             SelectRepeatTimeList = selectRepeatTimeList as ArrayList<String>
             repeatTimeAdapter.submitList(SelectRepeatTimeList)
             if (SelectRepeatTimeList.isNotEmpty()) {
-                rvRepeatTime.visibility = View.VISIBLE
-                tvAddRepeat.visibility = View.GONE
+                rvRepeatTime.visible()
+                tvAddRepeat.gone()
             }
         }.show()
     }
@@ -194,7 +202,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
                 }
                 setTextColor(context.resources.getColor(R.color.todo_addtodo_inner_text_color))
             }
-            tvDeleteTime.visibility = View.VISIBLE
+            tvDeleteTime.visible()
         }.show()
     }
 
@@ -203,21 +211,21 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
         if (s.isEmpty()) {
             tvSave.setTextColor(getColor(R.color.todo_addtodo_save_text_none_color))
         } else {
-            tvSave.setTextColor(getColor(R.color.todo_addtodo_save_text_color))
+            tvSave.setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
         }
     }
 
     private fun showCategoryUI() {
-        llCategoryList.visibility = View.VISIBLE
-        btnAddtodoBt.visibility = View.VISIBLE
-        btnAddtodoBtCancel.visibility = View.VISIBLE
+        llCategoryList.visible()
+        btnAddtodoBt.visible()
+        btnAddtodoBtCancel.visible()
         wpCategory.data = listOf("学习", "生活", "其他")
     }
 
     private fun hideUI() {
-        llCategoryList.visibility = View.GONE
-        btnAddtodoBt.visibility = View.GONE
-        btnAddtodoBtCancel.visibility = View.GONE
+        llCategoryList.gone()
+        btnAddtodoBt.gone()
+        btnAddtodoBtCancel.gone()
     }
 
 

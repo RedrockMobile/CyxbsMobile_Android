@@ -30,7 +30,7 @@ class DragAndDropCallback(
         val isPinned = item.isPinned
 
         // 如果是置顶项，则不允许拖动
-        if (isPinned==1) {
+        if (isPinned == 1) {
             return 0
         }
 
@@ -55,7 +55,7 @@ class DragAndDropCallback(
         val isPinnedSource = item.isPinned
         val isPinnedTarget = targetItem.isPinned
 
-        if (isPinnedSource==1 || isPinnedTarget==1) {
+        if (isPinnedSource == 1 || isPinnedTarget == 1) {
             return false
         }
 
