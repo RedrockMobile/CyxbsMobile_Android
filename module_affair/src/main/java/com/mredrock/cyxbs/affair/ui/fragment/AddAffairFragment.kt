@@ -158,9 +158,9 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
           mPageManager.getContent(),
           mRvDurationAdapter.currentList.toAtWhatTime(),
         )
-        if(mTvAddTodo.text == "取消待办"){
+//        if(mTvAddTodo.text == "取消待办"){
           mViewModel.addTodo(translationToTodo())
-        }
+//        }
         requireActivity().finish()
       } else {
         mPageManager.loadNextPage()
@@ -178,10 +178,14 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
       "other",
       0
     )
+    val syncTime= appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+    val firstPush = if (syncTime == 0L) 1 else 0
     val todoList = listOf(todo)
     return TodoListPushWrapper(
       todoList,
-      0
+      syncTime,
+      TodoListPushWrapper.NONE_FORCE,
+      firstPush
     )
   }
 }

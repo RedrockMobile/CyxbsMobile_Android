@@ -17,7 +17,7 @@ data class TodoListPushWrapper(
     var force: Int = 0,
     @SerializedName("first_push")
     var firsPush: Int = 1
-): Serializable {
+): Serializable{
     companion object{
         const val IS_FORCE = 1
         const val NONE_FORCE = 0

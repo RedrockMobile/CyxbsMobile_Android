@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -41,7 +42,22 @@ class AddAffairViewModel : BaseViewModel() {
     AffairRepository.addTodo(pushWrapper)
       .safeSubscribeBy {
         "加入待办".toast()
+        it.data.syncTime.apply {
+          setLastSyncTime(this)
+        }
       }
+  }
+  /**
+   * 得到和设置本地最后同步的时间戳
+   */
+  private fun getLastSyncTime(): Long =
+    appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+
+  private fun setLastSyncTime(syncTime: Long) {
+    appContext.getSp("todo").edit().apply {
+      putLong("TODO_LAST_SYNC_TIME", syncTime)
+      commit()
+    }
   }
 
   init {

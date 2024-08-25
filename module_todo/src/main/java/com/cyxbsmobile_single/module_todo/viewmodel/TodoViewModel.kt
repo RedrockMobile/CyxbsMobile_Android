@@ -173,7 +173,6 @@ class TodoViewModel : BaseViewModel() {
             force = TodoListPushWrapper.NONE_FORCE,
             firsPush = if (syncTime == 0L) 1 else 0
         )
-
         TodoRepository.pushTodo(pushWrapper)
             .doOnError {
                 viewModelScope.launch {
