@@ -3,17 +3,13 @@ package com.cyxbsmobile_single.module_todo.ui.fragment
 import DragAndDropCallback
 import TodoAllAdapter
 import android.annotation.SuppressLint
-import android.app.PendingIntent.OnFinished
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,10 +20,8 @@ import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
-import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
-import com.cyxbsmobile_single.module_todo.ui.dialog.DetailAlarmDialog
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -44,7 +38,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
     private val mRecyclerView by R.id.todo_allrv.view<SwipeDeleteRecyclerView>()
     private val emptyview by R.id.empty_view.view<View>()
-    private lateinit var todoListSyncTimeWrapper: TodoListSyncTimeWrapper
     private val mViewModel: TodoViewModel by activityViewModels()
     private val emptyBottom by R.id.todo_bottom_action_layout_all.view<LinearLayoutCompat>()
     private val acDeleteButton by R.id.button_bottom_right_all.view<FrameLayout>()

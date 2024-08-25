@@ -8,11 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -23,7 +20,6 @@ import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
-import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
@@ -42,7 +38,6 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
     private val mRecyclerView by R.id.todo_liferv.view<SwipeDeleteRecyclerView>()
     private val emptyview by R.id.empty_view.view<View>()
-    private lateinit var todoListSyncTimeWrapper: TodoListSyncTimeWrapper
     private val emptyBottom by R.id.todo_bottom_action_layout_life.view<LinearLayoutCompat>()
     private val acDeleteButton by R.id.button_bottom_right_life.view<FrameLayout>()
     private val acTopButton by R.id.button_bottom_left_life.view<FrameLayout>()
@@ -52,7 +47,6 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.todo_fragment_life, container, false)
     }
 
