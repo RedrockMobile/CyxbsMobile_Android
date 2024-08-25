@@ -1,4 +1,5 @@
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -16,6 +18,13 @@ import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
+import java.time.temporal.TemporalAdjusters
 import java.util.Collections
 import java.util.Locale
 
@@ -76,6 +85,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 //                selectItems.removeAt(i)
                 currentList.removeAt(i)
 
+
             }
         }
         submitList(currentList)
@@ -104,6 +114,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
         for (item in selectedItems) {
             item.isPinned = 1
+
         }
         // 从 currentList 中移除选中的项
         currentList.removeAll(selectedItems)
@@ -120,6 +131,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         val isSelected = selectItems.contains(item)
@@ -213,6 +225,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             null
         }
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: Todo) {
             listtext.text = item.title
             date.text = item.remindMode.notifyDateTime
@@ -227,6 +240,9 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                 icRight?.let {
                     it.visibility = View.VISIBLE
                 }
+            }
+            if (item.remindMode.notifyDateTime==""){
+                listener.onFinishCheck(item)
             }
             itemView.setOnClickListener {
                 listener.onItemClick(item)
@@ -260,15 +276,11 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                         it.visibility = View.VISIBLE
                     }
                     // 禁用点击事件
-                    defaultcheckbox.setOnClickListener(null)
                     listener.onFinishCheck(item)
                 }
             }
-
             // 如果当前项是置顶项，则隐藏置顶按钮
             topbutton.visibility = if (item.isPinned == 1) View.GONE else View.VISIBLE
-
-
         }
     }
 
@@ -281,6 +293,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             return oldItem == newItem
         }
     }
+
 
 
     interface OnItemClickListener {

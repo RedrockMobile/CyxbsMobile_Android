@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.ui.fragment
 import DragAndDropCallback
 import TodoAllAdapter
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -26,6 +28,13 @@ import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
+import java.time.temporal.TemporalAdjusters
 
 /**
  * description ：清单下面四个页面之一
@@ -43,6 +52,11 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private val acDeleteButton by R.id.button_bottom_right_all.view<FrameLayout>()
     private val acTopButton by R.id.button_bottom_left_all.view<FrameLayout>()
     private val checkall by R.id.todo_bottom_check_al_all.view<CheckBox>()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val dateTimeFormatter: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("yyyy年M月d日HH:mm")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -190,6 +204,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                     currentList.removeAt(position)
                     // 提交更新后的列表
                     todoAllAdapter.submitList(currentList)
+
                     dismiss()
                 }.setNegativeClick {
                     dismiss()
@@ -205,7 +220,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     override fun ontopButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
-
         // 更新isPinned状态并移除当前项
         item.isPinned = 1
         currentList.removeAt(position)
@@ -222,12 +236,158 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             // 滚动到顶部以显示置顶的项
             mRecyclerView.scrollToPosition(0)
         }
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateTodoItem(todoItem: Todo) {
+        // 获取系统当前时间
+        var currentSystemTime = LocalDateTime.now()
+        if (todoItem.remindMode.notifyDateTime!=""){
+             currentSystemTime = todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
+        }
+
+        // 使用截止时间
+        val endTime = todoItem.end_time?.let { parseDateTime(it) } // 截止时间
+
+        // 如果没有初始提醒时间，则使用当前系统时间
+        val initialRemindTime = currentSystemTime
+
+        // 根据重复模式计算下一个提醒时间
+        val nextRemindTime = when (todoItem.remindMode.repeatMode) {
+            1 -> endTime?.let {
+                calculateNextDailyRemindTime(
+                    initialRemindTime,
+                    it
+                )
+            }               // 每天提醒
+            2 -> endTime?.let {
+                calculateNextWeeklyRemindTime(
+                    initialRemindTime, todoItem.remindMode.week,
+                    it
+                )
+            } // 每周提醒
+            3 -> endTime?.let {
+                calculateNextMonthlyRemindTime(
+                    initialRemindTime, todoItem.remindMode.day,
+                    it
+                )
+            } // 每月提醒
+
+            else -> initialRemindTime
+        }
+        Log.d("current", "updateTodoItem: $nextRemindTime")
+        if (nextRemindTime != null) {
+
+            // 创建新的待办事项
+
+            todoItem.remindMode.notifyDateTime = formatDateTime(nextRemindTime)
+            // 将新的待办事项添加到列表顶部
+            val currentList = todoAllAdapter.currentList.toMutableList()
+            currentList.remove(todoItem)
+
+            currentList.add(getTopItems(), todoItem)
+            todoAllAdapter.submitList(currentList) {
+                todoAllAdapter.notifyDataSetChanged()
+            }
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateNextDailyRemindTime(
+        currentRemindTime: LocalDateTime,
+        endTime: LocalDateTime
+    ): LocalDateTime? {
+        var nextRemindTime =
+            currentRemindTime.plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0)
+        if (nextRemindTime.isAfter(endTime)) {
+          return endTime
+        }
+        return nextRemindTime
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateNextWeeklyRemindTime(
+        currentRemindTime: LocalDateTime,
+        weekDays: List<Int>,
+        endTime: LocalDateTime
+    ): LocalDateTime? {
+        var nextRemindTime = currentRemindTime.withHour(0).withMinute(0).withSecond(0).withNano(0)
+
+        // 确保 weekDays 列表包含合法的值
+        val validWeekDays = weekDays.filter { it in 1..7 }
+        if (validWeekDays.isEmpty()) {
+            Log.w("ReminderCalculation", "No valid week days provided")
+            return null
+        }
+
+        // 找到下一个符合条件的周一
+        while (nextRemindTime.dayOfWeek.value !in validWeekDays) {
+            nextRemindTime = nextRemindTime.plusDays(1)
+            if (nextRemindTime.isAfter(endTime)) {
+                Log.d("ReminderCalculation", "Next remind time is after end time")
+                return endTime // 超过截止时间，不再提醒
+            }
+        }
+
+        return nextRemindTime
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateNextMonthlyRemindTime(
+        currentRemindTime: LocalDateTime,
+        days: List<Int>,
+        endTime: LocalDateTime
+    ): LocalDateTime? {
+        var nextRemindTime = currentRemindTime
+        do {
+            nextRemindTime =
+                nextRemindTime.plusMonths(1).withDayOfMonth(days[0]).withHour(0).withMinute(0)
+                    .withSecond(0).withNano(0)
+        } while (nextRemindTime.dayOfMonth !in days && nextRemindTime.isBefore(endTime))
+
+        if (nextRemindTime.isAfter(endTime)) {
+            return null // 超过截止时间，不再提醒
+        }
+        return endTime
+    }
+
+    private fun getTopItems(): Int {
+        var topitems = 0;
+        for (todo in todoAllAdapter.currentList) {
+            // 对每个 todo 对象执行操作
+            if (todo.isPinned == 1) {
+                topitems++
+            }
+        }
+        return topitems
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun parseDateTime(dateTimeStr: String): LocalDateTime {
+        return LocalDateTime.parse(dateTimeStr, dateTimeFormatter)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun formatDateTime(dateTime: LocalDateTime): String {
+        return dateTime.format(dateTimeFormatter)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinishCheck(item: Todo) {
-        item.isChecked = 1
-        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-        mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 1))
+        if (item.remindMode.repeatMode != 0 && item.remindMode.notifyDateTime != "") {
+            Log.d("checkisc", "repeatMode: ${item.remindMode.repeatMode}")
+            Log.d("checkisc", "notifyDateTime: ${item.remindMode.notifyDateTime}")
+            updateTodoItem(item)
+        } else {
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            item.isChecked = 1
+            mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 0))
+        }
     }
 
     override fun onResume() {
