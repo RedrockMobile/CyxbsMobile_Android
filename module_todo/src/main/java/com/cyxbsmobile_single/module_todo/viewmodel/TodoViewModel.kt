@@ -13,7 +13,6 @@ import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,6 +46,9 @@ class TodoViewModel : BaseViewModel() {
     private val _isChanged = MutableLiveData<Boolean>()
     val isChanged: LiveData<Boolean> get() = _isChanged
     var rawTodo: Todo? = null
+
+    private val _isPushed = MutableLiveData<Boolean>()
+    val isPushed: LiveData<Boolean> get() = _isPushed
 
     fun setEnabled(click: Boolean) {
         _isEnabled.value = click
@@ -168,6 +170,7 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 getAllTodo()
+                _isPushed.postValue(true)
                 viewModelScope.launch {
                     setLastModifyTime(it.data.syncTime)
                     pushWrapper.todoList.forEach { todo ->
@@ -311,7 +314,7 @@ class TodoViewModel : BaseViewModel() {
      */
     fun syncTodo(todoList: List<Todo>) {
         // 本地数据为空，直接同步远端
-        if (getLastModifyTime() == 0L) {
+        if (getLastModifyTime() == 0L && getLastSyncTime() != 0L) {
             syncWithRemote(todoList)
             return
         }

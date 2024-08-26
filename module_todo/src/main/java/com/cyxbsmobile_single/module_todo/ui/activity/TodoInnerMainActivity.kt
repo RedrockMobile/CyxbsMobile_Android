@@ -1,6 +1,8 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +20,7 @@ import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoStudyFragment
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
@@ -85,14 +88,19 @@ class TodoInnerMainActivity : com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
             AddTodoDialog(this) {
                 val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
                 val firstPush = if (syncTime == 0L) 1 else 0
-                todoViewModel.pushTodo(
-                    TodoListPushWrapper(
-                        listOf(it),
-                        syncTime,
-                        TodoListPushWrapper.NONE_FORCE,
-                        firstPush
+                todoViewModel.apply {
+                    pushTodo(
+                        TodoListPushWrapper(
+                            listOf(it), syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
+                        )
                     )
-                )
+                    isPushed.observe(this@TodoInnerMainActivity) {
+                        //通知小组件更新数据
+                        this@TodoInnerMainActivity.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+                            component = ComponentName(appContext, TodoWidget::class.java)
+                        })
+                    }
+                }
             }.show()
         }
 

@@ -27,21 +27,21 @@ class WidgetAddTodoActivity : BaseActivity() {
         dialog = AddTodoDialog(this) {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             val firstPush = if (syncTime == 0L) 1 else 0
-            mViewModel.pushTodo(
-                TodoListPushWrapper(
-                    listOf(it),
-                    syncTime,
-                    TodoListPushWrapper.NONE_FORCE,
-                    firstPush
+            mViewModel.apply {
+                pushTodo(
+                    TodoListPushWrapper(
+                        listOf(it), syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
+                    )
                 )
-            )
-            //通知小组件更新数据
-            this.sendBroadcast(
-                Intent("cyxbs.widget.todo.refresh").apply {
-                    component = ComponentName(appContext, TodoWidget::class.java)
+                isPushed.observe(this@WidgetAddTodoActivity) {
+                    //通知小组件更新数据
+                    this@WidgetAddTodoActivity.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+                        component = ComponentName(appContext, TodoWidget::class.java)
+                    })
+                    finish()
                 }
-            )
-            finish()
+            }
+
         }.apply {
             //点击外部不允许hide
             setCanceledOnTouchOutside(false)
