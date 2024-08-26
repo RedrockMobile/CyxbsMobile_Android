@@ -242,6 +242,11 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTodoItem(todoItem: Todo) {
+        if (todoItem.endTime==todoItem.remindMode.notifyDateTime){
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            todoItem.isChecked = 1
+            mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+        }else{
         // 获取系统当前时间
         var currentSystemTime = LocalDateTime.now()
         if (todoItem.remindMode.notifyDateTime!=""){
@@ -291,6 +296,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             }
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+        }
         }
     }
 
@@ -343,14 +349,31 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         endTime: LocalDateTime
     ): LocalDateTime? {
         var nextRemindTime = currentRemindTime
+        val sortedDays = days.sorted() // 确保days是排序的
         do {
-            nextRemindTime =
-                nextRemindTime.plusMonths(1).withDayOfMonth(days[0]).withHour(0).withMinute(0)
-                    .withSecond(0).withNano(0)
-        } while (nextRemindTime.dayOfMonth !in days && nextRemindTime.isBefore(endTime))
+            // 遍历days中的每一天
+            for (day in sortedDays) {
+                nextRemindTime = nextRemindTime
+                    .withDayOfMonth(day)
+                    .withHour(0)
+                    .withMinute(0)
+                    .withSecond(0)
+                    .withNano(0)
+
+                if (nextRemindTime.isAfter(currentRemindTime)) {
+                    break // 找到下一个提醒时间，跳出循环
+                }
+            }
+
+            // 如果没有找到合适的日期，就增加一个月
+            if (nextRemindTime.isBefore(currentRemindTime) || nextRemindTime.isEqual(currentRemindTime)) {
+                nextRemindTime = nextRemindTime.plusMonths(1).withDayOfMonth(sortedDays[0])
+            }
+
+        } while (nextRemindTime.isBefore(endTime))
 
         if (nextRemindTime.isAfter(endTime)) {
-            return endTime // 超过截止时间，不再提醒
+            return endTime // 超过截止时间
         }
         return nextRemindTime
     }
