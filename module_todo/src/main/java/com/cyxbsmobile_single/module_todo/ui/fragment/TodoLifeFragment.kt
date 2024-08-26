@@ -309,6 +309,7 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         return nextRemindTime
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateNextWeeklyRemindTime(
         currentRemindTime: LocalDateTime,
         weekDays: List<Int>,
