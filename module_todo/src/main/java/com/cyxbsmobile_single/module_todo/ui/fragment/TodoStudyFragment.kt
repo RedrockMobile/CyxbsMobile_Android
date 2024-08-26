@@ -447,10 +447,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     }
 
-    override fun onResume() {
-        mViewModel.getAllTodo()
-        super.onResume()
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
