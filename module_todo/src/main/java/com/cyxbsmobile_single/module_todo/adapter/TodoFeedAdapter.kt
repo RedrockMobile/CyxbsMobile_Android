@@ -102,7 +102,7 @@ class TodoFeedAdapter :
                 todoFeedTime.text = todo.remindMode.notifyDateTime
                 val itemTime = if (!todo.remindMode.notifyDateTime.isNullOrEmpty()) {
                     try {
-                        dateFormat.parse(todo.remindMode.notifyDateTime)?.time ?: 0L
+                        todo.remindMode.notifyDateTime?.let { dateFormat.parse(it)?.time } ?: 0L
                     } catch (e: ParseException) {
                         // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
                         e.printStackTrace()

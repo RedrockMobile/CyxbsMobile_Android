@@ -191,12 +191,12 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
                                 hour
                             )
                         }:${String.format("%02d", minute)}"
-                        todo.remindMode.notifyDateTime = time.replace(" ", "")
+                        todo.endTime = time.replace(" ", "")
                         time
                     }
 
                     else -> {
-                        todo.remindMode.notifyDateTime = "${year}年${month}月${day}日00:00"
+                        todo.endTime = "${year}年${month}月${day}日00:00"
                         "${year}年${month}月${day}日"
                     }
                 }
