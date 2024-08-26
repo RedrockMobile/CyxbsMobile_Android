@@ -238,7 +238,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
         val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
 
-        mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
+        mViewModel.pinTodo(TodoPinData(1, 1,syncTime.toInt() , item.todoId.toInt()))
 
         // 提交更新后的列表
         todoAllAdapter.submitList(currentList) {
