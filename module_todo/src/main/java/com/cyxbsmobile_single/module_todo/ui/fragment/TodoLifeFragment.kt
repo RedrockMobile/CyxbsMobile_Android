@@ -431,6 +431,7 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemnotify(item: Todo) {
         if (item.endTime != "") {
             updateTodoItem(item)
