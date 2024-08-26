@@ -171,13 +171,13 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 getAllTodo()
-                TodoWidget.sendAddTodoBroadcast(appContext)
                 viewModelScope.launch {
                     setLastModifyTime(it.data.syncTime)
                     pushWrapper.todoList.forEach { todo ->
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
                 }
+                TodoWidget.sendAddTodoBroadcast(appContext)
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                 }
@@ -204,6 +204,7 @@ class TodoViewModel : BaseViewModel() {
                     pushWrapper.todoList.forEach { todo ->
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
+                    TodoWidget.sendAddTodoBroadcast(appContext)
                 }
             }.safeSubscribeBy {
                 viewModelScope.launch {
@@ -212,6 +213,7 @@ class TodoViewModel : BaseViewModel() {
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
                 }
+                TodoWidget.sendAddTodoBroadcast(appContext)
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)
