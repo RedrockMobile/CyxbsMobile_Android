@@ -244,8 +244,10 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private fun updateTodoItem(todoItem: Todo) {
         if (todoItem.endTime == todoItem.remindMode.notifyDateTime) {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-            todoItem.isChecked = 1
-            mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+            mViewModel.delTodo(DelPushWrapper(listOf(todoItem.todoId), syncTime, 1))
+            val currentList = todoAllAdapter.currentList.toMutableList()
+            currentList.remove(todoItem)
+            todoAllAdapter.submitList(currentList)
         } else {
             var currentSystemTime = LocalDateTime.now()
             if (todoItem.remindMode.notifyDateTime != "") {
@@ -280,15 +282,43 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
                 Log.d("current", "updateTodoItem: $nextRemindTime")
                 nextRemindTime?.let {
-                    todoItem.remindMode.notifyDateTime = formatDateTime(it)
-                    val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                    mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 0, 0))
-                    todoAllAdapter.notifyDataSetChanged()
-                    val currentList = todoAllAdapter.currentList.toMutableList()
-                    currentList.remove(todoItem)
-                    currentList.add(getTopItems(), todoItem)
-                    todoAllAdapter.submitList(currentList) {
-                        mRecyclerView.scrollToPosition(getTopItems())
+                    if (todoItem.remindMode.notifyDateTime == "") {
+                        todoItem.remindMode.notifyDateTime = formatDateTime(it)
+                        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                        mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+                        todoAllAdapter.notifyDataSetChanged()
+                    } else {
+                        todoItem.remindMode.notifyDateTime = formatDateTime(it)
+                        val itemtodo =todoItem
+                        val syncTime1 = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                        mViewModel.delTodo(DelPushWrapper(listOf(todoItem.todoId), syncTime1, 1))
+                        // 取消任何已有任务
+                        pendingUpdateTask?.let { handler.removeCallbacks(it) }
+
+                        // 创建新的任务
+                        pendingUpdateTask = Runnable {
+                            itemtodo.todoId = System.currentTimeMillis() / 1000
+                            val syncTime2 =
+                                appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                            mViewModel.pushTodo(
+                                TodoListPushWrapper(
+                                    listOf(itemtodo),
+                                    syncTime2,
+                                    1,
+                                    0
+                                )
+                            )
+                        }
+
+                        // 延迟 2 秒执行新的任务
+                        pendingUpdateTask?.let { handler.postDelayed(it, 2500) }
+
+
+//                            val currentList = todoAllAdapter.currentList.toMutableList()
+//                            currentList.remove(todoItem)
+//                            todoAllAdapter.submitList(currentList) {
+//                                mRecyclerView.scrollToPosition(getTopItems())
+//                            }
                     }
                 }
             }
@@ -308,6 +338,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         return nextRemindTime
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateNextWeeklyRemindTime(
         currentRemindTime: LocalDateTime,
         weekDays: List<Int>,
@@ -421,7 +452,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             }
 
             // 延迟 2 秒执行新的任务
-            pendingUpdateTask?.let { handler.postDelayed(it, 2000) }
+            pendingUpdateTask?.let { handler.postDelayed(it, 1500) }
         } else {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             item.isChecked = 1
