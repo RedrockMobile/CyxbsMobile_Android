@@ -143,7 +143,7 @@ class TodoViewModel : BaseViewModel() {
     }
 
     /**
-     * 获取最后修改的时间戳
+     * 获取最后修改的时间戳`
      */
     fun getLastSyncTime(syncTime: Long) {
         TodoRepository
@@ -193,7 +193,7 @@ class TodoViewModel : BaseViewModel() {
         val pushWrapper = TodoListPushWrapper(
             todoList = listOf(todo),
             syncTime = syncTime,
-            force = TodoListPushWrapper.IS_FORCE,
+            force = TodoListPushWrapper.NONE_FORCE,
             firsPush = if (syncTime == 0L) 1 else 0
         )
 

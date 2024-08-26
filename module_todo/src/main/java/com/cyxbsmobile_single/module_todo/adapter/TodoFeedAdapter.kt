@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity.Companion.startActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
@@ -76,7 +77,7 @@ class TodoFeedAdapter :
                     icRight.visible()
                 }
             }
-            itemView.setOnClickListener {
+            todoTitle.setOnClickListener {
                 startActivity(getItem(absoluteAdapterPosition),itemView.context)
             }
         }
