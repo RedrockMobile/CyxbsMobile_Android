@@ -1,16 +1,19 @@
 package com.cyxbsmobile_single.module_todo.service
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.repository.TodoRepository
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
-import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * description: 小组件中RemoteView的Adapter
@@ -18,51 +21,60 @@ import kotlinx.coroutines.launch
  * date: 2024/8/20 17:39
  */
 class TodoWidgetService : RemoteViewsService() {
+    override fun onGetViewFactory(intent: Intent?): RemoteViewsFactory {
+        return TodoWidgetFactory(applicationContext)
+    }
 
-    override fun onGetViewFactory(intent: Intent?): RemoteViewsFactory = TodoWidgetFactory()
-
-    class TodoWidgetFactory : RemoteViewsFactory {
-
+    inner class TodoWidgetFactory(val context: Context) : RemoteViewsFactory {
         private var todoList: List<Todo> = emptyList()
 
         override fun onCreate() {
+            // 初始化数据
             loadData()
         }
 
         override fun onDataSetChanged() {
-            todoList = emptyList()
+            // 数据集变化时加载数据
             loadData()
-
         }
 
         private fun loadData() {
-            TodoRepository
-                .queryAllTodo()
-                .doOnError {
-                    // 处理错误的逻辑
+            // 使用协程获取数据
+            CoroutineScope(Dispatchers.IO).launch {
+
+                val newTodoList = TodoDatabase.instance.todoDao().queryAll()!! // 获取待办事项列表
+
+                // 检查数据是否发生变化
+                if (newTodoList != todoList) {
+                    todoList = newTodoList
+
+                    todoList = todoList.sortedByDescending { it.todoId }.filter { it.isChecked == 0 }
+                    // 更新UI线程
+                    withContext(Dispatchers.Main) {
+                        AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(
+                            AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, TodoWidget::class.java)),
+                            R.id.todo_lv_widget_todo_list
+                        )
+                    }
                 }
-                .unsafeSubscribeBy {
-                    todoList = it.data.todoArray.filter { todo -> todo.isChecked == 0 }
-                }
+            }
         }
 
         override fun onDestroy() {
+            // 清理操作
             todoList = emptyList()
         }
 
         override fun getCount(): Int = todoList.size
 
         override fun getViewAt(position: Int): RemoteViews {
-            val listItem = RemoteViews(appContext.packageName, R.layout.todo_widget_todo_list_item)
-            return listItem.apply {
-                setTextViewText(R.id.todo_tv_widget_todo_title, todoList[position].title)
-                setTextViewText(R.id.todo_widget_notify_time, todoList[position].endTime)
-            }
+            val item = RemoteViews(context.packageName, R.layout.todo_widget_todo_list_item)
+            item.setTextViewText(R.id.todo_tv_widget_todo_title, todoList[position].title)
+            item.setTextViewText(R.id.todo_widget_notify_time, todoList[position].endTime)
+            return item
         }
 
-        override fun getLoadingView(): RemoteViews {
-            return RemoteViews(appContext.packageName, R.layout.todo_widget_todo_list_item)
-        }
+        override fun getLoadingView(): RemoteViews? = null
 
         override fun getViewTypeCount(): Int = 1
 

@@ -102,7 +102,9 @@ class TodoViewModel : BaseViewModel() {
                 }
             }
             .safeSubscribeBy {
-                _allTodo.postValue(TodoListSyncTimeWrapper(it.data.todoArray, it.data.syncTime))
+                _allTodo.postValue(
+                    TodoListSyncTimeWrapper(it.data.todoArray, it.data.syncTime)
+                )
                 _categoryTodoStudy.postValue(
                     TodoListSyncTimeWrapper(
                         it.data.todoArray.filter { todo -> todo.type == "study" },

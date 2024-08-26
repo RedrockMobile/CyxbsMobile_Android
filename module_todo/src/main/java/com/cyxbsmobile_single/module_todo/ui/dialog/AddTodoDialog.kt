@@ -32,7 +32,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * date: 2024/8/13 15:19
  */
 class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
-    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
+    BottomSheetDialog(context, R.style.BottomSheetDialogThemeNight) {
 
 
     private var SelectRepeatTimeList = ArrayList<String>()
