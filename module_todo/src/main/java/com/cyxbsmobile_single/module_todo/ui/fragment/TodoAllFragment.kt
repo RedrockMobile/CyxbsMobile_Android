@@ -113,6 +113,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                     for (item in todoAllAdapter.selectItems) {
                         Log.d("SwipeDeleteRecyclerView", "deletePinning item: ${item.todoId}")
                     }
+                    todoAllAdapter.selectItems.clear()
                     dismiss()
                 }.setNegativeClick {
                     dismiss()
@@ -244,11 +245,11 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         // 获取系统当前时间
         var currentSystemTime = LocalDateTime.now()
         if (todoItem.remindMode.notifyDateTime!=""){
-             currentSystemTime = todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
+            currentSystemTime = todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
         }
 
         // 使用截止时间
-        val endTime = todoItem.end_time?.let { parseDateTime(it) } // 截止时间
+        val endTime = todoItem.endTime?.let { parseDateTime(it) } // 截止时间
 
         // 如果没有初始提醒时间，则使用当前系统时间
         val initialRemindTime = currentSystemTime
@@ -278,9 +279,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
         Log.d("current", "updateTodoItem: $nextRemindTime")
         if (nextRemindTime != null) {
-
             // 创建新的待办事项
-
             todoItem.remindMode.notifyDateTime = formatDateTime(nextRemindTime)
             // 将新的待办事项添加到列表顶部
             val currentList = todoAllAdapter.currentList.toMutableList()
@@ -288,7 +287,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
             currentList.add(getTopItems(), todoItem)
             todoAllAdapter.submitList(currentList) {
-                todoAllAdapter.notifyDataSetChanged()
+                todoAllAdapter.notifyItemChanged(0)
             }
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
@@ -304,7 +303,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         var nextRemindTime =
             currentRemindTime.plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0)
         if (nextRemindTime.isAfter(endTime)) {
-          return endTime
+            return endTime
         }
         return nextRemindTime
     }
@@ -351,9 +350,9 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         } while (nextRemindTime.dayOfMonth !in days && nextRemindTime.isBefore(endTime))
 
         if (nextRemindTime.isAfter(endTime)) {
-            return null // 超过截止时间，不再提醒
+            return endTime // 超过截止时间，不再提醒
         }
-        return endTime
+        return nextRemindTime
     }
 
     private fun getTopItems(): Int {
@@ -380,8 +379,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinishCheck(item: Todo) {
         if (item.remindMode.repeatMode != 0 && item.remindMode.notifyDateTime != "") {
-            Log.d("checkisc", "repeatMode: ${item.remindMode.repeatMode}")
-            Log.d("checkisc", "notifyDateTime: ${item.remindMode.notifyDateTime}")
             updateTodoItem(item)
         } else {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)

@@ -18,7 +18,7 @@ import java.util.concurrent.Executors
  * author: sanhuzhen
  * date: 2024/8/20 14:21
  */
-@Database(entities = [Todo::class], version = 1)
+@Database(entities = [Todo::class], version = 2)
 @TypeConverters(Convert::class)
 abstract class TodoDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao
@@ -54,7 +54,9 @@ abstract class TodoDatabase : RoomDatabase() {
                                                 0,
                                                 generateDefaultRemindMode(),
                                                 System.currentTimeMillis(),
-                                                "生活",
+                                                "",
+                                                "",
+                                                0,
                                                 0
                                             ),
                                             Todo(
@@ -64,7 +66,9 @@ abstract class TodoDatabase : RoomDatabase() {
                                                 0,
                                                 generateDefaultRemindMode(),
                                                 System.currentTimeMillis(),
-                                                "工作",
+                                                "",
+                                                "",
+                                                0,
                                                 0
                                             ),
                                             Todo(
@@ -74,7 +78,9 @@ abstract class TodoDatabase : RoomDatabase() {
                                                 0,
                                                 generateDefaultRemindMode(),
                                                 System.currentTimeMillis(),
-                                                "学习",
+                                                "",
+                                                "",
+                                                0,
                                                 0
                                             )
                                         )

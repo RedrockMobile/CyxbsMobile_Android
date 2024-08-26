@@ -82,10 +82,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         // 遍历当前列表，从后往前删除选中的项
         for (i in itemCount - 1 downTo 0) {
             if (selectItems.contains(currentList[i])) {
-//                selectItems.removeAt(i)
                 currentList.removeAt(i)
-
-
             }
         }
         submitList(currentList)
