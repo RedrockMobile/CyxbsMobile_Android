@@ -18,13 +18,6 @@ import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.ChronoField
-import java.time.temporal.TemporalAdjusters
 import java.util.Collections
 import java.util.Locale
 
@@ -132,6 +125,11 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         val isSelected = selectItems.contains(item)
+
+        holder.defaultcheckbox?.setStatusWithAnime(false)
+        holder.checkbox?.isChecked = false
+        holder.listtext.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.todo_check_line_color))
+        holder.icRight?.visibility = View.GONE
         Log.d(
             "TodoAllAdapter",
             "onBindViewHolder - Position: $position, isEnabled: $isEnabled, isSelected: $isSelected"
@@ -196,7 +194,12 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     }
 
     public override fun getItem(position: Int): Todo {
-        return super.getItem(position)
+        return if (position >= 0 && position < currentList.size) {
+            currentList[position]
+        }else{
+            Log.e("AdapterError", "Invalid position: $position, List size: ${currentList.size}")
+            currentList[0]
+        }
     }
 
     inner class ViewHolder(
@@ -210,7 +213,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         private val date: TextView = itemView.findViewById(R.id.todo_notify_time)
         private val deletebutton: LinearLayout = itemView.findViewById(R.id.todo_delete)
         private val topbutton: LinearLayout = itemView.findViewById(R.id.todo_item_totop)
-        private val icRight: ImageView? = itemView.findViewById(R.id.todo_iv_check)
+        val icRight: ImageView? = itemView.findViewById(R.id.todo_iv_check)
         val defaultcheckbox: CheckLineView? = if (!isEnabled) {
             itemView.findViewById(R.id.todo_item_check) as? CheckLineView
         } else {
@@ -239,7 +242,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                 }
             }
             if (item.remindMode.notifyDateTime==""){
-                listener.onFinishCheck(item)
+                listener.onItemnotify(item)
             }
             itemView.setOnClickListener {
                 listener.onItemClick(item)
@@ -299,6 +302,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
         fun ondeleteButtonClick(item: Todo, position: Int)
         fun ontopButtonClick(item: Todo, position: Int)
         fun onFinishCheck(item: Todo)
+        fun onItemnotify(item: Todo)
     }
 
     companion object {
