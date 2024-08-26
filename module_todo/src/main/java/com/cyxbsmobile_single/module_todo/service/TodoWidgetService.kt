@@ -12,6 +12,8 @@ import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,8 +27,10 @@ class TodoWidgetService : RemoteViewsService() {
         return TodoWidgetFactory(applicationContext)
     }
 
-    inner class TodoWidgetFactory(val context: Context) : RemoteViewsFactory {
+    class TodoWidgetFactory(val context: Context) : RemoteViewsFactory {
         private var todoList: List<Todo> = emptyList()
+
+        private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
         override fun onCreate() {
             // 初始化数据
@@ -40,19 +44,18 @@ class TodoWidgetService : RemoteViewsService() {
 
         private fun loadData() {
             // 使用协程获取数据
-            CoroutineScope(Dispatchers.IO).launch {
+            scope.launch {
 
-                val newTodoList = TodoDatabase.instance.todoDao().queryAll()!! // 获取待办事项列表
+                val newTodoList = TodoDatabase.instance.todoDao().queryAll()!!.filter { it.isChecked == 0 }.sortedByDescending { it.todoId } // 获取待办事项列表
 
                 // 检查数据是否发生变化
                 if (newTodoList != todoList) {
                     todoList = newTodoList
-
-                    todoList = todoList.sortedByDescending { it.todoId }.filter { it.isChecked == 0 }
                     // 更新UI线程
                     withContext(Dispatchers.Main) {
                         AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(
-                            AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, TodoWidget::class.java)),
+                            AppWidgetManager.getInstance(context)
+                                .getAppWidgetIds(ComponentName(context, TodoWidget::class.java)),
                             R.id.todo_lv_widget_todo_list
                         )
                     }
@@ -62,7 +65,7 @@ class TodoWidgetService : RemoteViewsService() {
 
         override fun onDestroy() {
             // 清理操作
-            todoList = emptyList()
+            scope.cancel()
         }
 
         override fun getCount(): Int = todoList.size
@@ -70,7 +73,6 @@ class TodoWidgetService : RemoteViewsService() {
         override fun getViewAt(position: Int): RemoteViews {
             val item = RemoteViews(context.packageName, R.layout.todo_widget_todo_list_item)
             item.setTextViewText(R.id.todo_tv_widget_todo_title, todoList[position].title)
-            item.setTextViewText(R.id.todo_widget_notify_time, todoList[position].endTime)
             return item
         }
 

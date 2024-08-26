@@ -33,13 +33,6 @@ class WidgetAddTodoActivity : BaseActivity() {
                         listOf(it), syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
                     )
                 )
-                isPushed.observe(this@WidgetAddTodoActivity) {
-                    //通知小组件更新数据
-                    this@WidgetAddTodoActivity.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
-                        component = ComponentName(appContext, TodoWidget::class.java)
-                    })
-                    finish()
-                }
             }
 
         }.apply {

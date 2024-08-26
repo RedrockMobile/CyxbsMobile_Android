@@ -94,12 +94,6 @@ class TodoInnerMainActivity : com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
                             listOf(it), syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
                         )
                     )
-                    isPushed.observe(this@TodoInnerMainActivity) {
-                        //通知小组件更新数据
-                        this@TodoInnerMainActivity.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
-                            component = ComponentName(appContext, TodoWidget::class.java)
-                        })
-                    }
                 }
             }.show()
         }

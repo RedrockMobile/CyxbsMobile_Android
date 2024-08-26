@@ -21,6 +21,13 @@ import com.mredrock.cyxbs.lib.utils.extensions.appContext
  * date: 2024/8/23 0:04
  */
 class TodoWidget : AppWidgetProvider() {
+    companion object{
+        fun sendAddTodoBroadcast(context: Context) {
+            context.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+                component = ComponentName(appContext, TodoWidget::class.java)
+            })
+        }
+    }
 
     override fun onUpdate(
         context: Context,
@@ -83,21 +90,7 @@ class TodoWidget : AppWidgetProvider() {
     private fun refresh(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val componentName = ComponentName(context, TodoWidget::class.java)
-        val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
-
-        // 更新小组件
-        appWidgetIds.forEach { appWidgetId ->
-            updateAppWidget(context, appWidgetManager, appWidgetId)
-        }
-    }
-
-    private fun updateAppWidget(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int
-    ) {
-        val remoteView = initRemoteView(context)
-        appWidgetManager.updateAppWidget(appWidgetId, remoteView)
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetManager.getAppWidgetIds(componentName), R.id.todo_lv_widget_todo_list,)
     }
 
     @SuppressLint("ObsoleteSdkInt")
