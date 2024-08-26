@@ -11,6 +11,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
@@ -46,9 +47,6 @@ class TodoViewModel : BaseViewModel() {
     private val _isChanged = MutableLiveData<Boolean>()
     val isChanged: LiveData<Boolean> get() = _isChanged
     var rawTodo: Todo? = null
-
-    private val _isPushed = MutableLiveData<Boolean>()
-    val isPushed: LiveData<Boolean> get() = _isPushed
 
     fun setEnabled(click: Boolean) {
         _isEnabled.value = click
@@ -167,12 +165,13 @@ class TodoViewModel : BaseViewModel() {
                     pushWrapper.todoList.forEach { todo ->
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
+                    TodoWidget.sendAddTodoBroadcast(appContext)
                     getAllTodo()
                 }
             }
             .safeSubscribeBy {
                 getAllTodo()
-                _isPushed.postValue(true)
+                TodoWidget.sendAddTodoBroadcast(appContext)
                 viewModelScope.launch {
                     setLastModifyTime(it.data.syncTime)
                     pushWrapper.todoList.forEach { todo ->
