@@ -55,9 +55,11 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private val mViewModel: TodoViewModel by activityViewModels()
     private val handler = Handler(Looper.getMainLooper())
     private var pendingUpdateTask: Runnable? = null
+
     @RequiresApi(Build.VERSION_CODES.O)
     private val dateTimeFormatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy年M月d日HH:mm")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -260,6 +262,7 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val nextRemindTime = withContext(Dispatchers.Default) {
                     when (todoItem.remindMode.repeatMode) {
+                        0 -> endTime
                         1 -> endTime?.let { calculateNextDailyRemindTime(initialRemindTime, it) }
                         2 -> endTime?.let {
                             calculateNextWeeklyRemindTime(
@@ -268,7 +271,6 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                                 it
                             )
                         }
-
                         3 -> endTime?.let {
                             calculateNextMonthlyRemindTime(
                                 initialRemindTime,

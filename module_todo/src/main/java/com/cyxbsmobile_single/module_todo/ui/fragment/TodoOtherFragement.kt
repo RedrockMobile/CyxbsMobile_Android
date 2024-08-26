@@ -260,6 +260,7 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val nextRemindTime = withContext(Dispatchers.Default) {
                     when (todoItem.remindMode.repeatMode) {
+                        0->endTime
                         1 -> endTime?.let { calculateNextDailyRemindTime(initialRemindTime, it) }
                         2 -> endTime?.let {
                             calculateNextWeeklyRemindTime(

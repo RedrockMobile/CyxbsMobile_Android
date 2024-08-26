@@ -259,6 +259,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val nextRemindTime = withContext(Dispatchers.Default) {
                     when (todoItem.remindMode.repeatMode) {
+                        0->endTime
                         1 -> endTime?.let { calculateNextDailyRemindTime(initialRemindTime, it) }
                         2 -> endTime?.let {
                             calculateNextWeeklyRemindTime(
@@ -443,6 +444,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             updateTodoItem(item)
         }
 
+
     }
 
     override fun onResume() {
@@ -456,3 +458,5 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         pendingUpdateTask?.let { handler.removeCallbacks(it) }
     }
 }
+
+
