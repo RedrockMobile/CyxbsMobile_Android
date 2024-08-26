@@ -14,6 +14,10 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
+import com.mredrock.cyxbs.affair.bean.RemindMode
+import com.mredrock.cyxbs.affair.bean.RemindMode.Companion.generateDefaultRemindMode
+import com.mredrock.cyxbs.affair.bean.Todo
+import com.mredrock.cyxbs.affair.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.TitleCandidateAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
@@ -23,6 +27,7 @@ import com.mredrock.cyxbs.affair.ui.fragment.utils.AffairPageManager
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.AddAffairViewModel
 import com.mredrock.cyxbs.affair.ui.dialog.RemindSelectDialog
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
@@ -63,6 +68,7 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
   
   private val mEditText by R.id.affair_et_add_affair.view<EditText>()
   private val mTvRemind by R.id.affair_tv_add_affair_remind.view<TextView>()
+  private val mTvAddTodo by R.id.affair_tv_add_affair_addTodo.view<TextView>()
   
   private val mRvTitleCandidate by R.id.affair_rv_add_affair_title_candidate.view<RecyclerView>()
   private val mRvTitleCandidateAdapter = TitleCandidateAdapter()
@@ -131,6 +137,13 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
       }
       dialog.show()
     }
+    mTvAddTodo.setOnSingleClickListener {
+      if (mTvAddTodo.text == "加入待办") {
+        mTvAddTodo.text = "取消待办"
+      } else {
+        mTvAddTodo.text = "加入待办"
+      }
+      }
   }
   
   private fun initObserve() {
@@ -146,10 +159,27 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
           mPageManager.getContent(),
           mRvDurationAdapter.currentList.toAtWhatTime(),
         )
+        if(mTvAddTodo.text == "取消待办"){
+          mViewModel.addTodo(translationToTodo())
+        }
         requireActivity().finish()
       } else {
         mPageManager.loadNextPage()
       }
     }
+  }
+  private fun translationToTodo() = Todo(
+      System.currentTimeMillis()/1000,
+      mPageManager.getTitle(),
+      mPageManager.getContent(),
+      0,
+      generateDefaultRemindMode(),
+      System.currentTimeMillis(),
+      "other",
+      0
+    )
+  // 将第几周转换为日历
+  private fun getCalendar(){
+
   }
 }

@@ -35,6 +35,8 @@ data class ActivityBean(
     @SerializedName("want_to_watch")
     val wantToWatch: Boolean,
     @SerializedName("activity_state")
-    val activityState:String
+    val activityState:String,
+    @SerializedName("is_add")
+    val addTodo:Boolean
 ):Serializable
 
