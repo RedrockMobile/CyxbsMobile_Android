@@ -342,6 +342,7 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateNextMonthlyRemindTime(
         currentRemindTime: LocalDateTime,
         days: List<Int>,
