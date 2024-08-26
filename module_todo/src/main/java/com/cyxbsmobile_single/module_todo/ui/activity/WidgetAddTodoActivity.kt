@@ -30,6 +30,9 @@ class WidgetAddTodoActivity : BaseActivity() {
                         listOf(it), syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
                     )
                 )
+                isPushed.observe(this@WidgetAddTodoActivity) {
+                    finish()
+                }
             }
 
         }.apply {
