@@ -1,12 +1,13 @@
 package com.mredrock.cyxbs.ufield.bean
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
  * author : QTwawa
- * date : 2024/8/25 16:33
+ * date : 2024/8/26 00:14
  */
 @Entity(tableName = "todo_list")
 data class Todo(

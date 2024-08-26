@@ -8,12 +8,14 @@ import com.mredrock.cyxbs.affair.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.affair.room.AffairEntity
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 /**
  * ...
@@ -46,8 +48,12 @@ class AddAffairViewModel : BaseViewModel() {
     )
     AffairRepository.addTodo(pushWrapper)
       .safeSubscribeBy {
-        "加入待办".toast()
         it.data.syncTime.apply {
+          val date = SchoolCalendar.getFirstMonDayOfTerm()
+          val year = date?.get(Calendar.YEAR)
+          val month = date?.get(Calendar.MONTH)?.plus(1)
+          val day = date?.get(Calendar.DAY_OF_MONTH)
+          "$year-$month-$day".toast()
           setLastSyncTime(this)
         }
       }

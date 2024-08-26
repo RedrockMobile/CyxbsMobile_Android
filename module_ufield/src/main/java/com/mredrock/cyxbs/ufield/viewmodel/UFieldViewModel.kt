@@ -88,6 +88,4 @@ class UFieldViewModel : BaseViewModel() {
             .doOnError {}
             .safeSubscribeBy { _isAdmin.postValue(listOf(it)) }
     }
-
-
 }

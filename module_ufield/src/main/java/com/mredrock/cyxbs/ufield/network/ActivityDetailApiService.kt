@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.lib.utils.network.IApi
 import com.mredrock.cyxbs.ufield.bean.ActivityBean
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
 
@@ -22,4 +23,8 @@ interface ActivityDetailApiService : IApi {
 
     @PUT("/magipoke-ufield/activity/action/watch/")
     fun wantToSee(@Query("activity_id") id: Int): Single<ApiWrapper<ApiStatus>>
+
+    @POST("/magipoke-ufield/activity/addTodo/")
+    fun addTodo(@Query("activity_id") id: Int): Single<ApiWrapper<ApiStatus>>
+
 }

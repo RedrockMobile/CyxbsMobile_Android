@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.affair.ui.fragment.utils.AffairPageManager
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.AddAffairViewModel
 import com.mredrock.cyxbs.affair.ui.dialog.RemindSelectDialog
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
@@ -158,7 +159,7 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
           mPageManager.getContent(),
           mRvDurationAdapter.currentList.toAtWhatTime(),
         )
-        if(mTvAddTodo.text == "加入待办"){
+        if(mTvAddTodo.text == "取消待办"){
           mViewModel.addTodo(translationToTodo())
         }
         requireActivity().finish()
@@ -177,4 +178,8 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
       "other",
       0
     )
+  // 将第几周转换为日历
+  private fun getCalendar(){
+
+  }
 }

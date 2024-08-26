@@ -679,7 +679,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginLeft="140dp"
         android:text="加入待办"
-        android:background="@drawable/ufield_shape_createbutton2"
+        android:background="@drawable/ufield_shape_addtodo"
         android:textColor="#524FEC"
         android:textSize="14sp"
         android:gravity="center"

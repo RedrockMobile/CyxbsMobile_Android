@@ -18,6 +18,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.bean.RemindMode
+import com.mredrock.cyxbs.ufield.bean.Todo
 import com.mredrock.cyxbs.ufield.viewmodel.DetailViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -180,21 +182,15 @@ class DetailActivity : BaseActivity() {
                 }
             }
             tvAddTodo.apply {
-                setBackgroundResource(R.drawable.ufield_shape_addtodo)
                 setOnClickListener {
                     if(tvAddTodo.text == "加入待办"){
                         tvAddTodo.setTextColor(ContextCompat.getColor(this@DetailActivity,R.color.uField_text_haveadd))
                         tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
-                    }
-                    else if(tvAddTodo.text == "已加入待办"){
-                        tvAddTodo.setTextColor(ContextCompat.getColor(this@DetailActivity,R.color.uField_text_add))
-                        tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_addtodo)
+                        viewModel.addTodo(createTodo())
                     }
                 }
-
             }
         }
-
     }
 
     private fun startDownTimer(startTime: Long) {
@@ -266,6 +262,17 @@ class DetailActivity : BaseActivity() {
         tvSeconds.gone()
         layout.gone()
     }
+
+    private fun createTodo() = Todo(
+        System.currentTimeMillis()/1000,
+        tvTitle.toString(),
+        tvPlace.toString(),
+        0,
+        RemindMode(0,arrayListOf(),arrayListOf(),arrayListOf(),tvStart.toString()),
+        System.currentTimeMillis(),
+        "other",
+        0
+    )
 
     private fun trans(timestampInSeconds: Long): String {
         val date = Date(timestampInSeconds * 1000L)
