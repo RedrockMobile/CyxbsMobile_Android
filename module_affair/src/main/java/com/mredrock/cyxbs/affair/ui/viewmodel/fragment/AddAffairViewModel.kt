@@ -48,6 +48,7 @@ class AddAffairViewModel : BaseViewModel() {
     )
     AffairRepository.addTodo(pushWrapper)
       .safeSubscribeBy {
+        todo.remindMode.notifyDateTime?.toast()
         it.data.syncTime.apply {
           setLastSyncTime(this)
         }
