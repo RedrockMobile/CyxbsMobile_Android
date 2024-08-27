@@ -37,7 +37,8 @@
             android:gravity="center_horizontal|center_vertical"
             android:text="保存"
             android:textColor="@color/todo_check_line_color"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/todo_thing_detail_save"
@@ -50,13 +51,9 @@
             android:text="保存"
             android:textColor="@color/todo_inner_add_save_text_color"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:visibility="gone" />
     </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/todo_inner_detail_line_color" />
 
 
     <TextView
@@ -68,7 +65,8 @@
         android:letterSpacing="0.05"
         android:text="@string/todo_string_detail_name"
         android:textColor="@color/todo_check_line_color"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/todo_detail_et_todo_title"
@@ -133,7 +131,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todo_rv_inner_detail_repeat_time"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="32dp"
         android:layout_marginStart="11dp"
         android:layout_marginTop="301dp"
         android:layout_marginEnd="11dp"
@@ -143,18 +141,14 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/todo_tv_inner_detail_no_repeat_time"
         android:layout_width="wrap_content"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="11dp"
         android:layout_marginTop="301dp"
         android:layout_marginEnd="11dp"
-        android:background="@drawable/todo_shape_inner_add_thing_repeat_select_time_background"
+        android:background="@drawable/todo_ic_detail_no_repeat_time"
+        android:gravity="center_vertical"
         android:paddingStart="20dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="8dp"
-        android:text="设置重复时间"
-        android:textColor="#992D4D80"
-        android:textSize="14sp" />
+        android:paddingEnd="20dp" />
 
     <View
         android:id="@+id/todo_detail_line"
