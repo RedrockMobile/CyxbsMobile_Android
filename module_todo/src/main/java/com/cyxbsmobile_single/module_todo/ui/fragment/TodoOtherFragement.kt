@@ -260,6 +260,7 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val nextRemindTime = withContext(Dispatchers.Default) {
                     when (todoItem.remindMode.repeatMode) {
+                        0->endTime
                         1 -> endTime?.let { calculateNextDailyRemindTime(initialRemindTime, it) }
                         2 -> endTime?.let {
                             calculateNextWeeklyRemindTime(
@@ -290,36 +291,13 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                         todoAllAdapter.notifyDataSetChanged()
                     } else {
                         todoItem.remindMode.notifyDateTime = formatDateTime(it)
-                        val itemtodo =todoItem
-                        val syncTime1 = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                        mViewModel.delTodo(DelPushWrapper(listOf(todoItem.todoId), syncTime1, 1))
-                        // 取消任何已有任务
-                        pendingUpdateTask?.let { handler.removeCallbacks(it) }
-
-                        // 创建新的任务
-                        pendingUpdateTask = Runnable {
-                            itemtodo.todoId = System.currentTimeMillis() / 1000
-                            val syncTime2 =
-                                appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                            mViewModel.pushTodo(
-                                TodoListPushWrapper(
-                                    listOf(itemtodo),
-                                    syncTime2,
-                                    1,
-                                    0
-                                )
-                            )
+                        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                        mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+                        val currentList = todoAllAdapter.currentList.toMutableList()
+                        currentList.remove(todoItem)
+                        todoAllAdapter.submitList(currentList) {
+                            mRecyclerView.scrollToPosition(getTopItems())
                         }
-
-                        // 延迟 2 秒执行新的任务
-                        pendingUpdateTask?.let { handler.postDelayed(it, 2500) }
-
-
-//                            val currentList = todoAllAdapter.currentList.toMutableList()
-//                            currentList.remove(todoItem)
-//                            todoAllAdapter.submitList(currentList) {
-//                                mRecyclerView.scrollToPosition(getTopItems())
-//                            }
                     }
                 }
             }
@@ -469,10 +447,7 @@ class TodoOtherFragement : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     }
 
-    override fun onResume() {
-        mViewModel.getAllTodo()
-        super.onResume()
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

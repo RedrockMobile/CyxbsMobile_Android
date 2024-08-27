@@ -99,26 +99,31 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     }
 
     fun topSelectedItems() {
-        val currentList = currentList.toMutableList()
-        val selectedItems = selectItems
+        val currentList = currentList.toMutableList()  // 获取当前列表的可变副本
 
-        for (item in selectedItems) {
-            item.isPinned = 1
+        // 过滤出要置顶的选中项，并将其从 currentList 中移除
+        val selectedItems = currentList.filter { it in selectItems }.toMutableList()
 
-        }
-        // 从 currentList 中移除选中的项
-        currentList.removeAll(selectedItems)
+        if (selectedItems.isEmpty()) return // 如果没有选中项，直接返回
+
+        // 更新 selectedItems 的 isPinned 状态
+        selectedItems.forEach { it.isPinned = 1 }
+
+        // 从 currentList 中移除所有选中的项
+        currentList.removeAll(selectedItems.toSet())
 
         // 将选中的项添加到 currentList 的顶部
         currentList.addAll(0, selectedItems)
 
-        // 提交更新后的列表并刷新 RecyclerView
+        // 提交更新后的列表并刷新RecyclerView
         submitList(currentList) {
-            notifyDataSetChanged()
+            // 清空选中状态，确保同步
+            selectItems.clear()
+            Log.d("TodoAllAdapter", "List updated, cleared selected items")
         }
-        // 清空选中状态
-        selectItems.clear()
     }
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -128,7 +133,14 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
         holder.defaultcheckbox?.setStatusWithAnime(false)
         holder.checkbox?.isChecked = false
-        holder.listtext.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.todo_check_line_color))
+
+//        holder.listtext.setTextColor(
+//            ContextCompat.getColor(
+//                holder.itemView.context,
+//                R.color.todo_check_line_color
+//            )
+//        )
+
         holder.icRight?.visibility = View.GONE
         Log.d(
             "TodoAllAdapter",
@@ -196,8 +208,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     public override fun getItem(position: Int): Todo {
         return if (position >= 0 && position < currentList.size) {
             currentList[position]
-        }else{
-            Log.e("AdapterError", "Invalid position: $position, List size: ${currentList.size}")
+        } else {
             currentList[0]
         }
     }
@@ -241,7 +252,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                     it.visibility = View.VISIBLE
                 }
             }
-            if (item.remindMode.notifyDateTime==""){
+            if (item.remindMode.notifyDateTime == "") {
                 listener.onItemnotify(item)
             }
             itemView.setOnClickListener {
@@ -293,7 +304,6 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             return oldItem == newItem
         }
     }
-
 
 
     interface OnItemClickListener {

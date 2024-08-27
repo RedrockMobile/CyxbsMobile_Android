@@ -37,6 +37,6 @@ data class ActivityBean(
     @SerializedName("activity_state")
     val activityState:String,
     @SerializedName("is_add")
-    val addTodo:Boolean
+    val addTodo:Int
 ):Serializable
 
