@@ -49,11 +49,6 @@ class AddAffairViewModel : BaseViewModel() {
     AffairRepository.addTodo(pushWrapper)
       .safeSubscribeBy {
         it.data.syncTime.apply {
-          val date = SchoolCalendar.getFirstMonDayOfTerm()
-          val year = date?.get(Calendar.YEAR)
-          val month = date?.get(Calendar.MONTH)?.plus(1)
-          val day = date?.get(Calendar.DAY_OF_MONTH)
-          "$year-$month-$day".toast()
           setLastSyncTime(this)
         }
       }

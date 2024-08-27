@@ -199,10 +199,10 @@ class TodoDetailActivity : BaseActivity() {
             }
         } else {
             etTitle.addTextChangedListener {
-                viewModel.setChangeState(it.toString() != viewModel.rawTodo?.title)
+                viewModel.setChangeState(judge())
             }
             edRemark.addTextChangedListener {
-                viewModel.setChangeState(it.toString() != viewModel.rawTodo?.detail)
+                viewModel.setChangeState(judge())
                 if (it != null) {
                     if (it.length == 100) {
                         "已超100字，无法再输入".toastWithYOffset(line.top)
@@ -247,7 +247,7 @@ class TodoDetailActivity : BaseActivity() {
                             }
                         }
                         setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
-                        viewModel.setChangeState(tvDeadline.text != viewModel.rawTodo?.endTime)
+                        viewModel.setChangeState(judge())
                     }
                 }.show()
             }
@@ -310,7 +310,7 @@ class TodoDetailActivity : BaseActivity() {
                 "生活" -> "life"
                 else -> "other"
             }
-            viewModel.setChangeState(tvClassify.text != viewModel.rawTodo?.type)
+            viewModel.setChangeState(judge())
 
             hideClassify()
         }
@@ -336,5 +336,11 @@ class TodoDetailActivity : BaseActivity() {
             onClick.invoke()
         }
     }
+
+    private fun judge() =
+        tvClassify.text != viewModel.rawTodo?.type ||
+                tvDeadline.text != viewModel.rawTodo?.endTime ||
+                etTitle.toString() != viewModel.rawTodo?.title ||
+                edRemark.toString() != viewModel.rawTodo?.detail
 
 }
