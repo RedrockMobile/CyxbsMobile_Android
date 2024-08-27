@@ -133,12 +133,14 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
         holder.defaultcheckbox?.setStatusWithAnime(false)
         holder.checkbox?.isChecked = false
-        holder.listtext.setTextColor(
-            ContextCompat.getColor(
-                holder.itemView.context,
-                R.color.todo_check_line_color
-            )
-        )
+
+//        holder.listtext.setTextColor(
+//            ContextCompat.getColor(
+//                holder.itemView.context,
+//                R.color.todo_check_line_color
+//            )
+//        )
+
         holder.icRight?.visibility = View.GONE
         Log.d(
             "TodoAllAdapter",
