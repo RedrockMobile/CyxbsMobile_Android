@@ -100,7 +100,6 @@ class DetailActivity : BaseActivity() {
                         "",
                         "已参加活动一次，获得50邮票"
                     )
-
                 }
                 layout.apply {
                     setBackgroundResource(R.drawable.ufield_shape_haveseen)
@@ -109,6 +108,15 @@ class DetailActivity : BaseActivity() {
             } else {
                 toast("想看失败")
             }
+        }
+        viewModel.isAdd.observe(this) {
+            tvAddTodo.setTextColor(
+                ContextCompat.getColor(
+                    this@DetailActivity,
+                    R.color.uField_text_haveadd
+                )
+            )
+            tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
         }
     }
 
@@ -165,6 +173,7 @@ class DetailActivity : BaseActivity() {
                     tvMinutes.gone()
                     tvSeconds.gone()
                     layout.gone()
+//                    tvAddTodo.gone()
                 } else {
                     startDownTimer(it.activityStartAt)
                 }
@@ -181,13 +190,25 @@ class DetailActivity : BaseActivity() {
                     viewModel.wantToSee(id)
                 }
             }
-            tvAddTodo.apply {
-                setOnClickListener {
-                    if(tvAddTodo.text == "加入待办"){
-                        tvAddTodo.setTextColor(ContextCompat.getColor(this@DetailActivity,R.color.uField_text_haveadd))
-                        tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
-                        viewModel.addTodo(createTodo())
-                    }
+            if (it.addTodo != 0) {
+                tvAddTodo.setTextColor(
+                    ContextCompat.getColor(
+                        this@DetailActivity,
+                        R.color.uField_text_haveadd
+                    )
+                )
+                tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+            } else {
+                tvAddTodo.setOnClickListener {
+                    tvAddTodo.setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailActivity,
+                            R.color.uField_text_haveadd
+                        )
+                    )
+                    tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+                    viewModel.addTodo(createTodo())
+                    viewModel.isAdd(id)
                 }
             }
         }
@@ -263,21 +284,32 @@ class DetailActivity : BaseActivity() {
         layout.gone()
     }
 
-    private fun createTodo() = Todo(
-        System.currentTimeMillis()/1000,
-        tvTitle.toString(),
-        tvPlace.toString(),
-        0,
-        RemindMode(0,arrayListOf(),arrayListOf(),arrayListOf(),tvStart.toString()),
-        System.currentTimeMillis(),
-        "other",
-        0
-    )
+    private fun createTodo(): Todo {
+        val notifyDatetime = viewModel.detailData.value?.let { otherTrans(it.activityStartAt) }
+        val todo = Todo(
+            System.currentTimeMillis() / 1000,
+            tvTitle.text.toString(),
+            tvPlace.text.toString(),
+            0,
+            RemindMode(0, arrayListOf(), arrayListOf(), arrayListOf(), notifyDatetime),
+            System.currentTimeMillis(),
+            "other",
+            0
+        )
+        return todo
+    }
 
     private fun trans(timestampInSeconds: Long): String {
         val date = Date(timestampInSeconds * 1000L)
 
         val format = SimpleDateFormat("yyyy年MM月dd日HH点mm分", Locale.getDefault())
+        return format.format(date)
+    }
+
+    private fun otherTrans(timestampInSeconds: Long): String {
+        val date = Date(timestampInSeconds * 1000L)
+
+        val format = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
         return format.format(date)
     }
 }
