@@ -37,6 +37,7 @@ class AffairPageManager(val fragment: BaseFragment) {
   private val mEtTitle by R.id.affair_tv_add_affair_title.view<EditText>()
   private val mEditText by R.id.affair_et_add_affair.view<EditText>()
   private val mTvRemind by R.id.affair_tv_add_affair_remind.view<TextView>()
+  private val mTvAddTodo by R.id.affair_tv_add_affair_addTodo.view<TextView>()
   private val mRvTitleCandidate by R.id.affair_rv_add_affair_title_candidate.view<RecyclerView>()
   private val mRvDuration by R.id.affair_rv_add_affair_duration.view<RecyclerView>()
   
@@ -158,6 +159,7 @@ class AffairPageManager(val fragment: BaseFragment) {
         mTvText3.invisible()
         mRvDuration.visible()
         mTvRemind.visible()
+        mTvAddTodo.visible()
         val set = ConstraintSet().apply { clone(mRootView) }
         set.connect(mEtTitle.id, ConstraintSet.START, mRootView.id, ConstraintSet.START)
         set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.BOTTOM)
@@ -193,6 +195,7 @@ class AffairPageManager(val fragment: BaseFragment) {
         mTvText3.visible()
         mRvDuration.gone()
         mTvRemind.gone()
+        mTvAddTodo.gone()
         val set = ConstraintSet().apply { clone(mRootView) }
         set.connect(mEtTitle.id, ConstraintSet.START, mTvText1.id, ConstraintSet.END)
         set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.TOP)

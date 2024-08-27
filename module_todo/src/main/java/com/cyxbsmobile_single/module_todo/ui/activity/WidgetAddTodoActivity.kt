@@ -1,7 +1,5 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
-import android.content.ComponentName
-import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.viewModels
@@ -9,7 +7,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
-import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.config.route.TODO_ADD_TODO_BY_WIDGET
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
@@ -27,21 +24,17 @@ class WidgetAddTodoActivity : BaseActivity() {
         dialog = AddTodoDialog(this) {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             val firstPush = if (syncTime == 0L) 1 else 0
-            mViewModel.pushTodo(
-                TodoListPushWrapper(
-                    listOf(it),
-                    syncTime,
-                    TodoListPushWrapper.NONE_FORCE,
-                    firstPush
+            mViewModel.apply {
+                pushTodo(
+                    TodoListPushWrapper(
+                        listOf(it), syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
+                    )
                 )
-            )
-            //通知小组件更新数据
-            this.sendBroadcast(
-                Intent("cyxbs.widget.todo.refresh").apply {
-                    component = ComponentName(appContext, TodoWidget::class.java)
+                isPushed.observe(this@WidgetAddTodoActivity) {
+                    finish()
                 }
-            )
-            finish()
+            }
+
         }.apply {
             //点击外部不允许hide
             setCanceledOnTouchOutside(false)

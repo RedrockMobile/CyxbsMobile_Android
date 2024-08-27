@@ -16,6 +16,7 @@ kotlinJvmTarget = "11"
 #                    其他三方依赖版本
 # ==================================================
 vasDolly = "3.0.4"
+roomCommon = "2.6.1"
 
 [libraries]
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
@@ -26,3 +27,4 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 #                     其他三方依赖
 # ==================================================
 vasDolly-gradlePlugin = { module = "com.tencent.vasdolly:plugin", version.ref = "vasDolly" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }

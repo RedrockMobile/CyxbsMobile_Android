@@ -11,9 +11,9 @@ import com.cyxbsmobile_single.module_todo.model.bean.TodoListSyncTimeWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.TodoPinData
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.repository.TodoRepository
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,6 +47,9 @@ class TodoViewModel : BaseViewModel() {
     private val _isChanged = MutableLiveData<Boolean>()
     val isChanged: LiveData<Boolean> get() = _isChanged
     var rawTodo: Todo? = null
+
+    private val _isPushed = MutableLiveData<Boolean>()
+    val isPushed : LiveData<Boolean> get() = _isPushed
 
     fun setEnabled(click: Boolean) {
         _isEnabled.value = click
@@ -100,7 +103,9 @@ class TodoViewModel : BaseViewModel() {
                 }
             }
             .safeSubscribeBy {
-                _allTodo.postValue(TodoListSyncTimeWrapper(it.data.todoArray, it.data.syncTime))
+                _allTodo.postValue(
+                    TodoListSyncTimeWrapper(it.data.todoArray, it.data.syncTime)
+                )
                 _categoryTodoStudy.postValue(
                     TodoListSyncTimeWrapper(
                         it.data.todoArray.filter { todo -> todo.type == "study" },
@@ -163,6 +168,7 @@ class TodoViewModel : BaseViewModel() {
                     pushWrapper.todoList.forEach { todo ->
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
+                    TodoWidget.sendAddTodoBroadcast(appContext)
                     getAllTodo()
                 }
             }
@@ -174,6 +180,8 @@ class TodoViewModel : BaseViewModel() {
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
                 }
+                TodoWidget.sendAddTodoBroadcast(appContext)
+                _isPushed.postValue(true)
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                 }
@@ -200,6 +208,7 @@ class TodoViewModel : BaseViewModel() {
                     pushWrapper.todoList.forEach { todo ->
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
+                    TodoWidget.sendAddTodoBroadcast(appContext)
                 }
             }.safeSubscribeBy {
                 viewModelScope.launch {
@@ -208,6 +217,7 @@ class TodoViewModel : BaseViewModel() {
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
                 }
+                TodoWidget.sendAddTodoBroadcast(appContext)
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)
@@ -311,7 +321,7 @@ class TodoViewModel : BaseViewModel() {
      */
     fun syncTodo(todoList: List<Todo>) {
         // 本地数据为空，直接同步远端
-        if (getLastModifyTime() == 0L) {
+        if (getLastModifyTime() == 0L && getLastSyncTime() != 0L) {
             syncWithRemote(todoList)
             return
         }

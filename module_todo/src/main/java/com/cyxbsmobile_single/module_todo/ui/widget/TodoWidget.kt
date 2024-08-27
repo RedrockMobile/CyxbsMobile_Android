@@ -11,128 +11,100 @@ import android.os.Build
 import android.widget.RemoteViews
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.repository.TodoRepository
 import com.cyxbsmobile_single.module_todo.service.TodoWidgetService
 import com.mredrock.cyxbs.config.route.TODO_ADD_TODO_BY_WIDGET
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
-import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
- * description:
+ * description: 待办事项桌面小组件
  * author: sanhuzhen
  * date: 2024/8/23 0:04
  */
 class TodoWidget : AppWidgetProvider() {
+    companion object{
+        fun sendAddTodoBroadcast(context: Context) {
+            context.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+                component = ComponentName(appContext, TodoWidget::class.java)
+            })
+        }
+    }
 
     override fun onUpdate(
-        context: Context?,
-        appWidgetManager: AppWidgetManager?,
-        appWidgetIds: IntArray?
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
+        updateAppWidgets(context, appWidgetManager, appWidgetIds)
+    }
 
-        context?.let {
-            val remoteView = initRemoteView(it)
-            appWidgetManager?.updateAppWidget(appWidgetIds, remoteView)
-        }
+    private fun updateAppWidgets(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        val remoteView = initRemoteView(context)
+
+        // 更新所有小组件
+        appWidgetManager.updateAppWidget(appWidgetIds, remoteView)
     }
 
     private fun initRemoteView(context: Context): RemoteViews {
-        val remoteView = RemoteViews(appContext.packageName, R.layout.todo_widget_main)
-        val intent = Intent(context, TodoWidgetService::class.java)
-        remoteView.apply {
-            setRemoteAdapter(R.id.todo_lv_widget_todo_list, intent)
-        }
-        remoteView.setOnClickPendingIntent(
-            R.id.todo_iv_widget_add_todo,
-            PendingIntent.getBroadcast(
-                context,
-                1,
-                Intent(context, TodoWidget::class.java).apply {
-                    action = "cyxbs.widget.todo.add"
-                },
-                getPendingIntentFlags()
-            )
-        )
-        remoteView.setPendingIntentTemplate(
-            R.id.todo_lv_widget_todo_list, PendingIntent.getBroadcast(
-                context,
-                0,
-                Intent(context, TodoWidget::class.java),
-                getPendingIntentFlags()
-            )
-        )
-        return remoteView
-    }
+        val remoteView = RemoteViews(context.packageName, R.layout.todo_widget_main)
 
-    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
-        super.onDeleted(context, appWidgetIds)
-        TodoWidgetService.todoList.clear()
+        // 设置 RemoteAdapter 以显示 ListView
+        val intent = Intent(context, TodoWidgetService::class.java)
+        remoteView.setRemoteAdapter(R.id.todo_lv_widget_todo_list, intent)
+
+        // 设置添加任务的 PendingIntent
+        val addIntent = Intent(context, TodoWidget::class.java).apply {
+            action = "cyxbs.widget.todo.add"
+        }
+        remoteView.setOnClickPendingIntent(R.id.todo_iv_widget_add_todo,
+            PendingIntent.getBroadcast(context, 0, addIntent, getPendingIntentFlags())
+        )
+
+        // 设置 ListView 的点击事件
+        remoteView.setPendingIntentTemplate(
+            R.id.todo_lv_widget_todo_list,
+            PendingIntent.getBroadcast(context, 0, Intent(context, TodoWidget::class.java), getPendingIntentFlags())
+        )
+
+        return remoteView
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
+
         when (intent?.action) {
-            // 刷新
             "cyxbs.widget.todo.refresh" -> {
-                context?.let {
-                    refresh(it)
-                }
+                context?.let { refresh(it) }
             }
-            // 添加
             "cyxbs.widget.todo.add" -> {
+                // 启动添加任务的界面或 Activity
                 ARouter.getInstance().build(TODO_ADD_TODO_BY_WIDGET).navigation()
-            }
-
-            "cyxbs.widget.todo.check" -> {
-
             }
         }
     }
 
-    private fun refresh(context: Context){
-        val manager = AppWidgetManager.getInstance(context)
+    private fun refresh(context: Context) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
         val componentName = ComponentName(context, TodoWidget::class.java)
-        val remoteView = initRemoteView(context)
-        TodoRepository
-            .queryAllTodo()
-            .doOnError {
-                processLifecycleScope.launch(Dispatchers.IO) {
-
-                }
-            }
-            .unsafeSubscribeBy {
-                TodoWidgetService.todoList.apply {
-                    clear()
-                    addAll(it.data.todoArray)
-                }
-                manager.updateAppWidget(componentName, remoteView)
-                manager.notifyAppWidgetViewDataChanged(
-                    manager.getAppWidgetIds(componentName),
-                    R.id.todo_lv_widget_todo_list
-                )
-            }
-
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetManager.getAppWidgetIds(componentName), R.id.todo_lv_widget_todo_list,)
     }
 
     @SuppressLint("ObsoleteSdkInt")
-    private fun getPendingIntentFlags(isMutable: Boolean = false) =
-        when {
+    private fun getPendingIntentFlags(isMutable: Boolean = false): Int {
+        return when {
             isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
                 PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-
             !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
-
             isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
                 PendingIntent.FLAG_UPDATE_CURRENT
-
             !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
                 PendingIntent.FLAG_CANCEL_CURRENT
-
             else -> PendingIntent.FLAG_UPDATE_CURRENT
         }
+    }
 }

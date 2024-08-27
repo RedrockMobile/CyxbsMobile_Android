@@ -18,6 +18,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.bean.RemindMode
+import com.mredrock.cyxbs.ufield.bean.Todo
 import com.mredrock.cyxbs.ufield.viewmodel.DetailViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -55,6 +57,7 @@ class DetailActivity : BaseActivity() {
     private val tvSecond by R.id.ufield_tv_second.view<TextView>()
     private val tvTimeHead by R.id.ufield_tv_timehead.view<TextView>()
     private val ivBack by R.id.ufield_iv_back.view<ImageView>()
+    private val tvAddTodo by R.id.ufield_tv_addtodo.view<TextView>()
     private lateinit var layout: ConstraintLayout
     private var countDownTimer: CountDownTimer = object : CountDownTimer(1, 1000) {
         override fun onTick(p0: Long) {
@@ -178,9 +181,16 @@ class DetailActivity : BaseActivity() {
                     viewModel.wantToSee(id)
                 }
             }
-
+            tvAddTodo.apply {
+                setOnClickListener {
+                    if(tvAddTodo.text == "加入待办"){
+                        tvAddTodo.setTextColor(ContextCompat.getColor(this@DetailActivity,R.color.uField_text_haveadd))
+                        tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+                        viewModel.addTodo(createTodo())
+                    }
+                }
+            }
         }
-
     }
 
     private fun startDownTimer(startTime: Long) {
@@ -252,6 +262,17 @@ class DetailActivity : BaseActivity() {
         tvSeconds.gone()
         layout.gone()
     }
+
+    private fun createTodo() = Todo(
+        System.currentTimeMillis()/1000,
+        tvTitle.toString(),
+        tvPlace.toString(),
+        0,
+        RemindMode(0,arrayListOf(),arrayListOf(),arrayListOf(),tvStart.toString()),
+        System.currentTimeMillis(),
+        "other",
+        0
+    )
 
     private fun trans(timestampInSeconds: Long): String {
         val date = Date(timestampInSeconds * 1000L)
