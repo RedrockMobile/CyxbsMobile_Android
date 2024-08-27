@@ -48,6 +48,9 @@ class TodoViewModel : BaseViewModel() {
     val isChanged: LiveData<Boolean> get() = _isChanged
     var rawTodo: Todo? = null
 
+    private val _isPushed = MutableLiveData<Boolean>()
+    val isPushed : LiveData<Boolean> get() = _isPushed
+
     fun setEnabled(click: Boolean) {
         _isEnabled.value = click
         LogUtils.d("TodoViewModel", "isEnabled set to ${_isEnabled.value}")
@@ -171,13 +174,14 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 getAllTodo()
-                TodoWidget.sendAddTodoBroadcast(appContext)
                 viewModelScope.launch {
                     setLastModifyTime(it.data.syncTime)
                     pushWrapper.todoList.forEach { todo ->
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
                 }
+                TodoWidget.sendAddTodoBroadcast(appContext)
+                _isPushed.postValue(true)
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                 }
@@ -204,6 +208,7 @@ class TodoViewModel : BaseViewModel() {
                     pushWrapper.todoList.forEach { todo ->
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
+                    TodoWidget.sendAddTodoBroadcast(appContext)
                 }
             }.safeSubscribeBy {
                 viewModelScope.launch {
@@ -212,6 +217,7 @@ class TodoViewModel : BaseViewModel() {
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
                 }
+                TodoWidget.sendAddTodoBroadcast(appContext)
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)

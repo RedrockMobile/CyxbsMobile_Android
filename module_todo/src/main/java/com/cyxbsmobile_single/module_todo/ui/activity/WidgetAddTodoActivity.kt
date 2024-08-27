@@ -1,7 +1,5 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
-import android.content.ComponentName
-import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.viewModels
@@ -9,7 +7,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddTodoDialog
-import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.config.route.TODO_ADD_TODO_BY_WIDGET
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
@@ -33,6 +30,9 @@ class WidgetAddTodoActivity : BaseActivity() {
                         listOf(it), syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
                     )
                 )
+                isPushed.observe(this@WidgetAddTodoActivity) {
+                    finish()
+                }
             }
 
         }.apply {
