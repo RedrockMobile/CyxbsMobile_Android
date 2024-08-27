@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
@@ -13,6 +15,9 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aigestudio.wheelpicker.WheelPicker
@@ -21,6 +26,8 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeRvAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
+import com.cyxbsmobile_single.module_todo.model.network.TodoApiService
 import com.cyxbsmobile_single.module_todo.ui.dialog.CalendarDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.DetailAlarmDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.SelectRepeatDialog
@@ -30,6 +37,7 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.config.route.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
+import kotlinx.coroutines.launch
 
 /**
  * description:
@@ -77,12 +85,40 @@ class TodoDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_detail)
 
-        todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
-        viewModel.rawTodo = todo
+        //下面的逻辑是为了处理端内跳转
+        fun initTodo() {
+            //这里反序列化两次是为了防止内外拿到同一个引用
+            viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
 
-        initView()
+            initView()
 
-        initClick()
+            initClick()
+        }
+
+        if (intent.getBooleanExtra("is_from_receive", false)) {
+            //如果来自端内跳转, 则重新加载todo
+            val todoId = intent.getStringExtra("todo_id").toString().toInt()
+            if (todoId <= 0) {
+                toast("没有这条代办的信息哦")
+                finish()
+            }
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    TodoDatabase.instance.todoDao().queryById(todoId)?.let {
+                        todo = it
+                        initTodo()
+                    } ?: run {
+                        "没有这条代办的信息哦".toast()
+                    }
+                }
+            }
+
+        } else {
+            todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
+
+            initTodo()
+        }
     }
 
     private fun initView() {
@@ -103,7 +139,7 @@ class TodoDetailActivity : BaseActivity() {
             "life" -> "生活"
             else -> "其他"
         }
-        tvDeadline.text = todo.remindMode.notifyDateTime
+        tvDeadline.text = todo.endTime
 
         val repeatMode: Int = todo.remindMode.repeatMode
         if (todo.remindMode.repeatMode == RemindMode.NONE) {
@@ -150,9 +186,31 @@ class TodoDetailActivity : BaseActivity() {
 
     @SuppressLint("DefaultLocale", "SetTextI18n")
     private fun initClick() {
-        etTitle.addTextChangedListener {
-            viewModel.setChangeState(it.toString() != viewModel.rawTodo?.title)
+        if (todo.isChecked == 1) {
+            //已经check，不允许修改
+            getString(R.string.todo_string_cant_modify).toastWithYOffset(67)
+            etTitle.apply {
+                isFocusable = false
+                isFocusableInTouchMode = false
+            }
+            edRemark.apply {
+                isFocusable = false
+                isFocusableInTouchMode = false
+            }
+        } else {
+            etTitle.addTextChangedListener {
+                viewModel.setChangeState(it.toString() != viewModel.rawTodo?.title)
+            }
+            edRemark.addTextChangedListener {
+                viewModel.setChangeState(it.toString() != viewModel.rawTodo?.detail)
+                if (it != null) {
+                    if (it.length == 100) {
+                        "已超100字，无法再输入".toastWithYOffset(line.top)
+                    }
+                }
+            }
         }
+
 
         back.setOnClickListener {
             if (viewModel.isChanged.value == true) {
@@ -168,49 +226,53 @@ class TodoDetailActivity : BaseActivity() {
         }
 
         tvDeadline.setOnClickListener {
-            CalendarDialog(this) { year, month, day, hour, minute ->
-                tvDeadline.apply {
-                    text = when {
-                        hour < 24 -> {
-                            val time = "${year}年${month}月${day}日 ${
-                                String.format(
-                                    "%02d",
-                                    hour
-                                )
-                            }:${String.format("%02d", minute)}"
-                            todo.remindMode.notifyDateTime = time.replace(" ", "")
-                            time
-                        }
+            onClickProxy {
+                CalendarDialog(this) { year, month, day, hour, minute ->
+                    tvDeadline.apply {
+                        text = when {
+                            hour < 24 -> {
+                                val time = "${year}年${month}月${day}日 ${
+                                    String.format(
+                                        "%02d",
+                                        hour
+                                    )
+                                }:${String.format("%02d", minute)}"
+                                todo.endTime = time.replace(" ", "")
+                                time
+                            }
 
-                        else -> {
-                            todo.remindMode.notifyDateTime = "${year}年${month}月${day}日00:00"
-                            "${year}年${month}月${day}日"
+                            else -> {
+                                todo.endTime = "${year}年${month}月${day}日00:00"
+                                "${year}年${month}月${day}日"
+                            }
                         }
+                        setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
+                        viewModel.setChangeState(tvDeadline.text != viewModel.rawTodo?.endTime)
                     }
-                    setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
-                    viewModel.setChangeState(tvDeadline.text != viewModel.rawTodo?.remindMode?.notifyDateTime)
-                }
-            }.show()
+                }.show()
+            }
         }
 
         tvRepeatTime.setOnClickListener {
-            SelectRepeatDialog(this) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
-                todo.remindMode.repeatMode = repeatMode
+            onClickProxy {
+                SelectRepeatDialog(this) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
+                    todo.remindMode.repeatMode = repeatMode
 
-                if (repeatMode == RemindMode.WEEK) {
-                    todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
-                } else {
-                    todo.remindMode.day = selectRepeatTimeListIndex as ArrayList<Int>
-                }
-                viewModel.setChangeState(SelectRepeatTimeList != selectRepeatTimeList as ArrayList<String>)
-                SelectRepeatTimeList = selectRepeatTimeList
+                    if (repeatMode == RemindMode.WEEK) {
+                        todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
+                    } else {
+                        todo.remindMode.day = selectRepeatTimeListIndex as ArrayList<Int>
+                    }
+                    viewModel.setChangeState(SelectRepeatTimeList != selectRepeatTimeList as ArrayList<String>)
+                    SelectRepeatTimeList = selectRepeatTimeList
 
-                repeatTimeAdapter.submitList(SelectRepeatTimeList)
-                if (SelectRepeatTimeList.isNotEmpty()) {
-                    rvRepeatTime.visibility = View.VISIBLE
-                    tvRepeatTime.visibility = View.INVISIBLE
-                }
-            }.show()
+                    repeatTimeAdapter.submitList(SelectRepeatTimeList)
+                    if (SelectRepeatTimeList.isNotEmpty()) {
+                        rvRepeatTime.visibility = View.VISIBLE
+                        tvRepeatTime.visibility = View.INVISIBLE
+                    }
+                }.show()
+            }
         }
 
         tvSave.setOnClickListener {
@@ -227,10 +289,12 @@ class TodoDetailActivity : BaseActivity() {
         }
 
         tvClassify.setOnClickListener {
-            wpClassify.data = listOf("学习", "生活", "其他")
-            edRemark.visibility = View.GONE
-            tvRemark.visibility = View.GONE
-            llClassify.visibility = View.VISIBLE
+            onClickProxy {
+                wpClassify.data = listOf("学习", "生活", "其他")
+                edRemark.visibility = View.GONE
+                tvRemark.visibility = View.GONE
+                llClassify.visibility = View.VISIBLE
+            }
         }
 
         btnConfirm.setOnClickListener {
@@ -254,15 +318,6 @@ class TodoDetailActivity : BaseActivity() {
         btnCancel.setOnClickListener {
             hideClassify()
         }
-
-        edRemark.addTextChangedListener {
-            viewModel.setChangeState(it.toString() != viewModel.rawTodo?.detail)
-            if (it != null) {
-                if (it.length == 100) {
-                    "已超100字，无法再输入".toastWithYOffset(line.top)
-                }
-            }
-        }
     }
 
     private fun hideClassify() {
@@ -270,4 +325,16 @@ class TodoDetailActivity : BaseActivity() {
         tvRemark.visibility = View.VISIBLE
         llClassify.visibility = View.GONE
     }
+
+    //统一处理此条todo的点击事件（试图修改）
+    //如果已经完成，则不handle这次点击事件
+    private fun onClickProxy(onClick: () -> Unit) {
+        if (todo.isChecked == 1) {
+            //已经check，不允许修改
+            getString(R.string.todo_string_cant_modify).toastWithYOffset(67)
+        } else {
+            onClick.invoke()
+        }
+    }
+
 }

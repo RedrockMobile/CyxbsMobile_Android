@@ -32,7 +32,7 @@ fun transformRepeat(selectRepeatTimeList: List<String>, repeatMode: Int): ArrayL
 
         RemindMode.MONTH -> {
             selectRepeatTimeList.map {
-                "每月${digitToChinese(it)}日"
+                "每月${it}日"
             } as ArrayList<String>
         }
 
@@ -50,8 +50,6 @@ fun digitToChinese(digit: String): String {
         "5" -> "五"
         "6" -> "六"
         "7" -> "日"
-        "8" -> "八"
-        "9" -> "九"
         else -> ""
     }
 }
