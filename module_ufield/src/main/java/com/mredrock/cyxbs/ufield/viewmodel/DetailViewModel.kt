@@ -30,6 +30,9 @@ private val _wantToSee=MutableLiveData<Boolean>()
 
     val wantToSee:LiveData<Boolean>
         get() = _wantToSee
+private val _isAdd=MutableLiveData<Int>()
+    val isAdd:LiveData<Int>
+        get() = _isAdd
     init {
         getActivityData(id)
     }
@@ -59,15 +62,34 @@ private val _wantToSee=MutableLiveData<Boolean>()
             }
     }
 
+    fun isAdd(id:Int){
+        ActivityDetailApiService::class.api
+            .addTodo(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                _isAdd.postValue(0)
+            }
+            .safeSubscribeBy {
+                _isAdd.postValue(1)
+            }
+    }
+
     fun addTodo(todo: Todo) {
         val pushWrapper = TodoListPushWrapper(
             listOf(todo),
             getLastSyncTime()
         )
         UFieldRepository.pushTodo(pushWrapper)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                _isAdd.postValue(0)
+            }
             .safeSubscribeBy {
                 it.data.syncTime.apply {
                     setLastSyncTime(this)
+                    _isAdd.postValue(1)
                 }
             }
     }
