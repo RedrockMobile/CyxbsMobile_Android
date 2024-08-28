@@ -1,57 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/todo_fragment_color"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/todo_fragment_color">
 
     <com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
         android:id="@+id/todo_liferv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
     <include
-        layout="@layout/todo_empty_view"
         android:id="@+id/empty_view"
+        layout="@layout/todo_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/todo_bottom_action_layout_life"
         android:layout_width="match_parent"
-        android:background="@color/common_dialog_bg"
         android:layout_height="82dp"
         android:layout_alignParentBottom="true"
+        android:background="@color/common_dialog_bg"
         android:orientation="horizontal"
         android:padding="16dp"
         android:visibility="gone">
 
         <CheckBox
             android:id="@+id/todo_bottom_check_al_life"
-            android:layout_width="72dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center_vertical"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="23dp"
+            android:button="@drawable/todo_selector_checkbox" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="25.5dp"
             android:text="全选"
             android:textColor="@color/todo_config_bottom_check_box"
             android:textSize="18sp" />
 
         <FrameLayout
             android:id="@+id/button_bottom_left_life"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="34dp"
-            android:layout_gravity="center_vertical"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/todo_ic_bottom_button_left">
 
             <ImageView
                 android:id="@+id/custom_button_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="28.5dp"
                 android:layout_gravity="center_vertical|start"
+                android:layout_marginLeft="28.5dp"
                 android:src="@drawable/todo_ic_bottom_button_leftimage" />
 
             <!-- TextView for the label -->
@@ -69,18 +76,18 @@
 
         <FrameLayout
             android:id="@+id/button_bottom_right_life"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
             android:layout_marginLeft="9dp"
-            android:layout_gravity="center_vertical"
+            android:layout_marginTop="16dp"
             android:background="@drawable/todo_ic_bottom_right_buttonbac">
 
             <ImageView
                 android:id="@+id/custom_buttondelete_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="28.5dp"
                 android:layout_gravity="center_vertical|start"
+                android:layout_marginLeft="28.5dp"
                 android:src="@drawable/todo_ic_bottom_right_image" />
 
             <!-- TextView for the label -->
@@ -89,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="8dp"
                 android:layout_toEndOf="@id/custom_buttondelete_icon"
                 android:text="@string/todo_string_delete"
                 android:textColor="@color/config_white_black"
@@ -98,4 +105,4 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </RelativeLayout>
+</RelativeLayout>

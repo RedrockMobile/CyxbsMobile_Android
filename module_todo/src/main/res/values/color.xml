@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="todo_check_line_color">#15315B</color>
+    <color name="todo_item_text_top_color">#4A44E4</color>
     <color name="todo_check_line_delay_color">#FF6262</color>
     <color name="todo_inner_add_save_text_color">#2923D2</color>
     <color name="todo_inner_add_thing_et_shape_color">#E8F1FC</color>
@@ -36,6 +37,7 @@
     <!--    40-->
     <color name="todo_item_checked_color">#6615315B</color>
     <color name="todo_item_checked_delay_color">#FFB7B7</color>
+    <color name="todo_item_delay_color">#FF6262</color>
     <color name="todo_list_change">#4A44E4</color>
     <color name="todo_top_title">#4A44E4</color>
     <color name="todo_feed_divide_line_color">#142A4E84</color>

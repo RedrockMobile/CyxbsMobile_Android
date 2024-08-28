@@ -20,17 +20,16 @@
             android:layout_width="0dp"
             android:layout_height="23dp"
             android:layout_marginStart="15dp"
-            app:unchecked_line_color="@color/todo_inner_check_eclipse_color"
+            android:transitionName="check"
             app:checked_line_color="@color/todo_inner_checked_line_color"
             app:checked_line_width="2dp"
-            android:transitionName="check"
             app:layout_constraintBottom_toBottomOf="@+id/todo_title_text"
             app:layout_constraintEnd_toEndOf="@+id/todo_title_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/todo_title_text"
-            android:foreground="?attr/selectableItemBackground"
             app:left_radius="10.5dp"
-            app:uncheck_line_width="2dp" />
+            app:uncheck_line_width="2dp"
+            app:unchecked_line_color="@color/todo_inner_check_eclipse_color" />
 
         <ImageView
             android:id="@+id/todo_iv_check"
@@ -38,8 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5.6dp"
             android:layout_marginBottom="0.9dp"
-            android:visibility="gone"
             android:src="@drawable/todo_ic_detail_check"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/todo_item_check"
             app:layout_constraintStart_toStartOf="@+id/todo_item_check"
             app:layout_constraintTop_toTopOf="@+id/todo_item_check" />
@@ -71,10 +70,11 @@
             tools:text="复习高数114514191911451419191145141919" />
 
 
+
         <TextView
             android:id="@+id/todo_notify_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginBottom="12dp"
             android:textColor="@color/todo_item_inner_nf_time_color"
             android:textSize="13sp"
@@ -89,15 +89,13 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
     <LinearLayout
         android:id="@+id/todo_item_totop"
         android:layout_width="82dp"
         android:layout_height="match_parent"
         android:background="@color/todo_item_to_top"
         android:gravity="center"
-        android:orientation="vertical"
-        >
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -107,6 +105,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="@string/todo_string_totop"
             android:textColor="@color/todo_add_todo_back_color"
             android:textSize="14sp" />
@@ -118,8 +117,7 @@
         android:layout_height="match_parent"
         android:background="@color/todo_item_delete"
         android:gravity="center"
-        android:orientation="vertical"
-        >
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -129,6 +127,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:text="@string/todo_string_delete"
             android:textColor="@color/todo_add_todo_back_color"
             android:textSize="14sp" />
