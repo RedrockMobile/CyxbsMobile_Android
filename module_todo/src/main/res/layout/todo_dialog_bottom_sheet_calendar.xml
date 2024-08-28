@@ -23,7 +23,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/todo_tv_header_calendar"
             android:src="@drawable/todo_ic_pre_month" />
 
@@ -32,7 +32,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="25dp"
             android:layout_toRightOf="@id/todo_iv_pre_month"
             android:src="@drawable/todo_ic_next_month" />
     </RelativeLayout>
@@ -108,7 +108,7 @@
         android:layout_marginLeft="30dp"
         android:background="@drawable/todo_shape_btn_cancel"
         android:gravity="center"
-        android:text="不设置"
+        android:text="取消"
         android:textColor="@color/todo_cancel_button_text_color"
         android:textSize="18sp" />
 

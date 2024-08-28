@@ -328,7 +328,7 @@ class TodoViewModel : BaseViewModel() {
 
         // 如果远端数据为空，直接同步本地数据
         if (getLastSyncTime() == 0L) {
-            syncWithLocal(todoList)
+            syncWithLocal()
             return
         }
 
@@ -345,7 +345,7 @@ class TodoViewModel : BaseViewModel() {
             syncRemoteFromLocal(syncTime)
         } else {
             if (allTodo.value?.todoArray?.isNotEmpty() == true) {
-                syncLocalFromRemote(todoList)
+                syncLocalFromRemote()
             }
         }
 
@@ -363,7 +363,7 @@ class TodoViewModel : BaseViewModel() {
         }
     }
 
-    private fun syncWithLocal(todoList: List<Todo>) {
+    private fun syncWithLocal() {
         viewModelScope.launch(Dispatchers.IO) {
             TodoDatabase.instance.todoDao().apply {
                 pushTodo(TodoListPushWrapper(queryAll()!!, getLastModifyTime(), 1, 0))
@@ -389,7 +389,7 @@ class TodoViewModel : BaseViewModel() {
         }
     }
 
-    private fun syncLocalFromRemote(todoList: List<Todo>) {
+    private fun syncLocalFromRemote() {
         viewModelScope.launch(Dispatchers.IO) {
             TodoDatabase.instance.todoDao().apply {
                 deleteAll()

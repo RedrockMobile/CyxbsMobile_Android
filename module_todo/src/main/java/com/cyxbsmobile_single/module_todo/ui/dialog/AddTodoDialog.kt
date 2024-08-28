@@ -31,8 +31,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * author: sanhuzhen
  * date: 2024/8/13 15:19
  */
-class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
-    BottomSheetDialog(context, R.style.BottomSheetDialogThemeNight) {
+class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit) :
+    BottomSheetDialog(context, style) {
 
 
     private var SelectRepeatTimeList = ArrayList<String>()
@@ -153,7 +153,10 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     }
 
     private fun showSelectRepeatDialog() {
-        SelectRepeatDialog(context) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
+        SelectRepeatDialog(
+            context,
+            R.style.BottomSheetDialogTheme
+        ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
             todo.remindMode.repeatMode = repeatMode
             if (repeatMode == RemindMode.WEEK) {
                 todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
@@ -181,7 +184,7 @@ class AddTodoDialog(context: Context, val onAddTodo: (Todo) -> Unit) :
     //显示日历
     @SuppressLint("DefaultLocale", "SetTextI18n")
     private fun showCalendarDialog() {
-        CalendarDialog(context) { year, month, day, hour, minute ->
+        CalendarDialog(context, R.style.BottomSheetDialogTheme) { year, month, day, hour, minute ->
             tvAddNoticeTime.apply {
                 text = when {
                     hour < 24 -> {
