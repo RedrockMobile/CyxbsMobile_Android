@@ -21,7 +21,7 @@ class WidgetAddTodoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_add_widget)
-        dialog = AddTodoDialog(this) {
+        dialog = AddTodoDialog(this, R.style.BottomSheetDialogThemeNight) {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             val firstPush = if (syncTime == 0L) 1 else 0
             mViewModel.apply {

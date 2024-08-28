@@ -4,14 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.addTextChangedListener
@@ -20,16 +16,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.aigestudio.wheelpicker.WheelPicker
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeRvAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
-import com.cyxbsmobile_single.module_todo.model.network.TodoApiService
 import com.cyxbsmobile_single.module_todo.ui.dialog.CalendarDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.DetailAlarmDialog
+import com.cyxbsmobile_single.module_todo.ui.dialog.SelectCategoryDialog
 import com.cyxbsmobile_single.module_todo.ui.dialog.SelectRepeatDialog
 import com.cyxbsmobile_single.module_todo.util.transformRepeat
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
@@ -52,11 +47,6 @@ class TodoDetailActivity : BaseActivity() {
     private val viewModel by viewModels<TodoViewModel>()
 
     private val edRemark by R.id.todo_inner_detail_remark_ed.view<AppCompatEditText>()
-    private val tvRemark by R.id.todo_inner_detail_remark_tv.view<TextView>()
-    private val llClassify by R.id.todo_detail_ll_classify_choose.view<LinearLayout>()
-    private val btnConfirm by R.id.todo_detail_btn_confirm.view<AppCompatButton>()
-    private val btnCancel by R.id.todo_detail_btn_cancel.view<AppCompatButton>()
-    private val wpClassify by R.id.todo_wp_detail_category_list.view<WheelPicker>()
     private val etTitle by R.id.todo_detail_et_todo_title.view<AppCompatEditText>()
     private val tvDeadline by R.id.todo_detail_tv_deadline.view<AppCompatTextView>()
     private val tvRepeatTime by R.id.todo_tv_inner_detail_no_repeat_time.view<AppCompatTextView>()
@@ -227,7 +217,10 @@ class TodoDetailActivity : BaseActivity() {
 
         tvDeadline.setOnClickListener {
             onClickProxy {
-                CalendarDialog(this) { year, month, day, hour, minute ->
+                CalendarDialog(
+                    this,
+                    R.style.BottomSheetDialogThemeNight
+                ) { year, month, day, hour, minute ->
                     tvDeadline.apply {
                         text = when {
                             hour < 24 -> {
@@ -255,7 +248,10 @@ class TodoDetailActivity : BaseActivity() {
 
         tvRepeatTime.setOnClickListener {
             onClickProxy {
-                SelectRepeatDialog(this) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
+                SelectRepeatDialog(
+                    this,
+                    R.style.BottomSheetDialogThemeNight
+                ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
                     todo.remindMode.repeatMode = repeatMode
 
                     if (repeatMode == RemindMode.WEEK) {
@@ -290,40 +286,20 @@ class TodoDetailActivity : BaseActivity() {
 
         tvClassify.setOnClickListener {
             onClickProxy {
-                wpClassify.data = listOf("学习", "生活", "其他")
-                edRemark.visibility = View.GONE
-                tvRemark.visibility = View.GONE
-                llClassify.visibility = View.VISIBLE
+                SelectCategoryDialog(
+                    this,
+                    R.style.BottomSheetDialogThemeNight
+                ) {
+                    tvClassify.text = it
+                    todo.type = when (it) {
+                        "学习" -> "study"
+                        "生活" -> "life"
+                        else -> "other"
+                    }
+                    viewModel.setChangeState(judge())
+                }.show()
             }
         }
-
-        btnConfirm.setOnClickListener {
-            tvClassify.apply {
-                text = when (wpClassify.currentItemPosition) {
-                    0 -> "学习"
-                    1 -> "生活"
-                    else -> "其他"
-                }
-            }
-            todo.type = when (tvClassify.text) {
-                "学习" -> "study"
-                "生活" -> "life"
-                else -> "other"
-            }
-            viewModel.setChangeState(judge())
-
-            hideClassify()
-        }
-
-        btnCancel.setOnClickListener {
-            hideClassify()
-        }
-    }
-
-    private fun hideClassify() {
-        edRemark.visibility = View.VISIBLE
-        tvRemark.visibility = View.VISIBLE
-        llClassify.visibility = View.GONE
     }
 
     //统一处理此条todo的点击事件（试图修改）
