@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="取消"
+            android:textStyle="bold"
             android:textColor="@color/config_level_two_font_color" />
 
         <TextView
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="保存"
+            android:textStyle="bold"
             android:textColor="@color/todo_addtodo_save_text_none_color" />
 
     </FrameLayout>
@@ -43,6 +45,7 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:paddingStart="17dp"
+        android:textSize="15sp"
         android:singleLine="true"
         android:textColor="@color/todo_check_line_color"
         android:textColorHint="@color/todo_add_todo_title_hint_color" />
@@ -64,7 +67,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/todo_iv_addtodo_notice"
         android:text="设置截止时间"
-        android:textColor="@color/todo_addtodo_save_text_none_color" />
+        android:textColor="@color/todo_addtodo_text_color" />
 
     <TextView
         android:id="@+id/todo_tv_addtodo_notice_time_delete"
@@ -81,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/todo_iv_addtodo_notice"
         android:layout_alignStart="@id/todo_et_addtodo_title"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:src="@drawable/todo_ic_addtodo_repeat" />
 
     <TextView
@@ -92,7 +95,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/todo_iv_addtodo_repeat"
         android:text="设置重复"
-        android:textColor="@color/todo_addtodo_save_text_none_color" />
+        android:textColor="@color/todo_addtodo_text_color" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todo_rv_addtodo_repeat"
@@ -112,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/todo_iv_addtodo_repeat"
         android:layout_alignStart="@id/todo_et_addtodo_title"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:src="@drawable/todo_ic_addtodo_category" />
 
     <TextView
@@ -123,7 +126,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/todo_iv_addtodo_category"
         android:text="分组"
-        android:textColor="@color/todo_addtodo_save_text_none_color" />
+        android:textColor="@color/todo_addtodo_text_color" />
 
     <LinearLayout
         android:id="@+id/todo_ll_addtodo_category"
@@ -131,7 +134,6 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/todo_iv_addtodo_category"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -140,13 +142,14 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:text="其他"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/todo_addtodo_inner_category_text_color" />
 
         <ImageView
             android:id="@+id/todo_iv_addtodo_category_storage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="21dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/todo_ic_category_detail" />
 
     </LinearLayout>
@@ -185,12 +188,17 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <View
+        android:id="@+id/todo_view"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/todo_rl_addtodo_category_list"
+        android:layout_height="10dp"/>
 
     <RelativeLayout
         android:id="@+id/todo_rl_addtodo_bt"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/todo_rl_addtodo_category_list">
+        android:layout_below="@id/todo_view">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/todo_btn_confirm_addtodo"

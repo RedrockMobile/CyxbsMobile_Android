@@ -80,8 +80,10 @@
     <!--    日历当前日期字体的颜色-->
     <color name="todo_calendar_change_month_color">#EEF5FD</color>
     <!--    添加任务时的保存字体的颜色-->
-    <color name="todo_addtodo_save_text_none_color">#BEBEBE</color>
+    <color name="todo_addtodo_save_text_none_color">#b7c0cd</color>
     <color name="todo_addtodo_save_text_color">#15315B</color>
+    <!--    添加任务时的字体的颜色-->
+    <color name="todo_addtodo_text_color">#c8d2df</color>
 
     <!--    添加任务时的保存字体的颜色-->
     <color name="todo_addtodo_inner_text_color">#2A4E84</color>
@@ -101,4 +103,9 @@
     <color name="todo_addtodo_dividing_line_color">#EDF4FD</color>
     <color name="todo_transparent_background">#00000000</color>
 
+    <!--    超过时间的checkBox的颜色-->
+    <color name="todo_check_overtime_color">#FFB7B7</color>
+    <!--    超过时间的字体的颜色-->
+    <color name="todo_text_overtime_color">#FF6262</color>
+    <color name="todo_textTime_overtime_color">#a19ebb</color>
 </resources>

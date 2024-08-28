@@ -16,11 +16,12 @@ import java.util.Calendar
  */
 class TimeSelectDialog(
     context: Context,
+    style: Int,
     val selectedYear: Int,
     val selectedMonth: Int,
     val selectedDay: Int,
     val onTimeSelected: (Int, Int) -> Unit
-): BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
+) : BottomSheetDialog(context, style) {
 
 
     private val btCancel by lazy { findViewById<AppCompatButton>(R.id.todo_bt_cancel_timeselector)!! }
@@ -47,7 +48,8 @@ class TimeSelectDialog(
 
         btConfirm.setOnClickListener {
             val selectedHour = hourWheelPicker.data?.get(hourWheelPicker.currentItemPosition) as Int
-            val selectedMinute = minuteWheelPicker.data?.get(minuteWheelPicker.currentItemPosition) as Int
+            val selectedMinute =
+                minuteWheelPicker.data?.get(minuteWheelPicker.currentItemPosition) as Int
             onTimeSelected(selectedHour, selectedMinute)
             dismiss()
         }
@@ -67,7 +69,7 @@ class TimeSelectDialog(
         hourWheelPicker.data = (startTimeHour..23).toList()
         // 设置分钟选择器的值范围
         minuteWheelPicker.data = (startTimeMinute..59).toList()
-        hourWheelPicker.setOnItemSelectedListener { _, name, _->
+        hourWheelPicker.setOnItemSelectedListener { _, name, _ ->
             when (name) {
                 startTimeHour -> {
                     minuteWheelPicker.data = (startTimeMinute..59).toList()

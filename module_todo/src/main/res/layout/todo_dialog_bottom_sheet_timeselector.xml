@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="时"
             android:layout_centerVertical="true"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_marginLeft="3dp"
             android:textColor="@color/config_level_two_font_color"
             android:layout_toRightOf="@id/todo_wheelpicker_hour_timeselector"/>
@@ -64,7 +64,7 @@
             android:layout_toRightOf="@id/todo_wheelpicker_minute_timeselector"
             android:text="分"
             android:layout_centerVertical="true"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_marginLeft="3dp"
             android:textColor="@color/config_level_two_font_color"/>
     </RelativeLayout>

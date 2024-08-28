@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity.Companion.startActivity
+import com.cyxbsmobile_single.module_todo.util.getColor
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import java.text.ParseException
@@ -84,26 +86,20 @@ class TodoFeedAdapter :
 
         fun bind(todo: Todo) {
             todoTitle.text = todo.title
+            val endTime = todo.endTime?.replace("日", "日  ")
             defaultCheckbox.apply {
                 setStatusWithAnime(false)
-                uncheckedColor = Color.GRAY
             }
-            todoTitle.setTextColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    com.mredrock.cyxbs.config.R.color.config_level_two_font_color
-                )
-            )
+            todoTitle.setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
             icRight.gone()
-
             if (todo.remindMode.notifyDateTime == "") {
                 todoFeedIv.gone()
                 todoFeedTime.gone()
             } else {
-                todoFeedTime.text = todo.remindMode.notifyDateTime
-                val itemTime = if (!todo.remindMode.notifyDateTime.isNullOrEmpty()) {
+                todoFeedTime.text = endTime
+                val itemTime = if (!todo.endTime.isNullOrEmpty()) {
                     try {
-                        todo.remindMode.notifyDateTime?.let { dateFormat.parse(it)?.time } ?: 0L
+                        todo.endTime?.let { dateFormat.parse(it)?.time } ?: 0L
                     } catch (e: ParseException) {
                         // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
                         e.printStackTrace()
@@ -114,9 +110,9 @@ class TodoFeedAdapter :
                 }
                 val currentTime = System.currentTimeMillis()
                 if (currentTime > itemTime && itemTime != 0L){
-                    defaultCheckbox.uncheckedColor = Color.RED
-                    todoTitle.setTextColor(Color.RED)
-                    todoFeedTime.setTextColor(Color.RED)
+                    defaultCheckbox.uncheckedColor = getColor(R.color.todo_check_overtime_color)
+                    todoTitle.setTextColor(getColor(R.color.todo_text_overtime_color) )
+                    todoFeedTime.setTextColor(getColor(R.color.todo_textTime_overtime_color))
                     todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_overtime_notice)
                 }
             }

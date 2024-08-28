@@ -21,8 +21,8 @@ import java.util.Calendar
  * author: sanhuzhen
  * date: 2024/8/11 22:45
  */
-class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, Int, Int) -> Unit) :
-    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
+class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, Int, Int, Int, Int) -> Unit) :
+    BottomSheetDialog(context, style) {
 
 
     //设置一个选中状态的TextView，用于将背景销毁
@@ -73,6 +73,7 @@ class CalendarDialog(context: Context, val onCalendarSelected: (Int, Int, Int, I
             //传递选中的时间，判断是不是当前这一天
             TimeSelectDialog(
                 context,
+                R.style.BottomSheetDialogTheme,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)

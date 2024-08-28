@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/todo_layer_list_bottom_sheet_back"
-    android:padding="20dp"
+    android:padding="10dp"
     android:layout_marginTop="20dp"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/todo_rl_addtodo_repeat"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="5dp">
+        android:layout_height="300dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todo_rv_addtodo_repeat_list"
@@ -34,7 +33,7 @@
             android:layout_width="50dp"
             android:layout_height="200dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="35dp"
             android:layout_toRightOf="@id/todo_iv_addtodo_repeat_index"
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
@@ -48,7 +47,7 @@
             android:layout_width="50dp"
             android:layout_height="200dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="70dp"
             android:layout_toRightOf="@id/todo_wp_addtodo_repeat_mode"
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
@@ -59,10 +58,10 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/todo_btn_addtodo_repeat_add"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="60dp"
             android:layout_toRightOf="@id/todo_wp_addtodo_repeat_time"
             android:background="@drawable/todo_ic_addtodo_add" />
     </RelativeLayout>
@@ -70,6 +69,7 @@
         android:id="@+id/todo_rl_addtodo_bt"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="40dp"
         android:layout_below="@id/todo_rl_addtodo_repeat">
 
         <androidx.appcompat.widget.AppCompatButton

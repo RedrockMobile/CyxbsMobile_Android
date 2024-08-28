@@ -18,8 +18,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * author: sanhuzhen
  * date: 2024/8/22 1:43
  */
-class SelectRepeatDialog(context: Context, val selectRepeat: (List<Int>, List<String>, Int) -> Unit) :
-    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
+class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<Int>, List<String>, Int) -> Unit) :
+    BottomSheetDialog(context, style) {
 
     private val selectRepeatTimeList = arrayListOf<String>()
     private val selectRepeatTimeListIndex = arrayListOf<Int>()
