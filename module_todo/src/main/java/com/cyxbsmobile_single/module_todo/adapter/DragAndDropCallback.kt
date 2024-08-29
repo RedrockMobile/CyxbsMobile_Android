@@ -1,5 +1,7 @@
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
 
 /**
@@ -74,7 +76,26 @@ class DragAndDropCallback(
     override fun isItemViewSwipeEnabled(): Boolean {
         return true // 禁止侧滑
     }
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        super.onSelectedChanged(viewHolder, actionState)
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+            // 当 item 开始拖动时，改变背景颜色
+            viewHolder?.itemView?.setBackgroundColor(
+                ContextCompat.getColor(viewHolder.itemView.context, R.color.todo_rv_item_is_click)
+            )
+        }
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        // 当拖动结束时，恢复背景颜色
+        viewHolder.itemView.setBackgroundColor(
+            ContextCompat.getColor(viewHolder.itemView.context, R.color.todo_rv_item_un_click)
+        )
+    }
 }
+
+
 
 
 interface ItemTouchHelperAdapter {
