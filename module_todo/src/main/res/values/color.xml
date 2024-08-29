@@ -56,6 +56,8 @@
     <color name="todo_widget_back_color">#FFFFFF</color>
     <!--    被勾选后item的颜色-->
     <color name="todo_check_item_color">#B9C2CE</color>
+    <!--    被勾选后item的颜色-->
+    <color name="todo_check_item_trans_color">#661A3867</color>
     <!--    小组件item前置圈的颜色-->
     <color name="todo_widget_check_cycle">#7515315B</color>
     <!--    小组件item的提醒时间的颜色-->

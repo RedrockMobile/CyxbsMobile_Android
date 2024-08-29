@@ -234,7 +234,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
         val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
 
-        mViewModel.pinTodo(TodoPinData(1, 1,syncTime.toInt() , item.todoId.toInt()))
+        mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
 
         // 提交更新后的列表
         todoAllAdapter.submitList(currentList) {
@@ -423,17 +423,24 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinishCheck(item: Todo) {
+        pendingUpdateTask?.let { handler.removeCallbacks(it) }
         if (item.remindMode.repeatMode != 0 && item.endTime != "") {
-
-            // 取消任何已有任务
-            pendingUpdateTask?.let { handler.removeCallbacks(it) }
-
             // 创建新的任务
             pendingUpdateTask = Runnable {
                 updateTodoItem(item)
             }
+            // 延迟 1.5秒执行新的任务
+            pendingUpdateTask?.let { handler.postDelayed(it, 1500) }
+        } else if (item.endTime != "" && item.remindMode.repeatMode == 0) {
+            pendingUpdateTask = Runnable {
+                updateTodoItem(item)
 
-            // 延迟 2 秒执行新的任务
+                val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime, 1))
+                val currentList = todoAllAdapter.currentList.toMutableList()
+                currentList.remove(item)
+                todoAllAdapter.submitList(currentList)
+            }
             pendingUpdateTask?.let { handler.postDelayed(it, 1500) }
         } else {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)

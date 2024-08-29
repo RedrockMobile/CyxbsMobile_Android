@@ -142,7 +142,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                 val originalWidth = holder.listtext.width
 
                 // 将 dp 转换为 px
-                val extraWidthInDp = 13
+                val extraWidthInDp = 9
                 val extraWidthInPx = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,
                     extraWidthInDp.toFloat(),
@@ -303,7 +303,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                 listtext.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,
-                        R.color.todo_check_item_color
+                        R.color.todo_check_item_trans_color
                     )
                 )
                 icRight?.let {
@@ -338,7 +338,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                     listtext.setTextColor(
                         ContextCompat.getColor(
                             itemView.context,
-                            R.color.todo_check_item_color
+                            R.color.todo_check_item_trans_color
                         )
                     )
                     icRight?.let {
