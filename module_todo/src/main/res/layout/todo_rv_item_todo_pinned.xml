@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:elevation="3dp"
-     >
+        android:elevation="3dp">
+
 
         <com.cyxbsmobile_single.module_todo.component.CheckLineView
             android:id="@+id/todo_item_check"
@@ -36,17 +36,17 @@
             android:id="@+id/todo_iv_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="3dp"
+            android:layout_marginStart="5.8dp"
+            android:layout_marginBottom="0.7dp"
             android:src="@drawable/todo_ic_detail_check"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/todo_item_check"
             app:layout_constraintStart_toStartOf="@+id/todo_item_check"
             app:layout_constraintTop_toTopOf="@+id/todo_item_check" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/todo_title_text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="18dp"
@@ -57,12 +57,15 @@
             android:ellipsize="end"
             android:focusable="false"
             android:gravity="center_vertical"
+            android:lines="1"
             android:maxEms="16"
             android:paddingEnd="1dp"
             android:singleLine="true"
-            android:textColor="@color/todo_check_line_color"
+            android:textColor="@color/todo_item_text_top_color"
             android:textSize="18sp"
+            app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints"
             tools:text="复习高数114514191911451419191145141919" />
@@ -71,7 +74,7 @@
             android:id="@+id/todo_notify_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:textColor="@color/todo_item_inner_nf_time_color"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -101,6 +104,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:text="@string/todo_string_totop"
             android:textColor="@color/todo_add_todo_back_color"
             android:textSize="14sp" />
@@ -122,6 +126,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:text="@string/todo_string_delete"
             android:textColor="@color/todo_add_todo_back_color"
             android:textSize="14sp" />

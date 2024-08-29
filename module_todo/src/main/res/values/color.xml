@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="todo_check_line_color">#15315B</color>
+    <color name="todo_item_text_top_color">#4A44E4</color>
     <color name="todo_check_line_delay_color">#FF6262</color>
     <color name="todo_inner_add_save_text_color">#2923D2</color>
     <color name="todo_inner_add_thing_et_shape_color">#E8F1FC</color>
@@ -36,6 +37,7 @@
     <!--    40-->
     <color name="todo_item_checked_color">#6615315B</color>
     <color name="todo_item_checked_delay_color">#FFB7B7</color>
+    <color name="todo_item_delay_color">#FF6262</color>
     <color name="todo_list_change">#4A44E4</color>
     <color name="todo_top_title">#4A44E4</color>
     <color name="todo_feed_divide_line_color">#142A4E84</color>
@@ -54,6 +56,12 @@
     <color name="todo_widget_back_color">#FFFFFF</color>
     <!--    被勾选后item的颜色-->
     <color name="todo_check_item_color">#B9C2CE</color>
+    <!--    被勾选后item的颜色-->
+    <color name="todo_check_item_trans_color">#661A3867</color>
+    <!--    被点击前item的颜色-->
+    <color name="todo_rv_item_un_click">#00FFFFFF</color>
+    <!--    被点击后item的颜色-->
+    <color name="todo_rv_item_is_click">#EFF4F9</color>
     <!--    小组件item前置圈的颜色-->
     <color name="todo_widget_check_cycle">#7515315B</color>
     <!--    小组件item的提醒时间的颜色-->
@@ -101,7 +109,7 @@
     <!--    删除todo dialog按钮的颜色2-->
     <color name="todo_delete_dialog_button">#4741E0</color>
     <!--    空白页面提示词颜色-->
-    <color name="todo_empty_view">#112C54</color>
+    <color name="todo_empty_view">#5A6C88</color>
     <!--    空白页面提示词颜色-->
     <color name="todo_fragment_color">#FBFBFC</color>
 

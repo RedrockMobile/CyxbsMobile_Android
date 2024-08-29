@@ -1,14 +1,17 @@
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -64,6 +67,8 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             VIEW_TYPE_PINNED -> R.layout.todo_rv_item_todo_pinned
             VIEW_TYPE_DEFAULT -> R.layout.todo_rv_item_todo
             VIEW_TYPE_DELAY -> R.layout.todo_rv_item_delay
+            VIEW_TYPE_DEFAULT_NO -> R.layout.todo_rv_item_todo_notime
+            VIEW_TYPE_PINNED_NO -> R.layout.todo_rv_item_todo_pinned_notime
             else -> throw IllegalArgumentException("Unknown view type")
         }
         val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
@@ -124,22 +129,68 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     }
 
 
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        val isSelected = selectItems.contains(item)
+        // 动态设置宽度，在绑定数据时设置 EditText 的宽度
+        holder.listtext.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                holder.listtext.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
+                // 获取当前宽度
+                val originalWidth = holder.listtext.width
+
+                // 将 dp 转换为 px
+                val extraWidthInDp = 9
+                val extraWidthInPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    extraWidthInDp.toFloat(),
+                    holder.itemView.context.resources.displayMetrics
+                ).toInt()
+
+                // 设置新的宽度
+                val newWidth = originalWidth + extraWidthInPx
+                holder.listtext.layoutParams.width = newWidth
+                holder.listtext.requestLayout() // 更新视图
+            }
+        })
+        val isSelected = selectItems.contains(item)
+        val itemTime = if (!item.remindMode.notifyDateTime.isNullOrEmpty()) {
+            try {
+                dateFormat.parse(item.remindMode.notifyDateTime)?.time ?: 0L
+            } catch (e: ParseException) {
+                e.printStackTrace()
+                System.currentTimeMillis()
+            }
+        } else {
+            0L
+        }
+        val currentTime = System.currentTimeMillis()
         holder.defaultcheckbox?.setStatusWithAnime(false)
         holder.checkbox?.isChecked = false
-
-//        holder.listtext.setTextColor(
-//            ContextCompat.getColor(
-//                holder.itemView.context,
-//                R.color.todo_check_line_color
-//            )
-//        )
+        holder.listtext.setTextColor(
+            ContextCompat.getColor(
+                holder.itemView.context,
+                R.color.todo_check_line_color
+            )
+        )
+        if (item.isPinned == 1) {
+            holder.listtext.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.todo_item_text_top_color
+                )
+            )
+        }
+       if (currentTime>itemTime&&item.endTime!=""){
+           holder.listtext.setTextColor(
+               ContextCompat.getColor(
+                   holder.itemView.context,
+                   R.color.todo_item_delay_color
+               )
+           )
+       }
 
         holder.icRight?.visibility = View.GONE
         Log.d(
@@ -164,13 +215,11 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
 
     override fun getItemViewType(position: Int): Int {
-        // 如果启用了管理模式，所有项应使用管理模式布局
         val item = getItem(position)
         val itemTime = if (!item.remindMode.notifyDateTime.isNullOrEmpty()) {
             try {
                 dateFormat.parse(item.remindMode.notifyDateTime)?.time ?: 0L
             } catch (e: ParseException) {
-                // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
                 e.printStackTrace()
                 System.currentTimeMillis()
             }
@@ -178,21 +227,28 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             0L
         }
         val currentTime = System.currentTimeMillis()
-        return if (isEnabled) {
-            VIEW_TYPE_MANAGE
-        } else {
-            if (currentTime > itemTime && itemTime != 0L) {
-                VIEW_TYPE_DELAY
-            } else {
-                if (item.isPinned == 1) {
-                    VIEW_TYPE_PINNED
-                } else {
-                    VIEW_TYPE_DEFAULT
-                }
 
+        // 默认的viewType
+        var type = VIEW_TYPE_DEFAULT
+
+        if (isEnabled) {
+            type = VIEW_TYPE_MANAGE
+        } else {
+            // 检查置顶和 endTime 为空的条件
+            if (item.isPinned == 1) {
+                type = if (item.endTime != "") VIEW_TYPE_PINNED else VIEW_TYPE_PINNED_NO
+            } else if (currentTime > itemTime && item.endTime != "") {
+                // 如果时间已过期
+                type = VIEW_TYPE_DELAY
+            } else if (item.endTime == "") {
+                // endTime 为空的默认类型
+                type = VIEW_TYPE_DEFAULT_NO
             }
         }
+
+        return type
     }
+
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
         val currentList = currentList.toMutableList()
@@ -220,7 +276,10 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     ) :
         RecyclerView.ViewHolder(itemView) {
 
-        val listtext: TextView = itemView.findViewById(R.id.todo_title_text)
+        val listtext =
+            if (!isEnabled) itemView.findViewById<AppCompatEditText>(R.id.todo_title_text) else itemView.findViewById<TextView>(
+                R.id.todo_title_text
+            )
         private val date: TextView = itemView.findViewById(R.id.todo_notify_time)
         private val deletebutton: LinearLayout = itemView.findViewById(R.id.todo_delete)
         private val topbutton: LinearLayout = itemView.findViewById(R.id.todo_item_totop)
@@ -238,19 +297,19 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: Todo) {
-            listtext.text = item.title
+            listtext.setText(item.title)
             date.text = item.remindMode.notifyDateTime
             if (item.isChecked == 1) {
-                defaultcheckbox?.setStatusWithAnime(true)
                 listtext.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,
-                        R.color.todo_check_item_color
+                        R.color.todo_check_item_trans_color
                     )
                 )
                 icRight?.let {
                     it.visibility = View.VISIBLE
                 }
+                defaultcheckbox?.setStatusWithAnime(true)
             }
             if (item.remindMode.notifyDateTime == "") {
                 listener.onItemnotify(item)
@@ -276,17 +335,16 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             }
             if (!isEnabled) {
                 defaultcheckbox?.setOnClickListener {
-                    defaultcheckbox.setStatusWithAnime(true)
                     listtext.setTextColor(
                         ContextCompat.getColor(
                             itemView.context,
-                            R.color.todo_check_item_color
+                            R.color.todo_check_item_trans_color
                         )
                     )
                     icRight?.let {
                         it.visibility = View.VISIBLE
                     }
-                    // 禁用点击事件
+                    defaultcheckbox.setStatusWithAnime(true)
                     listener.onFinishCheck(item)
                 }
             }
@@ -317,7 +375,9 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
     companion object {
         private const val VIEW_TYPE_PINNED = 1
+        private const val VIEW_TYPE_PINNED_NO = 4
         private const val VIEW_TYPE_DEFAULT = 0
+        private const val VIEW_TYPE_DEFAULT_NO = 5
         private const val VIEW_TYPE_MANAGE = 2
         private const val VIEW_TYPE_DELAY = 3
     }
