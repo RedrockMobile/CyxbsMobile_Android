@@ -1,9 +1,11 @@
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -130,6 +132,29 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
+        // 动态设置宽度，在绑定数据时设置 EditText 的宽度
+        holder.listtext.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                holder.listtext.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                // 获取当前宽度
+                val originalWidth = holder.listtext.width
+
+                // 将 dp 转换为 px
+                val extraWidthInDp = 13
+                val extraWidthInPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    extraWidthInDp.toFloat(),
+                    holder.itemView.context.resources.displayMetrics
+                ).toInt()
+
+                // 设置新的宽度
+                val newWidth = originalWidth + extraWidthInPx
+                holder.listtext.layoutParams.width = newWidth
+                holder.listtext.requestLayout() // 更新视图
+            }
+        })
         val isSelected = selectItems.contains(item)
         val itemTime = if (!item.remindMode.notifyDateTime.isNullOrEmpty()) {
             try {
