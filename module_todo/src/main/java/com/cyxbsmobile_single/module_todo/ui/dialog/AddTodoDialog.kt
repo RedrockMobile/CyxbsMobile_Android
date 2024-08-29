@@ -156,7 +156,8 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
     private fun showSelectRepeatDialog() {
         SelectRepeatDialog(
             context,
-            R.style.BottomSheetDialogTheme
+            R.style.BottomSheetDialogTheme,
+            1
         ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
             todo.remindMode.repeatMode = repeatMode
             if (repeatMode == RemindMode.WEEK) {
@@ -185,7 +186,11 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
     //显示日历
     @SuppressLint("DefaultLocale", "SetTextI18n")
     private fun showCalendarDialog() {
-        CalendarDialog(context, R.style.BottomSheetDialogTheme) { year, month, day, hour, minute ->
+        CalendarDialog(
+            context,
+            R.style.BottomSheetDialogTheme,
+            1
+        ) { year, month, day, hour, minute ->
             tvAddNoticeTime.apply {
                 text = when {
                     hour < 24 -> {

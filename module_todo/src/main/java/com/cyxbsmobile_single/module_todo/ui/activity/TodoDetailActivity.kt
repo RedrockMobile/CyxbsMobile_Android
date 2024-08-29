@@ -31,6 +31,7 @@ import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.google.gson.Gson
 import com.mredrock.cyxbs.config.route.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
 import kotlinx.coroutines.launch
 
@@ -219,7 +220,8 @@ class TodoDetailActivity : BaseActivity() {
             onClickProxy {
                 CalendarDialog(
                     this,
-                    R.style.BottomSheetDialogThemeNight
+                    R.style.BottomSheetDialogThemeNight,
+                    0
                 ) { year, month, day, hour, minute ->
                     tvDeadline.apply {
                         text = when {
@@ -250,7 +252,8 @@ class TodoDetailActivity : BaseActivity() {
             onClickProxy {
                 SelectRepeatDialog(
                     this,
-                    R.style.BottomSheetDialogThemeNight
+                    R.style.BottomSheetDialogThemeNight,
+                    0
                 ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
                     todo.remindMode.repeatMode = repeatMode
 
@@ -299,6 +302,20 @@ class TodoDetailActivity : BaseActivity() {
                     viewModel.setChangeState(judge())
                 }.show()
             }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (viewModel.isChanged.value == true) {
+            DetailAlarmDialog.Builder(this)
+                .setPositiveClick {
+                    finish()
+                }.setNegativeClick {
+                    dismiss()
+                }.show()
+        } else {
+            super.onBackPressed()
         }
     }
 

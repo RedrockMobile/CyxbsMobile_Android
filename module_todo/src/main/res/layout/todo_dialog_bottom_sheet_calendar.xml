@@ -5,6 +5,7 @@
     android:background="@drawable/todo_layer_list_bottom_sheet_back">
 
     <View
+        android:id="@+id/todo_view_calendar_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="2dp"
@@ -131,7 +132,7 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_below="@id/todo_btn_confirm_calendar"/>
 
 

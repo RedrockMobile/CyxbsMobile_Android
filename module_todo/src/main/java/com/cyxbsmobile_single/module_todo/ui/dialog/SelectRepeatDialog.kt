@@ -2,25 +2,34 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import com.aigestudio.wheelpicker.WheelPicker
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeRvAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.util.addWithoutRepeat
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
  * description: 挑选重复的dialog
  * author: sanhuzhen
  * date: 2024/8/22 1:43
  */
-class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<Int>, List<String>, Int) -> Unit) :
+class SelectRepeatDialog(
+    context: Context,
+    style: Int,
+    private val lineVisibility: Int,
+    val selectRepeat: (List<Int>, List<String>, Int) -> Unit
+) :
     BottomSheetDialog(context, style) {
 
     private val selectRepeatTimeList = arrayListOf<String>()
@@ -34,12 +43,16 @@ class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<In
     private val btnAddRepeatTime by lazy { findViewById<AppCompatButton>(R.id.todo_btn_addtodo_repeat_add)!! }
     private val btnAddRepeatBt by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_confirm_addrepeat)!! }
     private val btnAddRepeatBtCancel by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_cancel_addrepeat)!! }
+    private val repeatLine by lazy { findViewById<View>(R.id.todo_view_addtodo_repeat_line)!! }
+
     init {
         val dialogView = LayoutInflater.from(context)
             .inflate(R.layout.todo_dialog_bottom_sheet_selectrepeat, null, false)
         setContentView(dialogView)
 
         dialogView?.apply {
+            if (lineVisibility == 1) repeatLine.visible()
+            else repeatLine.gone()
             initClick()
             initWp()
         }
@@ -69,6 +82,7 @@ class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<In
             }
         }
     }
+
     private fun initWp() {
         val repeatModeList = listOf("每天", "每周", "每月", "", "", "", "")
         wpRepeatMode.data = repeatModeList
@@ -79,7 +93,7 @@ class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<In
 
             1 -> {
                 wpRepeatTime.data =
-                    listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日","")
+                    listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日", "")
                 wpRepeatTime.setSelectedItemPosition(0)
             }
 
@@ -121,18 +135,24 @@ class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<In
         if (currentRepeatMode == repeatMode || repeatMode == RemindMode.NONE) {
             repeatMode = currentRepeatMode
             // 获取当前选中的重复时间
-            if (wpRepeatTime.currentItemPosition in 0..wpRepeatTime.data.size || wpRepeatTime.data.isEmpty()){
+            if (wpRepeatTime.currentItemPosition in 0..wpRepeatTime.data.size || wpRepeatTime.data.isEmpty()) {
                 val currentRepeatTime = when (repeatMode) {
                     RemindMode.DAY -> "每天"
                     RemindMode.WEEK -> {
-                        selectRepeatTimeListIndex.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
+                        selectRepeatTimeListIndex.addWithoutRepeat(
+                            0,
+                            wpRepeatTime.currentItemPosition + 1
+                        )
                         wpRepeatTime.data[wpRepeatTime.currentItemPosition].toString()
                     }
 
                     RemindMode.MONTH -> {
                         val day =
                             wpRepeatTime.data.get(wpRepeatTime.currentItemPosition).toString()
-                        selectRepeatTimeListIndex.addWithoutRepeat(0, wpRepeatTime.currentItemPosition + 1)
+                        selectRepeatTimeListIndex.addWithoutRepeat(
+                            0,
+                            wpRepeatTime.currentItemPosition + 1
+                        )
                         "每月${day}日"
                     }
 

@@ -6,6 +6,7 @@
     android:background="@drawable/todo_layer_list_bottom_sheet_back"
     android:layout_height="match_parent">
     <View
+        android:id="@+id/todo_view_addtodo_repeat_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
@@ -13,7 +14,7 @@
     <RelativeLayout
         android:id="@+id/todo_rl_addtodo_repeat"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:layout_height="320dp">
@@ -39,7 +40,7 @@
             android:layout_width="50dp"
             android:layout_height="230dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="34dp"
             android:layout_toRightOf="@id/todo_iv_addtodo_repeat_index"
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
@@ -53,7 +54,7 @@
             android:layout_width="50dp"
             android:layout_height="230dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="45dp"
             android:layout_toRightOf="@id/todo_wp_addtodo_repeat_mode"
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
@@ -67,7 +68,7 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="59dp"
             android:layout_toRightOf="@id/todo_wp_addtodo_repeat_time"
             android:background="@drawable/todo_ic_addtodo_add" />
     </RelativeLayout>
@@ -105,6 +106,6 @@
     </RelativeLayout>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_below="@id/todo_rl_addtodo_bt"/>
 </RelativeLayout>

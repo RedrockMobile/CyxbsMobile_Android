@@ -81,11 +81,11 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:letterSpacing="0.05"
-        android:paddingStart="24dp"
+        android:paddingStart="20dp"
         android:singleLine="true"
         android:text="1111111111111"
-        android:textColor="@color/todo_detail_thing_fill_color"
-        android:textColorHint="@color/todo_detail_thing_hind_color"
+        android:textColor="@color/todo_check_line_color"
+        android:textColorHint="@color/todo_inner_add_thing_et_hint_color"
         android:textSize="16sp" />
 
     <TextView
@@ -107,7 +107,8 @@
         android:layout_marginTop="212dp"
         android:hint="设置截止时间"
         android:letterSpacing="0.05"
-        android:textColor="@color/todo_check_line_color" />
+        android:textColor="@color/todo_check_line_color"
+        android:textColorHint="@color/todo_inner_add_thing_et_hint_color" />
 
     <View
         android:layout_width="match_parent"

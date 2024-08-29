@@ -2,7 +2,7 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import com.aigestudio.wheelpicker.WheelPicker
 import com.cyxbsmobile_single.module_todo.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -21,8 +21,8 @@ class SelectCategoryDialog(
     private var mCategory = "其他"
 
     private val wpCategory by lazy { findViewById<WheelPicker>(R.id.todo_wp_detail_category_list)!! }
-    private val btnConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_detail_btn_confirm)!! }
-    private val btnCancel by lazy { findViewById<AppCompatButton>(R.id.todo_detail_btn_cancel)!! }
+    private val btnConfirm by lazy { findViewById<AppCompatTextView>(R.id.todo_detail_btn_confirm)!! }
+    private val btnCancel by lazy { findViewById<AppCompatTextView>(R.id.todo_detail_btn_cancel)!! }
 
     init {
         val dialogView = LayoutInflater.from(context)

@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -15,6 +16,8 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.util.getColor
 import com.cyxbsmobile_single.module_todo.util.weekStringList
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import java.util.Calendar
 
 /**
@@ -22,7 +25,12 @@ import java.util.Calendar
  * author: sanhuzhen
  * date: 2024/8/11 22:45
  */
-class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, Int, Int, Int, Int) -> Unit) :
+class CalendarDialog(
+    context: Context,
+    style: Int,
+    private val lineVisibility: Int,
+    val onCalendarSelected: (Int, Int, Int, Int, Int) -> Unit
+) :
     BottomSheetDialog(context, style) {
 
 
@@ -47,6 +55,7 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
     private val btnConfirm by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_confirm_calendar)!! }
     private val btnCancel by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_cancel_calendar)!! }
     private val tvSelectTime by lazy { findViewById<TextView>(R.id.todo_tv_time_calendar)!! }
+    private val line by lazy { findViewById<View>(R.id.todo_view_calendar_line)!! }
 
     init {
         val dialogView = LayoutInflater.from(context)
@@ -56,6 +65,8 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
         dialogView?.apply {
             //设置日历
             setCalendar()
+            if (lineVisibility == 1) line.visible()
+            else line.gone()
             initClick()
         }
     }
@@ -77,7 +88,8 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
                 R.style.BottomSheetDialogTheme,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.DAY_OF_MONTH),
+                lineVisibility
             ) { hour, minute ->
                 selectHour = hour
                 selectMinute = minute

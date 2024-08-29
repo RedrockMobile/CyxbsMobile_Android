@@ -2,10 +2,14 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.transition.Visibility
 import com.aigestudio.wheelpicker.WheelPicker
 import com.cyxbsmobile_single.module_todo.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import java.util.Calendar
 
 /**
@@ -19,6 +23,7 @@ class TimeSelectDialog(
     val selectedYear: Int,
     val selectedMonth: Int,
     val selectedDay: Int,
+    val lineVisibility: Int,
     val onTimeSelected: (Int, Int) -> Unit
 ) : BottomSheetDialog(context, style) {
 
@@ -27,6 +32,7 @@ class TimeSelectDialog(
     private val btConfirm by lazy { findViewById<AppCompatTextView>(R.id.todo_bt_confirm_timeselector)!! }
     private val hourWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_hour_timeselector)!! }
     private val minuteWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_minute_timeselector)!! }
+    private val timeLine by lazy { findViewById<View>(R.id.todo_view_time_selector_line)!! }
 
     init {
         val dialogView =
@@ -35,6 +41,8 @@ class TimeSelectDialog(
         setContentView(dialogView)
 
         dialogView?.apply {
+            if (lineVisibility == 1) timeLine.visible()
+            else timeLine.gone()
             setupWheelPickers()
             initClick()
         }
