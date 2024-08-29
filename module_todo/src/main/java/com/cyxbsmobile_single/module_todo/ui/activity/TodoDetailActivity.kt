@@ -227,7 +227,10 @@ class TodoDetailActivity : BaseActivity() {
 
         tvDeadline.setOnClickListener {
             onClickProxy {
-                CalendarDialog(this) { year, month, day, hour, minute ->
+                CalendarDialog(
+                    this,
+                    R.style.BottomSheetDialogThemeNight
+                ) { year, month, day, hour, minute ->
                     tvDeadline.apply {
                         text = when {
                             hour < 24 -> {
@@ -255,7 +258,9 @@ class TodoDetailActivity : BaseActivity() {
 
         tvRepeatTime.setOnClickListener {
             onClickProxy {
-                SelectRepeatDialog(this) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
+                SelectRepeatDialog(
+                    this, R.style.BottomSheetDialogThemeNight
+                ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
                     todo.remindMode.repeatMode = repeatMode
 
                     if (repeatMode == RemindMode.WEEK) {

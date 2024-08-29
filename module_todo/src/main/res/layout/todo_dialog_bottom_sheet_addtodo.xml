@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/todo_layer_list_bottom_sheet_back"
-    android:padding="20dp">
+    android:background="@drawable/todo_layer_list_bottom_sheet_back">
 
     <FrameLayout
         android:id="@+id/todo_fl_addtodo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/todo_tv_addtodo_cancel"
@@ -18,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:text="取消"
-            android:textStyle="bold"
             android:textColor="@color/config_level_two_font_color" />
 
         <TextView
@@ -27,15 +28,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="保存"
-            android:textStyle="bold"
             android:textColor="@color/todo_addtodo_save_text_none_color" />
 
     </FrameLayout>
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/todo_et_addtodo_title"
-        android:layout_width="370dp"
+        android:layout_width="350dp"
         android:layout_height="44dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_below="@+id/todo_fl_addtodo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
@@ -57,6 +59,7 @@
         android:layout_below="@id/todo_et_addtodo_title"
         android:layout_alignStart="@id/todo_et_addtodo_title"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="6dp"
         android:src="@drawable/todo_ic_addtodo_notice" />
 
     <TextView
@@ -75,16 +78,19 @@
         android:layout_height="wrap_content"
         android:text="删除"
         android:visibility="gone"
+        android:layout_marginRight="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/todo_iv_addtodo_notice"
-        android:textColor="@color/todo_addtodo_inner_text_color"/>
+        android:textColor="#7CA3DF"/>
+
     <ImageView
         android:id="@+id/todo_iv_addtodo_repeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/todo_iv_addtodo_notice"
         android:layout_alignStart="@id/todo_et_addtodo_title"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="6dp"
         android:src="@drawable/todo_ic_addtodo_repeat" />
 
     <TextView
@@ -103,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/todo_iv_addtodo_repeat"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="-5dp"
+        android:layout_marginTop="-7dp"
         android:layout_toRightOf="@id/todo_iv_addtodo_repeat"
         android:visibility="gone"
         tools:itemCount="1"
@@ -115,7 +121,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/todo_iv_addtodo_repeat"
         android:layout_alignStart="@id/todo_et_addtodo_title"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="6dp"
         android:src="@drawable/todo_ic_addtodo_category" />
 
     <TextView
@@ -132,7 +139,8 @@
         android:id="@+id/todo_ll_addtodo_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/todo_iv_addtodo_category"
+        android:layout_marginRight="20dp"
+        android:layout_alignTop="@id/todo_tv_addtodo_category"
         android:layout_alignParentRight="true"
         android:orientation="horizontal">
 
@@ -148,7 +156,7 @@
         <ImageView
             android:id="@+id/todo_iv_addtodo_category_storage"
             android:layout_width="wrap_content"
-            android:layout_height="21dp"
+            android:layout_height="10dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/todo_ic_category_detail" />
 
@@ -159,14 +167,22 @@
         android:layout_height="300dp"
         android:layout_below="@id/todo_iv_addtodo_category"
         android:layout_marginTop="5dp">
+        <View
+            android:id="@+id/todo_v_addtodo_category_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:background="@color/todo_addtodo_line_color"/>
 
         <LinearLayout
             android:id="@+id/todo_ll_addtodo_category_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:layout_marginLeft="95dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="15dp"
@@ -188,36 +204,38 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <View
+    <TextView
         android:id="@+id/todo_view"
         android:layout_width="wrap_content"
         android:layout_below="@id/todo_rl_addtodo_category_list"
-        android:layout_height="10dp"/>
+        android:layout_height="20dp"/>
 
     <RelativeLayout
         android:id="@+id/todo_rl_addtodo_bt"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_below="@id/todo_view">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/todo_btn_confirm_addtodo"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:visibility="gone"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="25dp"
             android:background="@drawable/todo_shape_btn_confirm"
             android:gravity="center"
             android:text="确定"
             android:textColor="@color/todo_confirm_button_text_color"
             android:textSize="18sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/todo_btn_cancel_addtodo"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="25dp"
             android:visibility="gone"
             android:background="@drawable/todo_shape_btn_cancel"
             android:gravity="center"

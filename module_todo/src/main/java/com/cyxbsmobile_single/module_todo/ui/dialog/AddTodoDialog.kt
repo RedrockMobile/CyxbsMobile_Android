@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -49,8 +49,9 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
     private val llCategory by lazy { findViewById<LinearLayout>(R.id.todo_ll_addtodo_category)!! }
     private val llCategoryList by lazy { findViewById<LinearLayout>(R.id.todo_ll_addtodo_category_list)!! }
     private val wpCategory by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_category_list)!! }
-    private val btnAddtodoBt by lazy { findViewById<AppCompatButton>(R.id.todo_btn_confirm_addtodo)!! }
-    private val btnAddtodoBtCancel by lazy { findViewById<AppCompatButton>(R.id.todo_btn_cancel_addtodo)!! }
+    private val btnAddtodoBt by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_confirm_addtodo)!! }
+    private val btnAddtodoBtCancel by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_cancel_addtodo)!! }
+    private val viewLine by lazy { findViewById<View>(R.id.todo_v_addtodo_category_line)!! }
 
     init {
         val dialogView =
@@ -108,7 +109,7 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
                 setTextColor(
                     ContextCompat.getColor(
                         context,
-                        R.color.todo_addtodo_save_text_none_color
+                        R.color.todo_addtodo_text_color
                     )
                 )
             }
@@ -203,7 +204,7 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
                         "${year}年${month}月${day}日"
                     }
                 }
-                setTextColor(context.resources.getColor(R.color.todo_addtodo_inner_text_color))
+                setTextColor(getColor(R.color.todo_addtodo_time_color))
             }
             tvDeleteTime.visible()
         }.show()
@@ -219,6 +220,7 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
     }
 
     private fun showCategoryUI() {
+        viewLine.visible()
         llCategoryList.visible()
         btnAddtodoBt.visible()
         btnAddtodoBtCancel.visible()
@@ -226,6 +228,7 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
     }
 
     private fun hideUI() {
+        viewLine.gone()
         llCategoryList.gone()
         btnAddtodoBt.gone()
         btnAddtodoBtCancel.gone()

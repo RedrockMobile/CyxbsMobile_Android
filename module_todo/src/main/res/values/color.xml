@@ -79,12 +79,19 @@
     <color name="todo_calendar_current_day_tv_color">#2923D2</color>
     <!--    日历当前日期字体的颜色-->
     <color name="todo_calendar_change_month_color">#EEF5FD</color>
+    <!--    日历过期日期字体的颜色-->
+    <color name="todo_calendar_ago_day_color">#D1D8E4</color>
+    <!--    日历当前周的颜色-->
+    <color name="todo_calendar_week_text_color">#A1ADBD</color>
     <!--    添加任务时的保存字体的颜色-->
     <color name="todo_addtodo_save_text_none_color">#b7c0cd</color>
     <color name="todo_addtodo_save_text_color">#15315B</color>
     <!--    添加任务时的字体的颜色-->
-    <color name="todo_addtodo_text_color">#c8d2df</color>
-
+    <color name="todo_addtodo_text_color">#aab8ce</color>
+    <!--    分割线的颜色-->
+    <color name="todo_addtodo_line_color">#F4F8FE</color>
+    <!--    截止时间的颜色-->
+    <color name="todo_addtodo_time_color">#55719D</color>
     <!--    添加任务时的保存字体的颜色-->
     <color name="todo_addtodo_inner_text_color">#2A4E84</color>
     <!--    添加任务时的分组字体的颜色-->

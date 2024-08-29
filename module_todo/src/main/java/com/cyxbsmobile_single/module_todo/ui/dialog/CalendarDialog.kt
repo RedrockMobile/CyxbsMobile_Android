@@ -9,9 +9,10 @@ import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.util.getColor
 import com.cyxbsmobile_single.module_todo.util.weekStringList
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.Calendar
@@ -43,8 +44,8 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
     private val glWeekCalendar by lazy { findViewById<GridLayout>(R.id.todo_gl_week)!! }
     private val glCalendar by lazy { findViewById<GridLayout>(R.id.todo_gl_calendar)!! }
     private val rlCalendar by lazy { findViewById<RelativeLayout>(R.id.todo_rl_calendar)!! }
-    private val btnConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_btn_confirm_calendar)!! }
-    private val btnCancel by lazy { findViewById<AppCompatButton>(R.id.todo_btn_cancel_calendar)!! }
+    private val btnConfirm by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_confirm_calendar)!! }
+    private val btnCancel by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_cancel_calendar)!! }
     private val tvSelectTime by lazy { findViewById<TextView>(R.id.todo_tv_time_calendar)!! }
 
     init {
@@ -120,9 +121,9 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
         //填充星期
         for (i in 0..6) {
             val weekView = TextView(context).apply {
-                textSize = 16f
+                textSize = 12f
                 gravity = Gravity.CENTER
-                setTextColor(Color.GRAY)
+                setTextColor(getColor(R.color.todo_calendar_week_text_color))
                 text = weekStringList[i]
             }
             glWeekCalendar.addView(weekView, createGridLayoutParam())
@@ -189,7 +190,7 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
                     if (calendar.get(Calendar.YEAR) == currentYear &&
                         calendar.get(Calendar.MONTH) == currentMonth &&
                         it.text.toString().toInt() == currentDay
-                    ) Color.BLUE else Color.BLACK
+                    ) Color.BLUE else getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
                 )
             }
             selectedDayView = this
@@ -205,7 +206,7 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
                 if (calendar.get(Calendar.YEAR) == currentYear &&
                     calendar.get(Calendar.MONTH) == currentMonth &&
                     text.toString().toInt() == currentDay
-                ) Color.BLUE else Color.BLACK
+                ) Color.BLUE else getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
             )
         }
     }
@@ -226,16 +227,16 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
             text = day.toString()
             textSize = 16f
             gravity = Gravity.CENTER
-            setPadding(20, 20, 20, 20)
+            setPadding(20, 23, 20, 23)
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val dayColor = when {
-                year > currentYear -> Color.BLACK
-                year < currentYear -> Color.GRAY
-                month < currentMonth -> Color.GRAY
-                month > currentMonth -> Color.BLACK
-                day > currentDay -> Color.BLACK
-                day < currentDay -> Color.GRAY
+                year > currentYear -> getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
+                year < currentYear -> getColor(R.color.todo_calendar_ago_day_color)
+                month < currentMonth -> getColor(R.color.todo_calendar_ago_day_color)
+                month > currentMonth -> getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
+                day > currentDay -> getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
+                day < currentDay -> getColor(R.color.todo_calendar_ago_day_color)
                 else -> {
                     if (selectedDayView == null) {
                         selectedDayView = this
@@ -259,7 +260,7 @@ class CalendarDialog(context: Context,style: Int, val onCalendarSelected: (Int, 
             width = 0
             height = GridLayout.LayoutParams.WRAP_CONTENT
             columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            setMargins(25, 25, 25, 25) // 设置单元格间的间距
+            setMargins(20, 15, 20, 15) // 设置单元格间的间距
         }
     }
 

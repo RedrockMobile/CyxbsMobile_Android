@@ -4,19 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@drawable/todo_layer_list_bottom_sheet_back"
-    android:padding="10dp"
-    android:layout_marginTop="20dp"
     android:layout_height="match_parent">
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/todo_addtodo_line_color"/>
     <RelativeLayout
         android:id="@+id/todo_rl_addtodo_repeat"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_height="320dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todo_rv_addtodo_repeat_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             tools:itemCount="1"
             tools:listitem="@layout/todo_rv_item_repeat_time_item" />
 
@@ -25,34 +31,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="35dp"
             android:src="@drawable/todo_ic_inner_add_thing_time_index" />
 
         <com.aigestudio.wheelpicker.WheelPicker
             android:id="@+id/todo_wp_addtodo_repeat_mode"
             android:layout_width="50dp"
-            android:layout_height="200dp"
+            android:layout_height="230dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="30dp"
             android:layout_toRightOf="@id/todo_iv_addtodo_repeat_index"
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
             app:wheel_cyclic="true"
-            app:wheel_item_text_color="@color/config_level_two_font_color"
+            app:wheel_item_text_color="@color/config_level_three_font_color"
             app:wheel_item_text_size="20sp"
             app:wheel_visible_item_count="7" />
 
         <com.aigestudio.wheelpicker.WheelPicker
             android:id="@+id/todo_wp_addtodo_repeat_time"
             android:layout_width="50dp"
-            android:layout_height="200dp"
+            android:layout_height="230dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="35dp"
             android:layout_toRightOf="@id/todo_wp_addtodo_repeat_mode"
             app:wheel_atmospheric="true"
             app:wheel_item_align="center"
             app:wheel_cyclic="true"
-            app:wheel_item_text_color="@color/config_level_two_font_color"
+            app:wheel_item_text_color="@color/config_level_three_font_color"
             app:wheel_item_text_size="20sp"
             app:wheel_visible_item_count="7" />
 
@@ -68,11 +74,13 @@
     <RelativeLayout
         android:id="@+id/todo_rl_addtodo_bt"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_below="@id/todo_rl_addtodo_repeat">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/todo_btn_confirm_addrepeat"
             android:layout_width="120dp"
             android:layout_height="40dp"
@@ -84,7 +92,7 @@
             android:textColor="@color/todo_confirm_button_text_color"
             android:textSize="18sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/todo_btn_cancel_addrepeat"
             android:layout_width="120dp"
             android:layout_height="40dp"
@@ -93,6 +101,10 @@
             android:gravity="center"
             android:text="取消"
             android:textColor="@color/todo_cancel_button_text_color"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
     </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/todo_rl_addtodo_bt"/>
 </RelativeLayout>

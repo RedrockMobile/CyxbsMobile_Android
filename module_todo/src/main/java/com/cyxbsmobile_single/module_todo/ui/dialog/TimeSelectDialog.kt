@@ -2,8 +2,7 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import com.aigestudio.wheelpicker.WheelPicker
 import com.cyxbsmobile_single.module_todo.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,8 +23,8 @@ class TimeSelectDialog(
 ) : BottomSheetDialog(context, style) {
 
 
-    private val btCancel by lazy { findViewById<AppCompatButton>(R.id.todo_bt_cancel_timeselector)!! }
-    private val btConfirm by lazy { findViewById<AppCompatButton>(R.id.todo_bt_confirm_timeselector)!! }
+    private val btCancel by lazy { findViewById<AppCompatTextView>(R.id.todo_bt_cancel_timeselector)!! }
+    private val btConfirm by lazy { findViewById<AppCompatTextView>(R.id.todo_bt_confirm_timeselector)!! }
     private val hourWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_hour_timeselector)!! }
     private val minuteWheelPicker by lazy { findViewById<WheelPicker>(R.id.todo_wheelpicker_minute_timeselector)!! }
 
@@ -77,6 +76,7 @@ class TimeSelectDialog(
 
                 else -> {
                     minuteWheelPicker.data = (0..59).toList()
+                    minuteWheelPicker.isCyclic = true
                 }
             }
         }

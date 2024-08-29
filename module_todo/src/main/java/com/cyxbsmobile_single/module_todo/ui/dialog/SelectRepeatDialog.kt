@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aigestudio.wheelpicker.WheelPicker
@@ -12,6 +13,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.util.addWithoutRepeat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
 
 /**
  * description: 挑选重复的dialog
@@ -30,8 +32,8 @@ class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<In
     private val wpRepeatTime by lazy { findViewById<WheelPicker>(R.id.todo_wp_addtodo_repeat_time)!! }
     private val rvSelectRepeatTime by lazy { findViewById<RecyclerView>(R.id.todo_rv_addtodo_repeat_list)!! }
     private val btnAddRepeatTime by lazy { findViewById<AppCompatButton>(R.id.todo_btn_addtodo_repeat_add)!! }
-    private val btnAddRepeatBt by lazy { findViewById<AppCompatButton>(R.id.todo_btn_confirm_addrepeat)!! }
-    private val btnAddRepeatBtCancel by lazy { findViewById<AppCompatButton>(R.id.todo_btn_cancel_addrepeat)!! }
+    private val btnAddRepeatBt by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_confirm_addrepeat)!! }
+    private val btnAddRepeatBtCancel by lazy { findViewById<AppCompatTextView>(R.id.todo_btn_cancel_addrepeat)!! }
     init {
         val dialogView = LayoutInflater.from(context)
             .inflate(R.layout.todo_dialog_bottom_sheet_selectrepeat, null, false)
@@ -147,7 +149,7 @@ class SelectRepeatDialog(context: Context,style: Int, val selectRepeat: (List<In
                 }
             }
         } else {
-            toast("只能选择一种重复模式哦！")
+            "只能选择一种重复模式哦！".toastWithYOffset(1000)
         }
 
 
