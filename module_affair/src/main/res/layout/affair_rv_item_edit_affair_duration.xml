@@ -7,15 +7,15 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/affair_tv_find_course_history_name"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_width="130dp"
+        android:layout_height="35dp"
         android:layout_margin="4dp"
         android:background="@drawable/affair_shape_item_text_bg"
         android:gravity="center"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:textColor="@color/config_level_two_font_color"
-        android:textSize="12dp"
+        android:textSize="14dp"
         tools:ignore="SpUsage"
         tools:text="五六节课 周六" />
 

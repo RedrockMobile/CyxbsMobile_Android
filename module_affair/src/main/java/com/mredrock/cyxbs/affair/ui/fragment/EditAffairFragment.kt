@@ -50,8 +50,6 @@ class EditAffairFragment : BaseFragment(R.layout.affair_fragment_edit_affair) {
     private val mEtTitle: EditText by R.id.affair_et_edit_affair_title.view()
     private val mEtContent: EditText by R.id.affair_et_edit_affair_content.view()
     private val mTvRemind: TextView by R.id.affair_tv_edit_affair_remind.view()
-    private val mTvAddTodo: TextView by R.id.affair_tv_edit_affair_addTodo.view()
-
     private val mRvDuration: RecyclerView by R.id.affair_rv_edit_affair_duration.view()
     private val mRvDurationAdapter = AffairDurationAdapter()
 
@@ -105,14 +103,6 @@ class EditAffairFragment : BaseFragment(R.layout.affair_fragment_edit_affair) {
             dialog.show()
         }
 
-        mTvAddTodo.setOnSingleClickListener {
-            if (mTvAddTodo.text == "加入待办") {
-
-                mTvAddTodo.text = "取消待办"
-            } else {
-                mTvAddTodo.text = "加入待办"
-            }
-        }
     }
 
     private fun initObserve() {
