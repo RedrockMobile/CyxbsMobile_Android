@@ -427,7 +427,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             }
             // 延迟 1.5秒执行新的任务
             pendingUpdateTask?.let { handler.postDelayed(it, 1500) }
-        } else if (item.endTime != "" && item.remindMode.repeatMode == 0) {
+        } else if (item.endTime != ""||item.remindMode.notifyDateTime!="" && item.remindMode.repeatMode == 0) {
             pendingUpdateTask = Runnable {
                 updateTodoItem(item)
 
