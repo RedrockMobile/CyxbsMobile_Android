@@ -46,6 +46,7 @@
     <color name="todo_add_todo_title_hint_color">#94A6C4</color>
     <color name="todo_add_todo_back_color">#FFFFFF</color>
     <color name="todo_add_time_back_ic_color">#ABBCD8</color>
+    <color name="todo_item_manage_top">#F6F7FF</color>
     <color name="todo_item_inner_nf_time_color">#7815315b</color>
     <color name="todo_inner_check_eclipse_color">#7515315B</color>
     <color name="todo_inner_checked_line_color">#8997ad</color>
@@ -103,8 +104,17 @@
     <color name="todo_addtodo_time_color">#55719D</color>
     <!--    添加任务时的保存字体的颜色-->
     <color name="todo_addtodo_inner_text_color">#2A4E84</color>
+    <!--   tablayout顶部颜色-->
+    <color name="todo_tab_color">#FFFFFF</color>
+    <!--   底部按钮背景颜色-->
+    <color name="todo_fragment_bottom_button">#FFFFFF</color>
+    <!--   底部checkbox文字颜色-->
     <!--    添加任务时的分组字体的颜色-->
     <color name="todo_addtodo_inner_category_text_color">#514DEB</color>
+    <!--   底部按钮文字颜色-->
+    <color name="todo_config_bottom_button_text">#FFFFFF</color>
+    <!--    todo界面悬浮按钮背景颜色-->
+    <color name="todo_main_floatbutton">#5857F1</color>
     <!--    删除todo dialog按钮的颜色1-->
     <color name="todo_cancel_button">#C3D4EE</color>
     <!--    删除todo dialog按钮的颜色2-->
