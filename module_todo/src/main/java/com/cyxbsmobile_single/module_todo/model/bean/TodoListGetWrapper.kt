@@ -9,7 +9,7 @@ import java.io.Serializable
  */
 data class TodoListGetWrapper(
     @SerializedName("changed_todo_array")
-    val todoList: List<Todo>,
+    val todoList: List<Todo>?,
     @SerializedName("sync_time")
     val syncTime: Long,
     @SerializedName("del_todo_array")

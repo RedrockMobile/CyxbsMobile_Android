@@ -1,113 +1,128 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
-import android.animation.ValueAnimator
-import android.app.Activity
-import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.OvershootInterpolator
-import android.widget.FrameLayout
-import androidx.appcompat.widget.AppCompatEditText
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.component.CheckLineView
-import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
-import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
-import com.mredrock.cyxbs.common.ui.BaseFeedFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity.Companion.startActivity
+import com.cyxbsmobile_single.module_todo.util.getColor
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
- * Author: RayleighZ
- * Time: 2021-08-02 11:18
+ * description: 首页邮子清单
+ * author: sanhuzhen
+ * date: 2024/8/22 19:09
  */
-class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val activity: Activity) :
-    BaseFeedFragment.Adapter() {
+class TodoFeedAdapter :
+    ListAdapter<Todo, TodoFeedAdapter.todoFeedViewHolder>(DIFF_CALLBACK) {
 
-    private lateinit var feedView: View
-    private val checkImageBoomAnime by lazy {
-        ValueAnimator.ofFloat(0.5f, 1f).apply {
-            interpolator = OvershootInterpolator()
-            duration = 500
-        }
-    }
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Todo>() {
+            override fun areItemsTheSame(oldItem: Todo, newItem: Todo): Boolean {
+                return oldItem.todoId == newItem.todoId
+            }
 
-    override fun onCreateView(context: Context, parent: ViewGroup): View {
-        feedView = LayoutInflater.from(context).inflate(R.layout.todo_fragment_feed, parent, false)
-        todoViewModel.initDataList(
-            onLoadSuccess = { refresh() }
-        )
-        return feedView
-    }
-
-    fun refresh() {
-        feedView.apply {
-            LogUtils.d("Gibson", "uncheckTodoList = ${todoViewModel.uncheckTodoList}")
-            if (todoViewModel.uncheckTodoList.isNullOrEmpty()) {
-                changeToEmpty()
-            } else {
-                val todo_rv_todo_list = findViewById<RecyclerView>(R.id.todo_rv_todo_list)
-                val todo_tv_feed_empty_notify = findViewById<AppCompatTextView>(R.id.todo_tv_feed_empty_notify)
-                todo_rv_todo_list.visibility = View.VISIBLE
-                todo_tv_feed_empty_notify.visibility = View.GONE
-                //这里可以保证，viewModel和adapter的list是同一个引用，可以保证操作的同步性
-                val adapter = DoubleListFoldRvAdapter(
-                    todoViewModel.uncheckTodoList,
-                    THREE,
-                    R.layout.todo_rv_item_todo
-                )
-                adapter.onBindView = { view, _, viewType, wrapper ->
-                    //此处不可能出现title，但为了稳一波，还是加上了判断
-                    if (viewType == DoubleListFoldRvAdapter.TODO) {
-                        view.apply {
-                            findViewById<FrameLayout>(R.id.todo_fl_todo_back).setOnClickListener {
-                                wrapper.todo?.let {
-                                    TodoDetailActivity.startActivity(it, context)
-                                }
-                            }
-
-                            findViewById<AppCompatEditText>(R.id.todo_tv_todo_title).setOnClickListener {
-                                wrapper.todo?.let {
-                                    TodoDetailActivity.startActivity(it, context)
-                                }
-                            }
-                            val todo_iv_todo_item = findViewById<CheckLineView>(R.id.todo_iv_todo_item)
-                            val todo_iv_check = findViewById<AppCompatImageView>(R.id.todo_iv_check)
-                            todo_iv_todo_item.setOnSingleClickListener {
-                                todo_iv_check.visibility = View.VISIBLE
-                                checkImageBoomAnime.addUpdateListener {
-                                    todo_iv_check.scaleX = it.animatedValue as Float
-                                    todo_iv_check.scaleY = it.animatedValue as Float
-                                }
-                                checkImageBoomAnime.start()
-                                todo_iv_todo_item.setStatusWithAnime(isChecked = true) {
-                                    adapter.checkItemAndPopUp(wrapper)
-                                    if (adapter.itemCount == 0) {
-                                        //如果所有条目都下去了
-                                        changeToEmpty()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                todo_rv_todo_list.adapter = adapter
-                todo_rv_todo_list.layoutManager = LinearLayoutManager(context)
+            override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
+                return oldItem == newItem
             }
         }
     }
 
-    //转换为没有代办的情况
-    private fun changeToEmpty() {
-        feedView.apply {
-            findViewById<RecyclerView>(R.id.todo_rv_todo_list).visibility = View.GONE
-            findViewById<AppCompatTextView>(R.id.todo_tv_feed_empty_notify).visibility = View.VISIBLE
+    // 定义日期格式
+    private val dateFormat = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
+    private var mClick: ((Todo) -> Unit)? = null
+    fun onFinishCheck(listener: (Todo) -> Unit) {
+        mClick = listener
+    }
+
+    inner class todoFeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val todoTitle = itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_title)
+        val todoFeedIv = itemView.findViewById<AppCompatImageView>(R.id.todo_iv_feed_bell)
+        val todoFeedTime = itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_notify_time)
+        val icRight = itemView.findViewById<ImageView>(R.id.todo_iv_check_feed)
+        val defaultCheckbox = itemView.findViewById<CheckLineView>(R.id.todo_iv_todo_feed)
+        init {
+            defaultCheckbox.setOnClickListener {
+                val position = absoluteAdapterPosition
+                if (position != RecyclerView.NO_POSITION && position < currentList.size) {
+                    defaultCheckbox.setStatusWithAnime(true){
+                        mClick?.invoke(currentList[position])
+                    }
+                    todoTitle.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.todo_check_item_color
+                        )
+                    )
+                    todoFeedTime.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.todo_check_item_color
+                        )
+                    )
+                    todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_notice2)
+                    icRight.visible()
+                }
+            }
+            todoTitle.setOnClickListener {
+                startActivity(getItem(absoluteAdapterPosition),itemView.context)
+            }
         }
+
+        fun bind(todo: Todo) {
+            todoTitle.text = todo.title
+            val endTime = todo.endTime?.replace("日", "日  ")
+            defaultCheckbox.apply {
+                setStatusWithAnime(false)
+            }
+            todoTitle.setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
+            icRight.gone()
+            if (todo.remindMode.notifyDateTime == "") {
+                todoFeedIv.gone()
+                todoFeedTime.gone()
+            } else {
+                todoFeedTime.text = endTime
+                val itemTime = if (!todo.endTime.isNullOrEmpty()) {
+                    try {
+                        todo.endTime?.let { dateFormat.parse(it)?.time } ?: 0L
+                    } catch (e: ParseException) {
+                        // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
+                        e.printStackTrace()
+                        System.currentTimeMillis()
+                    }
+                } else {
+                    0L
+                }
+                val currentTime = System.currentTimeMillis()
+                if (currentTime > itemTime && itemTime != 0L){
+                    defaultCheckbox.uncheckedColor = getColor(R.color.todo_check_overtime_color)
+                    todoTitle.setTextColor(getColor(R.color.todo_text_overtime_color) )
+                    todoFeedTime.setTextColor(getColor(R.color.todo_textTime_overtime_color))
+                    todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_overtime_notice)
+                }
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): todoFeedViewHolder {
+        return todoFeedViewHolder(
+            View.inflate(parent.context, R.layout.todo_rv_item_feed, null)
+        )
+    }
+
+    override fun onBindViewHolder(holder: todoFeedViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 }

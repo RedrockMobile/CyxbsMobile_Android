@@ -1,6 +1,5 @@
 package com.cyxbsmobile_single.module_todo.model.bean
 
-import android.widget.ArrayAdapter
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
