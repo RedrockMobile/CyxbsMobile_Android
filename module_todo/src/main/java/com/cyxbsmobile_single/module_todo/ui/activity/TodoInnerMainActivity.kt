@@ -85,7 +85,7 @@ class TodoInnerMainActivity : com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
             todoViewModel.setEnabled(false)
         }
         todo_inner_home_bar_add.setOnClickListener {
-            AddTodoDialog(this) {
+            AddTodoDialog(this, R.style.BottomSheetDialogTheme) {
                 val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
                 val firstPush = if (syncTime == 0L) 1 else 0
                 todoViewModel.apply {

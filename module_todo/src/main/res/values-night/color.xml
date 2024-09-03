@@ -8,6 +8,7 @@
     <color name="todo_inner_add_thing_nf_tv_click_color">#66DFDFE3</color>
     <color name="todo_inner_add_thing_repeat_time_item_shape_color">#5E5E5E</color>
     <color name="todo_inner_add_thing_repeat_time_cancel">#80484A4D</color>
+    <color name="todo_detail_repeat_time_item_shape_color">#2D2D2D</color>
     <color name="todo_item_manage_top">#2D2D2D</color>
     <!--    选择年份点击之后的item的shape的颜色-->
     <color name="todo_add_todo_year_clicked_color">#222222</color>
