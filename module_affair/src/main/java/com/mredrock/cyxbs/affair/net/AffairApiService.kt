@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.affair.net
 import com.mredrock.cyxbs.affair.bean.AddAffairBean
 import com.mredrock.cyxbs.affair.bean.AffairBean
 import com.mredrock.cyxbs.affair.bean.NotificationResultBean
+import com.mredrock.cyxbs.affair.bean.SyncTime
+import com.mredrock.cyxbs.affair.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
@@ -70,6 +72,13 @@ interface AffairApiService {
   @POST("magipoke-jwzx/itinerary")
   @Headers("App-Version:74")
   fun sendNotification(@Body notification : NotificationBean) : Single<NotificationResultBean>
+
+  /**
+   * 上传todo到数据库
+   */
+  @POST("/magipoke-todo/batch-create")
+  fun pushTodo(@Body pushWrapper: TodoListPushWrapper):
+          Single<ApiWrapper<SyncTime>>
 
   companion object {
     val INSTANCE by lazy {

@@ -3,10 +3,15 @@ package com.mredrock.cyxbs.ufield.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.ufield.bean.ActivityBean
+import com.mredrock.cyxbs.ufield.bean.Todo
+import com.mredrock.cyxbs.ufield.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.ufield.network.ActivityDetailApiService
+import com.mredrock.cyxbs.ufield.network.UFieldApiService
+import com.mredrock.cyxbs.ufield.repository.UFieldRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -25,6 +30,9 @@ private val _wantToSee=MutableLiveData<Boolean>()
 
     val wantToSee:LiveData<Boolean>
         get() = _wantToSee
+private val _isAdd=MutableLiveData<Int>()
+    val isAdd:LiveData<Int>
+        get() = _isAdd
     init {
         getActivityData(id)
     }
@@ -52,6 +60,51 @@ private val _wantToSee=MutableLiveData<Boolean>()
             .safeSubscribeBy {
                _wantToSee.postValue(true)
             }
+    }
+
+    fun isAdd(id:Int){
+        ActivityDetailApiService::class.api
+            .addTodo(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                _isAdd.postValue(0)
+            }
+            .safeSubscribeBy {
+                _isAdd.postValue(1)
+            }
+    }
+
+    fun addTodo(todo: Todo) {
+        val pushWrapper = TodoListPushWrapper(
+            listOf(todo),
+            getLastSyncTime()
+        )
+        UFieldRepository.pushTodo(pushWrapper)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                _isAdd.postValue(0)
+            }
+            .safeSubscribeBy {
+                it.data.syncTime.apply {
+                    setLastSyncTime(this)
+                    _isAdd.postValue(1)
+                }
+            }
+    }
+
+    /**
+     * 得到和设置本地最后同步的时间戳
+     */
+    private fun getLastSyncTime(): Long =
+        appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+
+    private fun setLastSyncTime(syncTime: Long) {
+        appContext.getSp("todo").edit().apply {
+            putLong("TODO_LAST_SYNC_TIME", syncTime)
+            commit()
+        }
     }
 
 }
