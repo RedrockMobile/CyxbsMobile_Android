@@ -7,7 +7,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import com.aigestudio.wheelpicker.WheelPicker
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeRvAdapter
@@ -15,7 +14,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.util.addWithoutRepeat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.lib.utils.extensions.gone
-import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.toastWithYOffset
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
@@ -168,7 +167,7 @@ class SelectRepeatDialog(
                 }
             }
         } else {
-            "只能选择一种重复模式哦！".toast()
+            "只能选择一种重复模式哦！".toastWithYOffset(1000)
         }
 
 

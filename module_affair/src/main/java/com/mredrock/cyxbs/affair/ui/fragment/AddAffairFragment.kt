@@ -15,9 +15,7 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.bean.RemindMode
-import com.mredrock.cyxbs.affair.bean.RemindMode.Companion.generateDefaultRemindMode
 import com.mredrock.cyxbs.affair.bean.Todo
-import com.mredrock.cyxbs.affair.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.TitleCandidateAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
@@ -27,9 +25,12 @@ import com.mredrock.cyxbs.affair.ui.fragment.utils.AffairPageManager
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.AddAffairViewModel
 import com.mredrock.cyxbs.affair.ui.dialog.RemindSelectDialog
+import com.mredrock.cyxbs.api.course.utils.getStartRow
+import com.mredrock.cyxbs.api.course.utils.getStartTimeMinute
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.*
+import java.util.Calendar
 
 /**
  * ...
@@ -173,13 +174,27 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
       mPageManager.getTitle(),
       mPageManager.getContent(),
       0,
-      generateDefaultRemindMode(),
+      RemindMode(0, arrayListOf(), arrayListOf(), arrayListOf(),getCalendar()),
       System.currentTimeMillis(),
       "other",
       0
     )
-  // 将第几周转换为日历
-  private fun getCalendar(){
-
+  // 将时间转换为日历
+  private fun getCalendar():String{
+      val firstMonDay=SchoolCalendar.getFirstMonDayOfTerm() ?:return ""
+      val whatTime=mRvDurationAdapter.currentList.toAtWhatTime()
+    val startMinute = getStartTimeMinute(getStartRow(whatTime[0].beginLesson))
+      val time=whatTime[0].week.map {
+        (firstMonDay.clone() as Calendar).apply {
+          add(Calendar.DATE, whatTime[0].day + (it - 1) * 7)
+          add(Calendar.MINUTE, startMinute)
+        }
+      }
+    val year = time[0].get(Calendar.YEAR)
+    val month = time[0].get(Calendar.MONTH).plus(1)
+    val day = time[0].get(Calendar.DAY_OF_MONTH)
+    val hour=time[0].get(Calendar.HOUR_OF_DAY)
+    val minute=time[0].get(Calendar.MINUTE)
+    return "${year}年${month}月${day}日${hour}:${minute}"
   }
 }

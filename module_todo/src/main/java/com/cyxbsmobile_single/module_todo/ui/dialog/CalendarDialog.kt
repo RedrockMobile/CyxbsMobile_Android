@@ -74,6 +74,9 @@ class CalendarDialog(
 
     @SuppressLint("SetTextI18n", "DefaultLocale")
     private fun initClick() {
+        tvCalendarHeader.text =
+            "${calendar.get(Calendar.YEAR)}年${calendar.get(Calendar.MONTH) + 1}月"
+
         ivPreMonth.setOnClickListener {
             changeMonth(-1)
         }

@@ -228,6 +228,8 @@ class TodoDetailActivity : BaseActivity() {
         ivDeadlineDel.setOnClickListener {
             tvDeadline.text = ""
             it.gone()
+            todo.endTime = ""
+            viewModel.setChangeState(judge())
         }
 
         tvDeadline.setOnClickListener {
