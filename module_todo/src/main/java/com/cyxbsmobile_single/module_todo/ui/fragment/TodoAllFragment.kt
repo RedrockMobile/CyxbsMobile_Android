@@ -1,8 +1,6 @@
 package com.cyxbsmobile_single.module_todo.ui.fragment
 
 import DeleteTodoDialog
-import DragAndDropCallback
-import TodoAllAdapter
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -22,7 +20,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.adapter.DragAndDropCallback
 import com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
+import com.cyxbsmobile_single.module_todo.adapter.TodoAllAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.DelPushWrapper
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoListPushWrapper

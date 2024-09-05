@@ -1,7 +1,4 @@
 package com.cyxbsmobile_single.module_todo.adapter
-
-
-import TodoAllAdapter
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
@@ -70,7 +67,7 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 releaseVelocity()
-                parent.requestDisallowInterceptTouchEvent(false)
+               parent.requestDisallowInterceptTouchEvent(false)
             }
         }
         return super.onInterceptTouchEvent(e)

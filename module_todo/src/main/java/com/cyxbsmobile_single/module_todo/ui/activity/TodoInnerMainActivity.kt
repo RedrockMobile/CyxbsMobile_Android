@@ -1,8 +1,6 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +18,6 @@ import com.cyxbsmobile_single.module_todo.ui.fragment.TodoAllFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoLifeFragment
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoOtherFragement
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoStudyFragment
-import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
