@@ -74,6 +74,9 @@ class CalendarDialog(
 
     @SuppressLint("SetTextI18n", "DefaultLocale")
     private fun initClick() {
+        tvCalendarHeader.text =
+            "${calendar.get(Calendar.YEAR)}年${calendar.get(Calendar.MONTH) + 1}月"
+
         ivPreMonth.setOnClickListener {
             changeMonth(-1)
         }
@@ -150,7 +153,11 @@ class CalendarDialog(
 
 
         calendar.set(Calendar.DAY_OF_MONTH, 1)
-        val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 //获取当前月份第一天是星期几
+        var firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 //获取当前月份第一天是星期几
+        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+            firstDayOfWeek = 7
+        }
+
 
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) //获取当前月份的天数
 
