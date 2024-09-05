@@ -12,4 +12,4 @@ data class SyncTime(
     val syncTime: Long,
     @SerializedName("is_sync_time_exist")
     val isSyncTimeExit: Boolean
-): Serializable
+) : Serializable

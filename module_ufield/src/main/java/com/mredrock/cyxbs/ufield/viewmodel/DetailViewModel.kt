@@ -22,21 +22,23 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  * email : 2191288460@qq.com
  * date : 2023/8/24 10:49
  */
-class DetailViewModel(id:Int) :BaseViewModel(){
-private val _detailData= MutableLiveData<ActivityBean>()
+class DetailViewModel(id: Int) : BaseViewModel() {
+    private val _detailData = MutableLiveData<ActivityBean>()
     val detailData: LiveData<ActivityBean>
         get() = _detailData
-private val _wantToSee=MutableLiveData<Boolean>()
+    private val _wantToSee = MutableLiveData<Boolean>()
 
-    val wantToSee:LiveData<Boolean>
+    val wantToSee: LiveData<Boolean>
         get() = _wantToSee
-private val _isAdd=MutableLiveData<Int>()
-    val isAdd:LiveData<Int>
+    private val _isAdd = MutableLiveData<Int>()
+    val isAdd: LiveData<Int>
         get() = _isAdd
+
     init {
         getActivityData(id)
     }
-    private fun getActivityData(id:Int){
+
+    private fun getActivityData(id: Int) {
         ActivityDetailApiService::class.api
             .getActivityData(id)
             .subscribeOn(Schedulers.io())
@@ -49,7 +51,8 @@ private val _isAdd=MutableLiveData<Int>()
             }
 
     }
-    fun wantToSee(id:Int){
+
+    fun wantToSee(id: Int) {
         ActivityDetailApiService::class.api
             .wantToSee(id)
             .subscribeOn(Schedulers.io())
@@ -58,11 +61,11 @@ private val _isAdd=MutableLiveData<Int>()
                 _wantToSee.postValue(false)
             }
             .safeSubscribeBy {
-               _wantToSee.postValue(true)
+                _wantToSee.postValue(true)
             }
     }
 
-    fun isAdd(id:Int){
+    fun isAdd(id: Int) {
         ActivityDetailApiService::class.api
             .addTodo(id)
             .subscribeOn(Schedulers.io())

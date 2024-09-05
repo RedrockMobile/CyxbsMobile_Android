@@ -18,15 +18,15 @@ data class RemindMode(
     var day: ArrayList<Int>,
     @SerializedName("notify_datetime")
     var notifyDateTime: String?
-): Serializable {
-    companion object{
+) : Serializable {
+    companion object {
         const val NONE = 0
         const val DAY = 1
         const val WEEK = 2
         const val MONTH = 3
         const val YEAR = 4
 
-        fun generateDefaultRemindMode(): RemindMode{
+        fun generateDefaultRemindMode(): RemindMode {
             return RemindMode(
                 NONE,
                 arrayListOf(),
