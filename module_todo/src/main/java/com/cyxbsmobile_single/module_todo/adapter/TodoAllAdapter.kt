@@ -132,7 +132,6 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         // 动态设置宽度，在绑定数据时设置 EditText 的宽度
@@ -302,7 +301,6 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
             null
         }
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: Todo) {
             listtext.setText(item.title)
             date.text = item.remindMode.notifyDateTime
