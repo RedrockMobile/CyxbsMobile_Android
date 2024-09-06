@@ -17,8 +17,3 @@ dependRoom()
 dependNetwork()
 //rxJava
 dependRxjava()
-
-//使用viewmodel livedata
-dependLifecycleKtx()
-//android常用库
-dependAndroidView()

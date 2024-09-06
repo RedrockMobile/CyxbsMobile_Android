@@ -16,7 +16,7 @@
         android:elevation="3dp">
 
 
-        <com.cyxbsmobile_single.module_todo.component.CheckLineView
+        <com.mredrock.cyxbs.todo.component.CheckLineView
             android:id="@+id/todo_item_check"
             android:layout_width="0dp"
             android:layout_height="23dp"

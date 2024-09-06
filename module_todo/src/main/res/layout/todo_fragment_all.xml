@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/todo_fragment_color">
 
-    <com.cyxbsmobile_single.module_todo.adapter.SwipeDeleteRecyclerView
+    <com.mredrock.cyxbs.todo.adapter.SwipeDeleteRecyclerView
         android:id="@+id/todo_allrv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
