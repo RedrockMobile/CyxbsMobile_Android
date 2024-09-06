@@ -110,13 +110,15 @@ class DetailActivity : BaseActivity() {
             }
         }
         viewModel.isAdd.observe(this) {
-            tvAddTodo.setTextColor(
-                ContextCompat.getColor(
-                    this@DetailActivity,
-                    R.color.uField_text_haveadd
+            if (it == 1) {
+                tvAddTodo.setTextColor(
+                    ContextCompat.getColor(
+                        this@DetailActivity,
+                        R.color.uField_text_haveadd
+                    )
                 )
-            )
-            tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+                tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+            }
         }
     }
 
