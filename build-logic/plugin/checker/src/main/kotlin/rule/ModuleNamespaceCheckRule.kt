@@ -24,7 +24,6 @@ object ModuleNamespaceCheckRule : ICheckRule {
     "module_map" to "com.mredrock.cyxbs.discover.map",
     "module_news" to "com.mredrock.cyxbs.discover.news",
     "module_notification" to "com.redrock.module_notification",
-    "module_todo" to "com.cyxbsmobile_single.module_todo",
   )
   
   /**

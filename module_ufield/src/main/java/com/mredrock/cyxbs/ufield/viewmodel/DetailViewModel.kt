@@ -3,10 +3,15 @@ package com.mredrock.cyxbs.ufield.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.ufield.bean.ActivityBean
+import com.mredrock.cyxbs.ufield.bean.Todo
+import com.mredrock.cyxbs.ufield.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.ufield.network.ActivityDetailApiService
+import com.mredrock.cyxbs.ufield.network.UFieldApiService
+import com.mredrock.cyxbs.ufield.repository.UFieldRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -17,18 +22,23 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  * email : 2191288460@qq.com
  * date : 2023/8/24 10:49
  */
-class DetailViewModel(id:Int) :BaseViewModel(){
-private val _detailData= MutableLiveData<ActivityBean>()
+class DetailViewModel(id: Int) : BaseViewModel() {
+    private val _detailData = MutableLiveData<ActivityBean>()
     val detailData: LiveData<ActivityBean>
         get() = _detailData
-private val _wantToSee=MutableLiveData<Boolean>()
+    private val _wantToSee = MutableLiveData<Boolean>()
 
-    val wantToSee:LiveData<Boolean>
+    val wantToSee: LiveData<Boolean>
         get() = _wantToSee
+    private val _isAdd = MutableLiveData<Int>()
+    val isAdd: LiveData<Int>
+        get() = _isAdd
+
     init {
         getActivityData(id)
     }
-    private fun getActivityData(id:Int){
+
+    private fun getActivityData(id: Int) {
         ActivityDetailApiService::class.api
             .getActivityData(id)
             .subscribeOn(Schedulers.io())
@@ -41,7 +51,8 @@ private val _wantToSee=MutableLiveData<Boolean>()
             }
 
     }
-    fun wantToSee(id:Int){
+
+    fun wantToSee(id: Int) {
         ActivityDetailApiService::class.api
             .wantToSee(id)
             .subscribeOn(Schedulers.io())
@@ -50,8 +61,53 @@ private val _wantToSee=MutableLiveData<Boolean>()
                 _wantToSee.postValue(false)
             }
             .safeSubscribeBy {
-               _wantToSee.postValue(true)
+                _wantToSee.postValue(true)
             }
+    }
+
+    fun isAdd(id: Int) {
+        ActivityDetailApiService::class.api
+            .addTodo(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                _isAdd.postValue(0)
+            }
+            .safeSubscribeBy {
+                _isAdd.postValue(1)
+            }
+    }
+
+    fun addTodo(todo: Todo) {
+        val pushWrapper = TodoListPushWrapper(
+            listOf(todo),
+            getLastSyncTime()
+        )
+        UFieldRepository.pushTodo(pushWrapper)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                _isAdd.postValue(0)
+            }
+            .safeSubscribeBy {
+                it.data.syncTime.apply {
+                    setLastSyncTime(this)
+                    _isAdd.postValue(1)
+                }
+            }
+    }
+
+    /**
+     * 得到和设置本地最后同步的时间戳
+     */
+    private fun getLastSyncTime(): Long =
+        appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+
+    private fun setLastSyncTime(syncTime: Long) {
+        appContext.getSp("todo").edit().apply {
+            putLong("TODO_LAST_SYNC_TIME", syncTime)
+            commit()
+        }
     }
 
 }

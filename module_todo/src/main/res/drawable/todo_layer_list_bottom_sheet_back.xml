@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--    因为6.0版本的所有的dialog均替换为bottomSheetDialog样式-->
-    <!--    并且所有的圆角角度和阴影均是一样的，所以在这写一个背景复用-->
-
-    <item android:gravity="top">
+    <!-- 背景层：带透明度的渐变背景，避免和底色的solid叠加导致发黑 -->
+    <item android:bottom="16dp" android:left="16dp" android:right="16dp">
         <shape>
             <gradient
                 android:angle="90"
                 android:startColor="#205369BC"
                 android:endColor="#005369BC" />
-            <corners
-                android:topRightRadius="16dp"
-                android:topLeftRadius="16dp" />
+            <!-- 不设置圆角，保持渐变背景不影响角落 -->
         </shape>
     </item>
 
-    <item android:top="20dp">
+    <!-- 主体层：纯色背景，设置圆角 -->
+    <item>
         <shape>
             <corners
                 android:topRightRadius="16dp"
@@ -26,4 +21,5 @@
             <solid android:color="@color/todo_add_todo_back_color" />
         </shape>
     </item>
+
 </layer-list>

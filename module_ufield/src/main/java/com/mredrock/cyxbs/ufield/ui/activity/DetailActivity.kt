@@ -18,6 +18,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.bean.RemindMode
+import com.mredrock.cyxbs.ufield.bean.Todo
 import com.mredrock.cyxbs.ufield.viewmodel.DetailViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -55,6 +57,7 @@ class DetailActivity : BaseActivity() {
     private val tvSecond by R.id.ufield_tv_second.view<TextView>()
     private val tvTimeHead by R.id.ufield_tv_timehead.view<TextView>()
     private val ivBack by R.id.ufield_iv_back.view<ImageView>()
+    private val tvAddTodo by R.id.ufield_tv_addtodo.view<TextView>()
     private lateinit var layout: ConstraintLayout
     private var countDownTimer: CountDownTimer = object : CountDownTimer(1, 1000) {
         override fun onTick(p0: Long) {
@@ -97,7 +100,6 @@ class DetailActivity : BaseActivity() {
                         "",
                         "已参加活动一次，获得50邮票"
                     )
-
                 }
                 layout.apply {
                     setBackgroundResource(R.drawable.ufield_shape_haveseen)
@@ -105,6 +107,17 @@ class DetailActivity : BaseActivity() {
                 }
             } else {
                 toast("想看失败")
+            }
+        }
+        viewModel.isAdd.observe(this) {
+            if (it == 1) {
+                tvAddTodo.setTextColor(
+                    ContextCompat.getColor(
+                        this@DetailActivity,
+                        R.color.uField_text_haveadd
+                    )
+                )
+                tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
             }
         }
     }
@@ -162,6 +175,7 @@ class DetailActivity : BaseActivity() {
                     tvMinutes.gone()
                     tvSeconds.gone()
                     layout.gone()
+//                    tvAddTodo.gone()
                 } else {
                     startDownTimer(it.activityStartAt)
                 }
@@ -178,9 +192,28 @@ class DetailActivity : BaseActivity() {
                     viewModel.wantToSee(id)
                 }
             }
-
+            if (it.addTodo != 0) {
+                tvAddTodo.setTextColor(
+                    ContextCompat.getColor(
+                        this@DetailActivity,
+                        R.color.uField_text_haveadd
+                    )
+                )
+                tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+            } else {
+                tvAddTodo.setOnClickListener {
+                    tvAddTodo.setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailActivity,
+                            R.color.uField_text_haveadd
+                        )
+                    )
+                    tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+                    viewModel.addTodo(createTodo())
+                    viewModel.isAdd(id)
+                }
+            }
         }
-
     }
 
     private fun startDownTimer(startTime: Long) {
@@ -253,10 +286,32 @@ class DetailActivity : BaseActivity() {
         layout.gone()
     }
 
+    private fun createTodo(): Todo {
+        val notifyDatetime = viewModel.detailData.value?.let { otherTrans(it.activityStartAt) }
+        val todo = Todo(
+            System.currentTimeMillis() / 1000,
+            tvTitle.text.toString(),
+            tvPlace.text.toString(),
+            0,
+            RemindMode(0, arrayListOf(), arrayListOf(), arrayListOf(), notifyDatetime),
+            System.currentTimeMillis(),
+            "other",
+            0
+        )
+        return todo
+    }
+
     private fun trans(timestampInSeconds: Long): String {
         val date = Date(timestampInSeconds * 1000L)
 
         val format = SimpleDateFormat("yyyy年MM月dd日HH点mm分", Locale.getDefault())
+        return format.format(date)
+    }
+
+    private fun otherTrans(timestampInSeconds: Long): String {
+        val date = Date(timestampInSeconds * 1000L)
+
+        val format = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
         return format.format(date)
     }
 }

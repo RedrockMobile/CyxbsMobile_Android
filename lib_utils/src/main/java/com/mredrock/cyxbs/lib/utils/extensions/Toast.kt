@@ -30,36 +30,43 @@ fun toast(s: CharSequence?) {
   CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
 }
 
+fun toastWithYOffset(s: CharSequence?, toastY: Int) {
+  CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT, toastY)
+}
+
 fun toastLong(s: CharSequence?) {
   CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
 }
 
 fun String.toast() = toast(this)
+fun String.toastWithYOffset(toastY: Int) = toastWithYOffset(this,toastY)
 fun String.toastLong() = toastLong(this)
 
 class CyxbsToast {
   companion object {
-  
+
     /**
      * 已自带处于其他线程时自动切换至主线程发送
      */
     fun show(
       context: Context,
       text: CharSequence?,
-      duration: Int
+      duration: Int,
+      toastY: Int = 0
     ) {
       if (text == null) return
       if (Thread.currentThread() !== Looper.getMainLooper().thread) {
         Handler(Looper.getMainLooper()).post { newInstance(context, text, duration).show() }
       } else {
-        newInstance(context, text, duration).show()
+        newInstance(context, text, duration, toastY).show()
       }
     }
     
     private fun newInstance(
       context: Context,
       text: CharSequence,
-      duration: Int
+      duration: Int,
+      toastY: Int = 0
     ): Toast {
       if (BuildConfig.DEBUG) {
         val throwable = Throwable() // 获取堆栈信息
@@ -83,17 +90,22 @@ class CyxbsToast {
         Log.d("toast", "toast: text = $text   path: $path")
       }
       val result = Toast(context)
-      val inflate = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+      val inflate =
+        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
       val v: View = inflate.inflate(R.layout.utils_layout_toast, null)
       val tv = v.findViewById<View>(R.id.tv_toast) as TextView
       tv.text = text
-      val height = context.resources.displayMetrics.heightPixels
+      val height = if (toastY == 0) {
+        context.resources.displayMetrics.heightPixels / 8
+      } else {
+        toastY
+      }
       result.view = v
       result.duration = duration
-      result.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP, 0, height / 8)
+      result.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP, 0, height)
       return result
     }
-    
+
     /**
      * 寻找第一个满足条件后的子数组
      */
