@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
-import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 
 /**
  * description: 首页的邮子清单
@@ -74,23 +73,25 @@ class TodoFeedFragment : BaseFragment() {
             }
         }
         mViewModel.allTodo.observe(viewLifecycleOwner) {
-            val filteredList =
-                it.todoArray.filter { todo -> todo.isChecked == 0 && todo.todoId > 3 }
-                    .take(3) // 只取未选中的前3个
-            todoList.apply {
-                clear()
-                addAll(filteredList)
+            it.todoArray?.let{ todos ->
+                val filteredList =
+                    todos.filter { todo -> todo.isChecked == 0 && todo.todoId > 3 }
+                        .take(3) // 只取未选中的前3个
+                todoList.apply {
+                    clear()
+                    addAll(filteredList)
+                }
+                if (todoList.isEmpty()) {
+                    mTv.visible()
+                    mRv.gone()
+                    mTv.text = "还没有待做事项哦~快去添加吧！"
+                } else {
+                    mRv.visible()
+                    mTv.gone()
+                }
+                mAdapter.submitList(filteredList.toList())
             }
-            LogUtils.d("TodoFeedFragment", "推送成功 ${todoList}")
-            if (todoList.isEmpty()) {
-                mTv.visible()
-                mRv.gone()
-                mTv.text = "还没有待做事项哦~快去添加吧！"
-            } else {
-                mRv.visible()
-                mTv.gone()
-            }
-            mAdapter.submitList(filteredList.toList())
+
         }
     }
 
