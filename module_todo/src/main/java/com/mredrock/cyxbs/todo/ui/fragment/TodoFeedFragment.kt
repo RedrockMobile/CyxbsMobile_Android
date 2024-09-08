@@ -63,12 +63,15 @@ class TodoFeedFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdapter.apply {
                 onFinishCheck {
-                    it.isChecked = 1
-                    val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-                    mViewModel.apply {
-                        pushTodo(TodoListPushWrapper(listOf(it), syncTime, 1, 0))
-                        getAllTodo()
+                    if (it in todoList.indices){
+                        todoList[it].isChecked = 1
+                        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                        mViewModel.apply {
+                            pushTodo(TodoListPushWrapper(listOf(todoList[it]), syncTime, 1, 0))
+                            getAllTodo()
+                        }
                     }
+
                 }
             }
         }
