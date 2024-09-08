@@ -70,6 +70,7 @@ class DetailViewModel(id: Int) : BaseViewModel() {
             .addTodo(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {  }
             .doOnError {
                 _isAdd.postValue(0)
             }
@@ -86,14 +87,13 @@ class DetailViewModel(id: Int) : BaseViewModel() {
         UFieldRepository.pushTodo(pushWrapper)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {  }
             .doOnError {
                 _isAdd.postValue(0)
             }
             .safeSubscribeBy {
-                it.data.syncTime.apply {
-                    setLastSyncTime(this)
-                    _isAdd.postValue(1)
-                }
+                setLastSyncTime(it.syncTime)
+                _isAdd.postValue(1)
             }
     }
 

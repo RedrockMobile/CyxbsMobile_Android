@@ -175,7 +175,7 @@ class DetailActivity : BaseActivity() {
                     tvMinutes.gone()
                     tvSeconds.gone()
                     layout.gone()
-//                    tvAddTodo.gone()
+                    tvAddTodo.gone()
                 } else {
                     startDownTimer(it.activityStartAt)
                 }
@@ -310,7 +310,6 @@ class DetailActivity : BaseActivity() {
 
     private fun otherTrans(timestampInSeconds: Long): String {
         val date = Date(timestampInSeconds * 1000L)
-
         val format = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
         return format.format(date)
     }
