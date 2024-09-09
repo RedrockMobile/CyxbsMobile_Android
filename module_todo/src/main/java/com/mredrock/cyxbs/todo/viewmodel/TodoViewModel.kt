@@ -14,7 +14,9 @@ import com.mredrock.cyxbs.todo.repository.TodoRepository
 import com.mredrock.cyxbs.todo.ui.widget.TodoWidget
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
+import com.mredrock.cyxbs.todo.model.bean.RemindMode.Companion.generateDefaultRemindMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -66,7 +68,7 @@ class TodoViewModel : BaseViewModel() {
     fun getAllTodo() {
         TodoRepository
             .queryAllTodo()
-            .doOnError {
+            .mapOrInterceptException {
                 viewModelScope.launch(Dispatchers.IO) {
                     val modifyTime = System.currentTimeMillis() / 1000
                     TodoDatabase.instance.todoDao().apply {
@@ -94,31 +96,48 @@ class TodoViewModel : BaseViewModel() {
                 }
             }
             .safeSubscribeBy {
-                _allTodo.postValue(
-                    TodoListSyncTimeWrapper(it.data.todoArray, it.data.syncTime)
-                )
-                _categoryTodoStudy.postValue(
-                    TodoListSyncTimeWrapper(
-                        it.data.todoArray.filter { todo -> todo.type == "study" },
-                        it.data.syncTime
+                if (it.todoArray.isNullOrEmpty() && it.syncTime == 0L) {
+                    val todoList = listOf(
+                        Todo(1, "长按可以拖动我哟", "", 0, generateDefaultRemindMode(), System.currentTimeMillis(), "", "", 0, 0),
+                        Todo(2, "左滑可置顶或者删除", "", 0, generateDefaultRemindMode(), System.currentTimeMillis(), "", "", 0, 0),
+                        Todo(3, "点击查看代办详情", "", 0, generateDefaultRemindMode(), System.currentTimeMillis(), "", "", 0, 0)
                     )
-                )
-                _categoryTodoLife.postValue(
-                    TodoListSyncTimeWrapper(
-                        it.data.todoArray.filter { todo -> todo.type == "life" },
-                        it.data.syncTime
+                    val syncTime = getLastSyncTime()
+                    val firstPush = if (syncTime == 0L) 1 else 0
+                    pushTodo(
+                        TodoListPushWrapper(
+                            todoList, syncTime, TodoListPushWrapper.NONE_FORCE, firstPush
+                        )
                     )
-                )
-                _categoryTodoOther.postValue(
-                    TodoListSyncTimeWrapper(
-                        it.data.todoArray.filter { todo -> todo.type == "other" },
-                        it.data.syncTime
-                    )
-                )
-                it.data.syncTime.apply {
-                    setLastSyncTime(this)
                 }
-                syncTodo(it.data.todoArray)
+                it.todoArray?.let { todos ->
+                    _allTodo.postValue(
+                        TodoListSyncTimeWrapper(todos, it.syncTime)
+                    )
+                    _categoryTodoStudy.postValue(
+                        TodoListSyncTimeWrapper(
+                            todos.filter { todo -> todo.type == "study" },
+                            it.syncTime
+                        )
+                    )
+                    _categoryTodoLife.postValue(
+                        TodoListSyncTimeWrapper(
+                            todos.filter { todo -> todo.type == "life" },
+                            it.syncTime
+                        )
+                    )
+                    _categoryTodoOther.postValue(
+                        TodoListSyncTimeWrapper(
+                            todos.filter { todo -> todo.type == "other" },
+                            it.syncTime
+                        )
+                    )
+                    it.syncTime.apply {
+                        setLastSyncTime(this)
+                    }
+                    syncTodo(todos)
+                }
+
             }
     }
 
@@ -128,7 +147,7 @@ class TodoViewModel : BaseViewModel() {
     fun pushTodo(pushWrapper: TodoListPushWrapper) {
         TodoRepository
             .pushTodo(pushWrapper)
-            .doOnError {
+            .mapOrInterceptException {
                 viewModelScope.launch {
                     val modifyTime = System.currentTimeMillis() / 1000
                     setLastModifyTime(modifyTime)
@@ -140,13 +159,13 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 getAllTodo()
-                viewModelScope.launch {
-                    setLastModifyTime(it.data.syncTime)
+                viewModelScope.launch(Dispatchers.IO) {
+                    setLastModifyTime(it.syncTime)
                     TodoDatabase.instance.todoDao().insertAll(pushWrapper.todoList)
                 }
                 TodoWidget.sendAddTodoBroadcast(appContext)
                 _isPushed.postValue(true)
-                it.data.syncTime.apply {
+                it.syncTime.apply {
                     setLastSyncTime(this)
                 }
             }
@@ -165,20 +184,21 @@ class TodoViewModel : BaseViewModel() {
         )
 
         TodoRepository.pushTodo(pushWrapper)
-            .doOnError {
+            .mapOrInterceptException {
                 viewModelScope.launch {
                     val modifyTime = System.currentTimeMillis() / 1000
                     setLastModifyTime(modifyTime)
                     TodoDatabase.instance.todoDao().insertAll(pushWrapper.todoList)
                     TodoWidget.sendAddTodoBroadcast(appContext)
                 }
-            }.safeSubscribeBy {
+            }
+            .safeSubscribeBy {
                 viewModelScope.launch {
-                    setLastModifyTime(it.data.syncTime)
+                    setLastModifyTime(it.syncTime)
                     TodoDatabase.instance.todoDao().insertAll(pushWrapper.todoList)
                 }
                 TodoWidget.sendAddTodoBroadcast(appContext)
-                it.data.syncTime.apply {
+                it.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)
                 }
@@ -193,7 +213,7 @@ class TodoViewModel : BaseViewModel() {
     fun delTodo(delPushWrapper: DelPushWrapper) {
         TodoRepository
             .delTodo(delPushWrapper)
-            .doOnError {
+            .mapOrInterceptException {
                 viewModelScope.launch {
                     val modifyTime = System.currentTimeMillis() / 1000
                     setLastModifyTime(modifyTime)
@@ -210,7 +230,7 @@ class TodoViewModel : BaseViewModel() {
                         TodoDatabase.instance.todoDao().deleteTodoById(todoId)
                     }
                 }
-                it.data.syncTime.apply {
+                it.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)
                 }
@@ -223,7 +243,7 @@ class TodoViewModel : BaseViewModel() {
     fun pinTodo(todoPinData: TodoPinData) {
         TodoRepository
             .pinTodo(todoPinData)
-            .doOnError {
+            .mapOrInterceptException {
                 viewModelScope.launch(Dispatchers.IO) {
                     val modifyTime = System.currentTimeMillis() / 1000
                     setLastModifyTime(modifyTime)
@@ -243,7 +263,7 @@ class TodoViewModel : BaseViewModel() {
                         TodoDatabase.instance.todoDao().insert(todo)
                     }
                 }
-                it.data.syncTime.apply {
+                it.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)
                 }
@@ -280,6 +300,9 @@ class TodoViewModel : BaseViewModel() {
      * 同步远端与本地数据
      */
     fun syncTodo(todoList: List<Todo>) {
+        if (getLastModifyTime() == getLastSyncTime()) {
+            return
+        }
         // 本地数据为空，直接同步远端
         if (getLastModifyTime() == 0L && getLastSyncTime() != 0L) {
             syncWithRemote(todoList)
@@ -295,10 +318,6 @@ class TodoViewModel : BaseViewModel() {
         // 检查同步时间
         val syncTime = getLastSyncTime()
         val modifyTime = getLastModifyTime()
-
-        if (syncTime == modifyTime) {
-            return // 数据已同步，无需操作
-        }
 
         // 根据时间戳决定同步方向
         if (modifyTime > syncTime) {
@@ -318,7 +337,6 @@ class TodoViewModel : BaseViewModel() {
             TodoDatabase.instance.todoDao().apply {
                 deleteAll()
                 insertAll(todoList)
-                LogUtils.d("TodoDao", "${queryAll()}")
             }
         }
     }
@@ -326,7 +344,10 @@ class TodoViewModel : BaseViewModel() {
     private fun syncWithLocal() {
         viewModelScope.launch(Dispatchers.IO) {
             TodoDatabase.instance.todoDao().apply {
-                pushTodo(TodoListPushWrapper(queryAll()!!, getLastModifyTime(), 1, 0))
+                queryAll()?.let {
+                    pushTodo(TodoListPushWrapper(it, getLastModifyTime(), 1, 0))
+                }
+
             }
         }
     }
@@ -334,7 +355,9 @@ class TodoViewModel : BaseViewModel() {
     private fun syncRemoteFromLocal(syncTime: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             TodoDatabase.instance.todoDao().apply {
-                pushTodo(TodoListPushWrapper(queryAll()!!, syncTime, 1, 0))
+                queryAll()?.let {
+                    pushTodo(TodoListPushWrapper(it, getLastModifyTime(), 1, 0))
+                }
 
                 // 得到本地数据库中被删除的元素
                 val deletedIds = allTodo.value?.todoArray

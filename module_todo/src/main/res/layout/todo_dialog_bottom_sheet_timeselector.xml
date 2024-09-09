@@ -109,7 +109,7 @@
         android:layout_height="40dp"/>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="45dp"
         android:layout_below="@id/todo_bt_confirm_timeselector"/>
 
 </RelativeLayout>

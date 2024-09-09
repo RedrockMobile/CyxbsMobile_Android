@@ -42,8 +42,8 @@ class TodoFeedAdapter :
 
     // 定义日期格式
     private val dateFormat = SimpleDateFormat("yyyy年MM月dd日HH:mm", Locale.getDefault())
-    private var mClick: ((Todo) -> Unit)? = null
-    fun onFinishCheck(listener: (Todo) -> Unit) {
+    private var mClick: ((Int) -> Unit)? = null
+    fun onFinishCheck(listener: (Int) -> Unit) {
         mClick = listener
     }
 
@@ -55,10 +55,8 @@ class TodoFeedAdapter :
         val defaultCheckbox = itemView.findViewById<CheckLineView>(R.id.todo_iv_todo_feed)
         init {
             defaultCheckbox.setOnClickListener {
-                val position = absoluteAdapterPosition
-                if (position != RecyclerView.NO_POSITION && position in 0 until currentList.size) {
                     defaultCheckbox.setStatusWithAnime(true){
-                        mClick?.invoke(currentList[position])
+                        mClick?.invoke(absoluteAdapterPosition)
                     }
                     todoTitle.setTextColor(
                         ContextCompat.getColor(
@@ -74,7 +72,6 @@ class TodoFeedAdapter :
                     )
                     todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_notice2)
                     icRight.visible()
-                }
             }
             todoTitle.setOnClickListener {
                 startActivity(getItem(absoluteAdapterPosition),itemView.context)
