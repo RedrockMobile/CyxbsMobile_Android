@@ -109,13 +109,13 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/todo_ic_totop" />
+            android:src="@drawable/todo_ic_no_totop" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:text="@string/todo_string_totop"
+            android:text="@string/todo_string_tonotop"
             android:textColor="@color/todo_add_todo_back_color"
             android:textSize="14sp" />
     </LinearLayout>
