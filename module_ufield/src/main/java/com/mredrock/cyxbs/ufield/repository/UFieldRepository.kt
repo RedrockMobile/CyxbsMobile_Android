@@ -59,9 +59,4 @@ object UFieldRepository {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    fun pushTodo(pushWrapper: TodoListPushWrapper) = UFieldApiService
-        .INSTANCE
-        .pushTodo(pushWrapper)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
 }

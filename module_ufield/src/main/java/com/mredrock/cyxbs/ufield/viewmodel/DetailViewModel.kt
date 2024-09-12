@@ -30,8 +30,8 @@ private val _wantToSee=MutableLiveData<Boolean>()
 
     val wantToSee:LiveData<Boolean>
         get() = _wantToSee
-private val _isAdd=MutableLiveData<Int>()
-    val isAdd:LiveData<Int>
+private val _isAdd=MutableLiveData<Boolean>()
+    val isAdd:LiveData<Boolean>
         get() = _isAdd
     init {
         getActivityData(id)
@@ -47,7 +47,6 @@ private val _isAdd=MutableLiveData<Int>()
             .safeSubscribeBy {
                 _detailData.postValue(it)
             }
-
     }
     fun wantToSee(id:Int){
         ActivityDetailApiService::class.api
@@ -64,14 +63,17 @@ private val _isAdd=MutableLiveData<Int>()
 
     fun isAdd(id:Int){
         ActivityDetailApiService::class.api
-            .addTodo(id)
+            .isAdd(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {  }
             .doOnError {
-                _isAdd.postValue(0)
+                "failed".toast()
+                _isAdd.postValue(false)
             }
             .safeSubscribeBy {
-                _isAdd.postValue(1)
+                "isAdd".toast()
+                _isAdd.postValue(true)
             }
     }
 
@@ -80,16 +82,14 @@ private val _isAdd=MutableLiveData<Int>()
             listOf(todo),
             getLastSyncTime()
         )
-        UFieldRepository.pushTodo(pushWrapper)
+        ActivityDetailApiService::class.api
+            .addTodo(pushWrapper)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError {
-                _isAdd.postValue(0)
-            }
+            .mapOrInterceptException {  }
             .safeSubscribeBy {
-                it.data.syncTime.apply {
+                it.syncTime.apply {
                     setLastSyncTime(this)
-                    _isAdd.postValue(1)
                 }
             }
     }

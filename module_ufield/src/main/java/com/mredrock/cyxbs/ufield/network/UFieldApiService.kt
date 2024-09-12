@@ -55,9 +55,7 @@ interface UFieldApiService {
     @GET("/magipoke-ufield/isadmin/")
     fun getIsAdmin():Single<ApiWrapper<IsAdminBean>>
 
-    @POST("/magipoke-todo/batch-create")
-    fun pushTodo(@Body pushWrapper: TodoListPushWrapper):
-            Single<ApiWrapper<SyncTime>>
+
 
 
 }

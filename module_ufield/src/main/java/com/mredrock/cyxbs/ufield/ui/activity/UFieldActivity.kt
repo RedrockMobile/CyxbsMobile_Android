@@ -47,7 +47,6 @@ class UFieldActivity : BaseActivity() {
         iniTab()
         iniIsAdmin()
         iniClick()
-
     }
 
 

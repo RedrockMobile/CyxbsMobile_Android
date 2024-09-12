@@ -47,8 +47,9 @@ class AddAffairViewModel : BaseViewModel() {
       getLastSyncTime()
     )
     AffairRepository.addTodo(pushWrapper)
+      .mapOrInterceptException {  }
       .safeSubscribeBy {
-        it.data.syncTime.apply {
+        it.syncTime.apply {
           setLastSyncTime(this)
         }
       }

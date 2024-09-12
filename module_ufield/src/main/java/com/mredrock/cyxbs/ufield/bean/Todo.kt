@@ -27,7 +27,10 @@ data class Todo(
     @SerializedName("type")
     var type: String,
     @SerializedName("is_pinned")
-    var isPinned: Int//是否置顶
+    var isPinned: Int,//是否置顶
+    @SerializedName("end_time")
+    var endTime:String
+
 ) : Serializable {
     companion object {
         fun generateEmptyTodo(): Todo {
@@ -39,7 +42,8 @@ data class Todo(
                 RemindMode.generateDefaultRemindMode(),
                 System.currentTimeMillis(),
                 "other",
-                0
+                0,
+                ""
             )
         }
     }

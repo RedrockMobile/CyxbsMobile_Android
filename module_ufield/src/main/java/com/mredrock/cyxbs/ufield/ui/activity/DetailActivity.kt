@@ -173,7 +173,7 @@ class DetailActivity : BaseActivity() {
                     tvMinutes.gone()
                     tvSeconds.gone()
                     layout.gone()
-//                    tvAddTodo.gone()
+                    tvAddTodo.gone()
                 } else {
                     startDownTimer(it.activityStartAt)
                 }
@@ -190,7 +190,7 @@ class DetailActivity : BaseActivity() {
                     viewModel.wantToSee(id)
                 }
             }
-            if (it.addTodo != 0) {
+            if (it.isAdd) {
                 tvAddTodo.setTextColor(
                     ContextCompat.getColor(
                         this@DetailActivity,
@@ -200,15 +200,15 @@ class DetailActivity : BaseActivity() {
                 tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
             } else {
                 tvAddTodo.setOnClickListener {
-                    tvAddTodo.setTextColor(
-                        ContextCompat.getColor(
-                            this@DetailActivity,
-                            R.color.uField_text_haveadd
+                        tvAddTodo.setTextColor(
+                            ContextCompat.getColor(
+                                this@DetailActivity,
+                                R.color.uField_text_haveadd
+                            )
                         )
-                    )
-                    tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
-                    viewModel.addTodo(createTodo())
-                    viewModel.isAdd(id)
+                        tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
+                        viewModel.addTodo(createTodo())
+                        viewModel.isAdd(id)
                 }
             }
         }
@@ -285,7 +285,7 @@ class DetailActivity : BaseActivity() {
     }
 
     private fun createTodo(): Todo {
-        val notifyDatetime = viewModel.detailData.value?.let { otherTrans(it.activityStartAt) }
+        val notifyDatetime = viewModel.detailData.value?.let { otherTrans(it.activityStartAt) }?:""
         val todo = Todo(
             System.currentTimeMillis() / 1000,
             tvTitle.text.toString(),
@@ -294,7 +294,8 @@ class DetailActivity : BaseActivity() {
             RemindMode(0, arrayListOf(), arrayListOf(), arrayListOf(), notifyDatetime),
             System.currentTimeMillis(),
             "other",
-            0
+            0,
+            notifyDatetime
         )
         return todo
     }
