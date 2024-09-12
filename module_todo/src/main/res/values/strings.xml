@@ -18,6 +18,7 @@
     <string name="todo_string_management_change">退出管理</string>
     <string name="todo_string_delete">删除</string>
     <string name="todo_string_totop">置顶</string>
+    <string name="todo_string_tonotop">取消置顶</string>
     <string name="todo_string_tab1">全部</string>
     <string name="todo_string_tab2">学习</string>
     <string name="todo_string_tab3">生活</string>

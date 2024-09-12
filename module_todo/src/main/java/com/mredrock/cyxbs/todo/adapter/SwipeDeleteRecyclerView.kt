@@ -135,7 +135,7 @@ class SwipeDeleteRecyclerView @JvmOverloads constructor(
 
                 if (item != null) {
                     if (item.isPinned==1) {
-                        mMenuViewWidth = menuView.width + layoutParams.leftMargin + layoutParams.rightMargin
+                        mMenuViewWidth = menuView.width+menuView.width + layoutParams.leftMargin + layoutParams.rightMargin
                         return
                     }
                 }

@@ -225,33 +225,93 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     override fun ontopButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
-        // 更新isPinned状态并移除当前项
-        item.isPinned = 1
-        currentList.removeAt(position)
+        if (item.isPinned == 0) {
+            // 更新isPinned状态并移除当前项
+            item.isPinned = 1
+            currentList.removeAt(position)
 
-        // 将项添加到列表的顶部
-        currentList.add(0, item)
+            // 将项添加到列表的顶部
+            currentList.add(0, item)
 
-        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
 
-        mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
+            mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
 
-        // 提交更新后的列表
-        todoAllAdapter.submitList(currentList) {
-            // 滚动到顶部以显示置顶的项
-            mRecyclerView.scrollToPosition(0)
+            // 提交更新后的列表
+            todoAllAdapter.submitList(currentList) {
+                // 滚动到顶部以显示置顶的项
+                mRecyclerView.scrollToPosition(0)
+            }
+        } else {
+            item.isPinned = 0
+            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+            mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 0))
+            currentList.removeAt(position)
+            if (getTopItems() == 0) {
+                currentList.add(1, item)
+            } else {
+                currentList.add(getTopItems(), item)
+            }
+            todoAllAdapter.submitList(currentList)
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTodoItem(todoItem: Todo) {
-        if (todoItem.endTime == todoItem.remindMode.notifyDateTime) {
+        Log.d("day", "updateTodoItem: ${todoItem.endTime}")
+        if (todoItem.endTime == todoItem.remindMode.notifyDateTime && todoItem.endTime != "") {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             mViewModel.delTodo(DelPushWrapper(listOf(todoItem.todoId), syncTime, 1))
             val currentList = todoAllAdapter.currentList.toMutableList()
             currentList.remove(todoItem)
             todoAllAdapter.submitList(currentList)
+        } else if (todoItem.endTime == "" && todoItem.remindMode.repeatMode != 0) {
+            var currentSystemTime = LocalDateTime.now()
+            if (todoItem.remindMode.notifyDateTime != "") {
+                currentSystemTime = todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
+            }
+            val initialRemindTime = currentSystemTime
+            viewLifecycleOwner.lifecycleScope.launch {
+                val nextRemindTime = withContext(Dispatchers.Default) {
+                    when (todoItem.remindMode.repeatMode) {
+                        1 -> NocalculateNextDailyRemindTime(initialRemindTime)
+                        2 ->
+                            NocalculateNextWeeklyRemindTime(
+                                initialRemindTime,
+                                todoItem.remindMode.week
+                            )
+
+                        3 ->
+                            NocalculateNextMonthlyRemindTime(
+                                initialRemindTime,
+                                todoItem.remindMode.day
+                            )
+
+                        else -> initialRemindTime
+                    }
+                }
+
+                Log.d("current", "updateTodoItem: $nextRemindTime")
+                nextRemindTime?.let {
+                    if (todoItem.remindMode.notifyDateTime == "") {
+                        todoItem.remindMode.notifyDateTime = formatDateTime(it)
+                        Log.d("day", "updateTodoItem: $todoItem.remindMode.notifyDateTime")
+                        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                        mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+                        todoAllAdapter.notifyDataSetChanged()
+                    } else {
+                        todoItem.remindMode.notifyDateTime = formatDateTime(it)
+                        val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+                        mViewModel.pushTodo(TodoListPushWrapper(listOf(todoItem), syncTime, 1, 0))
+                        val currentList = todoAllAdapter.currentList.toMutableList()
+                        currentList.remove(todoItem)
+                        todoAllAdapter.submitList(currentList) {
+                            mRecyclerView.scrollToPosition(getTopItems())
+                        }
+                    }
+                }
+            }
+
         } else {
             var currentSystemTime = LocalDateTime.now()
             if (todoItem.remindMode.notifyDateTime != "") {
@@ -321,6 +381,16 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    private fun NocalculateNextDailyRemindTime(
+        currentRemindTime: LocalDateTime
+    ): LocalDateTime? {
+        var nextRemindTime =
+            currentRemindTime.plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0)
+        Log.d("day", "NocalculateNextDailyRemindTime:$nextRemindTime ")
+        return nextRemindTime
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateNextWeeklyRemindTime(
         currentRemindTime: LocalDateTime,
         weekDays: List<Int>,
@@ -347,6 +417,34 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                 Log.d("ReminderCalculation", "Next remind time is after end time")
                 return endTime // 超过截止时间，不再提醒
             }
+        }
+
+        Log.d("运算结果", "calculateNextWeeklyRemindTime: $nextRemindTime")
+        return nextRemindTime
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun NocalculateNextWeeklyRemindTime(
+        currentRemindTime: LocalDateTime,
+        weekDays: List<Int>,
+    ): LocalDateTime? {
+        // 初始化为当前提醒时间并设置为当天的00:00:00
+        var nextRemindTime = currentRemindTime.withHour(0).withMinute(0).withSecond(0).withNano(0)
+
+        // 确保 weekDays 列表包含合法的值
+        val validWeekDays = weekDays.filter { it in 1..7 }
+        if (validWeekDays.isEmpty()) {
+            Log.w("ReminderCalculation", "No valid week days provided")
+            return null
+        }
+
+        // 找到下一个符合条件的周一
+        // 首先将 nextRemindTime 移动到第二天，确保不是当前日期
+        nextRemindTime = nextRemindTime.plusDays(1)
+
+        // 循环直到找到符合条件的下一个日期
+        while (nextRemindTime.dayOfWeek.value !in validWeekDays) {
+            nextRemindTime = nextRemindTime.plusDays(1)
         }
 
         Log.d("运算结果", "calculateNextWeeklyRemindTime: $nextRemindTime")
@@ -399,6 +497,46 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun NocalculateNextMonthlyRemindTime(
+        currentRemindTime: LocalDateTime,
+        days: List<Int>,
+    ): LocalDateTime? {
+        var nextRemindTime = currentRemindTime
+        val sortedDays = days.sorted() // 确保 days 是排序的
+
+        // 循环直到找到下一个合适的提醒时间
+        while (true) {
+            var found = false
+
+            // 遍历 days 列表中的每一天
+            for (day in sortedDays) {
+                // 尝试将提醒时间设置为当前月的 day 号
+                val possibleRemindTime = nextRemindTime
+                    .withDayOfMonth(day)
+                    .withHour(0)
+                    .withMinute(0)
+                    .withSecond(0)
+                    .withNano(0)
+
+                // 如果找到的时间比当前时间晚，则返回该时间
+                if (possibleRemindTime.isAfter(currentRemindTime)) {
+                    nextRemindTime = possibleRemindTime
+                    found = true
+                    break // 找到合适的提醒时间，跳出循环
+                }
+            }
+
+            // 如果找到合适的提醒时间，跳出 while 循环
+            if (found) {
+                return nextRemindTime
+            }
+
+            // 如果没有找到，增加一个月并重置为下个月第一个指定的日期
+            nextRemindTime = nextRemindTime.plusMonths(1).withDayOfMonth(sortedDays[0])
+        }
+    }
+
 
     private fun getTopItems(): Int {
         var topitems = 0;
@@ -424,17 +562,15 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinishCheck(item: Todo) {
         pendingUpdateTask?.let { handler.removeCallbacks(it) }
-        if (item.remindMode.repeatMode != 0 && item.endTime != "") {
+        if (item.remindMode.repeatMode != 0 ) {
             // 创建新的任务
             pendingUpdateTask = Runnable {
                 updateTodoItem(item)
             }
             // 延迟 1.5秒执行新的任务
             pendingUpdateTask?.let { handler.postDelayed(it, 1500) }
-        } else if (item.endTime != ""||item.remindMode.notifyDateTime!="" && item.remindMode.repeatMode == 0) {
+        } else {
             pendingUpdateTask = Runnable {
-                updateTodoItem(item)
-
                 val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
                 mViewModel.delTodo(DelPushWrapper(listOf(item.todoId), syncTime, 1))
                 val currentList = todoAllAdapter.currentList.toMutableList()
@@ -442,10 +578,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                 todoAllAdapter.submitList(currentList)
             }
             pendingUpdateTask?.let { handler.postDelayed(it, 1500) }
-        } else {
-            val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
-            item.isChecked = 1
-            mViewModel.pushTodo(TodoListPushWrapper(listOf(item), syncTime, 1, 1))
         }
     }
 
@@ -453,9 +585,14 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     override fun onItemnotify(item: Todo) {
         if (item.endTime != "") {
             updateTodoItem(item)
+        } else {
+            if (item.remindMode.repeatMode != 0) {
+                updateTodoItem(item)
+            }
         }
 
     }
+
 
     override fun onResume() {
         mViewModel.getAllTodo()
