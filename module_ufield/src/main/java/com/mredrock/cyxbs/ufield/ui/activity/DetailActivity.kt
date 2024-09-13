@@ -110,15 +110,13 @@ class DetailActivity : BaseActivity() {
             }
         }
         viewModel.isAdd.observe(this) {
-            if (it == 1) {
-                tvAddTodo.setTextColor(
-                    ContextCompat.getColor(
-                        this@DetailActivity,
-                        R.color.uField_text_haveadd
-                    )
+            tvAddTodo.setTextColor(
+                ContextCompat.getColor(
+                    this@DetailActivity,
+                    R.color.uField_text_haveadd
                 )
-                tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
-            }
+            )
+            tvAddTodo.setBackgroundResource(R.drawable.ufield_shape_haveadd)
         }
     }
 
@@ -192,7 +190,7 @@ class DetailActivity : BaseActivity() {
                     viewModel.wantToSee(id)
                 }
             }
-            if (it.addTodo != 0) {
+            if (it.isAdd) {
                 tvAddTodo.setTextColor(
                     ContextCompat.getColor(
                         this@DetailActivity,
@@ -287,7 +285,7 @@ class DetailActivity : BaseActivity() {
     }
 
     private fun createTodo(): Todo {
-        val notifyDatetime = viewModel.detailData.value?.let { otherTrans(it.activityStartAt) }
+        val notifyDatetime = viewModel.detailData.value?.let { otherTrans(it.activityStartAt) }?:""
         val todo = Todo(
             System.currentTimeMillis() / 1000,
             tvTitle.text.toString(),
@@ -296,7 +294,8 @@ class DetailActivity : BaseActivity() {
             RemindMode(0, arrayListOf(), arrayListOf(), arrayListOf(), notifyDatetime),
             System.currentTimeMillis(),
             "other",
-            0
+            0,
+            notifyDatetime
         )
         return todo
     }

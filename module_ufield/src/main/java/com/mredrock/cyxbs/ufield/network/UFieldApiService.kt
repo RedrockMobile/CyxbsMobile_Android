@@ -4,12 +4,8 @@ import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.ufield.bean.IsAdminBean
 import com.mredrock.cyxbs.ufield.bean.ItemActivityBean
-import com.mredrock.cyxbs.ufield.bean.SyncTime
-import com.mredrock.cyxbs.ufield.bean.TodoListPushWrapper
 import io.reactivex.rxjava3.core.Single
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 
 /**
  *  description :
@@ -55,9 +51,6 @@ interface UFieldApiService {
     @GET("/magipoke-ufield/isadmin/")
     fun getIsAdmin():Single<ApiWrapper<IsAdminBean>>
 
-    @POST("/magipoke-todo/batch-create")
-    fun pushTodo(@Body pushWrapper: TodoListPushWrapper):
-            Single<ApiWrapper<SyncTime>>
 
 
 }
