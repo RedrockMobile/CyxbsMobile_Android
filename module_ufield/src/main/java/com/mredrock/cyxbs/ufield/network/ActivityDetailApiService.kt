@@ -4,7 +4,10 @@ import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.IApi
 import com.mredrock.cyxbs.ufield.bean.ActivityBean
+import com.mredrock.cyxbs.ufield.bean.SyncTime
+import com.mredrock.cyxbs.ufield.bean.TodoListPushWrapper
 import io.reactivex.rxjava3.core.Single
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -24,7 +27,12 @@ interface ActivityDetailApiService : IApi {
     @PUT("/magipoke-ufield/activity/action/watch/")
     fun wantToSee(@Query("activity_id") id: Int): Single<ApiWrapper<ApiStatus>>
 
+    @POST("/magipoke-todo/batch-create")
+    fun addTodo(@Body pushWrapper: TodoListPushWrapper):
+            Single<ApiWrapper<SyncTime>>
+
+
     @POST("/magipoke-ufield/activity/addTodo/")
-    fun addTodo(@Query("activity_id") id: Int): Single<ApiWrapper<ApiStatus>>
+    fun isAdd(@Query("activity_id") id: Int): Single<ApiWrapper<ApiStatus>>
 
 }
