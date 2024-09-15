@@ -35,8 +35,12 @@ class RepeatTimeRvAdapter(private val position: Int) :
      */
 
     private var mClick: ((Int) -> Unit)? = null
+    private var mChangeRepeatTime: (() -> Unit)? = null
     fun setOnItemClick(listener: (Int) -> Unit) {
         mClick = listener
+    }
+    fun setOnChangeRepeatTime(listener: () -> Unit) {
+        mChangeRepeatTime = listener
     }
 
 
@@ -47,6 +51,9 @@ class RepeatTimeRvAdapter(private val position: Int) :
         init {
             repeatTimeCancel.setOnClickListener {
                 mClick?.invoke(absoluteAdapterPosition)
+            }
+            repeatTimeText.setOnClickListener {
+                mChangeRepeatTime?.invoke()
             }
         }
 
@@ -64,6 +71,9 @@ class RepeatTimeRvAdapter(private val position: Int) :
         init {
             imgDetailCancel.setOnClickListener {
                 mClick?.invoke(absoluteAdapterPosition)
+            }
+            tvDetailRepeat.setOnClickListener {
+                mChangeRepeatTime?.invoke()
             }
         }
 

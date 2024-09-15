@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aigestudio.wheelpicker.WheelPicker
@@ -50,8 +49,8 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
     private lateinit var llCategory: LinearLayout
     private lateinit var llCategoryList: LinearLayout
     private lateinit var wpCategory: WheelPicker
-    private lateinit var btnAddtodoBt: AppCompatTextView
-    private lateinit var btnAddtodoBtCancel: AppCompatTextView
+    private lateinit var btnAddTodoBt: AppCompatTextView
+    private lateinit var btnAddTodoBtCancel: AppCompatTextView
     private lateinit var viewLine: View
 
     init {
@@ -73,6 +72,7 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initClick() {
 
 
@@ -108,10 +108,7 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
             tvAddNoticeTime.apply {
                 text = "设置截止时间"
                 setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.todo_addtodo_text_color
-                    )
+                    getColor(R.color.todo_addtodo_text_color)
                 )
             }
             tvDeleteTime.gone()
@@ -123,11 +120,11 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
         llCategory.setOnClickListener {
             showCategoryUI()
         }
-        btnAddtodoBt.setOnClickListener {
+        btnAddTodoBt.setOnClickListener {
             selectCategory()
             hideUI()
         }
-        btnAddtodoBtCancel.setOnClickListener {
+        btnAddTodoBtCancel.setOnClickListener {
             hideUI()
         }
         rvRepeatTime.apply {
@@ -148,7 +145,11 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
                     if (SelectRepeatTimeList.isEmpty()) {
                         rvRepeatTime.gone()
                         tvAddRepeat.visible()
+                        todo.remindMode.repeatMode = RemindMode.NONE
                     }
+                }
+                setOnChangeRepeatTime {
+                    showSelectRepeatDialog()
                 }
             }
         }
@@ -158,19 +159,26 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
         SelectRepeatDialog(
             context,
             R.style.BottomSheetDialogTheme,
-            1
+            1,
+            todo
         ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
             todo.remindMode.repeatMode = repeatMode
             if (repeatMode == RemindMode.WEEK) {
                 todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
+                todo.remindMode.day = ArrayList()
             } else {
                 todo.remindMode.day = selectRepeatTimeListIndex as ArrayList
+                todo.remindMode.week = ArrayList()
             }
             SelectRepeatTimeList = selectRepeatTimeList as ArrayList<String>
-            repeatTimeAdapter.submitList(SelectRepeatTimeList)
+            repeatTimeAdapter.submitList(SelectRepeatTimeList){
+                rvRepeatTime.scrollToPosition(0)
+            }
             if (SelectRepeatTimeList.isNotEmpty()) {
                 rvRepeatTime.visible()
                 tvAddRepeat.gone()
+            }else {
+                tvAddRepeat.visible()
             }
         }.show()
     }
@@ -228,16 +236,16 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
     private fun showCategoryUI() {
         viewLine.visible()
         llCategoryList.visible()
-        btnAddtodoBt.visible()
-        btnAddtodoBtCancel.visible()
+        btnAddTodoBt.visible()
+        btnAddTodoBtCancel.visible()
         wpCategory.data = listOf("学习", "生活", "其他")
     }
 
     private fun hideUI() {
         viewLine.gone()
         llCategoryList.gone()
-        btnAddtodoBt.gone()
-        btnAddtodoBtCancel.gone()
+        btnAddTodoBt.gone()
+        btnAddTodoBtCancel.gone()
     }
     private fun initView(dialog: Dialog){
         tvCancel = dialog.findViewById(R.id.todo_tv_addtodo_cancel)
@@ -251,8 +259,8 @@ class AddTodoDialog(context: Context, style: Int, val onAddTodo: (Todo) -> Unit)
         llCategory = dialog.findViewById(R.id.todo_ll_addtodo_category)
         llCategoryList = dialog.findViewById(R.id.todo_ll_addtodo_category_list)
         wpCategory = dialog.findViewById(R.id.todo_wp_addtodo_category_list)
-        btnAddtodoBt = dialog.findViewById(R.id.todo_btn_confirm_addtodo)
-        btnAddtodoBtCancel = dialog.findViewById(R.id.todo_btn_cancel_addtodo)
+        btnAddTodoBt = dialog.findViewById(R.id.todo_btn_confirm_addtodo)
+        btnAddTodoBtCancel = dialog.findViewById(R.id.todo_btn_cancel_addtodo)
         viewLine = dialog.findViewById(R.id.todo_v_addtodo_category_line)
     }
 
