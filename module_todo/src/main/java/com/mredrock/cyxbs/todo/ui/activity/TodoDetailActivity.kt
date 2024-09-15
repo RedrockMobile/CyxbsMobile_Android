@@ -119,11 +119,11 @@ class TodoDetailActivity : BaseActivity() {
     private fun initView() {
         viewModel.isChanged.observe(this) {
             if (it) {
-                tvSaveGrey.visibility = View.GONE
-                tvSave.visibility = View.VISIBLE
+                tvSaveGrey.gone()
+                tvSave.visible()
             } else {
-                tvSaveGrey.visibility = View.VISIBLE
-                tvSave.visibility = View.GONE
+                tvSaveGrey.visible()
+                tvSave.gone()
             }
         }
 
@@ -142,9 +142,9 @@ class TodoDetailActivity : BaseActivity() {
 
         val repeatMode: Int = todo.remindMode.repeatMode
         if (todo.remindMode.repeatMode == RemindMode.NONE) {
-            tvRepeatTime.visibility = View.VISIBLE
+            tvRepeatTime.visible()
         } else {
-            tvRepeatTime.visibility = View.GONE
+            tvRepeatTime.gone()
             val selectRepeatTimeList: List<String> = if (repeatMode == RemindMode.WEEK) {
                 todo.remindMode.week
             } else {
@@ -166,18 +166,42 @@ class TodoDetailActivity : BaseActivity() {
                         updatedList.removeAt(position)
                         repeatTimeAdapter.submitList(updatedList)
                         SelectRepeatTimeList = updatedList as ArrayList<String> // 更新数据源
+
                         if (todo.remindMode.repeatMode == RemindMode.WEEK) {
+                            val selectRepeatTimeList = viewModel.rawTodo?.remindMode?.week
+                                ?.map { it.toString() }
+                                ?.toList() ?: listOf()
+                            viewModel.setChangeState(
+                                judge() ||
+                                        transformRepeat(
+                                            selectRepeatTimeList,
+                                            RemindMode.WEEK
+                                        ) != SelectRepeatTimeList
+                            )
                             todo.remindMode.week.removeAt(position)
                         } else if (todo.remindMode.repeatMode == RemindMode.MONTH) {
+                            val selectRepeatTimeList = viewModel.rawTodo?.remindMode?.day
+                                ?.map { it.toString() }
+                                ?.toList() ?: listOf()
+                            viewModel.setChangeState(
+                                judge() ||
+                                        transformRepeat(
+                                            selectRepeatTimeList,
+                                            RemindMode.MONTH
+                                        ) != SelectRepeatTimeList
+                            )
                             todo.remindMode.day.removeAt(position)
                         }
                     }
                     if (SelectRepeatTimeList.isEmpty()) {
-                        rvRepeatTime.visibility = View.INVISIBLE
-                        tvRepeatTime.visibility = View.VISIBLE
+                        rvRepeatTime.gone()
+                        tvRepeatTime.visible()
                         viewModel.setChangeState(true)
                         todo.remindMode.repeatMode = RemindMode.NONE
                     }
+                }
+                setOnChangeRepeatTime {
+                    selectRepeatTime()
                 }
             }
         }
@@ -265,29 +289,7 @@ class TodoDetailActivity : BaseActivity() {
         }
 
         tvRepeatTime.setOnClickListener {
-            onClickProxy {
-                SelectRepeatDialog(
-                    this,
-                    R.style.BottomSheetDialogThemeNight,
-                    0
-                ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
-                    todo.remindMode.repeatMode = repeatMode
-
-                    if (repeatMode == RemindMode.WEEK) {
-                        todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
-                    } else {
-                        todo.remindMode.day = selectRepeatTimeListIndex as ArrayList<Int>
-                    }
-                    viewModel.setChangeState(SelectRepeatTimeList != selectRepeatTimeList as ArrayList<String>)
-                    SelectRepeatTimeList = selectRepeatTimeList
-
-                    repeatTimeAdapter.submitList(SelectRepeatTimeList)
-                    if (SelectRepeatTimeList.isNotEmpty()) {
-                        rvRepeatTime.visibility = View.VISIBLE
-                        tvRepeatTime.visibility = View.INVISIBLE
-                    }
-                }.show()
-            }
+            selectRepeatTime()
         }
 
         tvSave.setOnClickListener {
@@ -300,7 +302,7 @@ class TodoDetailActivity : BaseActivity() {
             todo.detail = edRemark.text.toString()
             todo.lastModifyTime = System.currentTimeMillis()
             viewModel.updateTodo(todo)
-            viewModel.judgeChange(todo)
+            finish()
         }
 
         tvClassify.setOnClickListener {
@@ -335,6 +337,40 @@ class TodoDetailActivity : BaseActivity() {
         }
     }
 
+    private fun selectRepeatTime() {
+        onClickProxy {
+            SelectRepeatDialog(
+                this,
+                R.style.BottomSheetDialogThemeNight,
+                0,
+                todo
+            ) { selectRepeatTimeListIndex, selectRepeatTimeList, repeatMode ->
+                todo.remindMode.repeatMode = repeatMode
+
+                if (repeatMode == RemindMode.WEEK) {
+                    todo.remindMode.week = selectRepeatTimeListIndex as ArrayList<Int>
+                    todo.remindMode.day = ArrayList()
+                } else {
+                    todo.remindMode.day = selectRepeatTimeListIndex as ArrayList<Int>
+                    todo.remindMode.week = ArrayList()
+                }
+                viewModel.setChangeState(SelectRepeatTimeList != selectRepeatTimeList as ArrayList<String>)
+                SelectRepeatTimeList = selectRepeatTimeList
+
+                repeatTimeAdapter.submitList(SelectRepeatTimeList) {
+                    rvRepeatTime.scrollToPosition(0)
+                }
+                if (SelectRepeatTimeList.isNotEmpty()) {
+                    rvRepeatTime.visible()
+                    tvRepeatTime.gone()
+                } else {
+                    rvRepeatTime.gone()
+                    tvRepeatTime.visible()
+                }
+            }.show()
+        }
+    }
+
     //统一处理此条todo的点击事件（试图修改）
     //如果已经完成，则不handle这次点击事件
     private fun onClickProxy(onClick: () -> Unit) {
@@ -350,6 +386,7 @@ class TodoDetailActivity : BaseActivity() {
         tvClassify.text != viewModel.rawTodo?.type ||
                 tvDeadline.text != viewModel.rawTodo?.endTime ||
                 etTitle.toString() != viewModel.rawTodo?.title ||
-                edRemark.toString() != viewModel.rawTodo?.detail
+                edRemark.toString() != viewModel.rawTodo?.detail ||
+                todo.remindMode.repeatMode != viewModel.rawTodo?.remindMode?.repeatMode
 
 }

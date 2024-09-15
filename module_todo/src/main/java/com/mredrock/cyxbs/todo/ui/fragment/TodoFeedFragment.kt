@@ -15,7 +15,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.todo.R
 import com.mredrock.cyxbs.todo.adapter.TodoFeedAdapter
 import com.mredrock.cyxbs.todo.model.bean.Todo
-import com.mredrock.cyxbs.todo.model.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_FEED
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
@@ -24,6 +23,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.todo.model.bean.DelPushWrapper
 
 /**
  * description: 首页的邮子清单
@@ -67,8 +67,7 @@ class TodoFeedFragment : BaseFragment() {
                         todoList[it].isChecked = 1
                         val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
                         mViewModel.apply {
-                            pushTodo(TodoListPushWrapper(listOf(todoList[it]), syncTime, 1, 0))
-                            getAllTodo()
+                            delTodo(DelPushWrapper(listOf(todoList[it].todoId), syncTime))
                         }
                     }
 
