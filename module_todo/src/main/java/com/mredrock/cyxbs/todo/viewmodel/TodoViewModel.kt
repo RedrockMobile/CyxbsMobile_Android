@@ -3,7 +3,11 @@ package com.mredrock.cyxbs.todo.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.todo.model.bean.DelPushWrapper
+import com.mredrock.cyxbs.todo.model.bean.RemindMode.Companion.generateDefaultRemindMode
 import com.mredrock.cyxbs.todo.model.bean.Todo
 import com.mredrock.cyxbs.todo.model.bean.TodoListGetWrapper
 import com.mredrock.cyxbs.todo.model.bean.TodoListPushWrapper
@@ -12,11 +16,6 @@ import com.mredrock.cyxbs.todo.model.bean.TodoPinData
 import com.mredrock.cyxbs.todo.model.database.TodoDatabase
 import com.mredrock.cyxbs.todo.repository.TodoRepository
 import com.mredrock.cyxbs.todo.ui.widget.TodoWidget
-import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.extensions.getSp
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
-import com.mredrock.cyxbs.lib.utils.utils.LogUtils
-import com.mredrock.cyxbs.todo.model.bean.RemindMode.Companion.generateDefaultRemindMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -46,7 +45,6 @@ class TodoViewModel : BaseViewModel() {
     val isPushed: LiveData<Boolean> get() = _isPushed
     fun setEnabled(click: Boolean) {
         _isEnabled.value = click
-        LogUtils.d("TodoViewModel", "isEnabled set to ${_isEnabled.value}")
     }
 
     fun setChangeState(state: Boolean) {
