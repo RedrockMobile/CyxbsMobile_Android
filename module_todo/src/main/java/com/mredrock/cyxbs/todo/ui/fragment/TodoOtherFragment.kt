@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.todo.ui.fragment
 
+
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -39,23 +40,24 @@ import com.mredrock.cyxbs.todo.viewmodel.TodoViewModel
  * date : 2024/8/11 20:16
  * version: 1.0
  */
-class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
+class TodoOtherFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
-    private val mRecyclerView by R.id.todo_studyrv.view<SwipeDeleteRecyclerView>()
+    private val mRecyclerView by R.id.todo_otherrv.view<SwipeDeleteRecyclerView>()
     private val emptyview by R.id.empty_view.view<View>()
-    private val emptyBottom by R.id.todo_bottom_action_layout_study.view<LinearLayoutCompat>()
-    private val acDeleteButton by R.id.button_bottom_right_study.view<FrameLayout>()
-    private val acTopButton by R.id.button_bottom_left_study.view<FrameLayout>()
-    private val checkall by R.id.todo_bottom_check_al_study.view<CheckBox>()
+    private val emptyBottom by R.id.todo_bottom_action_layout_other.view<LinearLayoutCompat>()
+    private val acDeleteButton by R.id.button_bottom_right_other.view<FrameLayout>()
+    private val acTopButton by R.id.button_bottom_left_other.view<FrameLayout>()
+    private val checkall by R.id.todo_bottom_check_al_other.view<CheckBox>()
     private val mViewModel: TodoViewModel by activityViewModels()
     private val handler = Handler(Looper.getMainLooper())
     private var pendingUpdateTask: Runnable? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.todo_fragment_study, container, false)
+        return inflater.inflate(R.layout.todo_fragment_other, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,6 +71,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         mRecyclerView.adapter = todoAllAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(context)
         initList()
+//        todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
         val callback = DragAndDropCallback(mRecyclerView, todoAllAdapter)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(mRecyclerView)
@@ -91,6 +94,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     private fun initClick() {
 
+
         acDeleteButton.setOnClickListener {
             DeleteTodoDialog.Builder(requireContext())
                 .setPositiveClick {
@@ -102,7 +106,6 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                             todoAllAdapter.selectItems.map { it.todoId },
                             syncTime
                         )
-
                     )
                     todoAllAdapter.selectItems.clear()
                     dismiss()
@@ -113,6 +116,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
         acTopButton.setOnClickListener {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
+
             for (item in todoAllAdapter.selectItems) {
                 mViewModel.pinTodo(TodoPinData(1, 1, syncTime.toInt(), item.todoId.toInt()))
             }
@@ -162,7 +166,7 @@ class TodoStudyFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     private fun initList() {
 
-        mViewModel.categoryTodoStudy.observe(viewLifecycleOwner) {
+        mViewModel.categoryTodoOther.observe(viewLifecycleOwner) {
             todoAllAdapter.submitList(it.todoArray) {
                 checkIfEmpty()
             }

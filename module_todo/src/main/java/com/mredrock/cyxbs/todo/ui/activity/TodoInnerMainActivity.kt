@@ -11,20 +11,21 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.todo.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.DISCOVER_TODO_MAIN
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.todo.R
 import com.mredrock.cyxbs.todo.model.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.todo.ui.dialog.AddTodoDialog
 import com.mredrock.cyxbs.todo.ui.fragment.TodoAllFragment
 import com.mredrock.cyxbs.todo.ui.fragment.TodoLifeFragment
-import com.mredrock.cyxbs.todo.ui.fragment.TodoOtherFragement
+import com.mredrock.cyxbs.todo.ui.fragment.TodoOtherFragment
 import com.mredrock.cyxbs.todo.ui.fragment.TodoStudyFragment
 import com.mredrock.cyxbs.todo.viewmodel.TodoViewModel
 import kotlin.properties.Delegates
@@ -35,7 +36,7 @@ import kotlin.properties.Delegates
  * date: 2024/8/20 17:31
  */
 @Route(path = DISCOVER_TODO_MAIN)
-class TodoInnerMainActivity : com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
+class TodoInnerMainActivity : BaseActivity() {
 
     //在详情页面是否有做出修改的flag
     private var changedFlag = false
@@ -104,7 +105,7 @@ class TodoInnerMainActivity : com.mredrock.cyxbs.lib.base.ui.BaseActivity() {
             .add { TodoAllFragment() }
             .add { TodoStudyFragment() }
             .add { TodoLifeFragment() }
-            .add { TodoOtherFragement() }
+            .add { TodoOtherFragment() }
         val tabs = arrayOf(
             getString(R.string.todo_string_tab1),
             getString(R.string.todo_string_tab2),
