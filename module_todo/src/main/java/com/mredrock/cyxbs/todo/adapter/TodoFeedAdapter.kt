@@ -35,7 +35,7 @@ class TodoFeedAdapter :
             }
 
             override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-                return oldItem == newItem
+                return oldItem == newItem && oldItem.remindMode.notifyDateTime == newItem.remindMode.notifyDateTime
             }
         }
     }
@@ -57,8 +57,13 @@ class TodoFeedAdapter :
 
         init {
             defaultCheckbox.setOnClickListener {
+                var target = 1
                 defaultCheckbox.setStatusWithAnime(true){
-                    mClick?.invoke(absoluteAdapterPosition)
+                    // 由于自定义View的缘故，导致这里回调多次，故加个标志，防止多次回调
+                    if (target == 1){
+                        mClick?.invoke(absoluteAdapterPosition)
+                        target++
+                    }
                 }
                 todoTitle.setTextColor(
                     ContextCompat.getColor(
@@ -82,14 +87,17 @@ class TodoFeedAdapter :
 
         fun bind(todo: Todo) {
             todoTitle.text = todo.title
-            val endTime = todo.endTime?.replace("日", "日  ")
+            var endTime = todo.endTime?.replace("日", "日  ")
+            if (todo.remindMode.notifyDateTime != ""){
+                endTime = todo.remindMode.notifyDateTime?.replace("日", "日  ")
+            }
             defaultCheckbox.apply {
                 setStatusWithAnime(false)
             }
             icRight.gone()
             todoFeedIv.visible()
             todoFeedTime.visible()
-            if (todo.endTime == "") {
+            if (todo.endTime == "" && todo.remindMode.notifyDateTime == "") {
                 todoFeedIv.gone()
                 todoFeedTime.gone()
                 updateUi(false)
@@ -98,6 +106,14 @@ class TodoFeedAdapter :
                 val itemTime = if (!todo.endTime.isNullOrEmpty()) {
                     try {
                         todo.endTime?.let { dateFormat.parse(it)?.time } ?: 0L
+                    } catch (e: ParseException) {
+                        // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
+                        e.printStackTrace()
+                        System.currentTimeMillis()
+                    }
+                } else if (!todo.remindMode.notifyDateTime.isNullOrEmpty()){
+                    try {
+                        todo.remindMode.notifyDateTime?.let { dateFormat.parse(it)?.time } ?: 0L
                     } catch (e: ParseException) {
                         // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
                         e.printStackTrace()

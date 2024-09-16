@@ -3,6 +3,4 @@
     android:shape="oval"> <!-- 将形状改为 oval -->
     <solid
         android:color="#5263FF" />
-    <corners android:radius="360dp"/>
-    <padding android:top="6dp" android:bottom="6dp" />
 </shape>

@@ -188,8 +188,8 @@ class CalendarDialog(
 
         // 检查是否选中
         val isSelected = ((isCurrentYear && isCurrentMonth && day == currentDay) ||
-                (!isCurrentYear && isFirstDay && afterCurrentMonth) ||
-                (isCurrentYear && afterCurrentMonth && isFirstDay)) || (isAfterCurrentYear && isFirstDay)
+                (isAfterCurrentYear && isFirstDay) ||
+                (isCurrentYear && afterCurrentMonth && isFirstDay))
 
         if (isSelected) {
             calendar.set(Calendar.DAY_OF_MONTH, day)
@@ -213,7 +213,7 @@ class CalendarDialog(
                     if (calendar.get(Calendar.YEAR) == currentYear &&
                         calendar.get(Calendar.MONTH) == currentMonth &&
                         it.text.toString().toInt() == currentDay
-                    ) Color.BLUE else getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
+                    ) getColor(R.color.todo_calendar_current_day_tv_color) else getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
                 )
             }
             selectedDayView = this
@@ -229,7 +229,7 @@ class CalendarDialog(
                 if (calendar.get(Calendar.YEAR) == currentYear &&
                     calendar.get(Calendar.MONTH) == currentMonth &&
                     text.toString().toInt() == currentDay
-                ) Color.BLUE else getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
+                ) getColor(R.color.todo_calendar_current_day_tv_color) else getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
             )
         }
     }
@@ -248,9 +248,9 @@ class CalendarDialog(
     private fun createDayTextView(day: Int): TextView {
         return TextView(context).apply {
             text = day.toString()
-            textSize = 16f
+            textSize = 4.6f.spToPx(context)
             gravity = Gravity.CENTER
-            setPadding(20, 23, 20, 23)
+            setPadding(20, 20, 20, 20)
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val dayColor = when {
@@ -267,7 +267,7 @@ class CalendarDialog(
                             ContextCompat.getDrawable(context, R.drawable.todo_shape_bg_day_select)
                         Color.WHITE
                     } else {
-                        Color.BLUE
+                        getColor(R.color.todo_calendar_current_day_tv_color)
                     }
 
                 }
@@ -283,7 +283,7 @@ class CalendarDialog(
             width = 0
             height = GridLayout.LayoutParams.WRAP_CONTENT
             columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            setMargins(20, 15, 20, 15) // 设置单元格间的间距
+            setMargins(20, 10, 20, 10) // 设置单元格间的间距
         }
     }
 
@@ -293,6 +293,11 @@ class CalendarDialog(
         setDayOfCalendar() //刷新日历${calendar.get(Calendar.MONTH) + 1}月
         tvCalendarHeader.text =
             "${calendar.get(Calendar.YEAR)}年${calendar.get(Calendar.MONTH) + 1}月"
+        if (calendar.get(Calendar.MONTH) > currentMonth || calendar.get(Calendar.YEAR) > currentYear){
+            ivPreMonth.setImageResource(R.drawable.todo_ic_pre_month_light)
+        }else{
+            ivPreMonth.setImageResource(R.drawable.todo_ic_pre_month)
+        }
     }
 
     private fun initView(dialog: Dialog) {
@@ -307,5 +312,10 @@ class CalendarDialog(
         tvSelectTime = dialog.findViewById(R.id.todo_tv_time_calendar)
         line = dialog.findViewById(R.id.todo_view_calendar_line)
         ivTime = dialog.findViewById(R.id.todo_iv_time_select)
+    }
+
+    // 扩展函数用于将sp转换为px
+    fun Float.spToPx(context: Context): Float {
+        return this * context.resources.displayMetrics.scaledDensity
     }
 }

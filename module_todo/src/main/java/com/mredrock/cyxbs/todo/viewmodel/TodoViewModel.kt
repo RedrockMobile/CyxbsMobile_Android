@@ -218,6 +218,7 @@ class TodoViewModel : BaseViewModel() {
                     delPushWrapper.delTodoList.forEach { todoId ->
                         TodoDatabase.instance.todoDao().deleteTodoById(todoId)
                     }
+                    TodoWidget.sendAddTodoBroadcast(appContext)
                     getAllTodo()
                 }
             }
@@ -228,6 +229,7 @@ class TodoViewModel : BaseViewModel() {
                         TodoDatabase.instance.todoDao().deleteTodoById(todoId)
                     }
                 }
+                TodoWidget.sendAddTodoBroadcast(appContext)
                 it.syncTime.apply {
                     setLastSyncTime(this)
                     setLastModifyTime(this)

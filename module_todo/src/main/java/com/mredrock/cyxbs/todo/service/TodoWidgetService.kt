@@ -75,7 +75,11 @@ class TodoWidgetService : RemoteViewsService() {
         override fun getViewAt(position: Int): RemoteViews {
             val item = RemoteViews(context.packageName, R.layout.todo_widget_todo_list_item)
             item.setTextViewText(R.id.todo_tv_widget_todo_title, todoList[position].title)
-            item.setTextViewText(R.id.todo_widget_notify_time, todoList[position].endTime)
+            if (!todoList[position].remindMode.notifyDateTime.isNullOrEmpty()){
+                item.setTextViewText(R.id.todo_widget_notify_time, todoList[position].remindMode.notifyDateTime)
+            }else{
+                item.setTextViewText(R.id.todo_widget_notify_time, todoList[position].endTime)
+            }
             return item
         }
 
