@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +19,7 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/todo_bottom_action_layout_life"
         android:layout_width="match_parent"
         android:layout_height="82dp"
@@ -31,26 +32,39 @@
             android:id="@+id/todo_bottom_check_al_life"
             android:layout_width="23dp"
             android:layout_height="23dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="18dp"
-            android:button="@drawable/todo_selector_checkbox" />
+            android:button="@drawable/todo_selector_checkbox"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.045"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.406" />
 
         <TextView
+            android:id="@+id/todoTextview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="19dp"
             android:text="全选"
             android:textColor="@color/todo_config_bottom_check_box"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.157"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.413" />
 
         <FrameLayout
             android:id="@+id/button_bottom_left_life"
             android:layout_width="100dp"
             android:layout_height="37dp"
-            android:layout_marginLeft="48dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/todo_ic_bottom_button_left">
+            android:background="@drawable/todo_ic_bottom_button_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_bottom_right_life"
+            app:layout_constraintHorizontal_bias="0.958"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.355">
 
             <ImageView
                 android:id="@+id/custom_button_icon"
@@ -77,9 +91,13 @@
             android:id="@+id/button_bottom_right_life"
             android:layout_width="100dp"
             android:layout_height="37dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/todo_ic_bottom_right_buttonbac">
+            android:background="@drawable/todo_ic_bottom_right_buttonbac"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.948"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.355">
 
             <ImageView
                 android:id="@+id/custom_buttondelete_icon"
@@ -102,6 +120,6 @@
                 android:textSize="14sp" />
         </FrameLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

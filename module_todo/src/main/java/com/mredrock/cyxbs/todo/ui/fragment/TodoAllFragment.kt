@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,7 +44,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private val mRecyclerView by R.id.todo_allrv.view<SwipeDeleteRecyclerView>()
     private val emptyview by R.id.empty_view.view<View>()
     private val mViewModel: TodoViewModel by activityViewModels()
-    private val emptyBottom by R.id.todo_bottom_action_layout_all.view<LinearLayoutCompat>()
+    private val emptyBottom by R.id.todo_bottom_action_layout_all.view<ConstraintLayout>()
     private val acDeleteButton by R.id.button_bottom_right_all.view<FrameLayout>()
     private val acTopButton by R.id.button_bottom_left_all.view<FrameLayout>()
     private val checkall by R.id.todo_bottom_check_al_all.view<CheckBox>()
@@ -101,7 +101,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                             todoAllAdapter.selectItems.map { it.todoId },
                             syncTime
                         )
-
                     )
 
                     todoAllAdapter.selectItems.clear()
