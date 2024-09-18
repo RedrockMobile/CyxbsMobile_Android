@@ -23,7 +23,7 @@ class DefaultPageInterceptor: IInterceptor {
     DISCOVER_SPORT,
     DISCOVER_SPORT_FEED,
     //空教室
-    DISCOVER_EMPTY_ROOM,
+//    DISCOVER_EMPTY_ROOM,
     //我的考试
     DISCOVER_GRADES,
     //志愿服务
@@ -42,6 +42,7 @@ class DefaultPageInterceptor: IInterceptor {
     QA_DYNAMIC_MINE_FRAGMENT,
     //个人中心
     MINE_PERSON_PAGE,
+    ""
   )
   override fun init(context: Context) {
     println(context)

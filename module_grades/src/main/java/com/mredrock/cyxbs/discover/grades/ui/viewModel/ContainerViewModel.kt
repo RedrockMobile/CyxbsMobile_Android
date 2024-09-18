@@ -5,10 +5,10 @@
 
 package com.mredrock.cyxbs.discover.grades.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.Status
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
 import com.mredrock.cyxbs.discover.grades.network.ApiService
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.HttpException
 
@@ -41,6 +42,7 @@ class ContainerViewModel : BaseViewModel() {
     fun loadData(stuNum: String) {
         val exam = apiService.getExam(stuNum)
         val reExam = apiService.getReExam(stuNum)
+
         Observable.merge(exam, reExam)
             .setSchedulers()
             .mapOrThrowApiException()
@@ -51,6 +53,7 @@ class ContainerViewModel : BaseViewModel() {
             .unsafeSubscribeBy {
                 examData.value = it
             }.lifeCycle()
+
     }
 
     /**
@@ -77,10 +80,10 @@ class ContainerViewModel : BaseViewModel() {
                     if (it is HttpException) {
                         val errorBody = it.response()?.errorBody()?.string() ?: ""
                         try {
+                            isBinding.value = false
                             // 防止后端返回的status不符合json格式报错
                             val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
                             _analyzeData.postValue(gpaStatus)
-                            isBinding.value = false
                         } catch (e: Exception) {
                             toast("加载绩点失败")
                         }
