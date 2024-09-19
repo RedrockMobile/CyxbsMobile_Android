@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.ufield.repository
 
-import com.mredrock.cyxbs.ufield.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.ufield.network.UFieldApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -59,9 +58,4 @@ object UFieldRepository {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-    fun pushTodo(pushWrapper: TodoListPushWrapper) = UFieldApiService
-        .INSTANCE
-        .pushTodo(pushWrapper)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
 }

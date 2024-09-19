@@ -178,7 +178,8 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
         RemindMode(0, arrayListOf(), arrayListOf(), arrayListOf(), translationToCalendar()),
         System.currentTimeMillis(),
         "other",
-        0
+        0,
+        translationToCalendar()
     )
 
     // 将时间转换为日历

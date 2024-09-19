@@ -2,8 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
->
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -123,8 +122,8 @@
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
-            app:tabPaddingEnd="20.5dp"
-            app:tabPaddingStart="20.5dp"
+            app:tabPaddingEnd="19dp"
+            app:tabPaddingStart="19dp"
             app:tabRippleColor="@android:color/transparent"
             app:tabTextAppearance="@style/todo_TabTextAppearance" />
 
@@ -137,19 +136,18 @@
             android:layout_weight="1" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <!-- FloatingActionButton -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/todo_inner_home_bar_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="66dp"
+        android:elevation="2dp"
         android:src="@drawable/todo_ic_floatbuttton"
         app:backgroundTint="@color/todo_main_floatbutton"
-        app:fabSize="normal"
-        android:elevation="2dp" />
-
+        app:fabCustomSize="66dp"
+        app:fabSize="normal" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

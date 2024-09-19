@@ -10,8 +10,6 @@ import com.mredrock.cyxbs.ufield.bean.ActivityBean
 import com.mredrock.cyxbs.ufield.bean.Todo
 import com.mredrock.cyxbs.ufield.bean.TodoListPushWrapper
 import com.mredrock.cyxbs.ufield.network.ActivityDetailApiService
-import com.mredrock.cyxbs.ufield.network.UFieldApiService
-import com.mredrock.cyxbs.ufield.repository.UFieldRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -30,8 +28,8 @@ class DetailViewModel(id: Int) : BaseViewModel() {
 
     val wantToSee: LiveData<Boolean>
         get() = _wantToSee
-    private val _isAdd = MutableLiveData<Int>()
-    val isAdd: LiveData<Int>
+    private val _isAdd = MutableLiveData<Boolean>()
+    val isAdd: LiveData<Boolean>
         get() = _isAdd
 
     init {
@@ -67,15 +65,15 @@ class DetailViewModel(id: Int) : BaseViewModel() {
 
     fun isAdd(id: Int) {
         ActivityDetailApiService::class.api
-            .addTodo(id)
+            .isAdd(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {  }
             .doOnError {
-                _isAdd.postValue(0)
+                _isAdd.postValue(false)
             }
             .safeSubscribeBy {
-                _isAdd.postValue(1)
+                _isAdd.postValue(true)
             }
     }
 
@@ -84,16 +82,13 @@ class DetailViewModel(id: Int) : BaseViewModel() {
             listOf(todo),
             getLastSyncTime()
         )
-        UFieldRepository.pushTodo(pushWrapper)
+        ActivityDetailApiService::class.api
+            .addTodo(pushWrapper)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {  }
-            .doOnError {
-                _isAdd.postValue(0)
-            }
             .safeSubscribeBy {
                 setLastSyncTime(it.syncTime)
-                _isAdd.postValue(1)
             }
     }
 

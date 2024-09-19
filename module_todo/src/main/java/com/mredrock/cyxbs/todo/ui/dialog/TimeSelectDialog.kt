@@ -102,8 +102,8 @@ class TimeSelectDialog(
         minuteWheelPicker.isCyclic = (minuteWheelPicker.data?.size ?: 0) > 7
 
         // 设置默认值为当天时间或初始值
-        hourWheelPicker.setSelectedItemPosition(0)
-        minuteWheelPicker.setSelectedItemPosition(0)
+        hourWheelPicker.selectedItemPosition = 0
+        minuteWheelPicker.selectedItemPosition = 0
     }
 
     // 判断是否是今天

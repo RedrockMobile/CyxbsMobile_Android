@@ -230,18 +230,18 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
 
         if (isEnabled) {
             if (item.isPinned==1){
-           type= if (item.endTime == "") VIEW_TYPE_MANAGE_PINNED else VIEW_TYPE_MANAGE_PINNED_NO
+           type= if (item.remindMode.notifyDateTime == "") VIEW_TYPE_MANAGE_PINNED else VIEW_TYPE_MANAGE_PINNED_NO
             }else {
-                type = if (item.endTime == "") VIEW_TYPE_MANAGE else VIEW_TYPE_MANAGE_NO
+                type = if (item.remindMode.notifyDateTime == "") VIEW_TYPE_MANAGE else VIEW_TYPE_MANAGE_NO
             }
             } else {
             // 检查置顶和 endTime 为空的条件
             if (item.isPinned == 1) {
-                type = if (item.endTime != "") VIEW_TYPE_PINNED else VIEW_TYPE_PINNED_NO
-            } else if (currentTime > itemTime && item.endTime != "") {
+                type = if (item.remindMode.notifyDateTime != "") VIEW_TYPE_PINNED else VIEW_TYPE_PINNED_NO
+            } else if (currentTime > itemTime && item.remindMode.notifyDateTime != "") {
                 // 如果时间已过期
                 type = VIEW_TYPE_DELAY
-            } else if (item.endTime == "") {
+            } else if (item.remindMode.notifyDateTime == "") {
                 // endTime 为空的默认类型
                 type = VIEW_TYPE_DEFAULT_NO
             }
@@ -349,7 +349,7 @@ class TodoAllAdapter(private val listener: OnItemClickListener) :
                 }
             }
             // 如果当前项是置顶项，则隐藏置顶按钮
-            topbutton.visibility = if (item.isPinned == 1) View.GONE else View.VISIBLE
+         //   topbutton.visibility = if (item.isPinned == 1) View.GONE else View.VISIBLE
         }
     }
 

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.todo.ui.fragment
 
+
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -39,15 +40,15 @@ import com.mredrock.cyxbs.todo.viewmodel.TodoViewModel
  * date : 2024/8/11 20:16
  * version: 1.0
  */
-class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
+class TodoOtherFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
-    private val mRecyclerView by R.id.todo_allrv.view<SwipeDeleteRecyclerView>()
+    private val mRecyclerView by R.id.todo_otherrv.view<SwipeDeleteRecyclerView>()
     private val emptyview by R.id.empty_view.view<View>()
+    private val emptyBottom by R.id.todo_bottom_action_layout_other.view<ConstraintLayout>()
+    private val acDeleteButton by R.id.button_bottom_right_other.view<FrameLayout>()
+    private val acTopButton by R.id.button_bottom_left_other.view<FrameLayout>()
+    private val checkall by R.id.todo_bottom_check_al_other.view<CheckBox>()
     private val mViewModel: TodoViewModel by activityViewModels()
-    private val emptyBottom by R.id.todo_bottom_action_layout_all.view<ConstraintLayout>()
-    private val acDeleteButton by R.id.button_bottom_right_all.view<FrameLayout>()
-    private val acTopButton by R.id.button_bottom_left_all.view<FrameLayout>()
-    private val checkall by R.id.todo_bottom_check_al_all.view<CheckBox>()
     private val handler = Handler(Looper.getMainLooper())
     private var pendingUpdateTask: Runnable? = null
 
@@ -56,7 +57,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.todo_fragment_all, container, false)
+        return inflater.inflate(R.layout.todo_fragment_other, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,10 +71,12 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         mRecyclerView.adapter = todoAllAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(context)
         initList()
+//        todoAllAdapter.submitList(todoDataDetails.changed_todo_array)
         val callback = DragAndDropCallback(mRecyclerView, todoAllAdapter)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(mRecyclerView)
         initClick()
+        checkIfEmpty()
         ifClick()
         todoAllAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
@@ -90,6 +93,8 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     private fun initClick() {
+
+
         acDeleteButton.setOnClickListener {
             DeleteTodoDialog.Builder(requireContext())
                 .setPositiveClick {
@@ -102,7 +107,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                             syncTime
                         )
                     )
-
                     todoAllAdapter.selectItems.clear()
                     dismiss()
                 }.setNegativeClick {
@@ -162,11 +166,12 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     private fun initList() {
 
-        mViewModel.allTodo.observe(viewLifecycleOwner) {
+        mViewModel.categoryTodoOther.observe(viewLifecycleOwner) {
             todoAllAdapter.submitList(it.todoArray) {
                 checkIfEmpty()
             }
         }
+
     }
 
     //处理点击事件
@@ -176,6 +181,7 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     override fun onListtextClick(item: Todo) {
         TodoDetailActivity.startActivity(item, requireContext())
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -192,7 +198,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
                     currentList.removeAt(position)
                     // 提交更新后的列表
                     todoAllAdapter.submitList(currentList)
-
                     dismiss()
                 }.setNegativeClick {
                     dismiss()
@@ -200,7 +205,6 @@ class TodoAllFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
 
         }
-
     }
 
     override fun ontopButtonClick(item: Todo, position: Int) {

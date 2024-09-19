@@ -75,7 +75,7 @@
             android:layout_width="11dp"
             android:layout_height="13dp"
             android:layout_marginTop="3dp"
-            android:src="@drawable/todo_ic_item_remindic"
+            android:src="@drawable/todo_ic_item_remindic_delay"
             app:layout_constraintStart_toStartOf="@+id/todo_title_text"
             app:layout_constraintTop_toBottomOf="@+id/todo_title_text" />
 
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:textColor="@color/todo_item_inner_nf_time_color"
+            android:textColor="@color/todo_item_delay"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -49,6 +49,9 @@
     <color name="todo_add_time_back_ic_color">#ABBCD8</color>
     <color name="todo_item_manage_top">#F6F7FF</color>
     <color name="todo_item_inner_nf_time_color">#7815315b</color>
+    <color name="todo_item_default">#9915315B</color>
+    <color name="todo_item_pinned">#991F155B</color>
+    <color name="todo_item_delay">#76719C</color>
     <color name="todo_inner_check_eclipse_color">#7515315B</color>
     <color name="todo_inner_checked_line_color">#8997ad</color>
     <color name="todo_list">#112C54</color>
@@ -86,7 +89,7 @@
 
     <color name="todo_calendar_header_color">#15315B</color>
     <!--    日历当前日期字体的颜色-->
-    <color name="todo_calendar_current_day_tv_color">#2923D2</color>
+    <color name="todo_calendar_current_day_tv_color">#2dccef</color>
     <!--    日历当前日期字体的颜色-->
     <color name="todo_calendar_change_month_color">#EEF5FD</color>
     <!--    日历过期日期字体的颜色-->
@@ -96,7 +99,7 @@
     <color name="todo_selecttime_time_color">#15315B</color>
     <!--    添加任务时的保存字体的颜色-->
     <color name="todo_addtodo_save_text_none_color">#b7c0cd</color>
-    <color name="todo_addtodo_save_text_color">#15315B</color>
+    <color name="todo_addtodo_save_text_color">#2923D2</color>
     <!--    添加任务时的字体的颜色-->
     <color name="todo_addtodo_text_color">#aab8ce</color>
     <!--    分割线的颜色-->

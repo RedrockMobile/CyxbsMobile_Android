@@ -26,7 +26,7 @@ import java.util.Locale
  * date: 2024/8/22 19:09
  */
 class TodoFeedAdapter :
-    ListAdapter<Todo, TodoFeedAdapter.todoFeedViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<Todo, TodoFeedAdapter.TodoFeedViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Todo>() {
@@ -35,7 +35,7 @@ class TodoFeedAdapter :
             }
 
             override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
-                return oldItem == newItem
+                return oldItem == newItem && oldItem.remindMode.notifyDateTime == newItem.remindMode.notifyDateTime
             }
         }
     }
@@ -47,31 +47,38 @@ class TodoFeedAdapter :
         mClick = listener
     }
 
-    inner class todoFeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val todoTitle = itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_title)
-        val todoFeedIv = itemView.findViewById<AppCompatImageView>(R.id.todo_iv_feed_bell)
-        val todoFeedTime = itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_notify_time)
-        val icRight = itemView.findViewById<ImageView>(R.id.todo_iv_check_feed)
-        val defaultCheckbox = itemView.findViewById<CheckLineView>(R.id.todo_iv_todo_feed)
+    inner class TodoFeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val todoTitle = itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_title)
+        private val todoFeedIv = itemView.findViewById<AppCompatImageView>(R.id.todo_iv_feed_bell)
+        private val todoFeedTime =
+            itemView.findViewById<AppCompatTextView>(R.id.todo_tv_feed_notify_time)
+        private val icRight = itemView.findViewById<ImageView>(R.id.todo_iv_check_feed)
+        private val defaultCheckbox = itemView.findViewById<CheckLineView>(R.id.todo_iv_todo_feed)
+
         init {
             defaultCheckbox.setOnClickListener {
-                    defaultCheckbox.setStatusWithAnime(true){
+                var target = 1
+                defaultCheckbox.setStatusWithAnime(true){
+                    // 由于自定义View的缘故，导致这里回调多次，故加个标志，防止多次回调
+                    if (target == 1){
                         mClick?.invoke(absoluteAdapterPosition)
+                        target++
                     }
-                    todoTitle.setTextColor(
-                        ContextCompat.getColor(
-                            itemView.context,
-                            R.color.todo_check_item_color
-                        )
+                }
+                todoTitle.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.todo_check_item_color
                     )
-                    todoFeedTime.setTextColor(
-                        ContextCompat.getColor(
-                            itemView.context,
-                            R.color.todo_check_item_color
-                        )
+                )
+                todoFeedTime.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.todo_check_item_color
                     )
-                    todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_notice2)
-                    icRight.visible()
+                )
+                todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_notice2)
+                icRight.visible()
             }
             todoTitle.setOnClickListener {
                 startActivity(getItem(absoluteAdapterPosition),itemView.context)
@@ -80,15 +87,20 @@ class TodoFeedAdapter :
 
         fun bind(todo: Todo) {
             todoTitle.text = todo.title
-            val endTime = todo.endTime?.replace("日", "日  ")
+            var endTime = todo.endTime?.replace("日", "日  ")
+            if (todo.remindMode.notifyDateTime != ""){
+                endTime = todo.remindMode.notifyDateTime?.replace("日", "日  ")
+            }
             defaultCheckbox.apply {
                 setStatusWithAnime(false)
             }
-            todoTitle.setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
             icRight.gone()
-            if (todo.remindMode.notifyDateTime == "") {
+            todoFeedIv.visible()
+            todoFeedTime.visible()
+            if (todo.endTime == "" && todo.remindMode.notifyDateTime == "") {
                 todoFeedIv.gone()
                 todoFeedTime.gone()
+                updateUi(false)
             } else {
                 todoFeedTime.text = endTime
                 val itemTime = if (!todo.endTime.isNullOrEmpty()) {
@@ -99,27 +111,38 @@ class TodoFeedAdapter :
                         e.printStackTrace()
                         System.currentTimeMillis()
                     }
+                } else if (!todo.remindMode.notifyDateTime.isNullOrEmpty()){
+                    try {
+                        todo.remindMode.notifyDateTime?.let { dateFormat.parse(it)?.time } ?: 0L
+                    } catch (e: ParseException) {
+                        // 如果解析失败，打印错误并使用一个默认时间值，例如当前时间
+                        e.printStackTrace()
+                        System.currentTimeMillis()
+                    }
                 } else {
                     0L
                 }
                 val currentTime = System.currentTimeMillis()
-                if (currentTime > itemTime && itemTime != 0L){
-                    defaultCheckbox.uncheckedColor = getColor(R.color.todo_check_overtime_color)
-                    todoTitle.setTextColor(getColor(R.color.todo_text_overtime_color) )
-                    todoFeedTime.setTextColor(getColor(R.color.todo_textTime_overtime_color))
-                    todoFeedIv.setImageResource(R.drawable.todo_ic_addtodo_overtime_notice)
-                }
+                updateUi(currentTime > itemTime && itemTime != 0L)
             }
+        }
+
+        private fun updateUi(isOverTime: Boolean) {
+            defaultCheckbox.uncheckedColor =
+                getColor(if (isOverTime) R.color.todo_check_overtime_color else R.color.todo_inner_check_eclipse_color)
+            todoTitle.setTextColor(getColor(if (isOverTime) R.color.todo_text_overtime_color else com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
+            todoFeedTime.setTextColor(getColor(if (isOverTime) R.color.todo_textTime_overtime_color else R.color.todo_item_nf_time_color))
+            todoFeedIv.setImageResource(if (isOverTime) R.drawable.todo_ic_addtodo_overtime_notice else R.drawable.todo_ic_addtodo_notice2)
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): todoFeedViewHolder {
-        return todoFeedViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoFeedViewHolder {
+        return TodoFeedViewHolder(
             View.inflate(parent.context, R.layout.todo_rv_item_feed, null)
         )
     }
 
-    override fun onBindViewHolder(holder: todoFeedViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TodoFeedViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }
