@@ -94,7 +94,10 @@ class TodoViewModel : BaseViewModel() {
                 }
             }
             .safeSubscribeBy {
-                if (it.todoArray.isNullOrEmpty() && it.syncTime == 0L) {
+                /**
+                 * 由于是老接口，故在这里设置一个更新时间戳，用来添加新手教程，防止一些老用户没有出现新手教程
+                 */
+                if ((it.todoArray.isNullOrEmpty() && it.syncTime == 0L) || it.syncTime < 1726843099) {
                     val todoList = listOf(
                         Todo(1, "长按可以拖动我哟", "", 0, generateDefaultRemindMode(), System.currentTimeMillis(), "", "", 0, 0),
                         Todo(2, "左滑可置顶或者删除", "", 0, generateDefaultRemindMode(), System.currentTimeMillis(), "", "", 0, 0),
