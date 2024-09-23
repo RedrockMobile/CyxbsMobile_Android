@@ -1,4 +1,5 @@
 package com.mredrock.cyxbs.todo.util
+
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -48,10 +49,11 @@ object TodoHelper {
             currentList.remove(todoItem)
             todoAllAdapter.submitList(currentList)
         } else if (todoItem.endTime == "" && todoItem.remindMode.repeatMode != 0) {
-            var currentSystemTime=LocalDateTime.now()
-            if (todoItem.remindMode.notifyDateTime!=""){
-                 currentSystemTime =
-                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) } ?: LocalDateTime.now()
+            var currentSystemTime = LocalDateTime.now()
+            if (todoItem.remindMode.notifyDateTime != "") {
+                currentSystemTime =
+                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
+                        ?: LocalDateTime.now()
             }
 
             lifecycleOwner.lifecycleScope.launch {
@@ -80,10 +82,11 @@ object TodoHelper {
                 )
             }
         } else {
-            var currentSystemTime=LocalDateTime.now()
-            if (todoItem.remindMode.notifyDateTime!=""){
+            var currentSystemTime = LocalDateTime.now()
+            if (todoItem.remindMode.notifyDateTime != "") {
                 currentSystemTime =
-                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) } ?: LocalDateTime.now()
+                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
+                        ?: LocalDateTime.now()
             }
             val endTime = todoItem.endTime?.let { parseDateTime(it) }
             lifecycleOwner.lifecycleScope.launch {
@@ -122,7 +125,6 @@ object TodoHelper {
     }
 
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun handleNextRemindTime(
         nextRemindTime: LocalDateTime?,
@@ -158,6 +160,12 @@ object TodoHelper {
     ): LocalDateTime? {
         var nextRemindTime =
             currentRemindTime.plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0)
+        // 如果 endTime 不为 null，则将 endTime 的小时和分钟设置给 nextRemindTime
+        if (endTime != null) {
+            nextRemindTime = nextRemindTime
+                .withHour(endTime.hour)      // 使用 endTime 的小时
+                .withMinute(endTime.minute)  // 使用 endTime 的分钟
+        }
         if (endTime != null && nextRemindTime.isAfter(endTime)) {
             return endTime
         }
@@ -171,6 +179,13 @@ object TodoHelper {
         endTime: LocalDateTime? = null
     ): LocalDateTime? {
         var nextRemindTime = currentRemindTime.withHour(0).withMinute(0).withSecond(0).withNano(0)
+        // 如果 endTime 不为 null，则将 endTime 的小时和分钟设置给 nextRemindTime
+        if (endTime != null) {
+            nextRemindTime = nextRemindTime
+                .withHour(endTime.hour)      // 使用 endTime 的小时
+                .withMinute(endTime.minute)  // 使用 endTime 的分钟
+        }
+
         val validWeekDays = weekDays.filter { it in 1..7 }
         if (validWeekDays.isEmpty()) {
             return null
@@ -202,13 +217,27 @@ object TodoHelper {
                     .withMinute(0)
                     .withSecond(0)
                     .withNano(0)
+
+
                 if (possibleRemindTime.isAfter(currentRemindTime)) {
                     nextRemindTime = possibleRemindTime
+                    // 如果 endTime 不为 null，则将 endTime 的小时和分钟设置给 nextRemindTime
+                    if (endTime != null) {
+                        nextRemindTime = nextRemindTime
+                            .withHour(endTime.hour)      // 使用 endTime 的小时
+                            .withMinute(endTime.minute)  // 使用 endTime 的分钟
+                    }
                     found = true
                     break
                 }
             }
             if (found && (endTime == null || nextRemindTime.isBefore(endTime))) {
+                // 如果 endTime 不为 null，则将 endTime 的小时和分钟设置给 nextRemindTime
+                if (endTime != null) {
+                    nextRemindTime = nextRemindTime
+                        .withHour(endTime.hour)      // 使用 endTime 的小时
+                        .withMinute(endTime.minute)  // 使用 endTime 的分钟
+                }
                 return nextRemindTime
             }
             nextRemindTime = nextRemindTime.plusMonths(1).withDayOfMonth(sortedDays[0])
@@ -217,11 +246,12 @@ object TodoHelper {
             }
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun NocalculateNextMonthlyRemindTime(
         currentRemindTime: LocalDateTime,
         days: List<Int>,
-     ): LocalDateTime? {
+    ): LocalDateTime? {
         var nextRemindTime = currentRemindTime
         val sortedDays = days.sorted() // 确保 days 是排序的
 
@@ -262,7 +292,8 @@ object TodoHelper {
         currentSystemTime: LocalDateTime?,
         week: ArrayList<Int>
     ): LocalDateTime? {
-        var nextRemindTime = currentSystemTime?.withHour(0)?.withMinute(0)?.withSecond(0)?.withNano(0)
+        var nextRemindTime =
+            currentSystemTime?.withHour(0)?.withMinute(0)?.withSecond(0)?.withNano(0)
         val validWeekDays = week.filter { it in 1..7 }
         if (validWeekDays.isEmpty()) {
             return null
