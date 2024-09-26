@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.todo.ui.fragment
 
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -43,11 +41,11 @@ import com.mredrock.cyxbs.todo.viewmodel.TodoViewModel
 class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private lateinit var todoAllAdapter: TodoAllAdapter
     private val mRecyclerView by R.id.todo_liferv.view<SwipeDeleteRecyclerView>()
-    private val emptyview by R.id.empty_view.view<View>()
+    private val emptyView by R.id.empty_view.view<View>()
     private val emptyBottom by R.id.todo_bottom_action_layout_life.view<ConstraintLayout>()
     private val acDeleteButton by R.id.button_bottom_right_life.view<FrameLayout>()
     private val acTopButton by R.id.button_bottom_left_life.view<FrameLayout>()
-    private val checkall by R.id.todo_bottom_check_al_life.view<CheckBox>()
+    private val checkAll by R.id.todo_bottom_check_al_life.view<CheckBox>()
     private val mViewModel: TodoViewModel by activityViewModels()
     private val handler = Handler(Looper.getMainLooper())
     private var pendingUpdateTask: Runnable? = null
@@ -92,8 +90,6 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
     private fun initClick() {
-
-
         acDeleteButton.setOnClickListener {
             DeleteTodoDialog.Builder(requireContext())
                 .setPositiveClick {
@@ -122,11 +118,11 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
             }
             todoAllAdapter.topSelectedItems()
         }
-        checkall.setOnCheckedChangeListener { _, isChecked ->
+        checkAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                todoAllAdapter.selectedall()
+                todoAllAdapter.selectedAll()
             } else {
-                todoAllAdapter.toSelectedall()
+                todoAllAdapter.toSelectedAll()
             }
         }
     }
@@ -157,10 +153,10 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     private fun checkIfEmpty() {
         if (todoAllAdapter.itemCount == 0) {
             mRecyclerView.visibility = View.GONE
-            emptyview.visibility = View.VISIBLE
+            emptyView.visibility = View.VISIBLE
         } else {
             mRecyclerView.visibility = View.VISIBLE
-            emptyview.visibility = View.GONE
+            emptyView.visibility = View.GONE
         }
     }
 
@@ -179,13 +175,9 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         TodoDetailActivity.startActivity(item, requireContext())
     }
 
-    override fun onListtextClick(item: Todo) {
-        TodoDetailActivity.startActivity(item, requireContext())
-
-    }
 
     @SuppressLint("MissingInflatedId")
-    override fun ondeleteButtonClick(item: Todo, position: Int) {
+    override fun onDeleteButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
 
         // 检查索引是否在当前列表的有效范围内
@@ -207,7 +199,7 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
     }
 
-    override fun ontopButtonClick(item: Todo, position: Int) {
+    override fun onTopButtonClick(item: Todo, position: Int) {
         val currentList = todoAllAdapter.currentList.toMutableList()
         if (item.isPinned == 0) {
             // 更新isPinned状态并移除当前项
@@ -241,7 +233,6 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onFinishCheck(item: Todo) {
         pendingUpdateTask?.let { handler.removeCallbacks(it) }
         if (item.remindMode.repeatMode != 0) {
@@ -270,8 +261,7 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onItemnotify(item: Todo) {
+    override fun onItemNotify(item: Todo) {
         if (item.endTime != "" && item.remindMode.repeatMode != 0) {
             updateTodoItem(
                 item,
@@ -301,7 +291,7 @@ class TodoLifeFragment : BaseFragment(), TodoAllAdapter.OnItemClickListener {
 
     }
 
-    fun getTopItems(): Int {
+    private fun getTopItems(): Int {
         return todoAllAdapter.currentList.count { it.isPinned == 1 }
     }
 
