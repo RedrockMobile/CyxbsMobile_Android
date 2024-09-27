@@ -32,7 +32,7 @@ interface ActivityDetailApiService : IApi {
             Single<ApiWrapper<SyncTime>>
 
 
-    @POST("/magipoke-ufield/activity/addTodo/")
+    @PUT("/magipoke-ufield/activity/addTodo/")
     fun isAdd(@Query("activity_id") id: Int): Single<ApiWrapper<ApiStatus>>
 
 }

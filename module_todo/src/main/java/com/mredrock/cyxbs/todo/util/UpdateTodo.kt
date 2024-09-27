@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.todo.util
+
+import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -15,9 +15,8 @@ import com.mredrock.cyxbs.todo.viewmodel.TodoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.ArrayList
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @Project: CyxbsMobile_Android
@@ -28,10 +27,8 @@ import java.util.ArrayList
  */
 object TodoHelper {
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年M月d日HH:mm")
+    private val dateTimeFormatter = SimpleDateFormat("yyyy年M月d日HH:mm", Locale.getDefault())
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateTodoItem(
         todoItem: Todo,
         appContext: Context,
@@ -40,7 +37,6 @@ object TodoHelper {
         recyclerView: SwipeDeleteRecyclerView,
         lifecycleOwner: LifecycleOwner // 添加 LifecycleOwner 参数
     ) {
-
         if (todoItem.endTime == todoItem.remindMode.notifyDateTime && todoItem.endTime != "") {
             val syncTime = appContext.getSp("todo").getLong("TODO_LAST_SYNC_TIME", 0L)
             viewModel.delTodo(DelPushWrapper(listOf(todoItem.todoId), syncTime, 1))
@@ -48,22 +44,23 @@ object TodoHelper {
             currentList.remove(todoItem)
             todoAllAdapter.submitList(currentList)
         } else if (todoItem.endTime == "" && todoItem.remindMode.repeatMode != 0) {
-            var currentSystemTime=LocalDateTime.now()
-            if (todoItem.remindMode.notifyDateTime!=""){
-                 currentSystemTime =
-                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) } ?: LocalDateTime.now()
+            var currentSystemTime = Calendar.getInstance()
+            if (todoItem.remindMode.notifyDateTime != "") {
+                currentSystemTime =
+                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
+                        ?: Calendar.getInstance()
             }
 
             lifecycleOwner.lifecycleScope.launch {
                 val nextRemindTime = withContext(Dispatchers.Default) {
                     when (todoItem.remindMode.repeatMode) {
-                        1 -> NocalculateNextDailyRemindTime(currentSystemTime)
-                        2 -> NocalculateNextWeeklyRemindTime(
+                        1 -> calculateNextDailyRemindTime(currentSystemTime)
+                        2 -> calculateNextWeeklyRemindTime(
                             currentSystemTime,
                             todoItem.remindMode.week
                         )
 
-                        3 -> NocalculateNextMonthlyRemindTime(
+                        3 -> calculateNextMonthlyRemindTime(
                             currentSystemTime,
                             todoItem.remindMode.day
                         )
@@ -80,10 +77,11 @@ object TodoHelper {
                 )
             }
         } else {
-            var currentSystemTime=LocalDateTime.now()
-            if (todoItem.remindMode.notifyDateTime!=""){
+            var currentSystemTime = Calendar.getInstance()
+            if (todoItem.remindMode.notifyDateTime != "") {
                 currentSystemTime =
-                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) } ?: LocalDateTime.now()
+                    todoItem.remindMode.notifyDateTime?.let { parseDateTime(it) }
+                        ?: Calendar.getInstance()
             }
             val endTime = todoItem.endTime?.let { parseDateTime(it) }
             lifecycleOwner.lifecycleScope.launch {
@@ -121,11 +119,9 @@ object TodoHelper {
         }
     }
 
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("NotifyDataSetChanged")
     private fun handleNextRemindTime(
-        nextRemindTime: LocalDateTime?,
+        nextRemindTime: Calendar?,
         todoItem: Todo,
         viewModel: TodoViewModel,
         todoAllAdapter: TodoAllAdapter,
@@ -150,148 +146,100 @@ object TodoHelper {
         }
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateNextDailyRemindTime(
-        currentRemindTime: LocalDateTime,
-        endTime: LocalDateTime? = null
-    ): LocalDateTime? {
-        var nextRemindTime =
-            currentRemindTime.plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0)
-        if (endTime != null && nextRemindTime.isAfter(endTime)) {
-            return endTime
+        currentRemindTime: Calendar,
+        endTime: Calendar? = null
+    ): Calendar? {
+        val nextRemindTime = (currentRemindTime.clone() as Calendar).apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        if (endTime != null) {
+            nextRemindTime.set(Calendar.HOUR_OF_DAY, endTime.get(Calendar.HOUR_OF_DAY))
+            nextRemindTime.set(Calendar.MINUTE, endTime.get(Calendar.MINUTE))
+            if (nextRemindTime.after(endTime)) return endTime
         }
         return nextRemindTime
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateNextWeeklyRemindTime(
-        currentRemindTime: LocalDateTime,
+        currentRemindTime: Calendar,
         weekDays: List<Int>,
-        endTime: LocalDateTime? = null
-    ): LocalDateTime? {
-        var nextRemindTime = currentRemindTime.withHour(0).withMinute(0).withSecond(0).withNano(0)
-        val validWeekDays = weekDays.filter { it in 1..7 }
-        if (validWeekDays.isEmpty()) {
-            return null
+        endTime: Calendar? = null
+    ): Calendar? {
+        val nextRemindTime = (currentRemindTime.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
-        nextRemindTime = nextRemindTime.plusDays(1)
-        while (nextRemindTime.dayOfWeek.value !in validWeekDays) {
-            nextRemindTime = nextRemindTime.plusDays(1)
-            if (endTime != null && nextRemindTime.isAfter(endTime)) {
-                return endTime
-            }
+        if (endTime != null) {
+            nextRemindTime.set(Calendar.HOUR_OF_DAY, endTime.get(Calendar.HOUR_OF_DAY))
+            nextRemindTime.set(Calendar.MINUTE, endTime.get(Calendar.MINUTE))
+        }
+
+        val validWeekDays = weekDays.filter { it in 1..7 }
+        if (validWeekDays.isEmpty()) return null
+
+        nextRemindTime.add(Calendar.DAY_OF_MONTH, 1)
+        while (nextRemindTime.get(Calendar.DAY_OF_WEEK) !in validWeekDays) {
+            nextRemindTime.add(Calendar.DAY_OF_MONTH, 1)
+            if (endTime != null && nextRemindTime.after(endTime)) return endTime
         }
         return nextRemindTime
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateNextMonthlyRemindTime(
-        currentRemindTime: LocalDateTime,
+        currentRemindTime: Calendar,
         days: List<Int>,
-        endTime: LocalDateTime? = null
-    ): LocalDateTime? {
-        var nextRemindTime = currentRemindTime
+        endTime: Calendar? = null
+    ): Calendar? {
+        val nextRemindTime = currentRemindTime.clone() as Calendar
         val sortedDays = days.sorted()
         while (true) {
-            var found = false
             for (day in sortedDays) {
-                val possibleRemindTime = nextRemindTime
-                    .withDayOfMonth(day)
-                    .withHour(0)
-                    .withMinute(0)
-                    .withSecond(0)
-                    .withNano(0)
-                if (possibleRemindTime.isAfter(currentRemindTime)) {
-                    nextRemindTime = possibleRemindTime
-                    found = true
-                    break
+                val possibleRemindTime = nextRemindTime.apply {
+                    set(Calendar.DAY_OF_MONTH, day)
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                if (possibleRemindTime.after(currentRemindTime)) {
+                    if (endTime != null) {
+                        possibleRemindTime.set(
+                            Calendar.HOUR_OF_DAY,
+                            endTime.get(Calendar.HOUR_OF_DAY)
+                        )
+                        possibleRemindTime.set(Calendar.MINUTE, endTime.get(Calendar.MINUTE))
+                    }
+                    if (endTime == null || possibleRemindTime.before(endTime)) return possibleRemindTime
                 }
             }
-            if (found && (endTime == null || nextRemindTime.isBefore(endTime))) {
-                return nextRemindTime
-            }
-            nextRemindTime = nextRemindTime.plusMonths(1).withDayOfMonth(sortedDays[0])
-            if (endTime != null && nextRemindTime.isAfter(endTime)) {
-                return endTime
-            }
+            nextRemindTime.add(Calendar.MONTH, 1)
+            nextRemindTime.set(Calendar.DAY_OF_MONTH, sortedDays[0])
+            if (endTime != null && nextRemindTime.after(endTime)) return endTime
         }
     }
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun NocalculateNextMonthlyRemindTime(
-        currentRemindTime: LocalDateTime,
-        days: List<Int>,
-     ): LocalDateTime? {
-        var nextRemindTime = currentRemindTime
-        val sortedDays = days.sorted() // 确保 days 是排序的
 
-        // 循环直到找到下一个合适的提醒时间
-        while (true) {
-            var found = false
-
-            // 遍历 days 列表中的每一天
-            for (day in sortedDays) {
-                // 尝试将提醒时间设置为当前月的 day 号
-                val possibleRemindTime = nextRemindTime
-                    .withDayOfMonth(day)
-                    .withHour(0)
-                    .withMinute(0)
-                    .withSecond(0)
-                    .withNano(0)
-
-                // 如果找到的时间比当前时间晚，则返回该时间
-                if (possibleRemindTime.isAfter(currentRemindTime)) {
-                    nextRemindTime = possibleRemindTime
-                    found = true
-                    break // 找到合适的提醒时间，跳出循环
+    private fun parseDateTime(dateTimeStr: String?): Calendar? {
+        return dateTimeStr?.let {
+            runCatching {
+                Calendar.getInstance().apply {
+                    time = dateTimeFormatter.parse(it)
                 }
-            }
-
-            // 如果找到合适的提醒时间，跳出 while 循环
-            if (found) {
-                return nextRemindTime
-            }
-
-            // 如果没有找到，增加一个月并重置为下个月第一个指定的日期
-            nextRemindTime = nextRemindTime.plusMonths(1).withDayOfMonth(sortedDays[0])
+            }.getOrNull()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun NocalculateNextWeeklyRemindTime(
-        currentSystemTime: LocalDateTime?,
-        week: ArrayList<Int>
-    ): LocalDateTime? {
-        var nextRemindTime = currentSystemTime?.withHour(0)?.withMinute(0)?.withSecond(0)?.withNano(0)
-        val validWeekDays = week.filter { it in 1..7 }
-        if (validWeekDays.isEmpty()) {
-            return null
-        }
-        nextRemindTime = nextRemindTime?.plusDays(1)
-        while (nextRemindTime?.dayOfWeek?.value !in validWeekDays) {
-            nextRemindTime = nextRemindTime?.plusDays(1)
-        }
-        return nextRemindTime
+    private fun formatDateTime(dateTime: Calendar): String {
+        return dateTimeFormatter.format(dateTime.time)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun NocalculateNextDailyRemindTime(currentSystemTime: LocalDateTime?): LocalDateTime? {
-        var nextRemindTime =
-            currentSystemTime?.plusDays(1)?.withHour(0)?.withMinute(0)?.withSecond(0)?.withNano(0)
-        return nextRemindTime
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun parseDateTime(dateTimeStr: String): LocalDateTime {
-        return LocalDateTime.parse(dateTimeStr, dateTimeFormatter)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun formatDateTime(dateTime: LocalDateTime): String {
-        return dateTime.format(dateTimeFormatter)
-    }
-
-    fun getTopItems(todoAllAdapter: TodoAllAdapter): Int {
+    private fun getTopItems(todoAllAdapter: TodoAllAdapter): Int {
         return todoAllAdapter.currentList.count { it.isPinned == 1 }
     }
 }

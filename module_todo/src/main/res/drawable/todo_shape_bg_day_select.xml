@@ -1,6 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval"> <!-- 将形状改为 oval -->
-    <solid
-        android:color="#5263FF" />
-</shape>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1dp"
+    android:height="1dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    <path
+        android:pathData="M512,512m-445,0a445,445 0,1 0,890 0,445 445,0 1,0 -890,0Z"
+        android:fillColor="#5263FF"/>
+</vector>
