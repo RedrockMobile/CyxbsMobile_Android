@@ -67,7 +67,7 @@ data class AffairIncompleteEntity(
 data class AffairEntity(
   val stuNum: String,
   val onlyId: Int, // 本地的唯一 id，由我们端上给出
-  val remoteId: Int, // 后端的 id，因为存在本地临时事务，所以会发生改变
+  val remoteId: Int, // 后端的 id，如果小于 0，则说明是本地临时添加的事务，并且可能会发生改变，业务侧不建议使用
   val time: Int, // 提醒时间
   val title: String,
   val content: String,
@@ -140,6 +140,14 @@ abstract class AffairDao {
   // 内部使用
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   protected abstract fun insertAffair(affair: AffairEntity)
+
+  @Transaction
+  open fun deleteAffairReturn(stuNum: String, onlyId: Int): AffairEntity? {
+    return findAffairByOnlyId(stuNum, onlyId)
+      .doOnSuccess {
+        deleteAffair(it)
+      }.blockingGet()
+  }
   
   /**
    * 更新旧事务的 id
