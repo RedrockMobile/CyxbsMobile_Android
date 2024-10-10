@@ -23,7 +23,6 @@ import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.functions.Functions
@@ -40,11 +39,6 @@ import kotlin.IllegalStateException
  */
 @SuppressLint("CheckResult")
 object AffairRepository {
-
-  // 以此 id 向下递减表示本地临时事物
-  // 后端下发的 remoteId 是大于 0 的
-  // 如果 remoteId 小于 0，则说明是本地临时添加的事务
-  private var AffairId = -10000
 
   private val Api = AffairApiService.INSTANCE
 
@@ -131,7 +125,8 @@ object AffairRepository {
     if (stuNum.isBlank()) return Completable.error(IllegalStateException("学号为空！"))
     val dateJson = atWhatTime.toPostDateJson()
     return Single.create {
-      val entity = AffairIncompleteEntity(AffairId--, time, title, content, atWhatTime)
+      // 先使用 LocalRemoteId 保存进本地数据库，后续网络请求后再更新
+      val entity = AffairIncompleteEntity(LocalRemoteId, time, title, content, atWhatTime)
       val onlyId = AffairDao
         .insertAffair(stuNum, entity) // 优先添加进数据库，保证用户先看到 ui
         .onlyId
@@ -199,7 +194,7 @@ object AffairRepository {
         )
       }.doOnSuccess { remoteId ->
         val dateJson = atWhatTime.toPostDateJson()
-        if (remoteId < 0) {
+        if (remoteId == LocalRemoteId) {
           // 如果是本地临时事务，就直接更新临时添加的事务
           LocalAddDao
             .updateLocalAddAffair(
@@ -249,7 +244,7 @@ object AffairRepository {
         it.tryOnError(e)
       }
     }.doOnSuccess { entity ->
-      if (entity.remoteId < 0) {
+      if (entity.remoteId == LocalRemoteId) {
         // 如果是本地临时事务，就直接删除临时添加的事务
         LocalAddDao.deleteLocalAddAffair(stuNum, onlyId)
       } else {
