@@ -227,6 +227,8 @@ class ScheduleV2SnapshotProjector {
   private fun RecurrenceInput.toUi(parentTiming: ScheduleTiming): RecurrenceRule {
     requireDateSlot(anchorDate, "recurrence anchorDate")
     untilDate?.let { requireDateSlot(it, "recurrence untilDate") }
+    // 协议循环起点必须能由旧 UI 的 timing 无损重建；历史 occurrence identity 另由 sidecar 保留。
+    requireProjection(anchorDate == parentTiming.anchorDateSlot(), "recurrence anchorDate must match timing date")
     requireProjection(untilDate == null || untilDate >= anchorDate, "recurrence untilDate precedes anchorDate")
     val anchor = anchorDate.toUtcDate()
     val uiWeekdays = weekdays.map { it.toUi() }.toSet()
