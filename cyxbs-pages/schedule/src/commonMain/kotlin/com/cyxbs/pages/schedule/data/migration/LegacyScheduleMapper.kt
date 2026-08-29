@@ -1,0 +1,444 @@
+package com.cyxbs.pages.schedule.data.migration
+
+import com.cyxbs.components.config.time.Date
+import com.cyxbs.components.config.time.MinuteTimeDate
+import com.cyxbs.pages.schedule.domain.model.CategoryId
+import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
+import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
+import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
+import com.cyxbs.pages.schedule.domain.model.ReminderChannel
+import com.cyxbs.pages.schedule.domain.model.ReminderId
+import com.cyxbs.pages.schedule.domain.model.Schedule
+import com.cyxbs.pages.schedule.domain.model.ScheduleId
+import com.cyxbs.pages.schedule.domain.model.ScheduleKind
+import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
+import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
+import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
+import kotlinx.datetime.TimeZone
+import okio.ByteString.Companion.encodeUtf8
+import kotlin.time.Instant
+
+/** 旧数据映射后的日程及只保留在端上的清单偏好。 */
+internal data class LegacyScheduleMigrationItem(
+  val schedule: Schedule,
+  val categoryName: String?,
+  val pinned: Boolean,
+)
+
+/**
+ * 将已成功解码的旧事务与旧清单转换成 Schedule v2 领域对象。
+ *
+ * 映射器不访问网络、Room 或 Settings；调用方提供账号、学期锚点和当前时间，便于迁移重试时保持边界清楚。
+ * 单条非法旧记录会被跳过，不会让其他有效记录无法迁移。
+ */
+internal object LegacyScheduleMapper {
+
+  /** 将当前学期旧事务拆为一个或多个时间段日程。 */
+  fun mapTransactions(
+    accountId: String,
+    transactions: List<LegacyTransactionDto>,
+    firstMonday: Date,
+    maxWeek: Int,
+  ): List<LegacyScheduleMigrationItem> = buildList {
+    val timeZoneId = TimeZone.currentSystemDefault().id
+    transactions.forEach { transaction ->
+      val title = transaction.title.trim()
+      if (title.isEmpty()) return@forEach
+      transaction.date.forEach timeLoop@{ time ->
+        if (time.day !in 0..6) return@timeLoop
+        val timing = legacyTransactionTiming(time.beginLesson, time.period) ?: return@timeLoop
+
+        if (time.week.contains(0)) {
+          val date = firstMonday.plusDays(time.day)
+          add(
+            transactionItem(
+              accountId = accountId,
+              transaction = transaction,
+              time = time,
+              identitySuffix = "all",
+              start = MinuteTimeDate(
+                date,
+                timing.startMinute / 60,
+                timing.startMinute % 60,
+              ),
+              durationMinutes = timing.durationMinutes,
+              recurrence = RecurrenceRule(
+                frequency = RecurrenceFrequency.WEEKLY,
+                byWeekDays = setOf(requireNotNull(IsoWeekDay.fromIsoNumber(time.day + 1))),
+                end = RecurrenceEnd.Count(maxWeek.coerceAtLeast(1)),
+              ),
+              timeZoneId = timeZoneId,
+            )
+          )
+        } else {
+          time.week.asSequence().distinct().filter { it in 1..maxWeek }.forEach { week ->
+            val date = firstMonday.plusDays((week - 1) * 7 + time.day)
+            add(
+              transactionItem(
+                accountId = accountId,
+                transaction = transaction,
+                time = time,
+                identitySuffix = "week:$week",
+                start = MinuteTimeDate(
+                  date,
+                  timing.startMinute / 60,
+                  timing.startMinute % 60,
+                ),
+                durationMinutes = timing.durationMinutes,
+                recurrence = null,
+                timeZoneId = timeZoneId,
+              )
+            )
+          }
+        }
+      }
+    }
+  }
+
+  /** 将旧清单转换为 Deadline 或 Unscheduled；旧模型没有可无损恢复的时间段与全天语义。 */
+  fun mapTodos(
+    accountId: String,
+    todos: List<LegacyTodoDto>,
+    now: MinuteTimeDate,
+    nowEpochMillis: Long,
+  ): List<LegacyScheduleMigrationItem> = todos.mapNotNull { todo ->
+    val title = todo.title.trim()
+    if (title.isEmpty()) return@mapNotNull null
+
+    val end = parseLegacyDateTime(todo.endTime)
+    val notify = parseLegacyDateTime(todo.remindMode.notifyDateTime)
+    val nonRepeating = createNonRepeatingTodoTiming(end, notify)
+    val recurring = createRecurringTodoTiming(todo.remindMode, end, notify, now)
+    val mapped = when {
+      recurring != null -> recurring
+      todo.remindMode.repeatMode != LegacyTodoRemindModeDto.NONE ->
+        createUnsupportedRepeatFallback(end, notify)
+      else -> nonRepeating
+    }
+    val timestamp = normalizeLegacyTimestamp(todo.lastModifyTime, nowEpochMillis)
+    val id = ScheduleId(
+      deterministicUuidV7(
+        timestamp,
+        "$accountId|todo|${todo.todoId}",
+      )
+    )
+    val isRepeating = mapped.recurrence != null
+    val schedule = Schedule(
+      id = id,
+      revision = 0,
+      title = title,
+      description = todo.detail,
+      categoryId = null,
+      timing = mapped.timing,
+      recurrence = mapped.recurrence,
+      reminders = mapped.reminderOffset?.let { offset ->
+        listOf(ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE))
+      }.orEmpty(),
+      todoState = if (todo.isDone == 1 && !isRepeating) {
+        ScheduleTodoState.COMPLETED
+      } else {
+        ScheduleTodoState.PENDING
+      },
+      createdAt = Instant.fromEpochMilliseconds(timestamp),
+      updatedAt = Instant.fromEpochMilliseconds(timestamp),
+      kind = ScheduleKind.TODO,
+      linkedToCourse = false,
+      recurrenceAnchorDate = mapped.recurrence?.let { timingDate(mapped.timing) },
+    )
+    LegacyScheduleMigrationItem(
+      schedule = schedule,
+      categoryName = legacyCategoryName(todo.type),
+      pinned = todo.isPinned == 1,
+    )
+  }
+
+  /** 构造单个旧事务时间位置，提醒分钟数为 0 时仍表示旧接口没有提醒。 */
+  private fun transactionItem(
+    accountId: String,
+    transaction: LegacyTransactionDto,
+    time: LegacyTransactionTimeDto,
+    identitySuffix: String,
+    start: MinuteTimeDate,
+    durationMinutes: Int,
+    recurrence: RecurrenceRule?,
+    timeZoneId: String,
+  ): LegacyScheduleMigrationItem {
+    val timestamp = start.date.toEpochMillis()
+    val id = ScheduleId(
+      deterministicUuidV7(
+        timestamp,
+        "$accountId|affair|${transaction.remoteId}|${time.day}|${time.beginLesson}|" +
+          "${time.period}|$identitySuffix",
+      )
+    )
+    return LegacyScheduleMigrationItem(
+      schedule = Schedule(
+        id = id,
+        revision = 0,
+        title = transaction.title.trim(),
+        description = transaction.content,
+        categoryId = null,
+        timing = ScheduleTiming.Timed(start, durationMinutes, timeZoneId),
+        recurrence = recurrence,
+        reminders = transaction.time.takeIf { it > 0 }?.let { offset ->
+          listOf(ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE))
+        }.orEmpty(),
+        todoState = null,
+        createdAt = Instant.fromEpochMilliseconds(timestamp),
+        updatedAt = Instant.fromEpochMilliseconds(timestamp),
+        kind = ScheduleKind.AFFAIR,
+        linkedToCourse = true,
+        recurrenceAnchorDate = recurrence?.let { start.date },
+      ),
+      categoryName = null,
+      pinned = false,
+    )
+  }
+
+  /**
+   * 按旧事务课表行规则换算开始分钟与持续时间。
+   *
+   * [beginLesson] 除 1～12 节外还可能使用 -1/-2 表示中午和傍晚；[period] 可以跨越这些课间行。
+   * 这里保留旧 Android 事务的精确语义，让 Android 与 iOS 迁移同一条旧记录时产生相同时间。
+   * 非法节次、非正时长或超出旧课表第 12 节的记录返回 null，由调用方只跳过该时间位置。
+   */
+  private fun legacyTransactionTiming(beginLesson: Int, period: Int): LegacyTransactionTiming? {
+    if (period <= 0) return null
+    val startRow = when (beginLesson) {
+      in 1..4 -> beginLesson - 1
+      -1 -> 4
+      in 5..8 -> beginLesson
+      -2 -> 9
+      in 9..12 -> beginLesson + 1
+      else -> return null
+    }
+    val endRow = startRow + period - 1
+    if (endRow !in startRow..LEGACY_MAX_COURSE_END_ROW) return null
+    val startMinute = LEGACY_START_MINUTES[startRow]
+    val durationMinutes = LEGACY_END_MINUTES[endRow] - startMinute
+    return durationMinutes.takeIf { it > 0 }?.let {
+      LegacyTransactionTiming(startMinute, it)
+    }
+  }
+
+  /** 非重复旧清单以截止时间为 timing；只有通知时间时将其作为截止点和准时提醒。 */
+  private fun createNonRepeatingTodoTiming(
+    end: MinuteTimeDate?,
+    notify: MinuteTimeDate?,
+  ): MappedTodoTiming {
+    val due = end ?: notify ?: return MappedTodoTiming(ScheduleTiming.Unscheduled, null, null)
+    val reminderOffset = notify?.minutesUntil(due)?.takeIf { it >= 0 }
+    return MappedTodoTiming(
+      timing = ScheduleTiming.Deadline(due, TimeZone.currentSystemDefault().id),
+      recurrence = null,
+      reminderOffset = reminderOffset,
+    )
+  }
+
+  /**
+   * 当前远端合同不接受月/年重复或非法选择器时，只保留旧服务已经算出的下一次通知。
+   *
+   * 优先使用 notify 而不是系列 end，避免把“重复结束日期”误当成下一次待办；没有 notify 时才退回 end。
+   */
+  private fun createUnsupportedRepeatFallback(
+    end: MinuteTimeDate?,
+    notify: MinuteTimeDate?,
+  ): MappedTodoTiming {
+    val due = notify ?: end ?: return MappedTodoTiming(ScheduleTiming.Unscheduled, null, null)
+    return MappedTodoTiming(
+      timing = ScheduleTiming.Deadline(due, TimeZone.currentSystemDefault().id),
+      recurrence = null,
+      reminderOffset = if (notify != null) 0 else null,
+    )
+  }
+
+  /**
+   * 构造旧重复清单。
+   *
+   * 旧服务保存的是“下一次通知时间”，优先用它作为新系列锚点；缺失时从今天起按旧选择器寻找下一次。
+   * 选择器无效或结束日期不晚于锚点时返回 null，由调用方降为一次性清单。
+   */
+  private fun createRecurringTodoTiming(
+    remindMode: LegacyTodoRemindModeDto,
+    end: MinuteTimeDate?,
+    notify: MinuteTimeDate?,
+    now: MinuteTimeDate,
+  ): MappedTodoTiming? {
+    if (remindMode.repeatMode == LegacyTodoRemindModeDto.NONE) return null
+    val recurrence = createRecurrenceRule(remindMode) ?: return null
+    val anchor = notify ?: findNextLegacyOccurrence(remindMode, now, end?.minuteOfDay ?: 0) ?: return null
+    if (end != null && end <= anchor) return null
+    return MappedTodoTiming(
+      timing = ScheduleTiming.Deadline(anchor, TimeZone.currentSystemDefault().id),
+      recurrence = recurrence.copy(
+        end = end?.let { RecurrenceEnd.Until(it.date) } ?: RecurrenceEnd.Never,
+      ),
+      reminderOffset = if (notify != null) 0 else null,
+    )
+  }
+
+  /** 将旧重复选择器收窄为 Schedule v2 支持的规则；非法空选择器不做猜测。 */
+  private fun createRecurrenceRule(remindMode: LegacyTodoRemindModeDto): RecurrenceRule? =
+    when (remindMode.repeatMode) {
+      LegacyTodoRemindModeDto.DAILY -> RecurrenceRule(RecurrenceFrequency.DAILY)
+      LegacyTodoRemindModeDto.WEEKLY -> remindMode.week
+        .mapNotNull(::legacyCalendarDayToIso)
+        .toSet()
+        .takeIf { it.isNotEmpty() }
+        ?.let { RecurrenceRule(RecurrenceFrequency.WEEKLY, byWeekDays = it) }
+      // Schedule v2 当前 wire/后端只支持 DAILY 与 WEEKLY；月/年重复由调用方保留为下一次一次性截止。
+      LegacyTodoRemindModeDto.MONTHLY, LegacyTodoRemindModeDto.YEARLY -> null
+      else -> null
+    }
+
+  /**
+   * 从当前时刻起找到旧日/周选择器的下一次发生时间。
+   *
+   * 当天属于选择日但目标时分已经过去时必须继续寻找下一天/周，不能迁出一个已经过期的系列锚点。
+   */
+  private fun findNextLegacyOccurrence(
+    remindMode: LegacyTodoRemindModeDto,
+    now: MinuteTimeDate,
+    minuteOfDay: Int,
+  ): MinuteTimeDate? {
+    val candidateDates = when (remindMode.repeatMode) {
+      LegacyTodoRemindModeDto.DAILY -> (0..1).asSequence().map(now.date::plusDays)
+      LegacyTodoRemindModeDto.WEEKLY -> {
+        val days = remindMode.week.mapNotNull(::legacyCalendarDayToIso).toSet()
+        (0..7).asSequence().map(now.date::plusDays).filter { candidate ->
+          IsoWeekDay.fromIsoNumber(candidate.dayOfWeekNumber) in days
+        }
+      }
+      // 月/年重复在进入本方法前已因协议不支持而降级，不能在本地构造无法上传的隐式规则。
+      else -> return null
+    }
+    val safeMinute = minuteOfDay.coerceIn(0, 24 * 60 - 1)
+    return candidateDates
+      .map { date -> MinuteTimeDate(date, safeMinute / 60, safeMinute % 60) }
+      .firstOrNull { candidate -> candidate >= now }
+  }
+
+  /** java.util.Calendar 的 1=周日、2=周一转换为 ISO 的 1=周一、7=周日。 */
+  private fun legacyCalendarDayToIso(day: Int): IsoWeekDay? =
+    IsoWeekDay.fromIsoNumber(if (day == 1) 7 else day - 1)
+
+  /** 解析旧客户端固定的“yyyy年M月d日HH:mm”，空串和非法日期返回 null。 */
+  internal fun parseLegacyDateTime(value: String?): MinuteTimeDate? {
+    val match = LEGACY_DATE_TIME_REGEX.matchEntire(value?.trim().orEmpty()) ?: return null
+    return runCatching {
+      MinuteTimeDate(
+        year = match.groupValues[1].toInt(),
+        month = match.groupValues[2].toInt(),
+        dayOfMonth = match.groupValues[3].toInt(),
+        hour = match.groupValues[4].toInt(),
+        minute = match.groupValues[5].toInt(),
+      )
+    }.getOrNull()
+  }
+
+  /** 旧时间戳同时出现过秒和毫秒；无效值只影响显示顺序，使用迁移时刻兜底。 */
+  private fun normalizeLegacyTimestamp(value: Long, fallback: Long): Long = when {
+    value <= 0 -> fallback
+    value < 100_000_000_000L -> value * 1_000L
+    else -> value
+  }
+
+  /** 固定分类只保留产品语义名称，实际 identity 由协调器结合已同步分类解析。 */
+  private fun legacyCategoryName(value: String): String = when (value.trim().lowercase()) {
+    "study", "学习" -> "学习"
+    "life", "生活" -> "生活"
+    else -> "其他"
+  }
+
+  /** 为重复系列返回领域锚点日期。 */
+  private fun timingDate(timing: ScheduleTiming): Date = when (timing) {
+    is ScheduleTiming.Timed -> timing.start.date
+    is ScheduleTiming.Deadline -> timing.due.date
+    is ScheduleTiming.AllDay -> timing.startDate
+    ScheduleTiming.Unscheduled -> error("Unscheduled cannot anchor recurrence")
+  }
+
+  /**
+   * 生成由旧 identity 决定的 UUIDv7。
+   *
+   * 前 48 位保留旧记录时间，剩余位来自 SHA-256；显式覆盖 version/variant 后，同一账号同一旧资源在重试、
+   * 重装和多设备迁移时得到相同 ID。
+   */
+  internal fun deterministicUuidV7(timestampMillis: Long, identity: String): String {
+    val bytes = ByteArray(16)
+    val timestamp = timestampMillis.coerceAtLeast(0) and 0x0000_FFFF_FFFF_FFFFL
+    repeat(6) { index ->
+      bytes[index] = (timestamp ushr ((5 - index) * 8)).toByte()
+    }
+    val digest = identity.encodeUtf8().sha256().toByteArray()
+    digest.copyInto(bytes, destinationOffset = 6, startIndex = 0, endIndex = 10)
+    bytes[6] = ((bytes[6].toInt() and 0x0F) or 0x70).toByte()
+    bytes[8] = ((bytes[8].toInt() and 0x3F) or 0x80).toByte()
+    val hex = CharArray(32)
+    bytes.forEachIndexed { index, byte ->
+      val value = byte.toInt() and 0xFF
+      hex[index * 2] = HEX[value ushr 4]
+      hex[index * 2 + 1] = HEX[value and 0x0F]
+    }
+    val compact = hex.concatToString()
+    return "${compact.substring(0, 8)}-${compact.substring(8, 12)}-" +
+      "${compact.substring(12, 16)}-${compact.substring(16, 20)}-${compact.substring(20)}"
+  }
+
+  private data class MappedTodoTiming(
+    val timing: ScheduleTiming,
+    val recurrence: RecurrenceRule?,
+    val reminderOffset: Int?,
+  )
+
+  /** 旧事务节次换算后的稳定时间结果。 */
+  private data class LegacyTransactionTiming(
+    val startMinute: Int,
+    val durationMinutes: Int,
+  )
+
+  private val LEGACY_DATE_TIME_REGEX =
+    Regex("""(\d{4})年(\d{1,2})月(\d{1,2})日(\d{1,2}):(\d{1,2})""")
+  private val LEGACY_START_MINUTES = intArrayOf(
+    8 * 60,
+    8 * 60 + 55,
+    10 * 60 + 15,
+    11 * 60 + 10,
+    11 * 60 + 55,
+    14 * 60,
+    14 * 60 + 55,
+    16 * 60 + 15,
+    17 * 60 + 10,
+    17 * 60 + 55,
+    19 * 60,
+    19 * 60 + 55,
+    20 * 60 + 50,
+    21 * 60 + 45,
+  )
+  private val LEGACY_END_MINUTES = intArrayOf(
+    8 * 60 + 45,
+    9 * 60 + 40,
+    11 * 60,
+    11 * 60 + 55,
+    14 * 60,
+    14 * 60 + 45,
+    15 * 60 + 40,
+    17 * 60,
+    17 * 60 + 55,
+    19 * 60,
+    19 * 60 + 45,
+    20 * 60 + 40,
+    21 * 60 + 35,
+    22 * 60 + 30,
+  )
+  private const val LEGACY_MAX_COURSE_END_ROW = 13
+  private const val HEX = "0123456789abcdef"
+}
+
+/** 固定默认分类 identity，避免迁移模块依赖 Compose UI 目录。 */
+internal val LegacyDefaultCategoryIds: Map<String, CategoryId> = mapOf(
+  "学习" to CategoryId("019d0000-0000-7000-8000-000000000001"),
+  "生活" to CategoryId("019d0000-0000-7000-8000-000000000002"),
+  "其他" to CategoryId("019d0000-0000-7000-8000-000000000003"),
+)

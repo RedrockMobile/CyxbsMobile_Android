@@ -43,6 +43,7 @@ kotlin {
       implementation(projects.cyxbsComponents.view)
       implementation(projects.cyxbsPages.course.api)
       implementation(projects.cyxbsPages.course.view)
+      implementation(libs.okio)
     }
     commonTest.dependencies {
       implementation(kotlin("test"))

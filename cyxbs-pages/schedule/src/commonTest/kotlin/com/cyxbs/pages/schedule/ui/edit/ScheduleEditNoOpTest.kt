@@ -18,6 +18,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -148,6 +149,110 @@ class ScheduleEditNoOpTest {
     assertEquals(timing, draft.timing)
     assertEquals(null, draft.todoState)
     assertTrue(draft.linkedToCourse)
+  }
+
+  /** 0 是正式的准时提醒值，从既有日程进入编辑再保存时不能被默认值或空提醒覆盖。 */
+  @Test
+  fun exactReminderSurvivesEditDraftRoundTrip() {
+    val origin = parentSchedule().copy(
+      recurrence = null,
+      reminders = listOf(ScheduleReminder(ReminderId("exact"), 0, ReminderChannel.DEVICE)),
+    )
+    val state = EditScheduleModelState(origin)
+
+    assertEquals(0, state.remindMinutes)
+    assertEquals(0, state.toDraft().reminders.single().offsetMinutes)
+  }
+
+  /** 新建编辑器用负数区分“不提醒”，领域草稿只能得到空列表，不能把默认态上传成准时提醒。 */
+  @Test
+  fun newDraftDefaultsToNoReminderInsteadOfExactReminder() {
+    val state = EditScheduleModelState(
+      origin = null,
+      creationTiming = ScheduleTiming.Deadline(
+        MinuteTimeDate(2026, 8, 25, 14, 30),
+        "Asia/Shanghai",
+      ),
+    )
+    state.title.setTextAndPlaceCursorAtEnd("默认不提醒")
+
+    assertEquals(-1, state.remindMinutes)
+    assertTrue(state.toDraft().reminders.isEmpty())
+  }
+
+  /** 有时间的日程应分别把准时、提前和不提醒映射为 0、正分钟数和空 reminder。 */
+  @Test
+  fun timedDraftMapsAllReminderChoicesWithoutConflatingZero() {
+    val state = EditScheduleModelState(parentSchedule().copy(recurrence = null, reminders = emptyList()))
+
+    state.remindMinutes = 0
+    assertEquals(0, state.toDraft().reminders.single().offsetMinutes)
+
+    state.remindMinutes = 10
+    assertEquals(10, state.toDraft().reminders.single().offsetMinutes)
+
+    state.remindMinutes = -1
+    assertTrue(state.toDraft().reminders.isEmpty())
+  }
+
+  /** 未排期没有提醒触发点或课表位置，草稿保存边界必须统一清理这两个暂存选择。 */
+  @Test
+  fun unscheduledDraftClearsReminderAndCourseRelation() {
+    val state = EditScheduleModelState(origin = null)
+    state.title.setTextAndPlaceCursorAtEnd("稍后安排")
+    state.remindMinutes = 0
+    state.linkedToCourse = true
+
+    val draft = state.toDraft()
+    assertEquals(ScheduleTiming.Unscheduled, draft.timing)
+    assertTrue(draft.reminders.isEmpty())
+    assertFalse(draft.linkedToCourse)
+  }
+
+  /** 已有重复日程改成无时间时，提醒、重复规则和课表关联必须在同一个保存草稿中一起清理。 */
+  @Test
+  fun changingExistingScheduleToUnscheduledClearsAllTimeDerivedFields() {
+    val state = EditScheduleModelState(parentSchedule())
+    state.startTime = ""
+    state.endTime = ""
+    state.isInterval = false
+    state.linkedToCourse = true
+
+    val draft = state.toDraft()
+    assertEquals(ScheduleTiming.Unscheduled, draft.timing)
+    assertNull(draft.recurrence)
+    assertTrue(draft.reminders.isEmpty())
+    assertFalse(draft.linkedToCourse)
+  }
+
+  /** 从重复实例改为无时间时，整个系列和此次及以后都必须清理系列级派生字段，且不能尝试重算时间偏移。 */
+  @Test
+  fun recurringOccurrenceToUnscheduledClearsDerivedFieldsForSeriesScopes() = runTest {
+    suspend fun commandFor(scope: EditScope): ScheduleCommand {
+      val parent = parentSchedule().copy(linkedToCourse = true)
+      val id = recurrenceId()
+      val repository = RecordingRepository(snapshot(parent))
+      val state = EditScheduleModelState(parent, occurrence(parent, id))
+      state.startTime = ""
+      state.endTime = ""
+      state.isInterval = false
+
+      repository.applyScheduleEdit(state, scope, id, FakeIds, Clock.System)
+      return repository.commands.single()
+    }
+
+    val all = (commandFor(EditScope.ALL) as ScheduleCommand.Update).schedule
+    assertEquals(ScheduleTiming.Unscheduled, all.timing)
+    assertNull(all.recurrence)
+    assertTrue(all.reminders.isEmpty())
+    assertFalse(all.linkedToCourse)
+
+    val following = (commandFor(EditScope.THIS_AND_FOLLOWING) as ScheduleCommand.SplitSeries)
+      .followingSchedule
+    assertEquals(ScheduleTiming.Unscheduled, following.timing)
+    assertNull(following.recurrence)
+    assertTrue(following.reminders.isEmpty())
+    assertFalse(following.linkedToCourse)
   }
 
   /** 从单次详情关联清单时仍更新事务所属系列，不生成伪造的 occurrence 关联字段。 */

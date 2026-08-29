@@ -59,16 +59,30 @@ suspend fun ScheduleRepository.applyScheduleEdit(
     description = if (state.isOccurrenceDescriptionChanged) edited.description else origin.description,
     categoryId = if (state.isOccurrenceCategoryChanged) edited.categoryId else origin.categoryId,
     timing = if (state.isOccurrenceTimingChanged) {
-      rebaseSeriesTiming(origin.timing, state.initialOccurrence.timing, edited.timing)
+      // 无时间没有 occurrence 起点，不能走时间偏移重算；它是整个系列的明确最终 timing。
+      if (edited.timing == ScheduleTiming.Unscheduled) ScheduleTiming.Unscheduled
+      else rebaseSeriesTiming(origin.timing, state.initialOccurrence.timing, edited.timing)
     } else {
       origin.timing
     },
-    recurrence = if (state.isSeriesRecurrenceChanged) edited.recurrence else origin.recurrence,
+    recurrence = if (state.isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled) {
+      null
+    } else if (state.isSeriesRecurrenceChanged) {
+      edited.recurrence
+    } else {
+      origin.recurrence
+    },
     reminders = if (state.isOccurrenceRemindersChanged ||
       (state.isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled)
     ) edited.reminders else origin.reminders,
     todoState = if (state.isSeriesRelationChanged) edited.todoState else origin.todoState,
-    linkedToCourse = if (state.isSeriesRelationChanged) edited.linkedToCourse else origin.linkedToCourse,
+    linkedToCourse = if (state.isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled) {
+      false
+    } else if (state.isSeriesRelationChanged) {
+      edited.linkedToCourse
+    } else {
+      origin.linkedToCourse
+    },
     updatedAt = now,
   )
   val relationEdited = origin.copy(
@@ -157,8 +171,13 @@ suspend fun ScheduleRepository.applyScheduleEdit(
         description = edited.description,
         categoryId = edited.categoryId,
         timing = edited.timing,
-        recurrence = if (state.isSeriesRecurrenceChanged) edited.recurrence
-        else split.followingSchedule.recurrence,
+        recurrence = if (edited.timing == ScheduleTiming.Unscheduled) {
+          null
+        } else if (state.isSeriesRecurrenceChanged) {
+          edited.recurrence
+        } else {
+          split.followingSchedule.recurrence
+        },
         reminders = edited.reminders,
         todoState = edited.todoState?.let { ScheduleTodoState.PENDING },
         linkedToCourse = edited.linkedToCourse,

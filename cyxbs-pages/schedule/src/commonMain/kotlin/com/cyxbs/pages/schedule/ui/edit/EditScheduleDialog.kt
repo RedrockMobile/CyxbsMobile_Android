@@ -84,6 +84,7 @@ import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.compose.imePaddingTarget
 import com.cyxbs.components.utils.compose.plusDsl
 import com.cyxbs.components.utils.compose.rememberDerivedStateOfStructure
+import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.components.view.ui.Window
 import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.domain.model.CategoryId
@@ -532,6 +533,10 @@ private fun ScheduleContent(
       onClickTime = { uiState = ScheduleUi.Edit.Time },
       onClickRepeat = { uiState = ScheduleUi.Edit.Repeat },
       onClickRemind = {
+        if (modelState.effectiveTiming == ScheduleTiming.Unscheduled) {
+          "请先设置时间后再开启提醒".toast()
+          return@InfoRow
+        }
         val editing = uiState is ScheduleUi.Edit
         // 只有“从不提醒切换为提醒”的新选择在授权失败后回退；其他设备同步来的提醒必须保留业务值。
         val enablingNewReminder = editing && modelState.remindMinutes < 0
@@ -539,7 +544,13 @@ private fun ScheduleContent(
         onRequestReminderAuthorization(enablingNewReminder)
       },
       onClickCategory = { uiState = ScheduleUi.Edit.Category },
-      onClickRelation = modelState::toggleCourseRelation,
+      onClickRelation = {
+        if (modelState.effectiveTiming == ScheduleTiming.Unscheduled) {
+          "请先设置时间后再关联课表".toast()
+        } else {
+          modelState.toggleCourseRelation()
+        }
+      },
     )
     Spacer(modifier = Modifier.height(10.dp))
     if (uiState is ScheduleUi.Show || uiState is ScheduleUi.Edit.Note) {

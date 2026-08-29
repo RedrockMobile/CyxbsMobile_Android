@@ -4,7 +4,9 @@ import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.pages.schedule.calendar.IosScheduleCalendarExportRuntimeRegistry
+import com.cyxbs.pages.schedule.data.migration.LegacyScheduleMigrationCoordinator
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Job
 
 /**
@@ -17,8 +19,16 @@ import kotlinx.coroutines.Job
 internal actual suspend fun onScheduleRepositoryInitialized(
   repository: ScheduleRepository,
   session: AccountSession,
-): ScheduleRepositoryInitializationHandoff =
-  registerIosScheduleCalendarExportInitialization(repository, session)
+): ScheduleRepositoryInitializationHandoff {
+  val calendarHandoff = registerIosScheduleCalendarExportInitialization(repository, session)
+  val released = atomic(false)
+  return ScheduleRepositoryInitializationHandoff {
+    if (released.compareAndSet(expect = false, update = true)) {
+      calendarHandoff.releaseAfterInitializationMutex()
+      LegacyScheduleMigrationCoordinator.start(repository, session)
+    }
+  }
+}
 
 /**
  * 同步登记 iOS EventKit runtime 的 exact-session binding，并返回 post-mutex handoff。

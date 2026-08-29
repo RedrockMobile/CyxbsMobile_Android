@@ -3,6 +3,7 @@ package com.cyxbs.pages.schedule.domain.calendar
 import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.init.appContext
 import com.cyxbs.pages.schedule.calendar.ScheduleCalendarExportController
+import com.cyxbs.pages.schedule.data.migration.LegacyScheduleMigrationCoordinator
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -15,10 +16,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 internal actual suspend fun onScheduleRepositoryInitialized(
   repository: ScheduleRepository,
   session: AccountSession,
-): ScheduleRepositoryInitializationHandoff = registerScheduleCalendarExportInitialization(
-  repository,
-  session,
-)
+): ScheduleRepositoryInitializationHandoff {
+  val calendarHandoff = registerScheduleCalendarExportInitialization(repository, session)
+  return AndroidScheduleCalendarExportInitializationHandoff {
+    calendarHandoff.releaseAfterInitializationMutex()
+    LegacyScheduleMigrationCoordinator.start(repository, session)
+  }
+}
 
 /** 为不再携带旧日历 capability 的 repository 创建一次性初始化 handoff。 */
 internal fun registerScheduleCalendarExportInitialization(

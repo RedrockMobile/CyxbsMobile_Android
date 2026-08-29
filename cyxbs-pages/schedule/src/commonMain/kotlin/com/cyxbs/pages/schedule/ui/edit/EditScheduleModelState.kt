@@ -153,11 +153,9 @@ class EditScheduleModelState(
     }
   }
 
-  val validationIssues: List<ScheduleValidationIssue> get() = ScheduleValidator.validate(
-    toDraft().let { draft ->
-      if (draft.timing == ScheduleTiming.Unscheduled) draft.copy(reminders = emptyList()) else draft
-    }.toNewDomainForValidation()
-  )
+  /** 保存草稿已经在 [toDraft] 统一清理未排期的不合法派生字段，校验不再维护第二套临时修正规则。 */
+  val validationIssues: List<ScheduleValidationIssue> get() =
+    ScheduleValidator.validate(toDraft().toNewDomainForValidation())
   val canConfirm: Boolean get() = validationIssues.isEmpty()
   /** occurrence 投影中的标题是否被用户实际改动；用于保留其他未触碰的 existing patch。 */
   internal val isOccurrenceTitleChanged: Boolean get() = initialOccurrence?.let { outputTitle != it.title.trim() } ?: true
@@ -211,9 +209,12 @@ class EditScheduleModelState(
   val outputDetail: String get() = detail.text.toString().trim()
 
   /**
-   * 提醒 payload 只由提醒控件输入决定；timing 改为 Unscheduled 时由路由层执行显式原子清理，不能伪造 dirty。
+   * 提醒 payload 由提醒控件输入决定；未排期没有可计算的触发时刻，保存时必须清空提醒。
+   *
+   * 0 是合法的准时提醒，只有负数表示不提醒，不能用真假判断或默认值把 0 丢失。
    */
   internal val effectiveReminders: List<ScheduleReminder> get() = when {
+    effectiveTiming == ScheduleTiming.Unscheduled -> emptyList()
     remindMinutes < 0 -> emptyList()
     initialReminderMinutes == remindMinutes -> initialReminders
     else -> listOf(
@@ -231,18 +232,23 @@ class EditScheduleModelState(
    * 新建态使用固定占位 [ScheduleId]，仅用于让草稿满足完整领域校验；命令边界必须在写入前替换成真实 UUIDv7。
    * 时间戳、revision 与正式 ID 均由调用方/仓库拥有；未排期或“不提醒”不会生成提醒。
    */
-  fun toDraft(): ScheduleDraft = ScheduleDraft(
-    id = origin?.id ?: ScheduleId("00000000-0000-7000-8000-000000000000"),
-    title = outputTitle,
-    description = outputDetail,
-    categoryId = categoryId,
-    timing = effectiveTiming,
-    recurrence = effectiveRecurrence,
-    reminders = effectiveReminders,
-    todoState = todoState,
-    kind = kind,
-    linkedToCourse = linkedToCourse,
-  )
+  fun toDraft(): ScheduleDraft {
+    val timing = effectiveTiming
+    val isUnscheduled = timing == ScheduleTiming.Unscheduled
+    return ScheduleDraft(
+      id = origin?.id ?: ScheduleId("00000000-0000-7000-8000-000000000000"),
+      title = outputTitle,
+      description = outputDetail,
+      categoryId = categoryId,
+      timing = timing,
+      recurrence = if (isUnscheduled) null else effectiveRecurrence,
+      reminders = effectiveReminders,
+      todoState = todoState,
+      kind = kind,
+      // 未排期没有课表投射位置；保留按钮但保存时归一化为未关联。
+      linkedToCourse = linkedToCourse && !isUnscheduled,
+    )
+  }
 
   /** 仅为运行完整领域校验补齐非编辑字段；占位时间与 revision 绝不会进入仓库。 */
   private fun ScheduleDraft.toNewDomainForValidation() = Schedule(

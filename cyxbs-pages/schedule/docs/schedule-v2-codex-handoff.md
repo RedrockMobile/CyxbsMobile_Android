@@ -173,7 +173,9 @@ ScheduleRepository.snapshot/calendarChanges
 
 不再支持系统日历到 Schedule 的入站写回、三方合并、冲突选择、link detachment 或手动 conflict executor。
 
-Android/iOS 初始化由账号 façade 在当前 delegate 初始化完成后调用 `onScheduleRepositoryInitialized`。平台 factory 不再携带旧 reconciliation capability 或 initialized hook。
+Android/iOS 初始化由账号 façade 在当前 delegate 初始化完成后调用 `onScheduleRepositoryInitialized`。平台 factory 不再携带旧 reconciliation capability 或 initialized hook。两端在同一个锁外 handoff 中通过共享协调器尝试一次
+[旧事务与旧清单迁移](schedule-v2-legacy-data-migration.md)，使用确定性 ID 写真实 Room；失败留到下次初始化重试，并在
+2028-09-01 UTC 后自动停止访问旧服务。
 
 ## 7. 明确不支持
 
@@ -184,7 +186,6 @@ Android/iOS 初始化由账号 façade 在当前 delegate 初始化完成后调�
   截断后的旧 Schedule、新 Schedule 与受影响 Override 的最终资源图；
 - 同 identity DELETE 后恢复；
 - Web 离线编辑与持久 pending；
-- 旧数据库数据推断迁移；
 - receipt/history/cursor/protocol rollout/自动重试框架。
 
 重复日程编辑已支持“仅此次 / 此次及以后 / 整个系列”：仅此次写 Override；此次及以后拆分系列；整个系列从

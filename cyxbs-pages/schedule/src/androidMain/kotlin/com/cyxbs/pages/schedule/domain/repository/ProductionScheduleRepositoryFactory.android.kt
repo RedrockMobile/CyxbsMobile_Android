@@ -10,24 +10,19 @@ import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RepositoryGateway
 import com.cyxbs.pages.schedule.data.local.room3.buildScheduleRoomDatabase
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2ApiService
 import com.cyxbs.pages.schedule.data.remote.v3.KtorScheduleV2Gateway
-import com.cyxbs.pages.schedule.ui.main.createScheduleTodoPreviewRepository
 import kotlin.time.Clock
 
 /**
- * Android 验收阶段临时使用邮子清单内存 mock。
+ * Android production 使用进程唯一 Room 数据库和账号绑定的 Schedule v2 gateway。
  *
- * 同一登录会话只创建一份账号绑定仓库，因此首页 Feed、邮子清单页和课表页观察并修改的是同一份数据。
- * mock 不读写 Room、不请求后端，应用进程或登录会话重建后会恢复初始样例。
+ * 旧数据迁移依赖真实 local-first 仓库保存确定性 ID 与 pending，因此上线实现不能继续使用验收阶段的内存 mock。
  */
 actual fun createProductionScheduleRepositoryFactory(
   clock: Clock,
-): ScheduleRepositoryFactory = ScheduleRepositoryFactory { session ->
-  createScheduleTodoPreviewRepository(
-    accountId = checkNotNull(session.accountId) {
-      "Schedule preview requires an authenticated account"
-    },
-  )
-}
+): ScheduleRepositoryFactory = createAndroidRoomScheduleRepositoryFactory(
+  database = AndroidScheduleRoomDatabaseOwner.database,
+  clock = clock,
+)
 
 /**
  * 从指定数据库与墙钟组装 Android Schedule v2 Room 工厂。

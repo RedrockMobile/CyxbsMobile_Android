@@ -80,7 +80,7 @@ class ScheduleInfoRowTest {
   fun remind_ahead_format() {
     assertNull(formatRemindAhead(-1))
     assertEquals("准时", formatRemindAhead(0))
-    assertEquals("提前10分", formatRemindAhead(10))
+    assertEquals("提前10分钟", formatRemindAhead(10))
     assertEquals("提前1小时", formatRemindAhead(60))
     assertEquals("提前2小时", formatRemindAhead(120))
   }
@@ -98,6 +98,6 @@ class ScheduleInfoRowTest {
   fun remind_option_label() {
     assertEquals("不提醒", remindOptionLabel(-1))
     assertEquals("准时", remindOptionLabel(0))
-    assertEquals("提前30分", remindOptionLabel(30))
+    assertEquals("提前30分钟", remindOptionLabel(30))
   }
 }
