@@ -3,7 +3,6 @@ package com.cyxbs.pages.course.api
 import android.app.Dialog
 import android.content.Context
 import androidx.core.content.edit
-import androidx.fragment.app.Fragment
 import com.cyxbs.components.config.sp.defaultSp
 import com.cyxbs.pages.affair.api.IAffairService
 
@@ -27,8 +26,6 @@ interface ICourseService {
     }
   }
 
-  fun createHomeCourseFragment(): Fragment
-  
   /**
    * 设置课表头的透明度
    */
