@@ -19,10 +19,6 @@ object DiscoverNavPlatformIosImpl : DiscoverNavPlatform {
     DiscoverIosPlatform::class.implOrNull()?.launchNotification() ?: toast("暂不支持跳转")
   }
 
-  override fun jumpCheckIn() {
-    DiscoverIosPlatform::class.implOrNull()?.jumpCheckIn() ?: toast("暂不支持跳转")
-  }
-
   override fun jumpJwNewsList() {
     DiscoverIosPlatform::class.implOrNull()?.jumpJwNewsList() ?: toast("暂不支持跳转")
   }

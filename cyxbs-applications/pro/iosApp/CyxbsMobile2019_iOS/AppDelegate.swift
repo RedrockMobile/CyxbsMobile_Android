@@ -18,9 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // 应用程序启动时调用的方法
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        // 版本迁移会清空整个 UserDefaults，必须在写入网络环境前完成。
+        // 提前初始化也避免首次登录才触发清理，导致旧原生模块丢失 baseURL。
+        _ = CacheManager.shared
+        // 网络环境必须先于 CMP 初始化，避免恢复登录态时旧原生模块读取不到 baseURL。
+        setupAlicloudSDK() // 设置网络环境和阿里云SDK
         IOSAppKt.doInitApp(impl: KmpInterfaceImpl()) // Kotlin Multiplatform 工程初始化
         setupWindow() // 设置应用程序窗口
-        setupAlicloudSDK() // 设置阿里云SDK
         XBSBugly.buglyInit() // 设置bugly
 
         return true
@@ -67,9 +71,8 @@ extension AppDelegate {
     
     // 设置阿里云SDK
     func setupAlicloudSDK() {
+        APIConfig.current.apply(APIConfig.current.environment)
         AliyunConfig.ip(byHost: APIConfig.current.environment.host)
-        let baseURL = APIConfig.current.environment.url + "/"
-        UserDefaultsManager.shared.set(baseURL, forKey: "baseURL")
     }
     
     // 设置结束操作

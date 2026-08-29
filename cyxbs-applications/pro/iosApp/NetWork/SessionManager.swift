@@ -181,7 +181,8 @@ extension DataRequest {
                     DataRequest.error_500_count += 1
                     if DataRequest.error_500_count >= 5 {
                         APIConfig.askHost { enviroment in
-                            APIConfig.current.environment = enviroment
+                            // 容灾切换时同步更新新旧网络栈，避免接口 Host 不一致。
+                            APIConfig.current.apply(enviroment)
                         }
                     }
                 }
