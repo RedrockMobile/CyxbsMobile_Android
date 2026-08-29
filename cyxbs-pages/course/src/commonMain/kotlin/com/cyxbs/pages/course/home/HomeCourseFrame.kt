@@ -147,8 +147,6 @@ private fun createCoursePageDecorationManager(
         coroutineScope,
         MobileScheduleItemFactory,
       ), // Schedule 原生事务使用独立层级
-      // TODO Schedule 事务验收完成后删除旧 Affair；过渡期间不再注册 AffairPageDecoration。
-      // AffairPageDecoration(courseFrame = frame, platformItemFactory = MobileCourseAffairItemFactory),
       LinkLessonPageDecoration(platformItemFactory = MobileCourseLinkLessonItemFactory), // 关联人的课程
       ScheduleAllDayPageDecoration(
         frame,

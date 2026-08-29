@@ -139,7 +139,6 @@ private fun createCoursePageDecorationManager(
           coroutineScope = coroutineScope,
           platformItemFactory = DefaultScheduleItemFactory,
         ), // Schedule 原生事务使用独立层级
-        // TODO 旧 Affair 仅保留代码等待后续迁移清理。
         LinkLessonPageDecoration(platformItemFactory = DefaultCourseLinkLessonItemFactory), // 关联人的课程
         ScheduleAllDayPageDecoration(
           courseFrame = frame,

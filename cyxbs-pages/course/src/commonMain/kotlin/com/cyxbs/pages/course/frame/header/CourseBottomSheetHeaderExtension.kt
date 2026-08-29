@@ -22,14 +22,13 @@ import androidx.compose.ui.unit.sp
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.time.MinuteTime
 import com.cyxbs.pages.course.view.item.extension.CourseItemExtension
-import com.cyxbs.pages.course.view.item.impl.CourseAffairItem
 import cyxbsmobile.cyxbs_pages.course.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.course.generated.resources.course_ic_course_header_landmark
 import cyxbsmobile.cyxbs_pages.course.generated.resources.course_ic_course_header_time
 import org.jetbrains.compose.resources.painterResource
 
 /**
- * 提供给主页课表展示外层的 Header，应作为 [CourseItemExtension] 附加到 [CourseAffairItem] 上
+ * 提供给主页课表展示外层的 Header，应作为 [CourseItemExtension] 附加到支持主页 Header 的课表 item 上。
  * 参考 [MobileSelfLessonItem]
  *
  * @author 985892345
