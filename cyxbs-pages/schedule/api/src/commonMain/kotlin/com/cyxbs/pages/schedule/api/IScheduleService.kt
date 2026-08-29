@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
  * 业务侧通过 `IScheduleService::class.impl()` 获取后将 [ScheduleFeed]
  * 嵌入到自己的页面中，无需直接依赖 schedule 模块。
  *
- * 该模块是 todo + 课表事务融合后的统一日程实现，对外取代旧的 `ITodoService`。
+ * 该模块是清单与课表事务融合后的统一日程实现，对外取代旧清单模块。
  */
 interface IScheduleService {
 
