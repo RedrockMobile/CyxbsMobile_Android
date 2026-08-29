@@ -77,3 +77,8 @@ const val NAV_SCHOOL_CAR = "school_car"
 
 // 空教室
 const val NAV_EMPTY_ROOM = "emptyroom"
+
+// 日程（邮子清单，todo + 课表事务融合）
+const val NAV_SCHEDULE_MAIN = "schedule"
+
+const val NAV_SIGN = "sign"

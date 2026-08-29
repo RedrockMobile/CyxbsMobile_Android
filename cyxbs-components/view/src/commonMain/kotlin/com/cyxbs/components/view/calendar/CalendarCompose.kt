@@ -2,11 +2,18 @@ package com.cyxbs.components.view.calendar
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +23,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -24,19 +33,21 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.cyxbs.components.view.calendar.month.CalendarMonthCompose
-import com.cyxbs.components.view.calendar.scroll.CalendarNestedScroll
 import com.cyxbs.components.config.time.Date
 import com.cyxbs.components.config.time.Festival
 import com.cyxbs.components.config.time.SolarTerms
 import com.cyxbs.components.config.time.toChineseCalendar
 import com.cyxbs.components.utils.compose.clickableNoIndicator
+import com.cyxbs.components.utils.compose.px2dpCompose
+import com.cyxbs.components.view.calendar.month.CalendarMonthCompose
+import com.cyxbs.components.view.calendar.scroll.CalendarNestedScroll
 import com.cyxbs.components.view.calendar.state.CalendarState
 import com.cyxbs.components.view.calendar.state.rememberCalendarState
-import com.cyxbs.components.utils.compose.px2dpCompose
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -63,8 +74,12 @@ fun CalendarCompose(
   },
   content: @Composable ColumnScope.() -> Unit = {},
 ) {
+  // 行高测量出来后，落地可能存在的「默认展开」请求（state.expand() 在测量前调用时会延后到此处）。
+  LaunchedEffect(state) {
+    snapshotFlow { state.lineHeightState.value }.collect { state.tryApplyExpand() }
+  }
   Column(
-    modifier = Modifier.fillMaxSize()
+    modifier = Modifier.fillMaxWidth()
       .nestedScroll(remember(state) { CalendarNestedScroll(state) })
       .then(modifier)
   ) {
@@ -133,6 +148,7 @@ fun CalendarState.MonthTextCompose(
 @Composable
 fun CalendarState.WeekTextCompose(
   modifier: Modifier = Modifier,
+  fontSize: TextUnit = 10.sp,
 ) {
   Row(modifier = modifier.layout { measurable, constraints ->
     // 日历宽度严格以 7 的倍数进行计算，这里同步处理
@@ -147,7 +163,7 @@ fun CalendarState.WeekTextCompose(
         modifier = Modifier.weight(1F),
         text = it,
         textAlign = TextAlign.Center,
-        fontSize = 10.sp
+        fontSize = fontSize
       )
     }
   }
@@ -164,6 +180,9 @@ sealed interface CalendarDateShowValue {
 fun CalendarState.CalendarDateCompose(
   date: Date,
   show: CalendarDateShowValue,
+  dayFontSize: TextUnit = 19.sp,
+  lunarFontSize: TextUnit = 9.sp,
+  maxCellHeight: Dp = 56.dp,
 ) {
   val today = today.invoke()
   Layout(
@@ -175,24 +194,31 @@ fun CalendarState.CalendarDateCompose(
       }
     }.clickableNoIndicator {
       clickEventFlowInternal.tryEmit(CalendarState.ClickEventData(clickDate, date))
-    }.background(
-      color = when {
+    }.drawBehind {
+      // 画正圆高亮：直径取格子较小边，避免格子被压扁(宽>高)时 CircleShape 变成椭圆。
+      val bg = when {
         date == today && show == CalendarDateShowValue.Clicked -> Color(0xFF1C71FF)
         show == CalendarDateShowValue.Clicked -> Color.LightGray
         date == today -> Color.White
         else -> Color.Transparent
-      },
-      shape = CircleShape
-    ),
+      }
+      if (bg != Color.Transparent) {
+        drawCircle(
+          color = bg,
+          radius = minOf(size.width, size.height) / 2f,
+          center = Offset(size.width / 2f, size.height / 2f),
+        )
+      }
+    },
     content = {
-      CalendarDateDayCompose(date, today, show)
-      CalendarDateLunarCompose(date, today, show)
+      CalendarDateDayCompose(date, today, show, dayFontSize)
+      CalendarDateLunarCompose(date, today, show, lunarFontSize)
       CalendarDateRestCompose(date, today, show)
     },
-    measurePolicy = remember {
+    measurePolicy = remember(maxCellHeight) {
       { measurables, constraints ->
         val width = constraints.maxWidth
-        val height = minOf(constraints.maxWidth, constraints.maxHeight, 56.dp.roundToPx())
+        val height = minOf(constraints.maxWidth, constraints.maxHeight, maxCellHeight.roundToPx())
         val newConstraints = Constraints(maxWidth = width, maxHeight = height)
         val dayPlaceable = measurables[0].measure(newConstraints)
         val lunarPlaceable = measurables[1].measure(newConstraints)
@@ -222,6 +248,7 @@ private fun CalendarDateDayCompose(
   date: Date,
   today: Date,
   show: CalendarDateShowValue,
+  fontSize: TextUnit = 19.sp,
 ) {
   Text(
     modifier = Modifier,
@@ -231,7 +258,7 @@ private fun CalendarDateDayCompose(
       date == today -> Color(0xFF1C71FF)
       else -> Color.Black
     },
-    fontSize = 19.sp,
+    fontSize = fontSize,
     fontWeight = FontWeight.Bold,
   )
 }
@@ -241,6 +268,7 @@ private fun CalendarDateLunarCompose(
   date: Date,
   today: Date,
   show: CalendarDateShowValue,
+  fontSize: TextUnit = 9.sp,
 ) {
   val specialDay = remember(date) { Festival.get(date) ?: SolarTerms.get(date)?.chinese }
   Text(
@@ -253,7 +281,7 @@ private fun CalendarDateLunarCompose(
       specialDay != null -> Color(0xFF1C71FF)
       else -> Color.Gray
     },
-    fontSize = 9.sp,
+    fontSize = fontSize,
   )
 }
 
