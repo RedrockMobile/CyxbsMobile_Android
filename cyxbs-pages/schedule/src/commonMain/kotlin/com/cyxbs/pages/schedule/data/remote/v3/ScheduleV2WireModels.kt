@@ -8,7 +8,7 @@ typealias UnixMillis = Long
 /** 可独立 LWW 合并的业务字段；data 与 modifiedAt 都是 required。 */
 @Serializable
 data class AtomicField<T>(
-  val data: T, // 当前业务值；Category.color、Schedule.recurrence 与 Schedule.todoState 可显式为 null。
+  val data: T, // 当前业务值；Category.color、Schedule.categoryId/recurrence/todoState 可显式为 null。
   val modifiedAt: UnixMillis, // 客户端最后修改此原子的时刻；零值合法但字段不可缺失。
 )
 
@@ -106,7 +106,7 @@ data class ScheduleInput(
   val kind: ScheduleKind, // required，创建来源；PATCH 不允许改变。
   val title: AtomicField<String>, // required，标题原子。
   val description: AtomicField<String>, // required，详情原子。
-  val categoryId: AtomicField<String>, // required，Category 引用原子。
+  val categoryId: AtomicField<String?>, // required；data=null 表示未分组，非空时引用同 owner Category。
   val timing: AtomicField<TimingInput>, // required，完整时间联合值。
   val recurrence: AtomicField<RecurrenceInput?>, // required；data=null 明确表示非重复。
   val reminders: AtomicField<List<ReminderInput>>, // required，空列表合法。

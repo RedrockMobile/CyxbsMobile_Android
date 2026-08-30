@@ -213,7 +213,7 @@ class ScheduleV2SnapshotProjector {
       revision = resource.version,
       title = resource.title.data,
       description = resource.description.data,
-      categoryId = CategoryId(resource.categoryId.data),
+      categoryId = resource.categoryId.data?.let(::CategoryId),
       timing = timing,
       recurrence = resource.recurrence.data?.toUi(timing),
       reminders = resource.reminders.data.toUiReminders(resource.identity.id),

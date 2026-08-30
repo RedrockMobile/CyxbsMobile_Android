@@ -134,6 +134,22 @@ class ScheduleV2SnapshotProjectorTest {
     assertEquals(Instant.fromEpochMilliseconds(70), schedule.updatedAt)
   }
 
+  /** categoryId.data=null 必须无损恢复为 UI 的未分组，而不是让整个快照投影失败。 */
+  @Test
+  fun uncategorizedScheduleProjectsAsNullCategory() {
+    val state = scheduleState(SCHEDULE_ID, TimingInput(TimingKind.UNSCHEDULED)).let { current ->
+      val resource = requireNotNull(current.effectiveResource()).copy(
+        categoryId = AtomicField(null, 30),
+      )
+      ScheduleSyncState(
+        resource.identity,
+        ScheduleRemoteSnapshot(resource, ServerResourceMeta(1, 2)),
+      )
+    }
+
+    assertNull(project(schedules = listOf(state)).snapshot.schedules.single().categoryId)
+  }
+
   @Test
   fun fourTimingKindsAreRestoredWithoutLosingTheirSemantics() {
     val timedStart = timed(2026, 7, 20, 9, 30, durationMinutes = 90)

@@ -75,6 +75,7 @@ import java.nio.file.Files
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Instant
 
@@ -125,6 +126,23 @@ class ScheduleV2RoomRepositoryDesktopTest {
       assertEquals("本地创建", repository.snapshot.value.schedules.single().title)
       assertIs<ScheduleRepositoryStatus.Ready>(repository.snapshot.value.status)
       assertTrue(ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().localRevision == null)
+    }
+  }
+
+  /** 未分组日程必须经过 Room、日常请求和 canonical 回包完整往返，不能停在 LOCAL rejected。 */
+  @Test
+  fun uncategorizedCreateIsSentAndRoundTripsThroughRoom() = runTest {
+    withRepository { repository, gateway, database ->
+      repository.initialize()
+
+      val result = repository.execute(ScheduleCommand.Create(schedule("未分组", categoryId = null)))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      assertNull(gateway.firstCreatedRequest?.schedules?.upserts?.single()?.categoryId?.data)
+      assertNull(repository.snapshot.value.schedules.single().categoryId)
+      val stored = ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single()
+      assertNull(stored.remoteSnapshot?.resource?.categoryId?.data)
+      assertNull(stored.localRevision)
     }
   }
 
@@ -723,12 +741,15 @@ class ScheduleV2RoomRepositoryDesktopTest {
   )
 
   /** 生成可直接被 v3 reducer 投影的最小非重复 UI 日程。 */
-  private fun schedule(title: String) = Schedule(
+  private fun schedule(
+    title: String,
+    categoryId: CategoryId? = CategoryId(CATEGORY_ID),
+  ) = Schedule(
     id = ScheduleId(SCHEDULE_ID),
     revision = 0,
     title = title,
     description = "",
-    categoryId = CategoryId(CATEGORY_ID),
+    categoryId = categoryId,
     timing = ScheduleTiming.Unscheduled,
     recurrence = null,
     reminders = emptyList(),
@@ -758,7 +779,7 @@ class ScheduleV2RoomRepositoryDesktopTest {
     linkedToCourse = AtomicField(false, 100),
   )
 
-  /** 预置服务端已确认分类，保持 reducer 的“每条日程必须归类”业务约束。 */
+  /** 预置服务端已确认分类，供默认有分组的测试日程引用。 */
   private suspend fun seedRemoteCategory(database: ScheduleRoomDatabase) {
     ScheduleV2RoomStateStore(database).replaceAccountState(
       ACCOUNT,

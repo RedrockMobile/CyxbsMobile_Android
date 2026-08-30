@@ -502,6 +502,10 @@ class ScheduleV2LocalCommandReducer {
     val categoryInUse = schedules.any {
       it.remoteSnapshot?.resource?.categoryId?.data == identity.id ||
         it.effectiveResource()?.categoryId?.data == identity.id
+    } || overrides.any {
+      // remote 引用即使被本地 pending 隐藏，在服务端确认前仍会阻止分类删除。
+      it.remoteSnapshot?.resource?.categoryId?.data == FieldPatch.Replace(identity.id) ||
+        it.effectiveResource()?.categoryId?.data == FieldPatch.Replace(identity.id)
     }
     if (categoryInUse) {
       // remote 即使被本地 pending DELETE 隐藏，确认前仍会让服务端拒绝分类删除，因此本地先拒绝。
@@ -718,8 +722,8 @@ class ScheduleV2LocalCommandReducer {
     old: ScheduleResource?,
     now: Long,
   ): ScheduleResource {
-    val category = categoryId
-      ?: reject(ScheduleV2LocalCommandRejectionReason.UNSUPPORTED)
+    // null 是“未分组”的正式协议值，不能在本地 reducer 中把它误判为不支持。
+    val category = categoryId?.value
     val timingValue = timing.toWireTiming()
     val recurrenceValue = recurrence?.toWireRecurrence(
       timing = timing,
@@ -735,7 +739,7 @@ class ScheduleV2LocalCommandReducer {
       kind = kind.toWire(),
       title = atomic(title, old?.title, now),
       description = atomic(description, old?.description, now),
-      categoryId = atomic(category.value, old?.categoryId, now),
+      categoryId = atomic(category, old?.categoryId, now),
       timing = atomic(timingValue, old?.timing, now),
       recurrence = atomic(recurrenceValue, old?.recurrence, now),
       reminders = atomic(reminderValues, old?.reminders, now),

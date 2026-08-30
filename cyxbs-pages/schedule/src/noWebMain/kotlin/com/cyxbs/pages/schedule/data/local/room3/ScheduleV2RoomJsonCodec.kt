@@ -123,7 +123,8 @@ private fun CategoryInput.validateForRoom() {
 
 /** Room 中 Schedule snapshot 的最低可恢复约束。 */
 private fun ScheduleInput.validateForRoom() {
-  require(id.validId() && categoryId.data.validId() && reminders.data.all { it.minutesBefore >= 0 })
+  require(id.validId() && (categoryId.data == null || categoryId.data.validId()) &&
+    reminders.data.all { it.minutesBefore >= 0 })
   timing.data.validateForRoom()
   recurrence.data?.validateForRoom()
   require(recurrence.data == null ||

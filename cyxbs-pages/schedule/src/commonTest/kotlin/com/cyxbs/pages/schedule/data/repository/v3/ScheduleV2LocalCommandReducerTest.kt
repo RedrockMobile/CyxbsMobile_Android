@@ -89,6 +89,39 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(listOf(ReminderInput(15, "")), resource.reminders.data)
   }
 
+  /** 未分组是可同步的正式状态，创建时应直接生成 categoryId.data=null 的 pending。 */
+  @Test
+  fun createUncategorizedScheduleCreatesNullableCategoryPending() {
+    val result = reduce(
+      command = ScheduleCommand.Create(schedule(categoryId = null)),
+      now = 10_001,
+      revision = 2,
+    ).applied()
+
+    val resource = result.schedules.single().pendingResource()
+    assertEquals(AtomicField<String?>(null, 10_001), resource.categoryId)
+  }
+
+  /** 已确认日程切换到未分组时只推进分类原子的时间，其余字段保持原时间。 */
+  @Test
+  fun updateScheduleCanClearCategory() {
+    val remote = scheduleResource(version = 3, timestamp = 100)
+    val state = ScheduleSyncState(
+      remote.identity,
+      ScheduleRemoteSnapshot(remote, ServerResourceMeta(1, 2)),
+    )
+
+    val resource = reduce(
+      schedules = listOf(state),
+      command = ScheduleCommand.Update(schedule(categoryId = null)),
+      now = 200,
+      revision = 3,
+    ).applied().schedules.single().pendingResource()
+
+    assertEquals(AtomicField<String?>(null, 200), resource.categoryId)
+    assertEquals(100, resource.title.modifiedAt)
+  }
+
   /** 惰性默认分类与日程使用同一 localRevision，日常 capture 会将两者放进一次请求。 */
   @Test
   fun saveScheduleWithNewCategoryUsesOneLocalRevision() {
@@ -535,6 +568,37 @@ class ScheduleV2LocalCommandReducerTest {
     )
   }
 
+  /** 单次 occurrence 的分类覆盖同样属于引用，不能让分类删除请求走到服务端再失败。 */
+  @Test
+  fun deleteCategoryReferencedByOccurrenceOverrideIsRejectedLocally() {
+    val category = reduce(
+      command = ScheduleCommand.CreateCategory(
+        ScheduleCategory(CategoryId(CATEGORY_ID), 0, "学习", null, 0),
+      ),
+      revision = 1,
+    ).applied().categories
+    val recurrenceId = RecurrenceId(
+      MinuteTimeDate(2026, 7, 23, 9, 0), "Asia/Shanghai", false,
+    )
+    val override = reduce(
+      command = ScheduleCommand.UpsertOccurrenceException(exception(
+        recurrenceId,
+        OccurrencePatch(categoryId = UiFieldPatch.Replace(CategoryId(CATEGORY_ID))),
+      )),
+      revision = 2,
+    ).applied().occurrenceOverrides
+
+    assertEquals(
+      ScheduleV2LocalCommandResult.Rejected(ScheduleV2LocalCommandRejectionReason.INVALID_STATE),
+      reduce(
+        categories = category,
+        occurrenceOverrides = override,
+        command = ScheduleCommand.DeleteCategory(CategoryId(CATEGORY_ID)),
+        revision = 3,
+      ),
+    )
+  }
+
   @Test
   fun splitSeriesUsesOneBatchAndMovesFutureOverridesToNewIdentity() {
     val recurrence = RecurrenceRule(UiRecurrenceFrequency.DAILY)
@@ -631,7 +695,6 @@ class ScheduleV2LocalCommandReducerTest {
   fun unsupportedProtocolBoundariesAreRejected() {
     val recurrenceId = RecurrenceId(MinuteTimeDate(2026, 7, 23, 9, 30), "Asia/Shanghai", false)
     val unsupported = listOf(
-      ScheduleCommand.Create(schedule(categoryId = null)),
       ScheduleCommand.Create(schedule(recurrence = RecurrenceRule(UiRecurrenceFrequency.MONTHLY))),
       ScheduleCommand.Create(schedule(recurrence = RecurrenceRule(
         UiRecurrenceFrequency.DAILY,

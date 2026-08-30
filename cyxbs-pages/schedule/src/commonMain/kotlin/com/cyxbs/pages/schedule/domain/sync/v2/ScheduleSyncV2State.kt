@@ -170,7 +170,7 @@ data class ScheduleResource(
   val kind: ScheduleKind,
   val title: AtomicField<String>,
   val description: AtomicField<String>,
-  val categoryId: AtomicField<String>,
+  val categoryId: AtomicField<String?>,
   val timing: AtomicField<TimingInput>,
   val recurrence: AtomicField<RecurrenceInput?>,
   val reminders: AtomicField<List<ReminderInput>>,
