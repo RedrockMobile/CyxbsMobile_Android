@@ -2,6 +2,7 @@ package com.cyxbs.pages.schedule.data.remote.v3
 
 import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.utils.network.ApiWrapper
+import com.cyxbs.components.utils.network.plugin.EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.HTTP
 import de.jensklingenberg.ktorfit.http.Headers
@@ -23,37 +24,30 @@ interface ScheduleV2ApiService {
   @Headers("Content-Type: application/json")
   suspend fun sync(
     @Body request: SyncRequest,
-    @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
+    @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
   ): ApiWrapper<SyncResponse>
 
-  /** 日常新增一个 Schedule 聚合批次，可同时携带关联 Category 与 OccurrenceOverride。 */
+  /** 日常新增请求；三类资源逐项处理并返回对齐结果。 */
   @POST("magipoke-todo/v2/schedules")
   @Headers("Content-Type: application/json")
   suspend fun createSchedule(
-    @Body input: AtomicBatch,
-    @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
-  ): ApiWrapper<AtomicBatchResult>
+    @Body input: MutationRequest,
+    @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
+  ): ApiWrapper<MutationResponse>
 
-  /** 日常更新一个 Schedule 聚合批次；服务端返回批次涉及 identity 的 canonical 结果。 */
+  /** 日常更新请求；完整资源由服务端按字段时间戳合并。 */
   @PUT("magipoke-todo/v2/schedules")
   @Headers("Content-Type: application/json")
   suspend fun updateSchedule(
-    @Body input: AtomicBatch,
-    @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
-  ): ApiWrapper<AtomicBatchResult>
+    @Body input: MutationRequest,
+    @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
+  ): ApiWrapper<MutationResponse>
 
-  /** 日常删除聚合批次；各 DELETE 成员仍只上传 identity 与 localModifiedAt。 */
+  /** 日常删除请求；各 DELETE 成员只上传 identity 与 localModifiedAt。 */
   @HTTP(method = "DELETE", path = "magipoke-todo/v2/schedules", hasBody = true)
   @Headers("Content-Type: application/json")
   suspend fun deleteSchedule(
-    @Body input: AtomicBatch,
-    @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
-  ): ApiWrapper<AtomicBatchResult>
+    @Body input: MutationRequest,
+    @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
+  ): ApiWrapper<MutationResponse>
 }
-
-/**
- * 必须与 TokenPlugin 的 ExpectedAccountSession attribute key 同名。
- *
- * Ktorfit 的 [Tag] 会以该名称写入本地 request attribute；它不会进入 header、query 或 JSON body。
- */
-private const val EXPECTED_ACCOUNT_SESSION_TAG = "ExpectedAccountSession"

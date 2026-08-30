@@ -112,30 +112,6 @@ abstract class ScheduleV2RoomDao {
   @Query("DELETE FROM schedule_v2_occurrence_override_state WHERE account_id = :accountId")
   abstract suspend fun deleteOccurrenceOverrideStates(accountId: String): Int
 
-  /** 按 localBatchId 读取 category pending 组成员。 */
-  @Query(
-    "SELECT * FROM schedule_v2_category_state WHERE account_id = :accountId AND local_batch_id = :localBatchId " +
-        "AND pending_operation IS NOT NULL ORDER BY category_id",
-  )
-  abstract suspend fun readPendingCategoriesForBatch(accountId: String, localBatchId: String): List<ScheduleV2CategoryStateEntity>
-
-  /** 按 localBatchId 读取 Schedule pending 组成员。 */
-  @Query(
-    "SELECT * FROM schedule_v2_schedule_state WHERE account_id = :accountId AND local_batch_id = :localBatchId " +
-        "AND pending_operation IS NOT NULL ORDER BY schedule_id",
-  )
-  abstract suspend fun readPendingSchedulesForBatch(accountId: String, localBatchId: String): List<ScheduleV2ScheduleStateEntity>
-
-  /** 按 localBatchId 读取 OccurrenceOverride pending 组成员。 */
-  @Query(
-    "SELECT * FROM schedule_v2_occurrence_override_state WHERE account_id = :accountId " +
-        "AND local_batch_id = :localBatchId AND pending_operation IS NOT NULL ORDER BY schedule_id, occurrence_date",
-  )
-  abstract suspend fun readPendingOccurrenceOverridesForBatch(
-    accountId: String,
-    localBatchId: String,
-  ): List<ScheduleV2OccurrenceOverrideStateEntity>
-
   /** 只在首次分配时创建账号计数器，不覆盖既有值。 */
   @Insert(onConflict = OnConflictStrategy.IGNORE)
   protected abstract suspend fun insertAccountMetadataIfAbsent(entity: ScheduleV2AccountMetadataEntity): Long

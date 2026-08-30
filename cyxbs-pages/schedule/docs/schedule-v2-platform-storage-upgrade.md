@@ -1,16 +1,8 @@
-# Schedule v2 客户端存储设计
+# Schedule v2 客户端存储
 
-> 文档状态：当前实现。Schedule v2 尚未上线，允许 break change；旧开发数据库需要清库或重装，不提供旧 schema 迁移。
+> 当前 Room v3 状态设计。旧 outbox、receipt、cursor、batch 和额外 tombstone 表均已删除。
 
-## 1. 设计结论
-
-客户端只保存三类资源的远端快照和本地临时快照：
-
-- Category
-- Schedule
-- OccurrenceOverride
-
-Room 只注册四张表：
+## 1. 表
 
 ```text
 schedule_v2_account_metadata
@@ -19,127 +11,69 @@ schedule_v2_schedule_state
 schedule_v2_occurrence_override_state
 ```
 
-没有下列旧同步结构：
+账号元数据只保存 `accountId` 与递增的 `localRevisionCounter`。
 
-- cursor、bootstrap/delta page；
-- 逐条 outbox、receipt、in-flight、delivery-unknown；
-- tombstone 表；
-- candidate、checkpoint、journal、reservation、settlement；
-- 设备 ID 或 mutationId。
+## 2. 每资源状态
 
-## 2. 账号元数据表
+三张资源表共享下列语义：
 
-`schedule_v2_account_metadata` 每个账号一行：
+| 字段 | 含义 |
+| --- | --- |
+| identity | Category/Schedule 的 id；Override 的 scheduleId + occurrenceDate |
+| remoteSnapshot | 最近一次确认的服务端完整 current，可空 |
+| pendingOperation | UPSERT / DELETE，可空 |
+| pendingSnapshot | UPSERT 的本地完整目标，可空 |
+| pendingLocalModifiedAt | DELETE 的本地时刻，可空 |
+| localRevision | 当前 pending 代数，可空 |
 
-```text
-account_id              TEXT PRIMARY KEY
-local_revision_counter  INTEGER NOT NULL
-```
+typed snapshot 通过 Room converter 编码为 JSON 列。业务代码直接维护 Kotlin DTO，不读取或拼接 JSON 字符串。
 
-`local_revision_counter` 只为本地编辑分配单调 revision。它不上传服务端，也不是资源 `version`。
+## 3. localRevision
 
-revision 出现空洞没有业务含义：命令可能 NoOp、Rejected 或在落库前取消。调用方只要求后一次成功编辑取得更大的值。
+`localRevision` 只用于防止旧请求响应清除新修改：
 
-## 3. 三张资源状态表
+- 每次本地命令从账号 counter 取一个新 revision；
+- 同一命令产生的相关资源可以共用 revision，便于日常 bridge 一次捕获；
+- 请求捕获 revision R；
+- 响应仅在当前行 revision 仍等于 R 时清 pending；
+- 请求期间产生 U 时 revision 已变化，因此 U 被保留。
 
-三张表使用各自 typed identity：
+`localRevision` 不上传服务端，也不表示服务端版本。
 
-```text
-Category:             account_id + category_id
-Schedule:             account_id + schedule_id
-OccurrenceOverride:  account_id + schedule_id + occurrence_date
-```
+## 4. remote 与 pending
 
-每行表达同一 identity 的两侧状态：
-
-```text
-remote_snapshot       typed Current?      // 服务端最后确认的 live 资源
-pending_operation     UPSERT | DELETE | null
-pending_snapshot      typed Input?        // 仅 UPSERT 存在
-pending_local_modified_at Long?           // 仅 DELETE 存在
-local_revision        Long?
-local_batch_id        String?
-```
-
-Kotlin Entity 字段直接使用 typed DTO。Room3 `ColumnTypeConverter` 负责把它们严格编码为 JSON 列；业务代码不直接维护裸 `String` JSON。
-
-`remote_snapshot.resource.version` 必须大于 0。pending CREATE 的资源 version 为 0；pending PATCH 在 capture 时使用当前 remote version 生成 wire 请求，不反写 pending 内容。
-
-`localBatchId` 是本地不可拆分分组键，Sync capture 时映射为当次 `AtomicBatch.batchId`。它不是 receipt，也不证明服务端处理进度。
-
-## 4. 有效展示状态
-
-每个 identity 的可见值只有三个分支：
+投影规则：
 
 ```text
-pending UPSERT  -> 展示 pendingSnapshot
-pending DELETE  -> 不展示
-无 pending      -> 展示 remoteSnapshot；remote 也为空则不存在
+pending UPSERT → 显示 pendingSnapshot
+pending DELETE → UI 隐藏
+无 pending      → 显示 remoteSnapshot
+两者都为空      → 不存在
 ```
 
-客户端不保存远端 tombstone。收到明确 tombstone 后删除 `remoteSnapshot`；若该行也没有 pending，则物理删除整行。
+接收服务端 current/tombstone 时只更新 remote；是否清 pending 由 uploadedRevision 比较决定。
 
-## 5. localRevision 与 R→U
+## 5. 删除
 
-请求 capture 会记录本次上传的 `localRevision`。网络请求期间用户可以继续编辑，形成更高 revision 的 U：
+DELETE pending 不保存版本，只保存 identity 与 `pendingLocalModifiedAt`。服务端确认 DELETED 后移除 remote 与 matching pending。不存在单独 tombstone 表。
 
-```text
-R(revision=1) 正在请求
-  -> 用户编辑形成 U(revision=2)
-  -> R 响应到达
-```
+## 6. 数据库版本
 
-应用 R 响应时先更新 `remoteSnapshot`，然后比较当前 revision：
+当前 schema version 为 8，变化是删除尚未上线的 `localBatchId` 列。Schedule v2 还没有发布，因此不编写从开发中间版本升级的 migration；本地旧开发库需要清除应用数据或重装。
 
-- 当前 revision 仍等于 1：响应证据满足合同后可清 pending；
-- 当前 revision 已是 2：无论 R 成功、被服务端合并还是请求结果不确定，都保留 U；
-- 下一次同步再上传 U，使两端收敛。
+## 7. 账号隔离
 
-CREATE 的 R 成功后可能短暂形成 `remote version=1 + pending U version=0`。下一次 capture 只在 wire 上把 U 投影为 remote version 1，pending 本身仍保持原始本地快照。
+所有表都以 accountId 参与主键或查询条件。切换账号时 façade 取消旧 delegate 收集，并在发布快照与日历变更前再次核对 binding identity，避免旧账号迟到响应污染新账号。
 
-## 6. 原子批次
+## 8. 写入边界
 
-需要父子闭包的命令在相关行写入同一 `localBatchId`。planner 只会把完整批次放入 `atomicBatches`，不会拆成普通 mutation。
+- 本地命令与最终响应应用各使用一次 Room transaction；
+- 网络调用不持有 repository mutex 或 Room transaction；
+- 回包后必须重新读取当前状态再应用；
+- 不在 Room 中保存 transport 重试次数、receipt 或请求历史。
 
-服务端 batch 响应由 common applier 一次计算出三类完整账号状态；Room 使用一个 write transaction 调用 `replaceAccountState`：
+## 9. 失败记录
 
-1. 删除账号现有三类状态行；
-2. 写入 applier 输出的完整集合；
-3. 保留账号的 `local_revision_counter`。
+业务拒绝与 HTTP400 的可编辑失败记录保存在账号 Settings，不属于 Room 同步状态。记录包含 scheduleId、失败时间、操作类型、源 Schedule、过滤后的 MutationRequest、reason 与安全 info。
 
-事务失败时不发布半批结果。
-
-## 7. 资源版本与 DELETE
-
-- `version` 是服务端资源属性，位于资源内部；客户端不自行递增。
-- DELETE 请求只包含 typed identity 和 `localModifiedAt`，不上传 version。
-- tombstone 不含 version。
-- DELETE 优先级最高；明确 tombstone 会清除 remote 侧，并按 uploaded revision 决定是否清 pending。
-- 同 identity 一旦成为 pending DELETE，不再转回 UPSERT；重新创建使用新 identity。
-
-## 8. 数据库创建与升级
-
-Schedule v2 未部署，因此当前代码不注册 migration，也不使用 destructive fallback。Android、Desktop、iOS builder 都直接创建当前 schema。
-
-旧开发数据库由开发者显式清库或重装。禁止从旧 graph、outbox、tombstone、cursor 或 semantic sidecar 猜测新 `remoteSnapshot` / `pendingSnapshot`。
-
-schema export 只保留当前四表版本，用于审查实际列和 converter 结果，不表示存在旧版本升级路径。
-
-## 9. 主要实现入口
-
-- `ScheduleV2RoomEntities.kt`：四表 Entity 与字段注释；
-- `ScheduleV2RoomConverters.kt`：typed snapshot JSON converter；
-- `ScheduleV2RoomDao.kt`：账号级查询、替换与 revision 分配；
-- `ScheduleV2RoomStateStore.kt`：完整状态事务；
-- `ScheduleV2RoomStateMapper.kt`：Room 与 common 同步状态互转；
-- `RoomScheduleRepository.kt`：local-first 命令、日常接口和完整 Sync 协调。
-
-## 10. 验证重点
-
-- remote-only、pending CREATE/PATCH/DELETE 的投影；
-- R→U compare-and-clear；
-- Category nullable color 和 recurrence nullable data 的 JSON 往返；
-- Schedule 与 Override 原子批次一次落库；
-- tombstone 删除 remote row 且下一轮不 confirmed；
-- RequestInvalid、timeout、5xx、HTTP 200 + REJECTED 都保留未确认 pending；
-- 账号切换后旧 delegate 的迟到快照和日历事件不能污染新账号。
+记录只用于向用户解释并回到编辑器；真正的重试来源仍是 Room pending。

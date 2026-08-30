@@ -32,20 +32,17 @@ import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideIdentity
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideResource
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideSyncState
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceStatus
-import com.cyxbs.pages.schedule.domain.sync.v2.PendingChange
 import com.cyxbs.pages.schedule.domain.sync.v2.PendingDelete
 import com.cyxbs.pages.schedule.domain.sync.v2.PendingUpsert
 import com.cyxbs.pages.schedule.domain.sync.v2.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.sync.v2.RecurrenceInput
 import com.cyxbs.pages.schedule.domain.sync.v2.ReminderInput
-import com.cyxbs.pages.schedule.domain.sync.v2.ResourceIdentity
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleIdentity
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleKind
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleResource
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleSyncState
 import com.cyxbs.pages.schedule.domain.sync.v2.TimingInput
 import com.cyxbs.pages.schedule.domain.sync.v2.TimingKind
-import com.cyxbs.pages.schedule.domain.sync.v2.SyncResource
 import com.cyxbs.pages.schedule.domain.sync.v2.Weekday
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -55,17 +52,6 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
 private const val UTC_DAY_MILLIS = 86_400_000L
-
-/** 为组合本地命令附加原子批次键；不改变 payload、revision 或删除时间。 */
-private fun <
-  I : ResourceIdentity,
-  R : SyncResource<I>,
-> PendingChange<I, R>.withLocalBatchId(
-  batchId: String,
-): PendingChange<I, R> = when (this) {
-  is PendingUpsert -> copy(localBatchId = batchId)
-  is PendingDelete -> copy(localBatchId = batchId)
-}
 
 /** 本地命令无法安全投影到当前后端协议时的最小稳定原因。 */
 enum class ScheduleV2LocalCommandRejectionReason {
@@ -293,17 +279,15 @@ class ScheduleV2LocalCommandReducer {
       it.identity.scheduleId == identity.id &&
         (it.remoteSnapshot != null || it.effectiveResource() != null)
     }
-    // 本地 effective 或服务端 remote 仍 live 的 Override 都必须与 parent 同批删除，避免遗漏已 pending DELETE 的子项。
-    val batchId = if (liveChildren.isEmpty()) null else "schedule-delete-$revision"
+    // 本地 effective 或服务端 remote 仍 live 的 Override 都使用同一 revision，日常 capture 会一次上传。
     val updated = state.replacePending(
       PendingDelete(
         identity,
         localModifiedAt = now,
         localRevision = revision,
-        localBatchId = batchId,
       ),
     )
-    val updatedOverrides = if (batchId == null) {
+    val updatedOverrides = if (liveChildren.isEmpty()) {
       overrides
     } else {
       overrides.map { child ->
@@ -315,7 +299,6 @@ class ScheduleV2LocalCommandReducer {
               identity = child.identity,
               localModifiedAt = now,
               localRevision = revision,
-              localBatchId = batchId,
             ),
           )
         }
@@ -400,7 +383,7 @@ class ScheduleV2LocalCommandReducer {
    * 将一次拖拽后的完整顺序转换为同 revision 的多个 Category pending。
    *
    * 已存在分类只改 sortOrder；尚未落库的固定默认候选按调用方提供的稳定 identity 创建。相同 revision
-   * 让 daily bridge 自动把全部变化收敛进一个 AtomicBatch，避免逐条请求暴露中间顺序。
+   * 让 daily bridge 自动把全部变化收敛进同一次普通请求，避免逐条请求暴露中间顺序。
    */
   private fun reorderCategories(
     categories: List<CategorySyncState>,
@@ -462,7 +445,7 @@ class ScheduleV2LocalCommandReducer {
   }
 
   /**
-   * 惰性创建固定默认分类并保存引用它的日程；两个 pending 使用同一 revision 和本地批次键。
+   * 惰性创建固定默认分类并保存引用它的日程；两个 pending 使用同一 revision，一次 capture 一起上传。
    *
    * 分类必须尚不存在，日程可为 CREATE 或 PATCH。该能力只服务于默认分类首次使用，通用分类管理不走此入口。
    */
@@ -503,18 +486,7 @@ class ScheduleV2LocalCommandReducer {
     }
     if (saved !is ScheduleV2LocalCommandResult.Applied) return saved
 
-    val categoryIdentity = CategoryIdentity(category.id.value)
-    val batchId = "category-schedule-$revision"
-    return saved.copy(
-      categories = saved.categories.map { state ->
-        if (state.identity != categoryIdentity) state
-        else state.copy(pending = state.pending?.withLocalBatchId(batchId))
-      },
-      schedules = saved.schedules.map { state ->
-        if (state.identity != scheduleIdentity) state
-        else state.copy(pending = state.pending?.withLocalBatchId(batchId))
-      },
-    )
+    return saved
   }
 
   private fun deleteCategory(
@@ -592,7 +564,7 @@ class ScheduleV2LocalCommandReducer {
    *
    * 边界 occurrence 的有效内容已经被提升为新系列字段，因此只删除旧 identity、不复制该例外；更晚的有效例外
    * 保留原 occurrenceDate 并改挂新 scheduleId。仅存在本地 CREATE 的旧例外可直接移除，已经存在远端快照的
-   * 例外则必须显式 DELETE。所有成员共享 [revision] 与 batchId，日常请求不会暴露半拆分状态。
+   * 例外则必须显式 DELETE。所有成员共享 [revision]，客户端将其拆成普通修改、新增和删除独立提交。
    */
   private fun splitSeries(
     categories: List<CategorySyncState>,
@@ -617,8 +589,6 @@ class ScheduleV2LocalCommandReducer {
       reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
     }
     val boundaryDate = occurrenceIdentity(previousIdentity.id, command.recurrenceId).occurrenceDate
-    val batchId = "series-split-$revision"
-
     var nextCategories = categories
     command.newCategory?.let { category ->
       if (command.followingSchedule.categoryId != category.id) {
@@ -628,13 +598,7 @@ class ScheduleV2LocalCommandReducer {
         nextCategories, schedules, overrides, category, now, revision,
       ) as? ScheduleV2LocalCommandResult.Applied
         ?: reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
-      nextCategories = categoryResult.categories.map { state ->
-        if (state.identity.id == category.id.value) {
-          state.copy(pending = state.pending?.withLocalBatchId(batchId))
-        } else {
-          state
-        }
-      }
+      nextCategories = categoryResult.categories
     }
 
     val previousResource = command.previousSchedule.toResource(
@@ -644,11 +608,11 @@ class ScheduleV2LocalCommandReducer {
     )
     val followingResource = command.followingSchedule.toResource(version = 0, old = null, now = now)
     val nextSchedules = schedules.replace(previousIdentity) { state ->
-      state.replacePending(PendingUpsert(previousResource, revision, batchId))
+      state.replacePending(PendingUpsert(previousResource, revision))
     } + ScheduleSyncState(
       identity = followingIdentity,
       remoteSnapshot = null,
-      pending = PendingUpsert(followingResource, revision, batchId),
+      pending = PendingUpsert(followingResource, revision),
     )
 
     val nextOverrides = migrateFollowingOverrides(
@@ -658,7 +622,6 @@ class ScheduleV2LocalCommandReducer {
       boundaryDate = boundaryDate,
       now = now,
       revision = revision,
-      batchId = batchId,
     )
     return applied(nextCategories, nextSchedules, nextOverrides)
   }
@@ -667,7 +630,7 @@ class ScheduleV2LocalCommandReducer {
    * 删除当前及后续 occurrence：PATCH 截断后的父系列，并同步删除边界及更晚的旧例外。
    *
    * 本地尚未上传的例外直接从双快照集合移除；已有 remote 的例外生成无版本 DELETE。系列 PATCH 与所有 DELETE
-   * 共享原子批次，服务端最终图校验时不会看到落在截断范围外的孤立例外。
+   * 使用同一 revision 进入一次请求，但服务端会按资源独立返回成功或拒绝。
    */
   private fun deleteThisAndFollowing(
     categories: List<CategorySyncState>,
@@ -686,10 +649,9 @@ class ScheduleV2LocalCommandReducer {
       reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
     }
     val boundaryDate = occurrenceIdentity(identity.id, command.recurrenceId).occurrenceDate
-    val batchId = "series-truncate-$revision"
     val previousResource = command.previousSchedule.toResource(effective.version, effective, now)
     val nextSchedules = schedules.replace(identity) { current ->
-      current.replacePending(PendingUpsert(previousResource, revision, batchId))
+      current.replacePending(PendingUpsert(previousResource, revision))
     }
     val nextOverrides = overrides.mapNotNull { override ->
       if (override.identity.scheduleId != identity.id || override.identity.occurrenceDate < boundaryDate) {
@@ -701,7 +663,6 @@ class ScheduleV2LocalCommandReducer {
           identity = override.identity,
           localModifiedAt = now,
           localRevision = revision,
-          localBatchId = batchId,
         ))
       }
     }
@@ -721,7 +682,6 @@ class ScheduleV2LocalCommandReducer {
     boundaryDate: Long,
     now: Long,
     revision: Long,
-    batchId: String,
   ): List<OccurrenceOverrideSyncState> = buildList {
     overrides.forEach { state ->
       if (state.identity.scheduleId != previousScheduleId || state.identity.occurrenceDate < boundaryDate) {
@@ -734,7 +694,6 @@ class ScheduleV2LocalCommandReducer {
           identity = state.identity,
           localModifiedAt = now,
           localRevision = revision,
-          localBatchId = batchId,
         )))
       }
       if (state.identity.occurrenceDate > boundaryDate && effective != null) {
@@ -748,7 +707,6 @@ class ScheduleV2LocalCommandReducer {
           pending = PendingUpsert(
             resource = effective.copy(identity = followingOverrideIdentity, version = 0),
             localRevision = revision,
-            localBatchId = batchId,
           ),
         ))
       }

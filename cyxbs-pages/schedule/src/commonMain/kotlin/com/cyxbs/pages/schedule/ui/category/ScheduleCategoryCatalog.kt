@@ -69,7 +69,7 @@ internal class ScheduleCategoryCatalog internal constructor(
    * 保存拖拽后的完整顺序。
    *
    * reducer 只更新 sortOrder 真正变化的分类；尚未落库的固定默认候选会在首次调整顺序时创建。所有变化
-   * 共用一次 localRevision，并由日常 bridge 作为一个 AtomicBatch 提交。
+ * 共用一次 localRevision，并由日常 bridge 在同一次普通请求中提交。
    */
   suspend fun reorder(ordered: List<ScheduleCategory>): ScheduleSyncResult? =
     repository.execute(ScheduleCommand.ReorderCategories(ordered))

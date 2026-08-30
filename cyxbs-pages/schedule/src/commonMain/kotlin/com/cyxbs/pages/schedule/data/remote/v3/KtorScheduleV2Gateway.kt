@@ -16,7 +16,7 @@ private const val MAX_DIAGNOSTIC_RESPONSE_CHARS = 2_000
 
 /** 单次 API 调用结果；失败不会在网关内排队、重试或生成 receipt。 */
 internal sealed interface ScheduleV2CallResult<out T> {
-  /** HTTP 200 且业务外壳为 10000 或 20101；两者都保留公共 [ApiWrapper] 的原始 data。 */
+  /** HTTP 200 且业务外壳为 10000；逐资源拒绝保留在 data 内。 */
   data class Completed<T>(val wrapper: ApiWrapper<T>) : ScheduleV2CallResult<T>
 
   /** HTTP 200，但统一外壳返回了 Schedule 合同之外的业务状态。 */
@@ -32,8 +32,8 @@ internal sealed interface ScheduleV2CallResult<out T> {
 /**
  * Schedule v2 的最小 Ktorfit 适配器。
  *
- * [api] 由 KtProvider 提供的 Ktorfit 实现注入。本类只校验账号绑定、分类一次调用结果，并保留 20101 中可处理的
- * data；pending 持久化和后续同步触发由上层 repository 负责。
+ * [api] 由 KtProvider 提供的 Ktorfit 实现注入。本类只校验账号绑定并分类网络结果；逐资源拒绝由上层从
+ * [MutationResponse] 或 [SyncResponse] 处理，pending 持久化和后续同步触发仍由 repository 负责。
  */
 internal class KtorScheduleV2Gateway(
   private val api: ScheduleV2ApiService,
@@ -53,27 +53,27 @@ internal class KtorScheduleV2Gateway(
     return result
   }
 
-  /** 日常新增上传一个 Schedule 聚合原子批次。 */
-  suspend fun createSchedule(accountId: String, input: AtomicBatch): ScheduleV2CallResult<AtomicBatchResult> =
-    callAtomic(accountId, "CREATE", input) { api.createSchedule(input, boundSession) }
+  /** 日常新增上传本次命令涉及的独立资源变更。 */
+  suspend fun createSchedule(accountId: String, input: MutationRequest): ScheduleV2CallResult<MutationResponse> =
+    callMutation(accountId, "CREATE", input) { api.createSchedule(input, boundSession) }
 
-  /** 日常更新上传一个 Schedule 聚合原子批次。 */
-  suspend fun updateSchedule(accountId: String, input: AtomicBatch): ScheduleV2CallResult<AtomicBatchResult> =
-    callAtomic(accountId, "UPDATE", input) { api.updateSchedule(input, boundSession) }
+  /** 日常更新上传本次命令涉及的独立资源变更。 */
+  suspend fun updateSchedule(accountId: String, input: MutationRequest): ScheduleV2CallResult<MutationResponse> =
+    callMutation(accountId, "UPDATE", input) { api.updateSchedule(input, boundSession) }
 
-  /** 日常删除上传包含 parent/child DELETE 的 Schedule 聚合原子批次。 */
-  suspend fun deleteSchedule(accountId: String, input: AtomicBatch): ScheduleV2CallResult<AtomicBatchResult> =
-    callAtomic(accountId, "DELETE", input) { api.deleteSchedule(input, boundSession) }
+  /** 日常删除上传本次命令涉及的独立资源变更。 */
+  suspend fun deleteSchedule(accountId: String, input: MutationRequest): ScheduleV2CallResult<MutationResponse> =
+    callMutation(accountId, "DELETE", input) { api.deleteSchedule(input, boundSession) }
 
-  /** 输出一次日常聚合请求及其 canonical 响应，再复用统一网络结果分类。 */
-  private suspend fun callAtomic(
+  /** 输出一次日常变更请求及其逐资源响应，再复用统一网络结果分类。 */
+  private suspend fun callMutation(
     accountId: String,
     operation: String,
-    input: AtomicBatch,
-    request: suspend () -> ApiWrapper<AtomicBatchResult>,
-  ): ScheduleV2CallResult<AtomicBatchResult> {
+    input: MutationRequest,
+    request: suspend () -> ApiWrapper<MutationResponse>,
+  ): ScheduleV2CallResult<MutationResponse> {
     input.logScheduleRequest("REQUEST $operation", diagnosticTimeZone)
-    val result = call(accountId, operation, input.batchId, request)
+    val result = call(accountId, operation, input.requestId, request)
     (result as? ScheduleV2CallResult.Completed)?.wrapper?.rawData
       ?.logScheduleResponse(diagnosticTimeZone)
     return result
@@ -82,8 +82,8 @@ internal class KtorScheduleV2Gateway(
   /**
    * 执行一次 Ktorfit 调用并保留统一外壳。
    *
-   * 20101 是带 typed data 的业务拒绝，不访问会抛 [com.cyxbs.components.utils.network.ApiException] 的
-   * [ApiWrapper.data]；其他非成功业务状态没有可应用结果，单独返回 [ScheduleV2CallResult.ApiFailure]。
+   * 合同内的逐资源拒绝仍使用 status=10000，并位于 typed data 中；其他非成功业务状态没有可应用结果，
+   * 单独返回 [ScheduleV2CallResult.ApiFailure]。
    */
   private suspend fun <T> call(
     accountId: String,
@@ -133,7 +133,7 @@ internal class KtorScheduleV2Gateway(
 
     log(NETWORK_LOG_TAG, "$operation completed requestId=$requestId businessStatus=${wrapper.status}")
     return when (wrapper.status) {
-      NORMAL_STATUS, BUSINESS_REJECTED_STATUS -> {
+      NORMAL_STATUS -> {
         if (wrapper.rawData == null) {
           ScheduleV2CallResult.TransportFailure(
             status = 200,
@@ -157,7 +157,6 @@ internal class KtorScheduleV2Gateway(
   private companion object {
     const val NETWORK_LOG_TAG = "ScheduleV2Network"
     const val NORMAL_STATUS = 10000
-    const val BUSINESS_REJECTED_STATUS = 20101
   }
 }
 

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 7,
-    "identityHash": "4a6f0390ca7776d4ea3b8e67d3ea6abc",
+    "version": 1,
+    "identityHash": "0bdd787b9d43d8ed5a6bc09492bc3dc6",
     "entities": [
       {
         "tableName": "schedule_v2_account_metadata",
@@ -30,7 +30,7 @@
       },
       {
         "tableName": "schedule_v2_category_state",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `category_id` TEXT NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, `local_batch_id` TEXT, PRIMARY KEY(`account_id`, `category_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `category_id` TEXT NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, PRIMARY KEY(`account_id`, `category_id`))",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -68,11 +68,6 @@
             "fieldPath": "localRevision",
             "columnName": "local_revision",
             "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "localBatchId",
-            "columnName": "local_batch_id",
-            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -84,21 +79,20 @@
         },
         "indices": [
           {
-            "name": "index_schedule_v2_category_state_account_id_pending_operation_local_batch_id",
+            "name": "index_schedule_v2_category_state_account_id_pending_operation",
             "unique": false,
             "columnNames": [
               "account_id",
-              "pending_operation",
-              "local_batch_id"
+              "pending_operation"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_category_state_account_id_pending_operation_local_batch_id` ON `${TABLE_NAME}` (`account_id`, `pending_operation`, `local_batch_id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_category_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
           }
         ]
       },
       {
         "tableName": "schedule_v2_schedule_state",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `schedule_id` TEXT NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, `local_batch_id` TEXT, PRIMARY KEY(`account_id`, `schedule_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `schedule_id` TEXT NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, PRIMARY KEY(`account_id`, `schedule_id`))",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -136,11 +130,6 @@
             "fieldPath": "localRevision",
             "columnName": "local_revision",
             "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "localBatchId",
-            "columnName": "local_batch_id",
-            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -152,21 +141,20 @@
         },
         "indices": [
           {
-            "name": "index_schedule_v2_schedule_state_account_id_pending_operation_local_batch_id",
+            "name": "index_schedule_v2_schedule_state_account_id_pending_operation",
             "unique": false,
             "columnNames": [
               "account_id",
-              "pending_operation",
-              "local_batch_id"
+              "pending_operation"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_schedule_state_account_id_pending_operation_local_batch_id` ON `${TABLE_NAME}` (`account_id`, `pending_operation`, `local_batch_id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_schedule_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
           }
         ]
       },
       {
         "tableName": "schedule_v2_occurrence_override_state",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `schedule_id` TEXT NOT NULL, `occurrence_date` INTEGER NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, `local_batch_id` TEXT, PRIMARY KEY(`account_id`, `schedule_id`, `occurrence_date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `schedule_id` TEXT NOT NULL, `occurrence_date` INTEGER NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, PRIMARY KEY(`account_id`, `schedule_id`, `occurrence_date`))",
         "fields": [
           {
             "fieldPath": "accountId",
@@ -210,11 +198,6 @@
             "fieldPath": "localRevision",
             "columnName": "local_revision",
             "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "localBatchId",
-            "columnName": "local_batch_id",
-            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -227,22 +210,21 @@
         },
         "indices": [
           {
-            "name": "index_schedule_v2_occurrence_override_state_account_id_pending_operation_local_batch_id",
+            "name": "index_schedule_v2_occurrence_override_state_account_id_pending_operation",
             "unique": false,
             "columnNames": [
               "account_id",
-              "pending_operation",
-              "local_batch_id"
+              "pending_operation"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_occurrence_override_state_account_id_pending_operation_local_batch_id` ON `${TABLE_NAME}` (`account_id`, `pending_operation`, `local_batch_id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_occurrence_override_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4a6f0390ca7776d4ea3b8e67d3ea6abc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0bdd787b9d43d8ed5a6bc09492bc3dc6')"
     ]
   }
 }

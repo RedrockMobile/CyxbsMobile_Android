@@ -5,15 +5,14 @@ import com.cyxbs.components.utils.extensions.log
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureOperation
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecordSink
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
-import com.cyxbs.pages.schedule.data.failure.allMutationBatches
 import com.cyxbs.pages.schedule.data.failure.createScheduleFailureRecords
-import com.cyxbs.pages.schedule.data.failure.rejectedMutationBatches
+import com.cyxbs.pages.schedule.data.failure.createRejectedScheduleFailureRecords
 import com.cyxbs.pages.schedule.data.failure.scheduleIds
+import com.cyxbs.pages.schedule.data.failure.toMutationRequest
 import com.cyxbs.pages.schedule.data.failure.toFailureOperation
-import com.cyxbs.pages.schedule.data.remote.v3.AtomicBatch
-import com.cyxbs.pages.schedule.data.remote.v3.AtomicBatchResult
-import com.cyxbs.pages.schedule.data.remote.v3.AtomicBatchResultCode
 import com.cyxbs.pages.schedule.data.remote.v3.KtorScheduleV2Gateway
+import com.cyxbs.pages.schedule.data.remote.v3.MutationRequest
+import com.cyxbs.pages.schedule.data.remote.v3.MutationResponse
 import com.cyxbs.pages.schedule.data.remote.v3.MutationResultCode
 import com.cyxbs.pages.schedule.data.remote.v3.ResultReason
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2CallResult
@@ -59,53 +58,69 @@ internal interface ScheduleV2RepositoryGateway {
   /** 提交完整 inventory 与 pending 的一次 Sync 请求。 */
   suspend fun sync(accountId: String, request: SyncRequest): ScheduleV2CallResult<SyncResponse>
 
-  /** 提交日常新增的 Schedule 聚合批次。 */
-  suspend fun createSchedule(accountId: String, input: AtomicBatch): ScheduleV2CallResult<AtomicBatchResult>
+  /** 提交日常新增所涉及的逐资源变更。 */
+  suspend fun createSchedule(
+    accountId: String,
+    input: MutationRequest
+  ): ScheduleV2CallResult<MutationResponse>
 
-  /** 提交日常修改的 Schedule 聚合批次。 */
-  suspend fun updateSchedule(accountId: String, input: AtomicBatch): ScheduleV2CallResult<AtomicBatchResult>
+  /** 提交日常修改所涉及的逐资源变更。 */
+  suspend fun updateSchedule(
+    accountId: String,
+    input: MutationRequest
+  ): ScheduleV2CallResult<MutationResponse>
 
-  /** 提交日常删除的 Schedule 聚合批次。 */
-  suspend fun deleteSchedule(accountId: String, input: AtomicBatch): ScheduleV2CallResult<AtomicBatchResult>
+  /** 提交日常删除所涉及的逐资源变更。 */
+  suspend fun deleteSchedule(
+    accountId: String,
+    input: MutationRequest
+  ): ScheduleV2CallResult<MutationResponse>
 }
 
 /** 将现有 Ktor 网关适配为 repository 的可替换最小接口，不复制 wire DTO 或 HTTP 解释。 */
 internal class KtorScheduleV2RepositoryGateway(
   private val delegate: KtorScheduleV2Gateway,
 ) : ScheduleV2RepositoryGateway {
-  override suspend fun sync(accountId: String, request: SyncRequest) = delegate.sync(accountId, request)
+  override suspend fun sync(accountId: String, request: SyncRequest) =
+    delegate.sync(accountId, request)
 
-  override suspend fun createSchedule(accountId: String, input: AtomicBatch) =
+  override suspend fun createSchedule(accountId: String, input: MutationRequest) =
     delegate.createSchedule(accountId, input)
 
-  override suspend fun updateSchedule(accountId: String, input: AtomicBatch) =
+  override suspend fun updateSchedule(accountId: String, input: MutationRequest) =
     delegate.updateSchedule(accountId, input)
 
-  override suspend fun deleteSchedule(accountId: String, input: AtomicBatch) =
+  override suspend fun deleteSchedule(accountId: String, input: MutationRequest) =
     delegate.deleteSchedule(accountId, input)
 }
 
 /** 未完成平台网络接线时的安全默认实现；它绝不伪造已发送或已确认的结果。 */
 internal object UnavailableScheduleV2RepositoryGateway : ScheduleV2RepositoryGateway {
   private fun unavailable(): ScheduleV2CallResult<Nothing> =
-    ScheduleV2CallResult.TransportFailure(null, IllegalStateException("Schedule v2 gateway is unavailable"))
+    ScheduleV2CallResult.TransportFailure(
+      null,
+      IllegalStateException("Schedule v2 gateway is unavailable")
+    )
 
-  override suspend fun sync(accountId: String, request: SyncRequest): ScheduleV2CallResult<SyncResponse> = unavailable()
+  override suspend fun sync(
+    accountId: String,
+    request: SyncRequest
+  ): ScheduleV2CallResult<SyncResponse> = unavailable()
 
   override suspend fun createSchedule(
     accountId: String,
-    input: AtomicBatch,
-  ): ScheduleV2CallResult<AtomicBatchResult> = unavailable()
+    input: MutationRequest,
+  ): ScheduleV2CallResult<MutationResponse> = unavailable()
 
   override suspend fun updateSchedule(
     accountId: String,
-    input: AtomicBatch,
-  ): ScheduleV2CallResult<AtomicBatchResult> = unavailable()
+    input: MutationRequest,
+  ): ScheduleV2CallResult<MutationResponse> = unavailable()
 
   override suspend fun deleteSchedule(
     accountId: String,
-    input: AtomicBatch,
-  ): ScheduleV2CallResult<AtomicBatchResult> = unavailable()
+    input: MutationRequest,
+  ): ScheduleV2CallResult<MutationResponse> = unavailable()
 }
 
 /**
@@ -133,6 +148,7 @@ internal class RoomScheduleRepository(
   private val mutableSnapshot = MutableStateFlow(ScheduleSnapshot())
   private var initialized = false
   private var requestSequence = 0L
+
   /** 最近一次尚未被成功响应解除的远端错误；仅进程内保留，绝不写入 Room 或作为同步状态机。 */
   private var lastRemoteError: ScheduleRemoteError? = null
 
@@ -149,7 +165,7 @@ internal class RoomScheduleRepository(
     val shouldSync = mutex.withLock {
       if (initialized) return@withLock false
       val local = readCurrentState()
-      publishOrThrow(local, null)
+      publishOrThrow(local)
       local.logScheduleState("LOCAL initialized", timeZone)
       initialized = true
       true
@@ -160,13 +176,13 @@ internal class RoomScheduleRepository(
   }
 
   /**
-   * 本地命令先分配纯本地 revision、归约并一次替换完整 state；随后把本次 pending 及其 Schedule 关系闭包作为
-   * 一个聚合批次立即提交。
+   * 本地命令先分配纯本地 revision、归约并一次替换完整 state；随后把本次 pending 及其 Schedule 关系闭包
+   * 按逐资源请求立即提交。
    *
    * transport 等不确定失败保留 pending；HTTP 400 或 typed REJECTED 同样保留本地数据，但额外写入可修复的
    * 失败记录。请求期间形成的 U 始终继续保留。
    */
-  override suspend fun execute(command: ScheduleCommand): ScheduleSyncResult? {
+  override suspend fun execute(command: ScheduleCommand): ScheduleSyncResult {
     if (command == ScheduleCommand.RequestSync) return synchronizeFull()
     check(initialized) { "RoomScheduleRepository must be initialized before execute" }
 
@@ -189,6 +205,7 @@ internal class RoomScheduleRepository(
           log(REPOSITORY_LOG_TAG, "LOCAL noOp ${command.diagnosticLabel()}")
           ScheduleSyncResult.Success(attempted = false)
         }
+
         is ScheduleV2LocalCommandResult.Rejected -> {
           log(REPOSITORY_LOG_TAG, "LOCAL rejected ${command.diagnosticLabel()}")
           ScheduleSyncResult.Failure(
@@ -196,6 +213,7 @@ internal class RoomScheduleRepository(
             attempted = false,
           )
         }
+
         is ScheduleV2LocalCommandResult.Applied -> {
           val after = ScheduleV2CommonAccountState(
             accountId,
@@ -219,25 +237,26 @@ internal class RoomScheduleRepository(
           )
           log(
             REPOSITORY_LOG_TAG,
-            "LOCAL persisted ${command.diagnosticLabel()} revision=$revision pendingCount=${after.pendingMutationCount()}",)
+            "LOCAL persisted ${command.diagnosticLabel()} revision=$revision pendingCount=${after.pendingMutationCount()}",
+          )
           if (changedIds.isNotEmpty()) {
             localEvent = ScheduleCalendarChange.SchedulesCommitted(accountId, changedIds)
           }
           safelyRemoveLocallyDeletedFailureRecords(changedIdValues, after)
           val captured = dailyBridge.capture(
-            syncRequestId = nextSyncRequestId(),
+            requestId = nextSyncRequestId(),
             localRevision = revision,
             categories = after.categories,
             schedules = after.schedules,
             occurrenceOverrides = after.occurrenceOverrides,
           )
           when (captured) {
-            is ScheduleV2DailyMutationCapture.Batch -> {
-              safelyRefreshFailureSource(captured.batch)
+            is ScheduleV2DailyMutationCapture.Ready -> {
+              safelyRefreshFailureSource(captured.request)
               log(
                 REPOSITORY_LOG_TAG,
-                "LOCAL captured method=${captured.method} batchId=${captured.batch.batchId} " +
-                    "operationCount=${captured.batch.operationCount()}",
+                "LOCAL captured method=${captured.method} requestId=${captured.request.requestId} " +
+                    "operationCount=${captured.request.operationCount()}",
               )
             }
 
@@ -265,25 +284,41 @@ internal class RoomScheduleRepository(
     val capture = try {
       mutex.withLock {
         val state = readCurrentState()
-        planner.capture(nextSyncRequestId(), state.categories, state.schedules, state.occurrenceOverrides)
+        planner.capture(
+          nextSyncRequestId(),
+          state.categories,
+          state.schedules,
+          state.occurrenceOverrides
+        )
       }
     } catch (failure: Throwable) {
-      return publishUnavailableAfterRead(ScheduleRemoteError.InvalidResponse(failure), attempted = false)
+      return publishUnavailableAfterRead(
+        ScheduleRemoteError.InvalidResponse(failure),
+        attempted = false
+      )
     }
     val result = when (val call = gateway.sync(accountId, capture.request)) {
-      is ScheduleV2CallResult.Completed -> applySyncResponse(capture, requireNotNull(call.wrapper.rawData))
+      is ScheduleV2CallResult.Completed -> applySyncResponse(
+        capture,
+        requireNotNull(call.wrapper.rawData)
+      )
+
       is ScheduleV2CallResult.ApiFailure ->
         publishUnavailableAfterRead(ScheduleRemoteError.Server(call.status), true)
+
       is ScheduleV2CallResult.RequestInvalid -> retainFailedRequest(
-        batches =
-        capture.request.allMutationBatches(),
+        request = capture.request.toMutationRequest(),
         operation = ScheduleFailureOperation.SYNC,
         reasonCode = "HTTP_400",
         message = call.body,
         error =
-        ScheduleRemoteError.InvalidResponse(IllegalArgumentException(call.body)),
+          ScheduleRemoteError.InvalidResponse(IllegalArgumentException(call.body)),
       )
-      is ScheduleV2CallResult.TransportFailure -> publishUnavailableAfterRead(call.toRemoteError(), true)
+
+      is ScheduleV2CallResult.TransportFailure -> publishUnavailableAfterRead(
+        call.toRemoteError(),
+        true
+      )
     }
     log(
       REPOSITORY_LOG_TAG,
@@ -294,34 +329,40 @@ internal class RoomScheduleRepository(
   }
 
   /**
-   * 提交一个 Schedule 聚合批次并记录最终 pending 数量；三种资源始终在同一次 HTTP 调用和同一个服务端事务内处理。
+   * 提交本次命令产生的逐资源变更并记录最终 pending 数量；服务端允许其中一部分独立成功。
    */
   private suspend fun submitDaily(capture: ScheduleV2DailyMutationCapture): ScheduleSyncResult {
     val result = when (capture) {
-    is ScheduleV2DailyMutationCapture.Batch -> {
-      val call = when (capture.method) {
-        ScheduleV2DailyMutationMethod.CREATE -> gateway.createSchedule(accountId, capture.batch)
-        ScheduleV2DailyMutationMethod.UPDATE -> gateway.updateSchedule(accountId, capture.batch)
-        ScheduleV2DailyMutationMethod.DELETE -> gateway.deleteSchedule(accountId, capture.batch)
-      }
-      when (call) {
-        is ScheduleV2CallResult.Completed -> applyDailyBatch(capture, requireNotNull(call.wrapper.rawData))
-        is ScheduleV2CallResult.ApiFailure ->
-          publishUnavailableAfterRead(ScheduleRemoteError.Server(call.status), true)
-        is ScheduleV2CallResult.RequestInvalid -> retainFailedRequest(
-            batches = listOf(
-          capture.batch),
-            operation =capture.method.toFailureOperation(),
+      is ScheduleV2DailyMutationCapture.Ready -> {
+        val call = when (capture.method) {
+          ScheduleV2DailyMutationMethod.CREATE -> gateway.createSchedule(accountId, capture.request)
+          ScheduleV2DailyMutationMethod.UPDATE -> gateway.updateSchedule(accountId, capture.request)
+          ScheduleV2DailyMutationMethod.DELETE -> gateway.deleteSchedule(accountId, capture.request)
+        }
+        when (call) {
+          is ScheduleV2CallResult.Completed ->
+            applyDailyMutation(capture, requireNotNull(call.wrapper.rawData))
+
+          is ScheduleV2CallResult.ApiFailure ->
+            publishUnavailableAfterRead(ScheduleRemoteError.Server(call.status), true)
+
+          is ScheduleV2CallResult.RequestInvalid -> retainFailedRequest(
+            request = capture.request,
+            operation = capture.method.toFailureOperation(),
             reasonCode = "HTTP_400",
             message = call.body,
-            error =
-          ScheduleRemoteError.InvalidResponse(IllegalArgumentException(call.body)),
-        )
-        is ScheduleV2CallResult.TransportFailure -> publishUnavailableAfterRead(call.toRemoteError(), true)
+            error = ScheduleRemoteError.InvalidResponse(IllegalArgumentException(call.body)),
+          )
+
+          is ScheduleV2CallResult.TransportFailure -> publishUnavailableAfterRead(
+            call.toRemoteError(),
+            true
+          )
+        }
       }
+
+      is ScheduleV2DailyMutationCapture.Failure -> ScheduleSyncResult.Success(attempted = false)
     }
-    is ScheduleV2DailyMutationCapture.Failure -> ScheduleSyncResult.Success(attempted = false)
-  }
     log(
       REPOSITORY_LOG_TAG,
       "REMOTE dailyFinished method=${capture.methodForLog()} result=${result::class.simpleName} " +
@@ -336,90 +377,107 @@ internal class RoomScheduleRepository(
     response: SyncResponse,
   ): ScheduleSyncResult {
     val businessError = response.rejectionError()
-    if (businessError != null) {
-      return retainFailedRequest(
-        batches = capture.request.rejectedMutationBatches(response),
-        operation = ScheduleFailureOperation.SYNC,
-        reasonCode = businessError.reason.name,
-        message = "服务端拒绝该日程变更：${businessError.reason.name}",
-        error = businessError,
-      )
-    }
     var event: ScheduleCalendarChange.RemoteCommitted? = null
+    var confirmedIds = emptySet<String>()
     val result = mutex.withLock {
       val before = readCurrentState()
-      when (val applied = applier.apply(capture, response, before.categories, before.schedules, before.occurrenceOverrides)) {
+      val rejectedRecords = createRejectedScheduleFailureRecords(
+        operation = ScheduleFailureOperation.SYNC,
+        request = capture.request,
+        response = response,
+        currentSchedules = before.schedules,
+        failedAt = nowMillis(),
+      )
+      when (val applied = applier.apply(
+        capture,
+        response,
+        before.categories,
+        before.schedules,
+        before.occurrenceOverrides
+      )) {
         is ScheduleV2ApplyResult.Failure -> {
           val error = ScheduleRemoteError.InvalidResponse(IllegalArgumentException(applied.message))
           publishUnavailable(before, error)
           ScheduleSyncResult.Failure(error, true)
         }
+
         is ScheduleV2ApplyResult.Success -> {
-          val after = ScheduleV2CommonAccountState(accountId, applied.categories, applied.schedules, applied.occurrenceOverrides)
+          val after = ScheduleV2CommonAccountState(
+            accountId,
+            applied.categories,
+            applied.schedules,
+            applied.occurrenceOverrides
+          )
           persistAndPublish(after, clearRemoteError = true)
           after.logScheduleState("LOCAL after SYNC merge", timeZone)
-          event = ScheduleCalendarChange.RemoteCommitted(accountId, changedScheduleIds(before, after).takeIf { it.isNotEmpty() })
-          safelyRemoveFailureRecords(
-            confirmedScheduleIds(
-              capture.request.allMutationBatches().flatMapTo(linkedSetOf()) { it.scheduleIds() },
-              after,
-            ),
-          )
-          ScheduleSyncResult.Success()
+          event = ScheduleCalendarChange.RemoteCommitted(
+            accountId,
+            changedScheduleIds(before, after).takeIf { it.isNotEmpty() })
+          safelyRecordFailures(rejectedRecords)
+          confirmedIds =
+            confirmedScheduleIds(capture.request.toMutationRequest().scheduleIds(), after)
+          businessError?.let { ScheduleSyncResult.Failure(it, true) }
+            ?: ScheduleSyncResult.Success()
         }
       }
     }
+    safelyRemoveFailureRecords(confirmedIds)
     event?.let { changes.emit(it) }
     return result
   }
 
-  /** 日常聚合响应按批次成员 revision 复用 canonical 合并与 R→U 规则。 */
-  private suspend fun applyDailyBatch(
-    capture: ScheduleV2DailyMutationCapture.Batch,
-    result: AtomicBatchResult,
+  /** 日常逐资源响应复用 canonical 合并与 R→U 规则，REJECTED 项单独保留失败记录。 */
+  private suspend fun applyDailyMutation(
+    capture: ScheduleV2DailyMutationCapture.Ready,
+    response: MutationResponse,
   ): ScheduleSyncResult {
-    val businessError =result.rejectionError()
-    if (businessError != null) {
-      return retainFailedRequest(
-        batches = listOf(capture.batch),
-        operation = capture.method.toFailureOperation(),
-        reasonCode = businessError.reason.name,
-        message = "服务端拒绝该日程变更：${businessError.reason.name}",
-        error = businessError,
-      )
-    }
-    val applied = applyDailyResponse(null) { before ->
-    dailyBridge.apply(capture, result, before.categories, before.schedules, before.occurrenceOverrides)
-    }
-    if (applied is ScheduleSyncResult.Success) {
-      safelyRemoveConfirmedFailureRecords(capture.batch.scheduleIds())
-    }
-    return applied
-  }
-
-  /** 对 Daily bridge 的纯 apply 结果进行单次 Room 替换和远端事件发布。 */
-  private suspend fun applyDailyResponse(
-    businessError: ScheduleRemoteError.MutationRejected?,
-    apply: (ScheduleV2CommonAccountState) -> ScheduleV2ApplyResult,
-  ): ScheduleSyncResult {
+    val businessError = response.rejectionError()
     var event: ScheduleCalendarChange.RemoteCommitted? = null
+    var confirmedIds = emptySet<String>()
     val result = mutex.withLock {
       val before = readCurrentState()
-      when (val applied = apply(before)) {
+      val rejectedRecords = createRejectedScheduleFailureRecords(
+        operation = capture.method.toFailureOperation(),
+        request = capture.request,
+        response = response,
+        currentSchedules = before.schedules,
+        failedAt = nowMillis(),
+      )
+      when (
+        val applied = dailyBridge.apply(
+          capture,
+          response,
+          before.categories,
+          before.schedules,
+          before.occurrenceOverrides,
+        )
+      ) {
         is ScheduleV2ApplyResult.Failure -> {
           val error = ScheduleRemoteError.InvalidResponse(IllegalArgumentException(applied.message))
           publishUnavailable(before, error)
           ScheduleSyncResult.Failure(error, true)
         }
+
         is ScheduleV2ApplyResult.Success -> {
-          val after = ScheduleV2CommonAccountState(accountId, applied.categories, applied.schedules, applied.occurrenceOverrides)
-          persistAndPublish(after, remoteError = businessError, clearRemoteError = businessError == null)
-          after.logScheduleState("LOCAL after ATOMIC merge", timeZone)
-          event = ScheduleCalendarChange.RemoteCommitted(accountId, changedScheduleIds(before, after).takeIf { it.isNotEmpty() })
-          businessError?.let { ScheduleSyncResult.Failure(it, true) } ?: ScheduleSyncResult.Success()
+          val after = ScheduleV2CommonAccountState(
+            accountId,
+            applied.categories,
+            applied.schedules,
+            applied.occurrenceOverrides
+          )
+          persistAndPublish(after, clearRemoteError = true)
+          after.logScheduleState("LOCAL after MUTATION merge", timeZone)
+          event = ScheduleCalendarChange.RemoteCommitted(
+            accountId,
+            changedScheduleIds(before, after).takeIf { it.isNotEmpty() })
+          safelyRecordFailures(rejectedRecords)
+          confirmedIds = confirmedScheduleIds(capture.request.scheduleIds(), after)
+          businessError?.let { ScheduleSyncResult.Failure(it, true) }
+            ?: ScheduleSyncResult.Success()
         }
       }
     }
+    safelyRemoveFailureRecords(confirmedIds)
     event?.let { changes.emit(it) }
     return result
   }
@@ -431,7 +489,7 @@ internal class RoomScheduleRepository(
    * 会直接消失。记录失败后只更新远端状态，Room 双快照保持不变，等待用户编辑或后续同步成功。
    */
   private suspend fun retainFailedRequest(
-    batches: List<AtomicBatch>,
+    request: MutationRequest,
     operation: ScheduleFailureOperation,
     reasonCode: String,
     message: String,
@@ -441,30 +499,51 @@ internal class RoomScheduleRepository(
       val before = readCurrentState()
       val records = createScheduleFailureRecords(
         operation = operation,
-        batches = batches,
+        request = request,
         currentSchedules = before.schedules,
         failedAt = nowMillis(),
         reasonCode = reasonCode,
         message = message.take(MAX_FAILURE_MESSAGE_LENGTH),
       )
-      runCatching { failureRecords.record(accountId, records) }
-        .onFailure { log(REPOSITORY_LOG_TAG, "LOCAL failureRecordWriteFailed type=${it::class.simpleName}") }
+      safelyRecordFailures(records)
       publishUnavailable(before, error)
       before.logScheduleState("LOCAL retained after deterministic failure", timeZone)
     }
     return ScheduleSyncResult.Failure(error, true)
   }
 
-  /** 已有失败项再次编辑或修改单次覆盖后刷新源批次；持久化失败不影响 Room 的 local-first 提交。 */
-  private fun safelyRefreshFailureSource(batch: AtomicBatch) {
-    runCatching { failureRecords.refreshSources(accountId, batch) }
-      .onFailure { log(REPOSITORY_LOG_TAG, "LOCAL failureRecordRefreshFailed type=${it::class.simpleName}") }
+  /** 已有失败项再次编辑或修改单次覆盖后刷新源请求；持久化失败不影响 Room 的 local-first 提交。 */
+  private fun safelyRefreshFailureSource(request: MutationRequest) {
+    runCatching { failureRecords.refreshSources(accountId, request) }
+      .onFailure {
+        log(
+          REPOSITORY_LOG_TAG,
+          "LOCAL failureRecordRefreshFailed type=${it::class.simpleName}"
+        )
+      }
+  }
+
+  /** 失败记录持久化异常只写诊断日志，不回滚已经完成的 Room 状态应用。 */
+  private fun safelyRecordFailures(records: List<com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecord>) {
+    if (records.isEmpty()) return
+    runCatching { failureRecords.record(accountId, records) }
+      .onFailure {
+        log(
+          REPOSITORY_LOG_TAG,
+          "LOCAL failureRecordWriteFailed type=${it::class.simpleName}"
+        )
+      }
   }
 
   /** 成功 canonical 响应到达后删除对应失败记录；失败记录存储异常不回滚已确认的远端结果。 */
   private fun safelyRemoveFailureRecords(scheduleIds: Set<String>) {
     runCatching { failureRecords.remove(accountId, scheduleIds) }
-      .onFailure { log(REPOSITORY_LOG_TAG, "LOCAL failureRecordRemoveFailed type=${it::class.simpleName}") }
+      .onFailure {
+        log(
+          REPOSITORY_LOG_TAG,
+          "LOCAL failureRecordRemoveFailed type=${it::class.simpleName}"
+        )
+      }
   }
 
   /**
@@ -482,18 +561,6 @@ internal class RoomScheduleRepository(
       scheduleState.effectiveResource()?.let { scheduleState.identity.id }
     }
     safelyRemoveFailureRecords(changedScheduleIds - visibleScheduleIds)
-  }
-
-  /**
-   * Daily 响应应用完成后重新读取最新 Room 状态，只清理由服务端确认且没有更新 pending 的记录。
-   *
-   * 该二次检查覆盖 R 请求期间用户又产生 U 的场景：R 成功不能误删仍待提交的 U 失败记录。
-   */
-  private suspend fun safelyRemoveConfirmedFailureRecords(scheduleIds: Set<String>) {
-    val confirmedIds = mutex.withLock {
-      confirmedScheduleIds(scheduleIds, readCurrentState())
-    }
-    safelyRemoveFailureRecords(confirmedIds)
   }
 
   /** 只返回当前已经没有 pending 变更的 Schedule identity。 */
@@ -533,15 +600,22 @@ internal class RoomScheduleRepository(
     if (remoteError != null) lastRemoteError = remoteError
     val projected = project(state)
     val roomState = state.toRoomAccountState()
-    stateStore.replaceAccountState(accountId, roomState.categories, roomState.schedules, roomState.occurrenceOverrides)
-    mutableSnapshot.value = projected.copy(status = projected.status.withUnavailable(lastRemoteError))
+    stateStore.replaceAccountState(
+      accountId,
+      roomState.categories,
+      roomState.schedules,
+      roomState.occurrenceOverrides
+    )
+    mutableSnapshot.value =
+      projected.copy(status = projected.status.withUnavailable(lastRemoteError))
   }
 
   /** 发布现有 Room state 的 Unavailable 快照，不重建、清除或覆盖任何 pending。 */
   private fun publishUnavailable(state: ScheduleV2CommonAccountState, error: ScheduleRemoteError) {
     lastRemoteError = error
     val projected = project(state)
-    mutableSnapshot.value = projected.copy(status = projected.status.withUnavailable(lastRemoteError))
+    mutableSnapshot.value =
+      projected.copy(status = projected.status.withUnavailable(lastRemoteError))
   }
 
   /** 读取当前状态后发布不可用结果；读/投影本身损坏时转为 Corrupted。 */
@@ -550,12 +624,14 @@ internal class RoomScheduleRepository(
     attempted: Boolean,
   ): ScheduleSyncResult = try {
     mutex.withLock {
-      val state =readCurrentState()
+      val state = readCurrentState()
       publishUnavailable(state, error)
       state.logScheduleState("LOCAL retained after REMOTE failure", timeZone)
       log(
         REPOSITORY_LOG_TAG,
-        "REMOTE unavailable type=${error::class.simpleName} pendingCount=${state.pendingMutationCount()}",) }
+        "REMOTE unavailable type=${error::class.simpleName} pendingCount=${state.pendingMutationCount()}",
+      )
+    }
     ScheduleSyncResult.Failure(error, attempted)
   } catch (failure: Throwable) {
     mutableSnapshot.value = ScheduleSnapshot(
@@ -566,19 +642,28 @@ internal class RoomScheduleRepository(
   }
 
   /** 初始化本地快照；错误直接发布 Corrupted 并让调用方 fail-closed。 */
-  private fun publishOrThrow(state: ScheduleV2CommonAccountState, unavailable: ScheduleRemoteError?) {
+  private fun publishOrThrow(state: ScheduleV2CommonAccountState) {
     try {
       val projected = project(state)
-      mutableSnapshot.value = projected.copy(status = projected.status.withUnavailable(unavailable))
+      mutableSnapshot.value = projected
     } catch (failure: Throwable) {
-      mutableSnapshot.value = ScheduleSnapshot(status = ScheduleRepositoryStatus.Corrupted(failure), accountId = accountId)
+      mutableSnapshot.value = ScheduleSnapshot(
+        status = ScheduleRepositoryStatus.Corrupted(failure),
+        accountId = accountId
+      )
       throw failure
     }
   }
 
   /** SnapshotProjector 的 Failure 不允许降级成局部 UI；调用方必须保持 Room 数据并报告损坏。 */
   private fun project(state: ScheduleV2CommonAccountState): ScheduleSnapshot = when (
-    val result = projector.project(accountId, timeZone, state.categories, state.schedules, state.occurrenceOverrides)
+    val result = projector.project(
+      accountId,
+      timeZone,
+      state.categories,
+      state.schedules,
+      state.occurrenceOverrides
+    )
   ) {
     is ScheduleV2SnapshotProjection.Success -> result.snapshot
     is ScheduleV2SnapshotProjection.Failure -> throw IllegalArgumentException(result.message)
@@ -591,15 +676,19 @@ internal class RoomScheduleRepository(
   ): Set<ScheduleId> {
     val scheduleIds = (before.schedules + after.schedules)
       .groupBy { it.identity.id }
-      .filter { (_, values) -> values.distinct().size > 1 || values.size == 1 &&
-        ((before.schedules.any { it.identity.id == values.first().identity.id }) !=
-          (after.schedules.any { it.identity.id == values.first().identity.id })) }
+      .filter { (_, values) ->
+        values.distinct().size > 1 || values.size == 1 &&
+            ((before.schedules.any { it.identity.id == values.first().identity.id }) !=
+                (after.schedules.any { it.identity.id == values.first().identity.id }))
+      }
       .keys
     val overrideParents = (before.occurrenceOverrides + after.occurrenceOverrides)
       .groupBy { it.identity }
-      .filter { (_, values) -> values.distinct().size > 1 || values.size == 1 &&
-        ((before.occurrenceOverrides.any { it.identity == values.first().identity }) !=
-          (after.occurrenceOverrides.any { it.identity == values.first().identity })) }
+      .filter { (_, values) ->
+        values.distinct().size > 1 || values.size == 1 &&
+            ((before.occurrenceOverrides.any { it.identity == values.first().identity }) !=
+                (after.occurrenceOverrides.any { it.identity == values.first().identity }))
+      }
       .keys
       .map { it.scheduleId }
     return (scheduleIds + overrideParents).mapTo(linkedSetOf()) { ScheduleId(it) }
@@ -647,15 +736,15 @@ private fun ScheduleV2CommonAccountState.pendingMutationCount(): Int =
       schedules.count { it.pending != null } +
       occurrenceOverrides.count { it.pending != null }
 
-/** 统计聚合批次的成员数，不展开或记录任何业务 payload。 */
-private fun AtomicBatch.operationCount(): Int =
+/** 统计请求成员数，不展开或记录任何业务 payload。 */
+private fun MutationRequest.operationCount(): Int =
   categories.upserts.size + categories.deletes.size +
       schedules.upserts.size + schedules.deletes.size +
       occurrenceOverrides.upserts.size + occurrenceOverrides.deletes.size
 
-/** 日常 capture 无法形成批次时返回 NONE，避免诊断日志反向影响业务分支。 */
+/** 日常 capture 无法形成有效请求时返回 NONE，避免诊断日志反向影响业务分支。 */
 private fun ScheduleV2DailyMutationCapture.methodForLog(): String = when (this) {
-  is ScheduleV2DailyMutationCapture.Batch -> method.name
+  is ScheduleV2DailyMutationCapture.Ready -> method.name
   is ScheduleV2DailyMutationCapture.Failure -> "NONE"
 }
 
@@ -693,48 +782,57 @@ private fun ScheduleV2CallResult.TransportFailure.toRemoteError(): ScheduleRemot
   status == 200 && cause != null -> ScheduleRemoteError.InvalidResponse(cause)
   status == null && cause is HttpRequestTimeoutException ->
     ScheduleRemoteError.Timeout
+
   status != null -> ScheduleRemoteError.Server(status)
-  else -> ScheduleRemoteError.Unexpected(cause ?: IllegalStateException("Schedule v2 transport failed"))
+  else -> ScheduleRemoteError.Unexpected(
+    cause ?: IllegalStateException("Schedule v2 transport failed")
+  )
 }
 
 /** 在保留 projector 计算出的 pendingCount 的同时，仅覆盖远端可用性状态。 */
-private fun ScheduleRepositoryStatus.withUnavailable(error: ScheduleRemoteError?): ScheduleRepositoryStatus = when {
-  error == null -> this
-  this is ScheduleRepositoryStatus.Ready -> ScheduleRepositoryStatus.Unavailable(pendingCount, error)
-  this is ScheduleRepositoryStatus.Unavailable -> ScheduleRepositoryStatus.Unavailable(pendingCount, error)
-  else -> this
-}
+private fun ScheduleRepositoryStatus.withUnavailable(error: ScheduleRemoteError?): ScheduleRepositoryStatus =
+  when {
+    error == null -> this
+    this is ScheduleRepositoryStatus.Ready -> ScheduleRepositoryStatus.Unavailable(
+      pendingCount,
+      error
+    )
 
-/** HTTP 200 外壳不是业务成功证明；普通或原子 REJECTED 都必须让上层看到稳定业务失败。 */
-private fun SyncResponse.rejectionError(): ScheduleRemoteError.MutationRejected? {
-  val ordinary = sequenceOf(
-    categories.upsertResults.map { it.code to it.reason },
-    categories.deleteResults.map { it.code to it.reason },
-    schedules.upsertResults.map { it.code to it.reason },
-    schedules.deleteResults.map { it.code to it.reason },
-    occurrenceOverrides.upsertResults.map { it.code to it.reason },
-    occurrenceOverrides.deleteResults.map { it.code to it.reason },
-  ).flatten().firstOrNull { it.first == MutationResultCode.REJECTED }
-  if (ordinary != null) return ordinary.second.toBusinessRejection()
+    this is ScheduleRepositoryStatus.Unavailable -> ScheduleRepositoryStatus.Unavailable(
+      pendingCount,
+      error
+    )
 
-  atomicBatchResults.forEach { batch ->
-    if (batch.code == AtomicBatchResultCode.REJECTED) return batch.reason.toBusinessRejection()
-    val member = sequenceOf(
-      batch.categories.upsertResults.map { it.code to it.reason },
-      batch.categories.deleteResults.map { it.code to it.reason },
-      batch.schedules.upsertResults.map { it.code to it.reason },
-      batch.schedules.deleteResults.map { it.code to it.reason },
-      batch.occurrenceOverrides.upsertResults.map { it.code to it.reason },
-      batch.occurrenceOverrides.deleteResults.map { it.code to it.reason },
-    ).flatten().firstOrNull { it.first == AtomicBatchResultCode.REJECTED }
-    if (member != null) return member.second.toBusinessRejection()
+    else -> this
   }
-  return null
+
+/** HTTP 200 允许部分成功；存在任一 REJECTED 时仍让当前命令调用方得到稳定业务失败。 */
+private fun SyncResponse.rejectionError(): ScheduleRemoteError.MutationRejected? {
+  val rejected = sequenceOf(
+    categories.upsertResults.map { it.result to it.reason },
+    categories.deleteResults.map { it.result to it.reason },
+    schedules.upsertResults.map { it.result to it.reason },
+    schedules.deleteResults.map { it.result to it.reason },
+    occurrenceOverrides.upsertResults.map { it.result to it.reason },
+    occurrenceOverrides.deleteResults.map { it.result to it.reason },
+  ).flatten().firstOrNull { it.first == MutationResultCode.REJECTED }
+  if (rejected == null) return null
+  return rejected.second.toBusinessRejection()
 }
 
-/** 日常聚合批次与完整 Sync 共用同一稳定 reason 映射。 */
-private fun AtomicBatchResult.rejectionError(): ScheduleRemoteError.MutationRejected? =
-  if (code == AtomicBatchResultCode.REJECTED) reason.toBusinessRejection() else null
+/** 日常响应与完整 Sync 共用同一稳定 reason 映射。 */
+private fun MutationResponse.rejectionError(): ScheduleRemoteError.MutationRejected? {
+  val rejected = sequenceOf(
+    categories.upsertResults.map { it.result to it.reason },
+    categories.deleteResults.map { it.result to it.reason },
+    schedules.upsertResults.map { it.result to it.reason },
+    schedules.deleteResults.map { it.result to it.reason },
+    occurrenceOverrides.upsertResults.map { it.result to it.reason },
+    occurrenceOverrides.deleteResults.map { it.result to it.reason },
+  ).flatten().firstOrNull { it.first == MutationResultCode.REJECTED }
+  if (rejected == null) return null
+  return rejected.second.toBusinessRejection()
+}
 
 /** 严格 wire reason 逐项映射到公共枚举；未知或缺失 reason fail-closed 为 INVALID_REQUEST。 */
 private fun ResultReason?.toBusinessRejection(): ScheduleRemoteError.MutationRejected =

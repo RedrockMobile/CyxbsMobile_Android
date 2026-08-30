@@ -253,26 +253,22 @@ data class OccurrenceOverrideRemoteSnapshot(
  * 原样保留 U；R 成功并推进或合并 remote 时，也只有当前 localRevision 仍等于 uploadedRevision 才能
  * 清除 pending。否则 U 必须继续保留为有效值，等待下一轮上传后收敛。
  *
- * localBatchId 仅把同一原子批次的资源归组，不保存 batch 状态、回执或历史。
  */
 sealed interface PendingChange<I : ResourceIdentity, R : SyncResource<I>> {
   val identity: I
   val localRevision: Long
-  val localBatchId: String?
 }
 
 /** 待上传的完整 CREATE/PATCH 资源 payload。 */
 data class PendingUpsert<I : ResourceIdentity, R : SyncResource<I>>(
   val resource: R,
   override val localRevision: Long,
-  override val localBatchId: String? = null,
 ) : PendingChange<I, R> {
   override val identity: I
     get() = resource.identity
 
   init {
     require(localRevision > 0) { "localRevision must be positive" }
-    require(localBatchId == null || localBatchId.isNotBlank()) { "localBatchId must not be blank" }
   }
 }
 
@@ -285,12 +281,10 @@ data class PendingDelete<I : ResourceIdentity, R : SyncResource<I>>(
   override val identity: I,
   val localModifiedAt: Long,
   override val localRevision: Long,
-  override val localBatchId: String? = null,
 ) : PendingChange<I, R> {
   init {
     require(localModifiedAt >= 0) { "localModifiedAt must not be negative" }
     require(localRevision > 0) { "localRevision must be positive" }
-    require(localBatchId == null || localBatchId.isNotBlank()) { "localBatchId must not be blank" }
   }
 }
 

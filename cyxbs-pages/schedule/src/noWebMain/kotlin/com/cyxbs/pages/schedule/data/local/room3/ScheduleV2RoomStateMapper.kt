@@ -31,8 +31,7 @@ internal data class ScheduleV2CommonAccountState(
  * Room typed entity 与 common 双快照状态的无损映射。
  *
  * wire 与 domain 资源字段转换全部复用共享 mapper；本文件只处理 Room 行的 identity、pending 形态及纯本地
- * localRevision；它绝不编码进 wire payload。localBatchId 会由 common planner 映射为 wire
- * AtomicBatch.batchId，但不代表 receipt 或服务端进度。
+ * localRevision；它绝不编码进 wire payload。
  */
 
 /** 将 Category Room 行恢复为 common 双快照状态；数据库非法 pending 组合立即失败。 */
@@ -67,7 +66,6 @@ internal fun CategorySyncState.toRoomEntity(accountId: String): ScheduleV2Catego
       else -> null
     },
     localRevision = pending?.localRevision,
-    localBatchId = pending?.localBatchId,
   )
 }
 
@@ -103,7 +101,6 @@ internal fun ScheduleSyncState.toRoomEntity(accountId: String): ScheduleV2Schedu
       else -> null
     },
     localRevision = pending?.localRevision,
-    localBatchId = pending?.localBatchId,
   )
 }
 
@@ -140,7 +137,6 @@ internal fun OccurrenceOverrideSyncState.toRoomEntity(accountId: String): Schedu
       else -> null
     },
     localRevision = pending?.localRevision,
-    localBatchId = pending?.localBatchId,
   )
 }
 
@@ -177,7 +173,7 @@ private fun ScheduleV2CategoryStateEntity.toCategoryPending(
   identity: CategoryIdentity,
 ): PendingChange<CategoryIdentity, CategoryResource>? = when (pendingOperation) {
   null -> {
-    require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null && localBatchId == null) {
+    require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null) {
       "category has pending fields without pending operation"
     }
     null
@@ -186,13 +182,13 @@ private fun ScheduleV2CategoryStateEntity.toCategoryPending(
     require(pendingSnapshot != null && pendingLocalModifiedAt == null && localRevision != null) {
       "category UPSERT pending shape is invalid"
     }
-    PendingUpsert(pendingSnapshot.toDomain(), localRevision, localBatchId)
+    PendingUpsert(pendingSnapshot.toDomain(), localRevision)
   }
   ScheduleV2PendingOperation.DELETE -> {
     require(pendingSnapshot == null && pendingLocalModifiedAt != null && localRevision != null) {
       "category DELETE pending shape is invalid"
     }
-    PendingDelete(identity, pendingLocalModifiedAt, localRevision, localBatchId)
+    PendingDelete(identity, pendingLocalModifiedAt, localRevision)
   }
   else -> error("unsupported category pending operation=$pendingOperation")
 }
@@ -202,7 +198,7 @@ private fun ScheduleV2ScheduleStateEntity.toSchedulePending(
   identity: ScheduleIdentity,
 ): PendingChange<ScheduleIdentity, ScheduleResource>? = when (pendingOperation) {
   null -> {
-    require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null && localBatchId == null) {
+    require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null) {
       "schedule has pending fields without pending operation"
     }
     null
@@ -211,13 +207,13 @@ private fun ScheduleV2ScheduleStateEntity.toSchedulePending(
     require(pendingSnapshot != null && pendingLocalModifiedAt == null && localRevision != null) {
       "schedule UPSERT pending shape is invalid"
     }
-    PendingUpsert(pendingSnapshot.toDomain(), localRevision, localBatchId)
+    PendingUpsert(pendingSnapshot.toDomain(), localRevision)
   }
   ScheduleV2PendingOperation.DELETE -> {
     require(pendingSnapshot == null && pendingLocalModifiedAt != null && localRevision != null) {
       "schedule DELETE pending shape is invalid"
     }
-    PendingDelete(identity, pendingLocalModifiedAt, localRevision, localBatchId)
+    PendingDelete(identity, pendingLocalModifiedAt, localRevision)
   }
   else -> error("unsupported schedule pending operation=$pendingOperation")
 }
@@ -227,7 +223,7 @@ private fun ScheduleV2OccurrenceOverrideStateEntity.toOccurrenceOverridePending(
   identity: OccurrenceOverrideIdentity,
 ): PendingChange<OccurrenceOverrideIdentity, OccurrenceOverrideResource>? = when (pendingOperation) {
   null -> {
-    require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null && localBatchId == null) {
+    require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null) {
       "occurrence override has pending fields without pending operation"
     }
     null
@@ -236,13 +232,13 @@ private fun ScheduleV2OccurrenceOverrideStateEntity.toOccurrenceOverridePending(
     require(pendingSnapshot != null && pendingLocalModifiedAt == null && localRevision != null) {
       "occurrence override UPSERT pending shape is invalid"
     }
-    PendingUpsert(pendingSnapshot.toDomain(), localRevision, localBatchId)
+    PendingUpsert(pendingSnapshot.toDomain(), localRevision)
   }
   ScheduleV2PendingOperation.DELETE -> {
     require(pendingSnapshot == null && pendingLocalModifiedAt != null && localRevision != null) {
       "occurrence override DELETE pending shape is invalid"
     }
-    PendingDelete(identity, pendingLocalModifiedAt, localRevision, localBatchId)
+    PendingDelete(identity, pendingLocalModifiedAt, localRevision)
   }
   else -> error("unsupported occurrence override pending operation=$pendingOperation")
 }

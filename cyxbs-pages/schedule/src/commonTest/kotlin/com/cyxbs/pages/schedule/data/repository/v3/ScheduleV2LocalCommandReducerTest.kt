@@ -89,9 +89,9 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(listOf(ReminderInput(15, "")), resource.reminders.data)
   }
 
-  /** 惰性默认分类与日程必须在同一 localRevision 下形成一个本地原子批次。 */
+  /** 惰性默认分类与日程使用同一 localRevision，日常 capture 会将两者放进一次请求。 */
   @Test
-  fun saveScheduleWithNewCategoryCreatesOneLocalAtomicBatch() {
+  fun saveScheduleWithNewCategoryUsesOneLocalRevision() {
     val category = ScheduleCategory(CategoryId(CATEGORY_ID), 0, "学习", null, 0)
     val result = reduce(
       command = ScheduleCommand.SaveScheduleWithNewCategory(category, schedule()),
@@ -103,8 +103,6 @@ class ScheduleV2LocalCommandReducerTest {
     val schedulePending = assertIs<PendingUpsert<*, *>>(result.schedules.single().pending)
     assertEquals(7, categoryPending.localRevision)
     assertEquals(7, schedulePending.localRevision)
-    assertEquals("category-schedule-7", categoryPending.localBatchId)
-    assertEquals(categoryPending.localBatchId, schedulePending.localBatchId)
     assertEquals(
       CategoryIdentity(CATEGORY_ID),
       assertIs<CategoryResource>(categoryPending.resource).identity,
@@ -216,11 +214,10 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(ScheduleIdentity(SCHEDULE_ID), pending.identity)
     assertEquals(300, pending.localModifiedAt)
     assertEquals(4, pending.localRevision)
-    assertEquals(null, pending.localBatchId)
   }
 
   @Test
-  fun deleteScheduleWithLiveOverridesUsesOneAtomicBatch() {
+  fun deleteScheduleWithLiveOverridesUsesOneRevision() {
     val parent = scheduleResource(version = 7)
     val parentState = ScheduleSyncState(
       identity = parent.identity,
@@ -266,15 +263,11 @@ class ScheduleV2LocalCommandReducerTest {
       revision = 3,
     ).applied()
 
-    val batchId = "schedule-delete-3"
     val parentDelete = assertIs<PendingDelete<*, *>>(deleted.schedules.single().pending)
-    assertEquals(batchId, parentDelete.localBatchId)
-    assertEquals(
-      setOf(batchId),
-      deleted.occurrenceOverrides.map { state ->
-        assertIs<PendingDelete<*, *>>(state.pending).localBatchId
-      }.toSet(),
-    )
+    assertEquals(3, parentDelete.localRevision)
+    assertEquals(setOf(3L), deleted.occurrenceOverrides.map { state ->
+      assertIs<PendingDelete<*, *>>(state.pending).localRevision
+    }.toSet())
 
     val capture = ScheduleV2RequestPlanner().capture(
       syncRequestId = "sync-delete-series",
@@ -282,12 +275,8 @@ class ScheduleV2LocalCommandReducerTest {
       schedules = deleted.schedules,
       occurrenceOverrides = deleted.occurrenceOverrides,
     )
-    assertEquals(emptyList(), capture.request.schedules.deletes)
-    assertEquals(emptyList(), capture.request.occurrenceOverrides.deletes)
-    val batch = capture.request.atomicBatches.single()
-    assertEquals(batchId, batch.batchId)
-    assertEquals(1, batch.schedules.deletes.size)
-    assertEquals(3, batch.occurrenceOverrides.deletes.size)
+    assertEquals(1, capture.request.schedules.deletes.size)
+    assertEquals(3, capture.request.occurrenceOverrides.deletes.size)
   }
 
   @Test
@@ -598,15 +587,12 @@ class ScheduleV2LocalCommandReducerTest {
     ).applied()
 
     assertEquals(2, result.schedules.size)
-    val batchId = result.schedules.first { it.identity.id == SCHEDULE_ID }
-      .pending?.localBatchId
-    assertEquals("series-split-3", batchId)
-    assertEquals(setOf(batchId), result.schedules.map { it.pending?.localBatchId }.toSet())
+    assertEquals(setOf(3L), result.schedules.map { it.pending?.localRevision }.toSet())
     val oldOverride = result.occurrenceOverrides.first { it.identity.scheduleId == SCHEDULE_ID }
-    assertEquals(batchId, assertIs<PendingDelete<*, *>>(oldOverride.pending).localBatchId)
+    assertEquals(3, assertIs<PendingDelete<*, *>>(oldOverride.pending).localRevision)
     val newOverride = result.occurrenceOverrides.first { it.identity.scheduleId == SCHEDULE_ID_2 }
     val newPending = assertIs<PendingUpsert<*, *>>(newOverride.pending)
-    assertEquals(batchId, newPending.localBatchId)
+    assertEquals(3, newPending.localRevision)
     assertEquals(0, assertIs<OccurrenceOverrideResource>(newPending.resource).version)
   }
 
@@ -637,7 +623,7 @@ class ScheduleV2LocalCommandReducerTest {
       revision = 3,
     ).applied()
 
-    assertEquals("series-truncate-3", result.schedules.single().pending?.localBatchId)
+    assertEquals(3, result.schedules.single().pending?.localRevision)
     assertEquals(emptyList(), result.occurrenceOverrides)
   }
 

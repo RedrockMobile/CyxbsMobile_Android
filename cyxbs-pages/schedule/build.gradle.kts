@@ -23,8 +23,10 @@ useRoom3() // Room3 KMP 持久化
 
 kotlin {
   android {
-    // S24 因果握手只运行 host 单测；显式启用后仍不会安装应用、连接设备或访问真实 Calendar Provider。
-    withHostTest {}
+    // Host 单测不会安装应用或访问真实 Provider；Android 框架 stub 返回默认值，避免诊断 Log.d 中断纯 JVM 测试。
+    withHostTest {
+      isReturnDefaultValues = true
+    }
   }
   sourceSets {
     if (Multiplatform.enableIOS(project)) {

@@ -7,9 +7,9 @@ import com.cyxbs.pages.schedule.data.local.room3.RoomScheduleRepositoryFactory
 import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RepositoryGateway
 import com.cyxbs.pages.schedule.data.local.room3.closeScheduleRoomDatabase
 import com.cyxbs.components.utils.network.ApiWrapper
-import com.cyxbs.pages.schedule.data.remote.v3.AtomicBatch
-import com.cyxbs.pages.schedule.data.remote.v3.AtomicBatchResult
 import com.cyxbs.pages.schedule.data.remote.v3.CategorySyncResponse
+import com.cyxbs.pages.schedule.data.remote.v3.MutationRequest
+import com.cyxbs.pages.schedule.data.remote.v3.MutationResponse
 import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideSyncResponse
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleSyncResponse
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2CallResult
@@ -96,18 +96,18 @@ class ProductionScheduleRepositoryFactoryDesktopTest {
 
     override suspend fun createSchedule(
       accountId: String,
-      input: AtomicBatch,
-    ): ScheduleV2CallResult<AtomicBatchResult> = error("initialize must not call daily create")
+      input: MutationRequest,
+    ): ScheduleV2CallResult<MutationResponse> = error("initialize must not call daily create")
 
     override suspend fun updateSchedule(
       accountId: String,
-      input: AtomicBatch,
-    ): ScheduleV2CallResult<AtomicBatchResult> = error("initialize must not call daily update")
+      input: MutationRequest,
+    ): ScheduleV2CallResult<MutationResponse> = error("initialize must not call daily update")
 
     override suspend fun deleteSchedule(
       accountId: String,
-      input: AtomicBatch,
-    ): ScheduleV2CallResult<AtomicBatchResult> = error("initialize must not call daily delete")
+      input: MutationRequest,
+    ): ScheduleV2CallResult<MutationResponse> = error("initialize must not call daily delete")
   }
 
   /** 删除临时目录、数据库主文件以及 Room 可能生成的 WAL/SHM。 */
@@ -131,5 +131,4 @@ private fun emptySyncResponse(requestId: String) = SyncResponse(
   categories = CategorySyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
   schedules = ScheduleSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
   occurrenceOverrides = OccurrenceOverrideSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
-  atomicBatchResults = emptyList(),
 )

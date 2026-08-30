@@ -9,8 +9,8 @@ import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RepositoryGateway
 import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RoomStateStore
 import com.cyxbs.pages.schedule.data.local.room3.bundledScheduleRoomDriver
 import com.cyxbs.pages.schedule.data.local.room3.closeScheduleRoomDatabase
-import com.cyxbs.pages.schedule.data.remote.v3.AtomicBatch
-import com.cyxbs.pages.schedule.data.remote.v3.AtomicBatchResult
+import com.cyxbs.pages.schedule.data.remote.v3.MutationRequest
+import com.cyxbs.pages.schedule.data.remote.v3.MutationResponse
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2CallResult
 import com.cyxbs.pages.schedule.data.remote.v3.SyncRequest
 import com.cyxbs.pages.schedule.data.remote.v3.SyncResponse
@@ -115,7 +115,7 @@ class ProductionScheduleRepositoryFactoryAndroidTest {
     var dailyCalls: Int = 0
       private set
 
-    private fun failedDailyCall(): ScheduleV2CallResult<AtomicBatchResult> {
+    private fun failedDailyCall(): ScheduleV2CallResult<MutationResponse> {
       dailyCalls += 1
       return ScheduleV2CallResult.TransportFailure(
         status = null,
@@ -136,18 +136,18 @@ class ProductionScheduleRepositoryFactoryAndroidTest {
 
     override suspend fun createSchedule(
       accountId: String,
-      input: AtomicBatch,
-    ): ScheduleV2CallResult<AtomicBatchResult> = failedDailyCall()
+      input: MutationRequest,
+    ): ScheduleV2CallResult<MutationResponse> = failedDailyCall()
 
     override suspend fun updateSchedule(
       accountId: String,
-      input: AtomicBatch,
-    ): ScheduleV2CallResult<AtomicBatchResult> = failedDailyCall()
+      input: MutationRequest,
+    ): ScheduleV2CallResult<MutationResponse> = failedDailyCall()
 
     override suspend fun deleteSchedule(
       accountId: String,
-      input: AtomicBatch,
-    ): ScheduleV2CallResult<AtomicBatchResult> = failedDailyCall()
+      input: MutationRequest,
+    ): ScheduleV2CallResult<MutationResponse> = failedDailyCall()
   }
 
   private companion object {

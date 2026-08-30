@@ -102,7 +102,7 @@ sealed interface ScheduleCommand {
    * 按列表顺序重排完整分类集合。
    *
    * reducer 会把所有实际变化的 sortOrder 写成同一 localRevision，使日常 mutation bridge 在一个
-   * AtomicBatch 中提交；列表中的惰性默认分类会同时创建。
+ * 同一次普通变更请求中提交；列表中的惰性默认分类会同时创建。
    */
   data class ReorderCategories(val categories: List<ScheduleCategory>) : ScheduleCommand
   /**
@@ -117,7 +117,7 @@ sealed interface ScheduleCommand {
   /**
    * 删除未被日程引用的分类。
    *
-   * 仓库会把该命令编码为仅包含 Category DELETE 的聚合批次并复用日常 DELETE 接口；当前暂不提供 UI 入口。
+   * 仓库会把该命令编码为仅包含 Category DELETE 的逐资源请求并复用日常 DELETE 接口；当前暂不提供 UI 入口。
    * 仍被日程引用时本地直接拒绝，避免向服务端提交必然无法形成合法最终图的请求。
    */
   data class DeleteCategory(val categoryId: CategoryId) : ScheduleCommand

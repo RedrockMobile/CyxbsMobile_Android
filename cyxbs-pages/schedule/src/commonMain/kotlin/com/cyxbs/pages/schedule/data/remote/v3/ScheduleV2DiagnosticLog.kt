@@ -13,7 +13,7 @@ import kotlin.time.Instant
  */
 internal const val SCHEDULE_DETAIL_LOG_TAG = "ScheduleV2Detail"
 
-/** 输出完整 Sync 中客户端已持有的 identity、待提交日程与原子批次。 */
+/** 输出完整 Sync 中客户端已持有的 identity 与待提交日程。 */
 internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, "REQUEST SYNC requestId=$syncRequestId")
   logItems(
@@ -28,12 +28,11 @@ internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
     label = "REQUEST SYNC delete",
     items = schedules.deletes.map { "id=${it.id}" },
   )
-  atomicBatches.forEach { it.logScheduleRequest("REQUEST SYNC atomic", timeZone) }
 }
 
-/** 输出日常聚合请求中实际新增或修改的完整日程，以及删除 identity。 */
-internal fun AtomicBatch.logScheduleRequest(operation: String, timeZone: TimeZone) {
-  log(SCHEDULE_DETAIL_LOG_TAG, "$operation batchId=$batchId")
+/** 输出日常请求中实际新增或修改的完整日程，以及删除 identity。 */
+internal fun MutationRequest.logScheduleRequest(operation: String, timeZone: TimeZone) {
+  log(SCHEDULE_DETAIL_LOG_TAG, "$operation requestId=$requestId")
   logItems(
     label = "$operation upsert",
     items = schedules.upserts.map { it.diagnosticSummary(timeZone) },
@@ -44,59 +43,52 @@ internal fun AtomicBatch.logScheduleRequest(operation: String, timeZone: TimeZon
   )
 }
 
-/** 输出完整 Sync 返回的 inventory、普通 mutation 结果和原子批次 canonical 结果。 */
+/** 输出完整 Sync 返回的 inventory 核对、发现资源和 mutation 结果。 */
 internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, "RESPONSE SYNC requestId=$syncRequestId")
   logItems(
-    label = "RESPONSE SYNC inventoryUpsert",
-    items = schedules.upserts.map { it.resource.diagnosticSummary(timeZone) },
+    label = "RESPONSE SYNC confirmedResult",
+    items = schedules.confirmedResults.map {
+      "id=${it.id}, result=${it.result}, version=${it.version}, " +
+        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${it.tombstone?.id}"
+    },
   )
   logItems(
-    label = "RESPONSE SYNC inventoryDelete",
-    items = schedules.deletes.map { "id=${it.id}" },
+    label = "RESPONSE SYNC discoveredResult",
+    items = schedules.discoveredResults.map { it.resource.diagnosticSummary(timeZone) },
   )
   logItems(
     label = "RESPONSE SYNC upsertResult",
     items = schedules.upsertResults.map { result ->
-      "id=${result.id}, code=${result.code}, reason=${result.reason}, " +
+      "id=${result.id}, result=${result.result}, reason=${result.reason}, info=${result.info}, " +
         "current=${result.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${result.tombstone?.id}"
     },
   )
   logItems(
     label = "RESPONSE SYNC deleteResult",
     items = schedules.deleteResults.map { result ->
-      "id=${result.id}, code=${result.code}, reason=${result.reason}, " +
+      "id=${result.id}, result=${result.result}, reason=${result.reason}, info=${result.info}, " +
         "current=${result.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${result.tombstone?.id}"
     },
   )
-  atomicBatchResults.forEach { it.logScheduleResponse(timeZone) }
 }
 
-/** 输出日常原子批次的处理结论及服务端最终返回的相关日程。 */
-internal fun AtomicBatchResult.logScheduleResponse(timeZone: TimeZone) {
-  log(
-    SCHEDULE_DETAIL_LOG_TAG,
-    "RESPONSE ATOMIC batchId=$batchId, code=$code, reason=$reason",
-  )
+/** 输出日常逐资源结果和服务端合并后的 canonical 日程。 */
+internal fun MutationResponse.logScheduleResponse(timeZone: TimeZone) {
+  log(SCHEDULE_DETAIL_LOG_TAG, "RESPONSE MUTATION requestId=$requestId")
   logItems(
-    label = "RESPONSE ATOMIC upsertResult",
+    label = "RESPONSE MUTATION upsertResult",
     items = schedules.upsertResults.map {
-      "id=${it.id}, code=${it.code}, reason=${it.reason}"
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${it.tombstone?.id}"
     },
   )
   logItems(
-    label = "RESPONSE ATOMIC deleteResult",
+    label = "RESPONSE MUTATION deleteResult",
     items = schedules.deleteResults.map {
-      "id=${it.id}, code=${it.code}, reason=${it.reason}"
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${it.tombstone?.id}"
     },
-  )
-  logItems(
-    label = "RESPONSE ATOMIC relatedUpsert",
-    items = schedules.relatedUpserts.map { it.resource.diagnosticSummary(timeZone) },
-  )
-  logItems(
-    label = "RESPONSE ATOMIC relatedDelete",
-    items = schedules.relatedDeletes.map { "id=${it.id}" },
   )
 }
 

@@ -1,24 +1,25 @@
 # Schedule v2 Codex 交接
 
-> 更新时间：2026-08-24。后端接口已基本定型，客户端按最终 typed 协议完成主体重写；尚未部署，也未进行真实账号、生产数据库或跨端网络验收。
+> 更新时间：2026-08-30。本文只记录当前实现，不保留旧 Claude 方案。后端与客户端尚未正式上线，可以进行不兼容修改。
 
-## 1. 当前结论
+## 1. 当前状态
 
-Schedule v2 不再沿用旧 cursor、单条 outbox、receipt 或 semantic command 方案。客户端当前实现只包含：
+Schedule v2 主体功能已完成，同步协议也已从 AtomicBatch 收敛为逐资源请求与逐资源结果。已明确删除且不应恢复的设计包括 cursor、outbox、receipt、batch、checkpoint、journal、reservation 与服务端 semantic command。
+
+当前保留：
 
 - typed Category、Schedule、OccurrenceOverride；
-- 资源内部 `version` 与逐字段 `AtomicField`；
+- 资源内统一 `version` 与逐字段 `AtomicField`；
 - 每个 identity 一份 remote snapshot 和至多一份 pending；
-- 本地 `localRevision` 的 R→U 保护；
-- 日常新增、修改、删除通过一个 typed `AtomicBatch` 同时携带相关 Category、Schedule、OccurrenceOverride；
-- 首次进入、网络恢复或手动触发的一次完整 Sync；
-- Android/iOS 单向导出到系统日历。
+- `localRevision` 的 R→U 保护；
+- 日常 CRUD 与完整 Sync；
+- Android/iOS 单向导出系统日历；
+- 旧事务与旧清单的一次性迁移；
+- 可编辑的同步失败记录。
 
-旧 graph、outbox、receipt、tombstone 表、cursor、checkpoint、candidate、journal、reservation、settlement、双向 Calendar 冲突链和 P0 探针均已删除，不应恢复兼容层。
+## 2. 当前后端合同
 
-## 2. 后端最终合同
-
-后端设计事实源：
+事实源：
 
 ```text
 /Users/guoxiangrui/GolandProjects/magipoke-todo/SCHEDULE_BACKEND_DESIGN.md
@@ -33,72 +34,46 @@ PUT    /v2/schedules
 DELETE /v2/schedules
 ```
 
+完整 Sync 上传每类资源的 `confirmed/upserts/deletes`；响应返回：
+
+- `confirmedResults`：与 confirmed 逐项对齐；
+- `discoveredResults`：其他设备新增、当前客户端未知的 live 资源；
+- `upsertResults`：与 upserts 逐项对齐；
+- `deleteResults`：与 deletes 逐项对齐。
+
+日常接口没有 confirmed/discovered，只返回 upsert/delete 结果。三个资源类型在一次请求内可以同时出现，但服务端逐资源独立处理，不存在跨资源事务。
+
 关键约束：
 
-- Sync 请求包含三类资源的 `confirmed/upserts/deletes` 和不可拆分 `atomicBatches`；
-- 三个日常 `/v2/schedules` 接口的请求体同样是 `AtomicBatch`，响应是 `AtomicBatchResult`；
-- upsert 直接上传完整 typed Input，`version` 在资源内部；
-- CREATE 使用 `version=0`，PATCH 使用当前正版本；
-- DELETE 只上传 identity 与 `localModifiedAt`，不上传 version；
-- tombstone 不含 version；
-- DELETE 优先级最高，客户端不尝试复活相同 identity；
-- OccurrenceOverride identity 是 `scheduleId + occurrenceDate`，包含 status/timing/title/description/categoryId/reminders 六个原子；
-- Category color 可为 `null`，表示没有自定义颜色；非空时保存客户端定义的课表配色 JSON：
-  `background/content/darkBackground` 均使用 `#AARRGGBB`；深色模式文字统一使用 `0xFFF0F0F2`，
-  不写入分组 JSON。服务端把该 JSON 当作不透明字符串
-  参与原子合并，客户端解析失败时回退到清单默认灰色；分组编辑器的第一项也固定为该灰色；
-- DAILY/WEEKLY 是当前支持的 recurrence；MONTHLY/YEARLY 不支持。
-- Schedule 的 `kind=TODO|AFFAIR` 是创建来源且不可修改，不参与字段级 LWW；`todoState` 与
-  `linkedToCourse` 是可合并原子并随 Schedule 一起增改。
-- `todoState=null` 表示当前不进入清单；TODO 必须非空，AFFAIR 关联清单后才改为 `OPEN`。
-- AFFAIR 必须是 TIMED 且 `linkedToCourse=true`。关联清单的 AFFAIR 完成后仍展示在课表；TODO 完成后
-  暂时从课表隐藏，重新打开后恢复。
-- 纯 AFFAIR 不展示分组入口；关联清单后才展示并使用清单默认灰色，用户随后可以改为具体分组配色。
-- `COMPLETED` occurrence 只允许出现在 `todoState` 非空的父日程下。
+- 新建资源 `version=0`，修改资源携带当前正版本；
+- DELETE 不上传 version；
+- 重复 DELETE 统一视为 `DELETED`；
+- tombstone 不带 version，identity 删除后不可复活；
+- 服务端不感知“此次及以后”，客户端拆成普通资源增删改；
+- 结构合法且已处理的响应统一 HTTP 200 / `status=10000`；
+- 单资源业务错误使用 `result=REJECTED + reason + 可选安全 info`，不影响同请求其他资源；
+- 畸形 JSON、未知字段、必填字段缺失等整体形状错误才返回 HTTP 400。
 
-所有 HTTP 响应使用：
+## 3. 客户端协议代码
 
-```json
-{
-  "data": {},
-  "status": 10000,
-  "info": "ok"
-}
-```
+`data/remote/v3`：
 
-HTTP 200 的 `status=10000` 和 `status=20101` 都必须解码 `data`。`20101` 表示 data 内含 aligned `REJECTED`，不是 transport failure；HTTP 400 才是 strict 请求不合法。401/403、5xx、超时和连接失败没有可证明的业务执行结论。
+- `ScheduleV2WireModels.kt`：typed DTO；
+- `ScheduleV2ApiService.kt`：Ktorfit 四个接口；
+- `KtorScheduleV2Gateway.kt`：统一 `ApiWrapper` 与 HTTP/transport 分类；
+- `ScheduleV2DiagnosticLog.kt`：只记录标题、日期、时间、周期和安全失败信息，不记录凭证或完整 payload。
 
-## 3. 客户端结构
+`data/repository/v3`：
 
-### 3.1 Wire
+- `ScheduleV2LocalCommandReducer`：把 UI 命令写成本地最终资源状态；
+- `ScheduleV2SyncCapture`：捕获全部当前 pending 与 uploadedRevision；
+- `ScheduleV2DailyMutationBridge`：捕获本次 localRevision 对应的普通请求；
+- `ScheduleV2ResponseApplier`：逐项应用 confirmed/discovered/upsert/delete 结果；
+- `ScheduleV2SnapshotProjector`：把 Room 状态投影为领域快照。
 
-当前协议位于 `data/remote/v3`：
+## 4. Room 状态
 
-- `ScheduleV2WireModels.kt`：typed DTO 与字段中文说明；
-- `ScheduleV2ApiService.kt`：返回公共 `ApiWrapper<T>` 的四个 Ktorfit 接口；
-- `KtorScheduleV2Gateway.kt`：通过 KtProvider 获取接口实现后，对统一外壳和 HTTP 异常做一次分类。
-
-网络 JSON 由项目统一 Ktorfit/ContentNegotiation 配置负责，不再维护 Schedule 私有 JSON 扫描器。`status=20101`
-时不能访问会执行成功校验的 `ApiWrapper.data`，gateway 在确认该状态后读取 `rawData`，把 aligned `REJECTED`
-结果交给 applier；其他模块仍按原规则使用 `data`。
-
-### 3.2 Common 同步逻辑
-
-`data/repository/v3` 包含纯逻辑：
-
-- domain/wire mapper；
-- local command reducer；
-- Schedule 的 `kind/todoState/linkedToCourse` 映射、校验与持久化；
-- Sync capture/planner；
-- response applier；
-- daily mutation bridge；
-- snapshot projector。
-
-planner 只上传当前完整 pending。applier 先更新 remote，再按捕获的 `uploadedRevision` compare-and-clear；请求期间形成的更高 revision U 必须保留到下一次同步。
-
-### 3.3 Room
-
-Room 只注册四张表：
+数据库只保留四张表：
 
 ```text
 schedule_v2_account_metadata
@@ -107,124 +82,83 @@ schedule_v2_schedule_state
 schedule_v2_occurrence_override_state
 ```
 
-三张 state 表的 remote/pending 字段使用 typed Kotlin 类，Room converter 严格编码为 JSON 列。账号表只保存 `localRevisionCounter`。
+每个资源行保存：
 
-详细字段与 R→U 语义见 [客户端存储设计](./schedule-v2-platform-storage-upgrade.md)。
+- `remoteSnapshot`：最后确认的服务端 current；
+- `pendingOperation`：UPSERT 或 DELETE；
+- `pendingSnapshot`：UPSERT 的完整本地目标；
+- `pendingLocalModifiedAt`：DELETE 时刻；
+- `localRevision`：本地 pending 代数。
 
-## 4. Repository 行为
+不再保存 `localBatchId`。本次协议尚未上线，当前 Room schema 重新固定为初始 version 1，不保留开发期历史版本或 migration。Android、Desktop 与 iOS 在缺少迁移时统一清库重建；远端保有完整数据，本地临时日程按产品约定允许丢弃。
 
-### 4.1 初始化与完整 Sync
+## 5. Repository 行为
 
-`RoomScheduleRepository.initialize()`：
+### 初始化 / 完整 Sync
 
-1. 读取本地四表并先发布可见快照；
-2. 在 Room mutex 外调用一次 `/v2/schedule-mutations`；
-3. 响应回来后重新读取当前状态；
-4. common applier 处理 result、related、inventory 和 tombstone；
-5. 用一个 Room write transaction 替换账号三类完整状态。
+1. 读取 Room 并先发布本地快照；
+2. 在 mutex 外请求 `/v2/schedule-mutations`；
+3. 回包后重新读取最新 Room；
+4. 逐项应用结果；
+5. 在一次 Room transaction 中替换账号状态。
 
-网络失败、超时或未知响应不会清除 pending。HTTP 400 和 data 内的 typed `REJECTED` 已明确证明本次业务输入不能接受，客户端只清除仍匹配 uploaded revision 的 R；请求期间形成的 U 继续保留。
+### 日常 CRUD
 
-### 4.2 日常命令
+1. 命令先写 Room 并发布 UI；
+2. 捕获当前 localRevision 的 Category/Schedule/Override pending；
+3. 通过 POST/PUT/DELETE 日常接口上传；
+4. 成功项写 canonical remote，并仅在 localRevision 未变化时清 pending；
+5. REJECTED 项保留 pending，并写入可编辑失败记录；
+6. transport/5xx/timeout/HTTP400 均保留 pending。
 
-本地命令先写 Room、发布快照，再把本次 pending 及其 Schedule 关系闭包组成一个 `AtomicBatch` 调用日常接口：
+HTTP 400 属于确定性请求失败，但客户端仍保留本地数据，避免旧迁移或本地输入被直接丢弃。失败页记录操作时间、源 Schedule、请求片段、reason/info；用户修改或删除成功后自动移除。
 
-- CREATE 或批次内含新资源 → POST `/v2/schedules`；
-- 仅修改现有资源 → PUT `/v2/schedules`；
-- Schedule 删除或批次全为删除 → DELETE `/v2/schedules`；
-- Schedule 操作会同时携带其引用的待提交 Category、同 parent 的待提交 OccurrenceOverride，以及已有的父子删除闭包；
-- Category、OccurrenceOverride 自身的新增、修改、删除也立即走同一组聚合接口，不再等待完整 Sync。
+### R→U
 
-网络调用期间不持有 repository mutex。响应应用前重新读库，所以 R 请求期间产生的 U 不会被旧响应覆盖。
+R 上传期间发生本地 U 时，R 响应可以更新 remote，但不能清除更高 localRevision 的 U。U 继续作为 pending，等待下一次日常请求或网络恢复 Sync。
 
-### 4.3 错误可见性
+## 6. 部分成功
 
-客户端公共错误区分：
+同一响应先应用所有合法 canonical 结果，再汇总 REJECTED：
 
-- `MutationRejected`：业务拒绝，reason 与后端 ResultReason 对齐；
-- `InvalidResponse`：HTTP 200 body 或服务端状态无法按合同解释；
-- `Timeout`；
-- `Server(status)`；
-- `Unexpected`；
-- `BackendNotDeployed`：当前 Web 只读实现。
+- accepted 资源按 uploadedRevision compare-and-clear；
+- rejected 资源保留 pending；
+- 只为被拒绝的 Schedule 或相关 Override 生成失败记录；
+- 合法 HTTP 200 说明后端可达，repository 状态保持 `Ready(pendingCount)`，不能标成远端不可用。
 
-最近远端错误只保留在 repository 进程内，用于让 UI 继续显示 Unavailable；它不写入 Room，也不是重试状态机。成功且无 REJECTED 的完整或日常聚合响应会清除该错误。
+## 7. 业务模型边界
 
-## 5. 平台接线
+- recurrence 只支持 DAILY / WEEKLY；
+- `minutesBefore=0` 表示准时提醒；
+- UNSCHEDULED 不导出日历，点击提醒或关联课表时由 UI toast 说明；
+- `kind=TODO|AFFAIR` 创建后不可修改；
+- TODO 完成后暂不显示在课表；
+- AFFAIR 即使关联清单并完成，仍显示在课表；
+- OccurrenceOverride identity 永远是原始 `scheduleId + occurrenceDate`。
 
-- Android、Desktop、iOS：进程唯一 Room 数据库 + exact-session `KtorScheduleV2Gateway`；
-- Web：最小 `READ_ONLY` unavailable repository，不持久化、不联网；
-- Schedule ID 生成器只属于编辑入口，不再作为 repository 工厂参数；
-- 不再生成或持久化 stableDeviceId；
-- 数据库 builder 不注册旧 migration，旧开发库需要清库或重装。
+## 8. 日历与迁移
 
-账号切换由 `AccountSwitchingScheduleRepository` 维护稳定 façade。切号会取消旧 delegate 的初始化和快照收集；迟到快照和 Calendar change 在发布前按 binding identity 与 accountId 拦截。
+当前仅支持 Schedule 到系统日历的单向导出，不接收系统日历反向修改。
 
-## 6. Calendar 边界
+Android 与 iOS 在各自平台入口触发旧数据迁移，映射逻辑位于 commonMain。迁移版本记录在 AccountSettings；失败下次初始化重试，2028-09-01 UTC 后停止访问旧服务。旧数据迁移成功后不删除旧服务数据。
 
-当前只保留单向导出：
+## 9. 验证状态
 
-```text
-ScheduleRepository.snapshot/calendarChanges
-  -> ScheduleCalendarProjectionFactory
-  -> CalendarExportPlanner
-  -> Android Calendar Provider / iOS EventKit
-```
+本轮协议改造已验证：
 
-不再支持系统日历到 Schedule 的入站写回、三方合并、冲突选择、link detachment 或手动 conflict executor。
+- 后端 `go test ./schedulev2 ./schedulev2wire ./dao`；
+- 后端 `go test ./service -run '^TestScheduleV2'`；
+- 客户端 Android main 编译；
+- 客户端 Desktop 297 个测试；
+- Android host 302 个测试；测试配置让 `android.jar` 的日志 stub 返回默认值，不影响生产日志。
 
-Android/iOS 初始化由账号 façade 在当前 delegate 初始化完成后调用 `onScheduleRepositoryInitialized`。平台 factory 不再携带旧 reconciliation capability 或 initialized hook。两端在同一个锁外 handoff 中通过共享协调器尝试一次
-[旧事务与旧清单迁移](schedule-v2-legacy-data-migration.md)，使用确定性 ID 写真实 Room；失败留到下次初始化重试，并在
-2028-09-01 UTC 后自动停止访问旧服务。
+- iOS Simulator 测试源码编译；
+- 两端旧协议术语与 diff 已完成检查。
 
-## 7. 明确不支持
+## 10. Git 边界
 
-为避免再次过度设计，当前不实现：
+客户端分支：`guoxiangrui/feature/schedule`。
 
-- MONTHLY/YEARLY、RDATE；
-- 把 `SplitSeries`、`DeleteThisAndFollowing` 当作服务端命令上传；客户端只在一个 `AtomicBatch` 中提交
-  截断后的旧 Schedule、新 Schedule 与受影响 Override 的最终资源图；
-- 同 identity DELETE 后恢复；
-- Web 离线编辑与持久 pending；
-- receipt/history/cursor/protocol rollout/自动重试框架。
+后端分支：`dev/test`。
 
-重复日程编辑已支持“仅此次 / 此次及以后 / 整个系列”：仅此次写 Override；此次及以后拆分系列；整个系列从
-中间 occurrence 编辑时间时只把相对移动量应用到父系列锚点，稳定 `occurrenceDate` identity 不变。
-
-## 8. 当前验证状态
-
-已完成的验证：
-
-- common metadata 与 Room KSP 多轮通过；
-- Android、Desktop、iOS Simulator、JS、Wasm production 源码编译通过；
-- Desktop 全量测试通过；iOS Simulator、JS、Wasm test 源码编译通过，Android host test 已完成组装；
-- typed wire、mapper、reducer、planner/applier、daily bridge、Room mapper/store/repository 有聚焦测试；
-- 单次 timing/category Override、此次及以后原子拆分/截断、整个系列相对改期已有 reducer 与路由聚焦测试；
-- 日常聚合批次覆盖 Category + Schedule + OccurrenceOverride、HTTP 400/REJECTED 清 R、transport 保留 pending 与 R→U；
-- nullable Category color 已覆盖 wire、domain、Room 与 repository；客户端提供 10 组背景/字体配色，首项
-  为清单默认灰。关联清单后的事务使用清单颜色并额外保留斜纹，纯事务不展示分组；
-- 后端 `schedulev2wire` 与 `service` 的 Schedule v2 聚焦测试通过；
-- `git diff --check` 通过。
-
-真实 HTTP、真实账号、Android Provider、iOS EventKit 和生产数据库均未执行，也不在本轮默认授权范围内。
-
-## 9. 当前 Git 集成边界
-
-主集成分支：
-
-```text
-guoxiangrui/feature/schedule
-```
-
-客户端实现已经收敛到主集成分支，不再从旧 lane 继续合并。后续只允许针对验收发现的问题做小范围修正，并保持少量、带完整 body 的提交。
-
-禁止把历史 Claude semantic 分支、旧 cursor/outbox 实现或 archive 文档重新合入。
-
-## 10. 后续真实验收
-
-代码集成完成后，另行授权并执行：
-
-- 后端真实 MySQL/HTTP 合同测试；
-- Android/iOS/Desktop 使用测试账号的首次 Sync、日常 CRUD、断网 pending 与 R→U；
-- Android Calendar Provider 与 iOS EventKit 的隔离测试数据单向导出；
-- 服务端 20101 REJECTED、400 strict invalid、401/403、5xx 和 timeout 场景。
+本轮开始前已分别提交失败记录与参数错误改进。当前协议重构尚未提交，完成代码、测试与文档核对后再单独提交。

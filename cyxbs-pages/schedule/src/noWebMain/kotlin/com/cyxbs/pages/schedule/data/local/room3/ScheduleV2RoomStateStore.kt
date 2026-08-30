@@ -44,9 +44,8 @@ internal class ScheduleV2RoomStateStore(
    * 以 common applier 成功产出的完整账号状态替换 Room 中三类 state。
    *
    * 这是同步响应唯一的落库入口：同一写事务先清除旧集合再写入新集合，因此已从新集合消失的 tombstone identity 会
-   * 删除，atomic 结果也不会出现半批。三个列表必须显式传入以避免调用方误清；账号 metadata/localRevisionCounter
-   * 不属于替换目标，始终保留。行内 localBatchId 只表示原子组成员，common planner 会映射它为 wire
-   * AtomicBatch.batchId；它不代表 receipt 或服务端进度。
+   * 删除。三个列表必须显式传入以避免调用方误清；账号 metadata/localRevisionCounter 不属于替换目标，始终保留。
+   * store 不维护请求队列、批次状态或服务端处理进度。
    */
   suspend fun replaceAccountState(
     accountId: String,

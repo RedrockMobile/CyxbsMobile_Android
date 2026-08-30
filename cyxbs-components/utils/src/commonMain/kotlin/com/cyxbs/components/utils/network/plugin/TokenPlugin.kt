@@ -21,9 +21,16 @@ import kotlinx.coroutines.CancellationException
 internal val TokenLifecycleLeaseKey =
   AttributeKey<TokenLifecycleLease>("TokenLifecycleLease")
 
+/**
+ * Ktorfit `@Tag` 与 [TokenPlugin] 共享的严格账号会话 attribute 名称。
+ *
+ * 注解参数必须使用编译期常量，因此需要由网络层统一公开名称；它只用于本地 request attribute，不会进入网络请求。
+ */
+const val EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME = "ExpectedAccountSession"
+
 /** 仅由 [requireAccountSession] 写入的每请求严格账号会话标记。 */
 private val ExpectedAccountSessionKey =
-  AttributeKey<AccountSession>("ExpectedAccountSession")
+  AttributeKey<AccountSession>(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME)
 
 /**
  * 标记该请求只能以传入的 exact [expectedSession] 发出认证信息。

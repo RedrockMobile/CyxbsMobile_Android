@@ -63,7 +63,6 @@ class ScheduleV2RoomStateMapperTest {
       pendingSnapshot = pending.toWire(),
       pendingLocalModifiedAt = null,
       localRevision = 9,
-      localBatchId = null,
     )
 
     // R 已收到 version=1 时，本地更高 revision 的 CREATE(U, version=0) 仍是有效 pending。
@@ -77,7 +76,6 @@ class ScheduleV2RoomStateMapperTest {
       pendingSnapshot = null,
       pendingLocalModifiedAt = null,
       localRevision = null,
-      localBatchId = null,
     )
     val remoteAndDelete = categoryDeleteEntity().copy(
       remoteSnapshot = CategoryRemoteSnapshot(
@@ -146,7 +144,6 @@ class ScheduleV2RoomStateMapperTest {
       pendingSnapshot = pending.toWire(),
       pendingLocalModifiedAt = null,
       localRevision = 3,
-      localBatchId = "batch-1",
     )
   }
 
@@ -162,7 +159,6 @@ class ScheduleV2RoomStateMapperTest {
       pendingSnapshot = pending.toWire(),
       pendingLocalModifiedAt = null,
       localRevision = 4,
-      localBatchId = "batch-1",
     )
   }
 
@@ -179,7 +175,6 @@ class ScheduleV2RoomStateMapperTest {
       pendingSnapshot = pending.toWire(),
       pendingLocalModifiedAt = null,
       localRevision = 5,
-      localBatchId = "batch-1",
     )
   }
 
@@ -192,7 +187,6 @@ class ScheduleV2RoomStateMapperTest {
     pendingSnapshot = null,
     pendingLocalModifiedAt = 100,
     localRevision = 6,
-    localBatchId = "batch-2",
   )
 
   /** DELETE 行只保留 identity、操作时刻与纯本地 revision。 */
@@ -204,7 +198,6 @@ class ScheduleV2RoomStateMapperTest {
     pendingSnapshot = null,
     pendingLocalModifiedAt = 101,
     localRevision = 7,
-    localBatchId = "batch-2",
   )
 
   /** DELETE 行只保留 identity、操作时刻与纯本地 revision。 */
@@ -217,7 +210,6 @@ class ScheduleV2RoomStateMapperTest {
     pendingSnapshot = null,
     pendingLocalModifiedAt = 102,
     localRevision = 8,
-    localBatchId = "batch-2",
   )
 
   private fun categoryResource(id: String, name: String, version: Long = 1) = CategoryResource(

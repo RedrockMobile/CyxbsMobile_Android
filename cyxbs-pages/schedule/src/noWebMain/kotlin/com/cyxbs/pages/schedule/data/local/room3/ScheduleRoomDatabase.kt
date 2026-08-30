@@ -10,9 +10,9 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 /**
  * Schedule v2 的 Room3 业务数据库。
  *
- * 当前客户端尚未发布，因此 version 7 直接重定义为新协议的双快照 schema；已有旧开发数据库必须清库或重装，
- * 不提供把 cursor/outbox/receipt/semantic 历史伪造成 remote 或 pending 的迁移。数据库只存在于 noWeb source set；
- * Web 不得引用本类或 bundled SQLite。
+ * 当前客户端尚未发布，因此以 version 1 固定当前无 batch 的双快照 schema，不保留开发期间的历史版本或迁移。
+ * 各平台 builder 在 schema 不匹配且没有迁移时直接清库重建；远端保有完整数据，本地临时日程也允许丢弃。
+ * 数据库只存在于 noWeb source set；Web 不得引用本类或 bundled SQLite。
  */
 @Database(
   entities = [
@@ -21,7 +21,7 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
     ScheduleV2ScheduleStateEntity::class,
     ScheduleV2OccurrenceOverrideStateEntity::class,
   ],
-  version = 7,
+  version = 1,
   exportSchema = true,
 )
 @ColumnTypeConverters(ScheduleV2RoomConverters::class)

@@ -32,12 +32,12 @@ data class ScheduleV2AccountMetadataEntity(
  * Category identity 的 remote/pending 双快照状态行。
  *
  * Snapshot 只在严格 typed codec 边界编码、解码；Room 通过 TypeConverter 存为 JSON。DELETE 时 pending snapshot 为 null，
- * 只使用 identity、localModifiedAt、localRevision 与可选 localBatchId。
+ * 只使用 identity、localModifiedAt 与 localRevision。
  */
 @Entity(
   tableName = "schedule_v2_category_state",
   primaryKeys = ["account_id", "category_id"],
-  indices = [Index(value = ["account_id", "pending_operation", "local_batch_id"])],
+  indices = [Index(value = ["account_id", "pending_operation"])],
 )
 data class ScheduleV2CategoryStateEntity(
   @ColumnInfo(name = "account_id") val accountId: String,
@@ -55,8 +55,6 @@ data class ScheduleV2CategoryStateEntity(
    * R 的响应只可清除它上传的旧 revision；更高 revision 的 U 始终保留并作为 effective 值，下一轮同步后收敛。
    */
   @ColumnInfo(name = "local_revision") val localRevision: Long?,
-  /** 本地持久分组键，capture 时映射为当次 AtomicBatch.batchId；不是 receipt 或处理证明。 */
-  @ColumnInfo(name = "local_batch_id") val localBatchId: String?,
 )
 
 /**
@@ -67,7 +65,7 @@ data class ScheduleV2CategoryStateEntity(
 @Entity(
   tableName = "schedule_v2_schedule_state",
   primaryKeys = ["account_id", "schedule_id"],
-  indices = [Index(value = ["account_id", "pending_operation", "local_batch_id"])],
+  indices = [Index(value = ["account_id", "pending_operation"])],
 )
 data class ScheduleV2ScheduleStateEntity(
   @ColumnInfo(name = "account_id") val accountId: String,
@@ -85,8 +83,6 @@ data class ScheduleV2ScheduleStateEntity(
    * R 的响应只可清除它上传的旧 revision；更高 revision 的 U 始终保留并作为 effective 值，下一轮同步后收敛。
    */
   @ColumnInfo(name = "local_revision") val localRevision: Long?,
-  /** 本地持久分组键，capture 时映射为当次 AtomicBatch.batchId；不是 receipt 或处理证明。 */
-  @ColumnInfo(name = "local_batch_id") val localBatchId: String?,
 )
 
 /**
@@ -97,7 +93,7 @@ data class ScheduleV2ScheduleStateEntity(
 @Entity(
   tableName = "schedule_v2_occurrence_override_state",
   primaryKeys = ["account_id", "schedule_id", "occurrence_date"],
-  indices = [Index(value = ["account_id", "pending_operation", "local_batch_id"])],
+  indices = [Index(value = ["account_id", "pending_operation"])],
 )
 data class ScheduleV2OccurrenceOverrideStateEntity(
   @ColumnInfo(name = "account_id") val accountId: String,
@@ -116,6 +112,4 @@ data class ScheduleV2OccurrenceOverrideStateEntity(
    * R 的响应只可清除它上传的旧 revision；更高 revision 的 U 始终保留并作为 effective 值，下一轮同步后收敛。
    */
   @ColumnInfo(name = "local_revision") val localRevision: Long?,
-  /** 本地持久分组键，capture 时映射为当次 AtomicBatch.batchId；不是 receipt 或处理证明。 */
-  @ColumnInfo(name = "local_batch_id") val localBatchId: String?,
 )

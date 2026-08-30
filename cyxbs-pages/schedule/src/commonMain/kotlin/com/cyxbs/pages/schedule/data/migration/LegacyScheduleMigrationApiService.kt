@@ -2,6 +2,7 @@ package com.cyxbs.pages.schedule.data.migration
 
 import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.utils.network.ApiWrapper
+import com.cyxbs.components.utils.network.plugin.EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
@@ -21,13 +22,13 @@ internal interface LegacyScheduleMigrationApiService {
   @POST("magipoke-reminder/Person/getTransaction")
   @Headers("App-Version:74")
   suspend fun getTransactions(
-    @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
+    @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
   ): ApiWrapper<List<LegacyTransactionDto>>
 
   /** 读取旧清单服务当前仍有效的完整清单。 */
   @GET("magipoke-todo/list")
   suspend fun getTodos(
-    @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
+    @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
   ): ApiWrapper<LegacyTodoListDto>
 }
 
@@ -88,6 +89,3 @@ internal data class LegacyTodoRemindModeDto(
     const val YEARLY = 4
   }
 }
-
-/** 必须与网络层冻结账号会话的 request attribute 名称保持一致。 */
-private const val EXPECTED_ACCOUNT_SESSION_TAG = "ExpectedAccountSession"

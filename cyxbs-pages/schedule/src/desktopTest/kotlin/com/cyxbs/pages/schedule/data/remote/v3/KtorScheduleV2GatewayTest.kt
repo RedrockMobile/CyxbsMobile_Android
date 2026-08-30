@@ -13,10 +13,10 @@ import kotlinx.coroutines.test.runTest
 class KtorScheduleV2GatewayTest {
 
   @Test
-  fun businessRejectedKeepsTypedRawDataAndExactSession() = runTest {
+  fun handledResponseKeepsTypedRawDataAndExactSession() = runTest {
     val session = AccountSession(7, AccountState.Login(ACCOUNT_ID))
     val response = emptyResponse("sync-1")
-    val api = FakeApi(ApiWrapper(response, 20101, "rejected"))
+    val api = FakeApi(ApiWrapper(response, 10000, "success"))
     val gateway = KtorScheduleV2Gateway(api, session)
 
     val result = assertIs<ScheduleV2CallResult.Completed<SyncResponse>>(
@@ -25,7 +25,7 @@ class KtorScheduleV2GatewayTest {
 
     assertSame(session, api.receivedSession)
     assertSame(response, result.wrapper.rawData)
-    assertEquals(20101, result.wrapper.status)
+    assertEquals(10000, result.wrapper.status)
   }
 
   @Test
@@ -57,19 +57,19 @@ class KtorScheduleV2GatewayTest {
     }
 
     override suspend fun createSchedule(
-      input: AtomicBatch,
+      input: MutationRequest,
       session: AccountSession,
-    ): ApiWrapper<AtomicBatchResult> = error("unexpected create")
+    ): ApiWrapper<MutationResponse> = error("unexpected create")
 
     override suspend fun updateSchedule(
-      input: AtomicBatch,
+      input: MutationRequest,
       session: AccountSession,
-    ): ApiWrapper<AtomicBatchResult> = error("unexpected update")
+    ): ApiWrapper<MutationResponse> = error("unexpected update")
 
     override suspend fun deleteSchedule(
-      input: AtomicBatch,
+      input: MutationRequest,
       session: AccountSession,
-    ): ApiWrapper<AtomicBatchResult> = error("unexpected delete")
+    ): ApiWrapper<MutationResponse> = error("unexpected delete")
   }
 
   private fun emptyRequest(requestId: String) = SyncRequest(
@@ -77,7 +77,6 @@ class KtorScheduleV2GatewayTest {
     categories = CategorySyncRequest(emptyList(), emptyList(), emptyList()),
     schedules = ScheduleSyncRequest(emptyList(), emptyList(), emptyList()),
     occurrenceOverrides = OccurrenceOverrideSyncRequest(emptyList(), emptyList(), emptyList()),
-    atomicBatches = emptyList(),
   )
 
   private fun emptyResponse(requestId: String) = SyncResponse(
@@ -85,7 +84,6 @@ class KtorScheduleV2GatewayTest {
     categories = CategorySyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
     schedules = ScheduleSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
     occurrenceOverrides = OccurrenceOverrideSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
-    atomicBatchResults = emptyList(),
   )
 
   private companion object {

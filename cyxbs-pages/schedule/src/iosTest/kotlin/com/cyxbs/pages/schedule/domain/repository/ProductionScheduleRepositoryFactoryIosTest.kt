@@ -77,7 +77,6 @@ class ProductionScheduleRepositoryFactoryIosTest {
             CategorySyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
             ScheduleSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
             OccurrenceOverrideSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
-            emptyList(),
           ),
           10000,
           "ok",
@@ -87,17 +86,17 @@ class ProductionScheduleRepositoryFactoryIosTest {
 
     override suspend fun createSchedule(
       accountId: String,
-      input: com.cyxbs.pages.schedule.data.remote.v3.AtomicBatch,
+      input: com.cyxbs.pages.schedule.data.remote.v3.MutationRequest,
     ) = error("factory initialize must not call daily create")
 
     override suspend fun updateSchedule(
       accountId: String,
-      input: com.cyxbs.pages.schedule.data.remote.v3.AtomicBatch,
+      input: com.cyxbs.pages.schedule.data.remote.v3.MutationRequest,
     ) = error("factory initialize must not call daily update")
 
     override suspend fun deleteSchedule(
       accountId: String,
-      input: com.cyxbs.pages.schedule.data.remote.v3.AtomicBatch,
+      input: com.cyxbs.pages.schedule.data.remote.v3.MutationRequest,
     ) = error("factory initialize must not call daily delete")
   }
 }

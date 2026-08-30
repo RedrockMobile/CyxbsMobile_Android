@@ -42,7 +42,6 @@ class ScheduleV2RoomStateStoreTest {
         val state = categoryDeleteState(
           localModifiedAt = 1,
           localRevision = revision,
-          localBatchId = "batch-r",
         )
 
         store.replaceAccountState(
@@ -69,7 +68,7 @@ class ScheduleV2RoomStateStoreTest {
   }
 
   /** 构造包含 remote 与本地 DELETE pending 的完整 Category state 行。 */
-  private fun categoryDeleteState(localModifiedAt: Long, localRevision: Long, localBatchId: String) =
+  private fun categoryDeleteState(localModifiedAt: Long, localRevision: Long) =
     ScheduleV2CategoryStateEntity(
       accountId = ACCOUNT,
       categoryId = CATEGORY_ID,
@@ -87,7 +86,6 @@ class ScheduleV2RoomStateStoreTest {
       pendingSnapshot = null,
       pendingLocalModifiedAt = localModifiedAt,
       localRevision = localRevision,
-      localBatchId = localBatchId,
     )
 
   /** 在测试结束后删除 SQLite 主文件及 WAL/SHM 辅助文件。 */
