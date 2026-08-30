@@ -5,49 +5,52 @@ import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.components.config.time.toDate
 import com.cyxbs.components.config.time.toLocalDate
 import com.cyxbs.components.config.time.toMinuteTimeDate
+import com.cyxbs.pages.schedule.data.remote.v3.ScheduleInput
 import com.cyxbs.pages.schedule.domain.model.CategoryId
-import com.cyxbs.pages.schedule.domain.model.FieldPatch as UiFieldPatch
 import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
 import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
-import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus as UiOccurrenceStatus
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
-import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency as UiRecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 import com.cyxbs.pages.schedule.domain.model.ReminderChannel
 import com.cyxbs.pages.schedule.domain.model.ReminderId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
-import com.cyxbs.pages.schedule.domain.model.ScheduleKind as UiScheduleKind
-import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
 import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
+import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.domain.repository.ScheduleSnapshot
 import com.cyxbs.pages.schedule.domain.sync.v2.CategoryResource
 import com.cyxbs.pages.schedule.domain.sync.v2.CategorySyncState
-import com.cyxbs.pages.schedule.domain.sync.v2.TodoState
-import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleKind
 import com.cyxbs.pages.schedule.domain.sync.v2.FieldPatch
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideResource
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideSyncState
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceStatus
 import com.cyxbs.pages.schedule.domain.sync.v2.PendingDelete
+import com.cyxbs.pages.schedule.domain.sync.v2.PendingUpsert
 import com.cyxbs.pages.schedule.domain.sync.v2.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.sync.v2.RecurrenceInput
 import com.cyxbs.pages.schedule.domain.sync.v2.ReminderInput
+import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleKind
+import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleRemoteSnapshot
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleResource
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleSyncState
 import com.cyxbs.pages.schedule.domain.sync.v2.ServerResourceMeta
 import com.cyxbs.pages.schedule.domain.sync.v2.TimingInput
 import com.cyxbs.pages.schedule.domain.sync.v2.TimingKind
+import com.cyxbs.pages.schedule.domain.sync.v2.TodoState
 import com.cyxbs.pages.schedule.domain.sync.v2.Weekday
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
+import com.cyxbs.pages.schedule.domain.model.FieldPatch as UiFieldPatch
+import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus as UiOccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency as UiRecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.model.ScheduleKind as UiScheduleKind
 
 private const val UTC_DAY_MILLIS = 86_400_000L
 private const val MINUTE_MILLIS = 60_000L
@@ -129,6 +132,55 @@ class ScheduleV2SnapshotProjector {
     ScheduleV2SnapshotProjection.Failure(failure.message ?: "Schedule v2 projection failed")
   } catch (failure: IllegalArgumentException) {
     ScheduleV2SnapshotProjection.Failure(failure.message ?: "Schedule v2 projection is invalid")
+  }
+
+  /**
+   * 将失败记录中的单条完整请求源恢复成编辑器使用的 [Schedule]。
+   *
+   * version=0 按本地 CREATE pending 投影；正版本按最小 canonical 快照投影。两条路径最终都复用 [project]，
+   * 因而时间、重复规则、提醒和完成态不会与正常清单产生第二套转换语义。
+   */
+  internal fun projectFailureSource(
+    input: ScheduleInput,
+    timeZone: TimeZone,
+  ): Schedule? {
+    val resource = input.toDomain()
+    val atomTimes = listOf(
+      resource.title.modifiedAt,
+      resource.description.modifiedAt,
+      resource.categoryId.modifiedAt,
+      resource.timing.modifiedAt,
+      resource.recurrence.modifiedAt,
+      resource.reminders.modifiedAt,
+      resource.todoState.modifiedAt,
+      resource.linkedToCourse.modifiedAt,
+    )
+    val state = if (resource.version == 0L) {
+      ScheduleSyncState(
+        identity = resource.identity,
+        remoteSnapshot = null,
+        pending = PendingUpsert(resource, localRevision = 1),
+      )
+    } else {
+      ScheduleSyncState(
+        identity = resource.identity,
+        remoteSnapshot = ScheduleRemoteSnapshot(
+          resource = resource,
+          meta = ServerResourceMeta(
+            createdAt = atomTimes.minOrNull() ?: 0L,
+            remoteModifiedAt = atomTimes.maxOrNull() ?: 0L,
+          ),
+          firstRecurrenceAnchorDate = resource.recurrence.data?.anchorDate,
+        ),
+      )
+    }
+    return (project(
+      accountId = "failure-record",
+      timeZone = timeZone,
+      categories = emptyList(),
+      schedules = listOf(state),
+      occurrenceOverrides = emptyList(),
+    ) as? ScheduleV2SnapshotProjection.Success)?.snapshot?.schedules?.singleOrNull()
   }
 
   private fun CategoryResource.toUi(): ScheduleCategory = ScheduleCategory(

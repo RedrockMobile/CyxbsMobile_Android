@@ -92,6 +92,7 @@ import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.components.view.ui.Window
 import com.cyxbs.pages.schedule.api.ScheduleTodoNavArgument
+import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
@@ -103,8 +104,8 @@ import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryMutationMode
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.domain.repository.canSubmitScheduleMutation
-import com.cyxbs.pages.schedule.ui.category.mergeScheduleCategories
 import com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavArgument
+import com.cyxbs.pages.schedule.ui.category.mergeScheduleCategories
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog
 import com.cyxbs.pages.schedule.ui.edit.EditScope
 import com.cyxbs.pages.schedule.viewmodel.ScheduleMainViewModel
@@ -115,6 +116,7 @@ import cyxbsmobile.cyxbs_pages.schedule.generated.resources.schedule_ic_todo_emp
 import cyxbsmobile.cyxbs_pages.schedule.generated.resources.schedule_ic_todo_urgency_flag
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.painterResource
@@ -162,6 +164,11 @@ fun ScheduleTodoPage(
     projectScheduleTodo(snapshot, Clock.System.now(), viewerTimeZone)
   }
   val currentAccountSettings = accountSettings
+  val failureRecordsFlow = remember(currentAccountSettings.stuNum) {
+    currentAccountSettings.stuNum?.let(ScheduleFailureRecords::observe)
+      ?: MutableStateFlow(emptyList())
+  }
+  val failureRecords by failureRecordsFlow.collectAsState()
   val listState = rememberLazyListState()
   val coroutineScope = rememberCoroutineScope()
   val visibleCategories = remember(snapshot.categories) {
@@ -341,7 +348,9 @@ fun ScheduleTodoPage(
       ScheduleTodoHeader(
         manageMode = manageMode,
         editorEnabled = editorEnabled,
+        failureCount = failureRecords.size,
         onBack = onBack,
+        onFailures = { ScheduleFailureNavArgument.navigate() },
         onManage = {
           if (manageMode) viewModel.exitManageMode() else viewModel.enterManageMode()
         },
@@ -691,7 +700,9 @@ internal fun com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence.toDomainOccu
 private fun ScheduleTodoHeader(
   manageMode: Boolean,
   editorEnabled: Boolean,
+  failureCount: Int,
   onBack: () -> Unit,
+  onFailures: () -> Unit,
   onManage: () -> Unit,
 ) {
   val colors = LocalAppColors.current
@@ -730,6 +741,15 @@ private fun ScheduleTodoHeader(
           letterSpacing = 1.05.sp,
           modifier = Modifier.weight(1f),
         )
+        if (!manageMode && failureCount > 0) {
+          TextButton(onClick = onFailures) {
+            Text(
+              text = "失败 $failureCount",
+              color = MaterialTheme.colors.error,
+              fontSize = 13.sp,
+            )
+          }
+        }
         if (manageMode) {
           Surface(
             color = ScheduleTodoAccentColor,

@@ -4,6 +4,7 @@ import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.utils.network.ApiWrapper
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.HTTP
+import de.jensklingenberg.ktorfit.http.Headers
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Tag
@@ -18,28 +19,32 @@ import de.jensklingenberg.ktorfit.http.Tag
 interface ScheduleV2ApiService {
 
   /** 首次进入或网络恢复时提交完整 typed inventory 与当前 pending。 */
-  @POST("v2/schedule-mutations")
+  @POST("magipoke-todo/v2/schedule-mutations")
+  @Headers("Content-Type: application/json")
   suspend fun sync(
     @Body request: SyncRequest,
     @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
   ): ApiWrapper<SyncResponse>
 
   /** 日常新增一个 Schedule 聚合批次，可同时携带关联 Category 与 OccurrenceOverride。 */
-  @POST("v2/schedules")
+  @POST("magipoke-todo/v2/schedules")
+  @Headers("Content-Type: application/json")
   suspend fun createSchedule(
     @Body input: AtomicBatch,
     @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
   ): ApiWrapper<AtomicBatchResult>
 
   /** 日常更新一个 Schedule 聚合批次；服务端返回批次涉及 identity 的 canonical 结果。 */
-  @PUT("v2/schedules")
+  @PUT("magipoke-todo/v2/schedules")
+  @Headers("Content-Type: application/json")
   suspend fun updateSchedule(
     @Body input: AtomicBatch,
     @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
   ): ApiWrapper<AtomicBatchResult>
 
   /** 日常删除聚合批次；各 DELETE 成员仍只上传 identity 与 localModifiedAt。 */
-  @HTTP(method = "DELETE", path = "v2/schedules", hasBody = true)
+  @HTTP(method = "DELETE", path = "magipoke-todo/v2/schedules", hasBody = true)
+  @Headers("Content-Type: application/json")
   suspend fun deleteSchedule(
     @Body input: AtomicBatch,
     @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,

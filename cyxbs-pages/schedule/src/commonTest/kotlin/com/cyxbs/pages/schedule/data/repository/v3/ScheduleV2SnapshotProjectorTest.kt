@@ -377,6 +377,35 @@ class ScheduleV2SnapshotProjectorTest {
     assertProjectionFailure(state)
   }
 
+  /** 失败记录无论来自未确认 CREATE 还是已有版本 UPDATE，都能恢复成同一套编辑器领域对象。 */
+  @Test
+  fun failureSourceProjectsCreateAndConfirmedVersions() {
+    val timing = timed(2026, 8, 30, 14, 20, durationMinutes = 45)
+    val createInput = scheduleResource(
+      id = SCHEDULE_ID,
+      version = 0,
+      timing = timing,
+      title = "待修复创建",
+      timestamp = 100,
+    ).toWire()
+
+    val pending = requireNotNull(projector.projectFailureSource(createInput, zone))
+    val confirmed = requireNotNull(projector.projectFailureSource(
+      createInput.copy(version = 3u),
+      zone,
+    ))
+
+    assertEquals("待修复创建", pending.title)
+    assertEquals(0, pending.revision)
+    assertEquals(ScheduleTiming.Timed(
+      MinuteTimeDate(2026, 8, 30, 14, 20),
+      durationMinutes = 45,
+      timeZoneId = "Asia/Shanghai",
+    ), pending.timing)
+    assertEquals(3, confirmed.revision)
+    assertEquals(pending.timing, confirmed.timing)
+  }
+
   private fun project(
     categories: List<CategorySyncState> = emptyList(),
     schedules: List<ScheduleSyncState> = emptyList(),

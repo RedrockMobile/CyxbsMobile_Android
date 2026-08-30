@@ -310,6 +310,15 @@ object fields:
 deeplink: cyxbs://schedule_settings
 ```
 
+### schedule/failures
+
+- entry: `com.cyxbs.pages.schedule.ui.todo.ScheduleFailureNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.todo.ScheduleFailureNavArgument`
+
+```text
+deeplink: cyxbs://schedule/failures
+```
+
 ### schedule/todo
 
 - entry: `com.cyxbs.pages.schedule.ui.todo.ScheduleTodoNavEntry`

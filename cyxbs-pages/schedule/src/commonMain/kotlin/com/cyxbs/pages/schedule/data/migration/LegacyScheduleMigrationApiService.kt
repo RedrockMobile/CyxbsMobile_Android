@@ -18,14 +18,14 @@ import kotlinx.serialization.Serializable
 internal interface LegacyScheduleMigrationApiService {
 
   /** 读取旧事务服务当前学期的有效 Transaction；未上线的 TimeTransaction 不在该响应内。 */
-  @POST("/magipoke-reminder/Person/getTransaction")
+  @POST("magipoke-reminder/Person/getTransaction")
   @Headers("App-Version:74")
   suspend fun getTransactions(
     @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
   ): ApiWrapper<List<LegacyTransactionDto>>
 
   /** 读取旧清单服务当前仍有效的完整清单。 */
-  @GET("/magipoke-todo/list")
+  @GET("magipoke-todo/list")
   suspend fun getTodos(
     @Tag(EXPECTED_ACCOUNT_SESSION_TAG) session: AccountSession,
   ): ApiWrapper<LegacyTodoListDto>

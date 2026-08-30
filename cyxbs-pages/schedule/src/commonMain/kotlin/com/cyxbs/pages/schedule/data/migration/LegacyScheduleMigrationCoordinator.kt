@@ -29,13 +29,17 @@ internal object LegacyScheduleMigrationCoordinator {
   /**
    * 当前账号已成功完成的旧数据迁移方案版本；记录的是版本号，不是迁移次数。
    *
-   * Key 缺失时按 0 处理，表示从未完成迁移；保存为 1 表示第 1 版迁移已经完整落库。将来需要补迁其他旧数据时，
-   * 递增 [CURRENT_MIGRATION_VERSION] 即可让旧版本账号再次执行新的迁移方案。
+   * Key 缺失时按 0 处理，表示从未完成迁移；保存为 2 表示已执行“失败 pending 保留”修复后的补偿迁移。
+   * 将来需要补迁其他旧数据时，递增 [CURRENT_MIGRATION_VERSION] 即可让旧版本账号再次执行新的迁移方案。
    */
   private const val MIGRATION_VERSION_KEY = "schedule_v2_legacy_migration_version"
 
-  /** 本次客户端要求账号至少完成的迁移方案版本。 */
-  private const val CURRENT_MIGRATION_VERSION = 1
+  /**
+   * 本次客户端要求账号至少完成的迁移方案版本。
+   *
+   * v2 用于补回早期服务端拒绝后被客户端错误清掉的确定性 ID；已存在 ID 会由 [persistItems] 幂等跳过。
+   */
+  private const val CURRENT_MIGRATION_VERSION = 2
 
   /**
    * 旧服务迁移入口的硬截止时间。
