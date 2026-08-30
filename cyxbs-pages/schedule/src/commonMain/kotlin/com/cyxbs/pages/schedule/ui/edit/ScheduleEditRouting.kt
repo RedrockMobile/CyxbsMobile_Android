@@ -59,9 +59,14 @@ suspend fun ScheduleRepository.applyScheduleEdit(
     description = if (state.isOccurrenceDescriptionChanged) edited.description else origin.description,
     categoryId = if (state.isOccurrenceCategoryChanged) edited.categoryId else origin.categoryId,
     timing = if (state.isOccurrenceTimingChanged) {
-      // 无时间没有 occurrence 起点，不能走时间偏移重算；它是整个系列的明确最终 timing。
-      if (edited.timing == ScheduleTiming.Unscheduled) ScheduleTiming.Unscheduled
-      else rebaseSeriesTiming(origin.timing, state.initialOccurrence.timing, edited.timing)
+      when {
+        // 无时间没有 occurrence 起点，不能走时间偏移重算；它是整个系列的明确最终 timing。
+        edited.timing == ScheduleTiming.Unscheduled -> ScheduleTiming.Unscheduled
+        // 非重复日程从 occurrence 入口打开时也会携带 initialOccurrence。旧清单可能没有日期，首次
+        // 补充时间应直接采用表单结果，不能拿 Unscheduled 计算一个不存在的系列相对位移。
+        origin.recurrence == null -> edited.timing
+        else -> rebaseSeriesTiming(origin.timing, state.initialOccurrence.timing, edited.timing)
+      }
     } else {
       origin.timing
     },

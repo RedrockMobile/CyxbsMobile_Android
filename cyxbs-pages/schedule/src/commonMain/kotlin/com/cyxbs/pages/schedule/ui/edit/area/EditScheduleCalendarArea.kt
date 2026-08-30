@@ -3,7 +3,6 @@ package com.cyxbs.pages.schedule.ui.edit.area
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,10 +48,29 @@ internal fun EditScheduleCalendarArea(
   )
   LaunchedEffect(Unit) { calendarState.expand() } // 默认展开整月
   LaunchedEffect(Unit) {
-    snapshotFlow { calendarState.clickDate }.collect { date ->
-      state.startTime = reanchorTimeString(state.startTime, date)
-      state.endTime = reanchorTimeString(state.endTime, date)
+    // clickDate 是日历的展示状态，初次收集会直接给出今天；这里只消费真实点击，避免打开日历就
+    // 把迁移得到的无日期清单悄悄改成今天。事件流也允许用户再次点击当前选中日。
+    calendarState.clickEventFlow.collect { event ->
+      state.applyExplicitDateSelection(event.new)
     }
+  }
+}
+
+/**
+ * 提交用户在日历中的真实选日动作。
+ *
+ * 未排期日程首次选日后成为“有日期、无具体时刻”的全天日程；已有时间的日程只替换日期并保留时分。
+ */
+internal fun EditScheduleModelState.applyExplicitDateSelection(date: Date) {
+  if (effectiveTiming == com.cyxbs.pages.schedule.domain.model.ScheduleTiming.Unscheduled) {
+    val dateText = formatScheduleDateTime(date.year, date.monthNumber, date.dayOfMonth, 0, 0)
+    isAllDay = true
+    isInterval = false
+    startTime = dateText
+    endTime = dateText
+  } else {
+    startTime = reanchorTimeString(startTime, date)
+    endTime = reanchorTimeString(endTime, date)
   }
 }
 

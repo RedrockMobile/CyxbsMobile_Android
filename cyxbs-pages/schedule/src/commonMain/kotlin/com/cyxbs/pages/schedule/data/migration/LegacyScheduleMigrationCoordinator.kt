@@ -10,8 +10,8 @@ import com.cyxbs.pages.course.api.CourseUtils
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
-import com.cyxbs.pages.schedule.ui.todo.loadScheduleTodoPinnedIds
-import com.cyxbs.pages.schedule.ui.todo.saveScheduleTodoPinnedIds
+import com.cyxbs.pages.schedule.ui.todo.main.loadScheduleTodoPinnedIds
+import com.cyxbs.pages.schedule.ui.todo.main.saveScheduleTodoPinnedIds
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first

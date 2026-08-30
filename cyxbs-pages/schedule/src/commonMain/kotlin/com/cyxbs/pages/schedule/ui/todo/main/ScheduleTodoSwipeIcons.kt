@@ -1,4 +1,4 @@
-package com.cyxbs.pages.schedule.ui.todo
+package com.cyxbs.pages.schedule.ui.todo.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

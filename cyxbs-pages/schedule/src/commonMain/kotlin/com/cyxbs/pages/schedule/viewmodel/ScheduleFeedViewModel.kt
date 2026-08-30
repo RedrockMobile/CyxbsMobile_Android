@@ -2,19 +2,28 @@ package com.cyxbs.pages.schedule.viewmodel
 
 import com.cyxbs.components.base.ui.BaseViewModel
 import com.cyxbs.components.config.sp.accountSettings
-import com.cyxbs.pages.schedule.api.ScheduleTodoNavArgument
+import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
 import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
-import com.cyxbs.pages.schedule.domain.model.*
-import com.cyxbs.pages.schedule.domain.repository.*
+import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.RecurrenceId
+import com.cyxbs.pages.schedule.domain.model.ScheduleId
+import com.cyxbs.pages.schedule.domain.model.ScheduleKind
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
+import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
+import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
+import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
+import com.cyxbs.pages.schedule.domain.repository.ScheduleSnapshot
 import com.cyxbs.pages.schedule.ui.edit.EditScope
 import com.cyxbs.pages.schedule.ui.edit.applyScheduleDelete
-import com.cyxbs.pages.schedule.ui.feed.*
-import com.cyxbs.pages.schedule.ui.todo.loadScheduleTodoPinnedIds
-import com.cyxbs.pages.schedule.ui.todo.saveScheduleTodoPinnedIds
+import com.cyxbs.pages.schedule.ui.feed.ScheduleFeedUiState
+import com.cyxbs.pages.schedule.ui.feed.projectScheduleFeed
+import com.cyxbs.pages.schedule.ui.todo.main.loadScheduleTodoPinnedIds
+import com.cyxbs.pages.schedule.ui.todo.main.saveScheduleTodoPinnedIds
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.datetime.*
+import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 /**
@@ -34,11 +43,11 @@ class ScheduleFeedViewModel(
     launchByViewModelScope { repository.snapshot.collect(::updateList) }
   }
   fun refresh() = launchByViewModelScope { repository.initialize() }
-  /** 从首页摘要进入独立邮子清单，不再跳转到课表时间轴页面。 */
-  fun onCardClick() { ScheduleTodoNavArgument().navigate() }
-  /** 从摘要打开清单并定位精确实例；清单消费 identity 后滚动并短暂高亮对应卡片。 */
+  /** 从首页摘要进入唯一的日程主页。 */
+  fun onCardClick() { ScheduleMainNavArgument().navigate() }
+  /** 从摘要打开日程主页并定位精确实例；页面消费 identity 后滚动并短暂高亮对应卡片。 */
   fun onItemClick(id: ScheduleId, recurrenceId: RecurrenceId?) {
-    ScheduleTodoNavArgument(scheduleId = id, recurrenceId = recurrenceId).navigate()
+    ScheduleMainNavArgument(scheduleId = id, recurrenceId = recurrenceId).navigate()
   }
 
   /**

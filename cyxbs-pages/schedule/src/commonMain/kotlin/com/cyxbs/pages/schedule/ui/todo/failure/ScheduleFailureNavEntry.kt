@@ -1,4 +1,4 @@
-package com.cyxbs.pages.schedule.ui.todo
+package com.cyxbs.pages.schedule.ui.todo.failure
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

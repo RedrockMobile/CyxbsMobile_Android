@@ -9,6 +9,7 @@ import com.cyxbs.pages.schedule.domain.repository.*
 import com.cyxbs.pages.schedule.ui.edit.area.ScheduleTimeBoundary
 import com.cyxbs.pages.schedule.ui.edit.area.ScheduleTimeComponent
 import com.cyxbs.pages.schedule.ui.edit.area.ScheduleTimeInterval
+import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitDateSelection
 import com.cyxbs.pages.schedule.ui.edit.area.adjustScheduleTimeInterval
 import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitTimeModeSelection
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -441,6 +442,56 @@ class ScheduleEditNoOpTest {
     assertTrue(!unscheduled.isTimingInputChanged)
     assertEquals(allDayTiming, allDay.toDraft().timing)
     assertTrue(!allDay.isTimingInputChanged)
+  }
+
+  /** 日历真实选日会把无日期清单转为全天日程，候选的默认今天本身不参与状态转换。 */
+  @Test
+  fun explicitDateSelectionTurnsUnscheduledIntoAllDay() {
+    val state = EditScheduleModelState(parentSchedule().copy(
+      timing = ScheduleTiming.Unscheduled,
+      recurrence = null,
+      reminder = null,
+    ))
+
+    assertEquals(ScheduleTiming.Unscheduled, state.effectiveTiming)
+    state.applyExplicitDateSelection(Date(2026, 7, 6))
+
+    assertEquals(ScheduleTiming.AllDay(Date(2026, 7, 6)), state.effectiveTiming)
+  }
+
+  /** 迁移得到的无日期清单从 occurrence 入口补充时间时，应直接更新非重复系列而不是计算系列偏移。 */
+  @Test
+  fun unscheduledOccurrenceCanReceiveItsFirstScheduledTime() = runTest {
+    val parent = parentSchedule().copy(
+      timing = ScheduleTiming.Unscheduled,
+      recurrence = null,
+      reminder = null,
+      linkedToCourse = false,
+    )
+    val occurrence = ScheduleOccurrence(
+      scheduleId = parent.id,
+      recurrenceId = null,
+      timing = ScheduleTiming.Unscheduled,
+      title = parent.title,
+      description = parent.description,
+      categoryId = parent.categoryId,
+      reminder = null,
+      status = OccurrenceStatus.ACTIVE,
+      isOverridden = false,
+    )
+    val repository = RecordingRepository(snapshot(parent))
+    val state = EditScheduleModelState(parent, occurrence).apply {
+      isInterval = false
+      endTime = "2026年7月5日 10:00"
+    }
+
+    repository.applyScheduleEdit(state, EditScope.ALL, null, FakeIds, Clock.System)
+
+    val updated = (repository.commands.single() as ScheduleCommand.Update).schedule
+    assertEquals(
+      ScheduleTiming.Deadline(MinuteTimeDate(2026, 7, 5, 10, 0), "Asia/Shanghai"),
+      updated.timing,
+    )
   }
 
   @Test

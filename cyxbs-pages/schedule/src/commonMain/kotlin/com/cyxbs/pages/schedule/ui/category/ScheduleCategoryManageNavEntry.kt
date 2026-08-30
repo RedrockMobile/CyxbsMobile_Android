@@ -67,8 +67,8 @@ import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.repository.ScheduleSyncResult
 import com.cyxbs.pages.schedule.ui.dialog.ScheduleBottomSheet
 import com.cyxbs.pages.schedule.ui.dialog.ScheduleConfirmDialog
-import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoAccentColor
-import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoAddIconColor
+import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoAccentColor
+import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoAddIconColor
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable

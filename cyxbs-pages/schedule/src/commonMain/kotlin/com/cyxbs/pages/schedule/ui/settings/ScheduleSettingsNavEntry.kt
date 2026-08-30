@@ -45,7 +45,7 @@ import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.components.view.ui.ChooseDialogCompose
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2ApiService
 import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
-import com.cyxbs.pages.schedule.ui.todo.saveScheduleTodoPinnedIds
+import com.cyxbs.pages.schedule.ui.todo.main.saveScheduleTodoPinnedIds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable

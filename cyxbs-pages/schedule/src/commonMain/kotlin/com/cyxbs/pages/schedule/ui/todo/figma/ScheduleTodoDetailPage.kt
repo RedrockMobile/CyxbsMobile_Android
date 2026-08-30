@@ -37,68 +37,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.res.ConfigRes
-import com.cyxbs.components.navigation.AppNav
-import com.cyxbs.components.navigation.AppNavEntry
-import com.cyxbs.components.navigation.NAV_SCHEDULE_TODO_DETAIL
 import com.cyxbs.components.utils.compose.clickableNoIndicator
-import com.cyxbs.pages.schedule.api.ScheduleTodoDetailNavArgument
 import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.domain.repository.canSubmitScheduleMutation
+import com.cyxbs.pages.schedule.ui.dialog.ScheduleBottomSheet
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleModelState
 import com.cyxbs.pages.schedule.ui.edit.EditScope
 import com.cyxbs.pages.schedule.ui.edit.RepeatFreqOption
-import com.cyxbs.pages.schedule.ui.edit.rememberEditScheduleModelState
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleCalendarArea
-import com.cyxbs.pages.schedule.ui.dialog.ScheduleBottomSheet
-import com.cyxbs.pages.schedule.viewmodel.ScheduleMainViewModel
+import com.cyxbs.pages.schedule.ui.edit.rememberEditScheduleModelState
 import com.cyxbs.pages.schedule.ui.timeline.parseScheduleDateTime
-import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoItemUi
-import com.cyxbs.pages.schedule.ui.todo.projectScheduleTodo
-import com.cyxbs.pages.schedule.ui.todo.toDomainOccurrence
+import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoItemUi
+import com.cyxbs.pages.schedule.ui.todo.main.projectScheduleTodo
+import com.cyxbs.pages.schedule.ui.todo.main.toDomainOccurrence
+import com.cyxbs.pages.schedule.viewmodel.ScheduleMainViewModel
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.painterResource
 import kotlin.time.Clock
 
 /**
- * Figma 版待办详情的独立预览入口。
+ * Figma 版待办详情的数据装配层。
  *
- * 正式清单已改回共用 [com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog]；这里完整保留设计稿方案，
- * 便于后续单独比对或继续试验，但清单列表不会再导航到此页面。
- */
-@AppNav(route = NAV_SCHEDULE_TODO_DETAIL)
-class ScheduleTodoDetailNavEntry : AppNavEntry<ScheduleTodoDetailNavArgument>() {
-
-  /** 待办详情包含真实账号数据与修改能力，因此必须经过登录门禁。 */
-  override fun isNeedLogin(argument: ScheduleTodoDetailNavArgument): Boolean = true
-
-  /** 同一待办实例复用导航内容，避免重复入栈时创建两份详情观察。 */
-  override fun getContentKey(argument: ScheduleTodoDetailNavArgument): String =
-    "schedule_todo_detail_${argument.scheduleId}_${argument.recurrenceId}"
-
-  /** 创建详情页 ViewModel，并由导航参数定位实时仓库快照中的精确实例。 */
-  @Composable
-  override fun Content(argument: ScheduleTodoDetailNavArgument) {
-    val viewModel = viewModel { ScheduleMainViewModel() }
-    ScheduleTodoDetailRoute(
-      scheduleId = argument.scheduleId,
-      recurrenceId = argument.recurrenceId,
-      viewModel = viewModel,
-      onBack = argument::popBackStack,
-    )
-  }
-}
-
-/**
- * 独立详情路由的数据装配层。
- *
- * 导航参数只携带 identity；页面初始化后从共享仓库重新投影最新值，保存成功则弹出当前详情路由。
+ * 正式主页共用 [com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog]；这里保留设计稿方案供后续比对，
+ * 不再注册独立导航入口。调用方传入 identity 后从共享仓库重新投影最新值。
  */
 @Composable
 internal fun ScheduleTodoDetailRoute(

@@ -236,49 +236,13 @@ object fields:
 
 ## :cyxbs-pages:schedule
 
-### schedule/category/manage
+### schedule/category
 
 - entry: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavEntry`
 - argument: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavArgument`
 
 ```text
-deeplink: cyxbs://schedule/category/manage
-```
-
-### schedule/edit
-
-- entry: `com.cyxbs.pages.schedule.ui.edit.EditScheduleDialogPreview`
-- argument: `com.cyxbs.pages.schedule.ui.edit.EditScheduleDialogNavArgument`
-
-```text
-deeplink: cyxbs://schedule/edit
-```
-
-### schedule/desktop-preview
-
-- entry: `com.cyxbs.pages.schedule.ui.main.ScheduleDesktopPreviewNavEntry`
-- argument: `com.cyxbs.pages.schedule.ui.main.ScheduleDesktopPreviewNavArgument`
-
-```text
-deeplink: cyxbs://schedule/desktop-preview
-```
-
-### schedule/todo-preview/detail
-
-- entry: `com.cyxbs.pages.schedule.ui.main.ScheduleDesktopTodoDetailPreviewNavEntry`
-- argument: `com.cyxbs.pages.schedule.ui.main.ScheduleDesktopTodoDetailPreviewNavArgument`
-
-```text
-deeplink: cyxbs://schedule/todo-preview/detail?scheduleId={ScheduleId}&recurrenceId=[RecurrenceId?]
-```
-
-### schedule/todo-preview
-
-- entry: `com.cyxbs.pages.schedule.ui.main.ScheduleDesktopTodoPreviewNavEntry`
-- argument: `com.cyxbs.pages.schedule.ui.main.ScheduleDesktopTodoPreviewNavArgument`
-
-```text
-deeplink: cyxbs://schedule/todo-preview
+deeplink: cyxbs://schedule/category
 ```
 
 ### schedule
@@ -301,62 +265,31 @@ object fields:
   }
 ```
 
-### schedule_settings
+### schedule/preview
+
+- entry: `com.cyxbs.pages.schedule.ui.main.SchedulePreviewNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.main.SchedulePreviewNavArgument`
+
+```text
+deeplink: cyxbs://schedule/preview
+```
+
+### schedule/settings
 
 - entry: `com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavEntry`
 - argument: `com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument`
 
 ```text
-deeplink: cyxbs://schedule_settings
+deeplink: cyxbs://schedule/settings
 ```
 
 ### schedule/failures
 
-- entry: `com.cyxbs.pages.schedule.ui.todo.ScheduleFailureNavEntry`
-- argument: `com.cyxbs.pages.schedule.ui.todo.ScheduleFailureNavArgument`
+- entry: `com.cyxbs.pages.schedule.ui.todo.failure.ScheduleFailureNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.todo.failure.ScheduleFailureNavArgument`
 
 ```text
 deeplink: cyxbs://schedule/failures
-```
-
-### schedule/todo
-
-- entry: `com.cyxbs.pages.schedule.ui.todo.ScheduleTodoNavEntry`
-- argument: `com.cyxbs.pages.schedule.api.ScheduleTodoNavArgument`
-
-```text
-deeplink: cyxbs://schedule/todo?scheduleId=[ScheduleId?]&recurrenceId=[RecurrenceId?]
-object fields:
-  [scheduleId]: ScheduleId? {
-    value: String
-  }
-  [recurrenceId]: RecurrenceId? {
-    originalDateTime: MinuteTimeDate {
-      value: Int
-    }
-    timeZoneId: String?
-    allDay: Boolean
-  }
-```
-
-### schedule/todo/detail
-
-- entry: `com.cyxbs.pages.schedule.ui.todo.figma.ScheduleTodoDetailNavEntry`
-- argument: `com.cyxbs.pages.schedule.api.ScheduleTodoDetailNavArgument`
-
-```text
-deeplink: cyxbs://schedule/todo/detail?scheduleId={ScheduleId}&recurrenceId=[RecurrenceId?]
-object fields:
-  scheduleId: ScheduleId {
-    value: String
-  }
-  [recurrenceId]: RecurrenceId? {
-    originalDateTime: MinuteTimeDate {
-      value: Int
-    }
-    timeZoneId: String?
-    allDay: Boolean
-  }
 ```
 
 ## :cyxbs-pages:schoolcar

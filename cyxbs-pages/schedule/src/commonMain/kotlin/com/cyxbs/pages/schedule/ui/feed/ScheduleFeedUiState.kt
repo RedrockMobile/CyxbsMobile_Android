@@ -5,10 +5,10 @@ import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.repository.ScheduleSnapshot
-import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoItemUi
-import com.cyxbs.pages.schedule.ui.todo.formatScheduleTodoReminder
-import com.cyxbs.pages.schedule.ui.todo.projectScheduleTodo
-import com.cyxbs.pages.schedule.ui.todo.sortScheduleTodoPending
+import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoItemUi
+import com.cyxbs.pages.schedule.ui.todo.main.formatScheduleTodoReminder
+import com.cyxbs.pages.schedule.ui.todo.main.projectScheduleTodo
+import com.cyxbs.pages.schedule.ui.todo.main.sortScheduleTodoPending
 import kotlinx.datetime.TimeZone
 import kotlin.time.Instant
 

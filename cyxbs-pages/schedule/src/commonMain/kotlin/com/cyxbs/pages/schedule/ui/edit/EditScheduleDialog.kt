@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -75,33 +74,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.time.Date
-import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.components.config.time.SchoolCalendar
-import com.cyxbs.components.navigation.AppNav
-import com.cyxbs.components.navigation.AppNavArgument
-import com.cyxbs.components.navigation.AppNavEntry
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.compose.imePaddingTarget
 import com.cyxbs.components.utils.compose.plusDsl
 import com.cyxbs.components.utils.compose.rememberDerivedStateOfStructure
 import com.cyxbs.components.utils.extensions.toast
-import com.cyxbs.components.view.ui.Window
 import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.domain.model.CategoryId
-import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
-import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
-import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
-import com.cyxbs.pages.schedule.domain.model.ReminderId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
-import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrence
-import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
-import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.recurrence.SeriesSplitter
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
 import com.cyxbs.pages.schedule.ui.category.rememberScheduleCategoryCatalog
@@ -111,8 +97,8 @@ import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleCalendarArea
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleRecurrenceArea
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleRemindArea
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleTimeArea
-import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoCompletedIndicatorColor
-import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoPendingIndicatorColor
+import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoCompletedIndicatorColor
+import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoPendingIndicatorColor
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCalendar
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCategory
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoNotice
@@ -122,9 +108,7 @@ import com.cyxbs.pages.schedule.widget.rememberIcAddtodoTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import kotlin.math.abs
-import kotlin.time.Instant
 
 /**
  * 添加 / 查看 / 编辑日程的统一底部弹窗 —— **邮子清单与课表共用同一套**，外观对齐课表事务(affair)。
@@ -142,40 +126,6 @@ import kotlin.time.Instant
 
 /** 弹窗内容固定高度，对齐课表 item 弹窗（[com.cyxbs.pages.course.dialog] 的 280dp），两处观感一致。 */
 private val EditSheetHeight = 280.dp
-
-@Serializable
-object EditScheduleDialogNavArgument : AppNavArgument
-
-@AppNav(route = "schedule/edit")
-class EditScheduleDialogPreview : AppNavEntry<EditScheduleDialogNavArgument>() {
-  override fun isNeedLogin(argument: EditScheduleDialogNavArgument): Boolean {
-    return false
-  }
-
-  @Composable
-  override fun Content(argument: EditScheduleDialogNavArgument) {
-    Window(dismissOnBackPress = null) {
-      Box(modifier = Modifier.fillMaxSize()) {
-        EditScheduleDialog(
-          show = true,
-          editSchedule = previewSampleSchedule(),
-          recurrenceId = RecurrenceId(MinuteTimeDate(2026, 7, 4, 10, 0), "Asia/Shanghai", false),
-          onDismiss = {},
-          onConfirm = { _, _, _ -> }
-        )
-      }
-    }
-  }
-
-  private fun previewSampleSchedule() = Schedule(
-    id = ScheduleId("00000000-0000-7000-8000-000000000001"), revision = 0, title = "项目答辩",
-    description = "综合楼 503，记得带 U 盘", categoryId = null,
-    timing = ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 4, 10, 0), 90, "Asia/Shanghai"),
-    recurrence = RecurrenceRule(RecurrenceFrequency.WEEKLY, byWeekDays = setOf(IsoWeekDay.SATURDAY)),
-    reminder = ScheduleReminder(ReminderId("preview-reminder"), 10, ReminderChannel.DEVICE),
-    todoState = ScheduleTodoState.PENDING, createdAt = Instant.DISTANT_PAST, updatedAt = Instant.DISTANT_PAST,
-  )
-}
 
 @Composable
 fun EditScheduleDialog(
@@ -736,6 +686,8 @@ private fun InfoRow(
   val date = modelState.anchorDate
   val colors = LocalAppColors.current
   val placeholderColor = colors.tvLv2.copy(alpha = 0.4f)
+  // 未排期日程使用今天初始化日期选择器，但该日期尚未进入领域 timing，只能按占位态展示。
+  val hasEffectiveDate = modelState.effectiveTiming != ScheduleTiming.Unscheduled
   // 📅日期 第几周 周几
   val dateIcon = rememberIcAddtodoCalendar()
   val dateSegment = remember(
@@ -743,18 +695,23 @@ private fun InfoRow(
     editable,
     firstMonday,
     date,
+    hasEffectiveDate,
     dateIcon,
     onClickDate
   ) {
     InfoTextSegment(
       id = "date",
-      text = buildString {
-        append(formatInfoDate(date))
-        formatWeekOfTerm(firstMonday, date)?.let { append(' ').append(it) }
-        append(' ').append(formatWeekday(date))
+      text = if (hasEffectiveDate) {
+        buildString {
+          append(formatInfoDate(date))
+          formatWeekOfTerm(firstMonday, date)?.let { append(' ').append(it) }
+          append(' ').append(formatWeekday(date))
+        }
+      } else {
+        "未设置日期"
       },
       icon = dateIcon,
-      color = colors.tvLv2,
+      color = if (hasEffectiveDate) colors.tvLv2 else placeholderColor,
       onClick = if (editable) onClickDate else null,
     )
   }
@@ -763,16 +720,21 @@ private fun InfoRow(
   val timeSegment = remember(
     colors,
     editable,
+    modelState.isAllDay,
     modelState.startMinuteOfDay,
     modelState.endMinuteOfDay,
     placeholderColor,
     timeIcon,
     onClickTime
   ) {
-    val text = formatTimeRange(modelState.startMinuteOfDay, modelState.endMinuteOfDay)
+    val text = if (modelState.isAllDay) {
+      "全天"
+    } else {
+      formatTimeRange(modelState.startMinuteOfDay, modelState.endMinuteOfDay)
+    }
     InfoTextSegment(
       id = "time",
-      text = text ?: if (editable) "设置时间" else "未设置",
+      text = text ?: "未设置时间",
       icon = timeIcon,
       color = if (text == null) placeholderColor else colors.tvLv2,
       onClick = if (editable) onClickTime else null,

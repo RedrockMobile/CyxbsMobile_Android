@@ -1,4 +1,4 @@
-package com.cyxbs.pages.schedule.ui.todo
+package com.cyxbs.pages.schedule.ui.todo.main
 
 import com.cyxbs.components.config.serializable.defaultJson
 import com.cyxbs.components.config.sp.AccountSettings
