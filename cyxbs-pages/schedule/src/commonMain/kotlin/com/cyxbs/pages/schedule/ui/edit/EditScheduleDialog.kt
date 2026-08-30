@@ -526,7 +526,7 @@ private fun ScheduleContent(
     ScheduleUi.Show, ScheduleUi.Edit.Note -> Unit
     // 日期：下方就地变日历，点某天实时改写开始/结束的日期（周数随之重算）；← 返回
     ScheduleUi.Edit.Date -> EditScheduleCalendarArea(state = modelState)
-    // 时间段：下方变时分滚轮
+    // 时间：下方可切换全天、时间段或时间点；全天不展示时分滚轮。
     ScheduleUi.Edit.Time -> EditScheduleTimeArea(state = modelState)
     // 重复：内容较多，外层弹窗会增高；结束条件固定在底部，主体选择区内部滚动。
     ScheduleUi.Edit.Repeat -> EditScheduleRecurrenceArea(

@@ -54,6 +54,13 @@ internal enum class ScheduleTimeComponent {
   MINUTE,
 }
 
+/** 清单编辑器显式支持的三种时间形态。 */
+internal enum class ScheduleTimeEditMode {
+  ALL_DAY,
+  INTERVAL,
+  TIME_POINT,
+}
+
 /** 已满足同日时间段约束的起止分钟。 */
 internal data class ScheduleTimeInterval(
   val startMinuteOfDay: Int,
@@ -72,13 +79,22 @@ internal fun EditScheduleTimeArea(
 ) {
   val colors = LocalAppColors.current
   val now = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()) }
-  val startMin0 = state.startMinuteOfDay ?: (now.hour * 60 + now.minute)
-  val endMin0 = state.endMinuteOfDay ?: ((startMin0 + 60).coerceAtMost(23 * 60 + 59))
   // 时间点型：底层仍使用 Deadline 原子，但产品文案统一为“时间点”，不再暴露旧“截止”概念。
   val supportsTimePoint = state.kind == ScheduleKind.TODO
-  var deadlineOnly by remember {
-    mutableStateOf(supportsTimePoint && state.outputStartTime == null && state.outputEndTime != null)
+  var timeMode by remember(state) {
+    mutableStateOf(
+      when {
+        state.isAllDay -> ScheduleTimeEditMode.ALL_DAY
+        supportsTimePoint && state.outputStartTime == null && state.outputEndTime != null ->
+          ScheduleTimeEditMode.TIME_POINT
+        else -> ScheduleTimeEditMode.INTERVAL
+      }
+    )
   }
+  // 全天本身没有钟点；切回时间段/时间点时从当前时间开始，避免默认落到难以察觉的 00:00。
+  val startMin0 = state.startMinuteOfDay.takeUnless { state.isAllDay } ?: (now.hour * 60 + now.minute)
+  val endMin0 = state.endMinuteOfDay.takeUnless { state.isAllDay }
+    ?: ((startMin0 + 60).coerceAtMost(23 * 60 + 59))
 
   val startHour = remember { Animatable((startMin0 / 60).toFloat()) }
   val startMinute = remember { Animatable((startMin0 % 60).toFloat()) }
@@ -110,66 +126,73 @@ internal fun EditScheduleTimeArea(
   }
 
   Column(modifier = Modifier.fillMaxWidth()) {
-    // 时间段 / 时间点分段切换，两种选择分别无损映射到 Timed / Deadline。
+    // 清单支持全天、时间段与时间点；事务仍固定为时间段，不暴露不合法的时间类型。
     if (supportsTimePoint) {
-      ScheduleTimeTypeToggle(isInterval = !deadlineOnly, onChange = { interval ->
-        deadlineOnly = !interval
-        if (interval) {
-          // 切回时间段也属于显式操作，需要立即补足最短 30 分钟并同步滚轮位置。
-          coroutineScope.launch {
-            settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.MINUTE)
+      ScheduleTimeTypeToggle(mode = timeMode, onChange = { selectedMode ->
+        if (selectedMode != timeMode) {
+          timeMode = selectedMode
+          when (selectedMode) {
+            ScheduleTimeEditMode.ALL_DAY -> state.applyExplicitAllDaySelection()
+            ScheduleTimeEditMode.INTERVAL -> {
+              // 切回时间段也属于显式操作，需要立即补足最短 30 分钟并同步滚轮位置。
+              coroutineScope.launch {
+                settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.MINUTE)
+              }
+            }
+            ScheduleTimeEditMode.TIME_POINT -> state.applyExplicitTimeModeSelection(
+              interval = false,
+              startMinuteOfDay = startHour.value.roundToInt().coerceIn(0, 23) * 60 +
+                startMinute.value.roundToInt().coerceIn(0, 59),
+              endMinuteOfDay = endHour.value.roundToInt().coerceIn(0, 23) * 60 +
+                endMinute.value.roundToInt().coerceIn(0, 59),
+            )
           }
-        } else {
-          state.applyExplicitTimeModeSelection(
-            interval = false,
-            startMinuteOfDay = startHour.value.roundToInt().coerceIn(0, 23) * 60 +
-              startMinute.value.roundToInt().coerceIn(0, 59),
-            endMinuteOfDay = endHour.value.roundToInt().coerceIn(0, 23) * 60 +
-              endMinute.value.roundToInt().coerceIn(0, 59),
-          )
         }
       })
     }
-    // 去掉「完成」按钮后，滚轮整体下移一点。
-    Spacer(modifier = Modifier.height(12.dp))
-    Row(
-      modifier = Modifier.fillMaxWidth().height(100.dp),
-      horizontalArrangement = Arrangement.Center,
-      verticalAlignment = Alignment.CenterVertically,
-    ) {
-      if (deadlineOnly) {
-        // 时间点只有一个滚轮：居中、占一半宽度，避免背景铺满整行显得太宽。
-        WheelPair(hours, minutes, endHour, endMinute, modifier = Modifier.fillMaxWidth(0.5f))
-      } else {
-        WheelPair(
-          hours, minutes, startHour, startMinute,
-          modifier = Modifier.weight(1f),
-          onHourDragStopped = {
-            coroutineScope.launch {
-              settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.HOUR)
-            }
-          },
-          onMinuteDragStopped = {
-            coroutineScope.launch {
-              settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.MINUTE)
-            }
-          },
-        )
-        Text("—", modifier = Modifier.padding(horizontal = 8.dp), color = colors.tvLv2)
-        WheelPair(
-          hours, minutes, endHour, endMinute,
-          modifier = Modifier.weight(1f),
-          onHourDragStopped = {
-            coroutineScope.launch {
-              settleInterval(ScheduleTimeBoundary.END, ScheduleTimeComponent.HOUR)
-            }
-          },
-          onMinuteDragStopped = {
-            coroutineScope.launch {
-              settleInterval(ScheduleTimeBoundary.END, ScheduleTimeComponent.MINUTE)
-            }
-          },
-        )
+    // 全天没有钟点输入，选中后收起滚轮；日期继续由同一信息区的日历入口负责。
+    if (timeMode != ScheduleTimeEditMode.ALL_DAY) {
+      // 去掉「完成」按钮后，滚轮整体下移一点。
+      Spacer(modifier = Modifier.height(12.dp))
+      Row(
+        modifier = Modifier.fillMaxWidth().height(100.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        if (timeMode == ScheduleTimeEditMode.TIME_POINT) {
+          // 时间点只有一个滚轮：居中、占一半宽度，避免背景铺满整行显得太宽。
+          WheelPair(hours, minutes, endHour, endMinute, modifier = Modifier.fillMaxWidth(0.5f))
+        } else {
+          WheelPair(
+            hours, minutes, startHour, startMinute,
+            modifier = Modifier.weight(1f),
+            onHourDragStopped = {
+              coroutineScope.launch {
+                settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.HOUR)
+              }
+            },
+            onMinuteDragStopped = {
+              coroutineScope.launch {
+                settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.MINUTE)
+              }
+            },
+          )
+          Text("—", modifier = Modifier.padding(horizontal = 8.dp), color = colors.tvLv2)
+          WheelPair(
+            hours, minutes, endHour, endMinute,
+            modifier = Modifier.weight(1f),
+            onHourDragStopped = {
+              coroutineScope.launch {
+                settleInterval(ScheduleTimeBoundary.END, ScheduleTimeComponent.HOUR)
+              }
+            },
+            onMinuteDragStopped = {
+              coroutineScope.launch {
+                settleInterval(ScheduleTimeBoundary.END, ScheduleTimeComponent.MINUTE)
+              }
+            },
+          )
+        }
       }
     }
   }
@@ -188,8 +211,9 @@ internal fun EditScheduleTimeArea(
         firstEmission = false
         return@collect
       }
+      if (timeMode == ScheduleTimeEditMode.ALL_DAY) return@collect
       state.applyExplicitTimeModeSelection(
-        interval = !deadlineOnly,
+        interval = timeMode == ScheduleTimeEditMode.INTERVAL,
         startMinuteOfDay = startHour.value.roundToInt().coerceIn(0, 23) * 60 +
           startMinute.value.roundToInt().coerceIn(0, 59),
         endMinuteOfDay = endHour.value.roundToInt().coerceIn(0, 23) * 60 +
@@ -197,6 +221,16 @@ internal fun EditScheduleTimeArea(
       )
     }
   }
+}
+
+/** 将当前日期保留为单日全天，并清除小时语义；全天不扩展为跨日范围。 */
+internal fun EditScheduleModelState.applyExplicitAllDaySelection() {
+  val date = anchorDate
+  val midnight = formatScheduleDateTime(date.year, date.monthNumber, date.dayOfMonth, 0, 0)
+  isAllDay = true
+  isInterval = false
+  startTime = midnight
+  endTime = midnight
 }
 
 /**
@@ -262,13 +296,24 @@ internal fun EditScheduleModelState.applyExplicitTimeModeSelection(
   }
 }
 
-/** 时间段 / 时间点分段切换（紧凑胶囊，左对齐）。 */
+/** 全天 / 时间段 / 时间点分段切换（紧凑胶囊，左对齐）。 */
 @Composable
-private fun ScheduleTimeTypeToggle(isInterval: Boolean, onChange: (Boolean) -> Unit) {
+private fun ScheduleTimeTypeToggle(
+  mode: ScheduleTimeEditMode,
+  onChange: (ScheduleTimeEditMode) -> Unit,
+) {
   Row {
-    ToggleChip("时间段", selected = isInterval) { onChange(true) }
+    ToggleChip("时间段", selected = mode == ScheduleTimeEditMode.INTERVAL) {
+      onChange(ScheduleTimeEditMode.INTERVAL)
+    }
     Spacer(modifier = Modifier.width(8.dp))
-    ToggleChip("时间点", selected = !isInterval) { onChange(false) }
+    ToggleChip("时间点", selected = mode == ScheduleTimeEditMode.TIME_POINT) {
+      onChange(ScheduleTimeEditMode.TIME_POINT)
+    }
+    Spacer(modifier = Modifier.width(8.dp))
+    ToggleChip("全天", selected = mode == ScheduleTimeEditMode.ALL_DAY) {
+      onChange(ScheduleTimeEditMode.ALL_DAY)
+    }
   }
 }
 

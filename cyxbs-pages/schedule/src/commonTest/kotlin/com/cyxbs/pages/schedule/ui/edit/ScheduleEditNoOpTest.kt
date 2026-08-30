@@ -9,12 +9,14 @@ import com.cyxbs.pages.schedule.domain.repository.*
 import com.cyxbs.pages.schedule.ui.edit.area.ScheduleTimeBoundary
 import com.cyxbs.pages.schedule.ui.edit.area.ScheduleTimeComponent
 import com.cyxbs.pages.schedule.ui.edit.area.ScheduleTimeInterval
+import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitAllDaySelection
 import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitDateSelection
 import com.cyxbs.pages.schedule.ui.edit.area.adjustScheduleTimeInterval
 import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitTimeModeSelection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.TimeZone
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -457,6 +459,38 @@ class ScheduleEditNoOpTest {
     state.applyExplicitDateSelection(Date(2026, 7, 6))
 
     assertEquals(ScheduleTiming.AllDay(Date(2026, 7, 6)), state.effectiveTiming)
+  }
+
+  /** 全天按钮保留当前日程日期，并把时间段原子收窄为单日全天。 */
+  @Test
+  fun explicitAllDaySelectionKeepsCurrentDate() {
+    val state = EditScheduleModelState(parentSchedule())
+    val originalDate = state.anchorDate
+
+    state.applyExplicitAllDaySelection()
+
+    assertEquals(ScheduleTiming.AllDay(originalDate), state.effectiveTiming)
+    assertTrue(state.isAllDay)
+    assertTrue(!state.isInterval)
+  }
+
+  /** 从全天切回时间点时继续使用原日期，且不残留全天标记。 */
+  @Test
+  fun explicitTimePointSelectionLeavesAllDayMode() {
+    val date = Date(2026, 7, 8)
+    val state = EditScheduleModelState(parentSchedule().copy(timing = ScheduleTiming.AllDay(date)))
+
+    state.applyExplicitTimeModeSelection(
+      interval = false,
+      startMinuteOfDay = 9 * 60,
+      endMinuteOfDay = 10 * 60 + 15,
+    )
+
+    assertEquals(
+      ScheduleTiming.Deadline(MinuteTimeDate(date, 10, 15), TimeZone.currentSystemDefault().id),
+      state.effectiveTiming,
+    )
+    assertTrue(!state.isAllDay)
   }
 
   /** 迁移得到的无日期清单从 occurrence 入口补充时间时，应直接更新非重复系列而不是计算系列偏移。 */

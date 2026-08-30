@@ -103,8 +103,8 @@ private fun TimingInput.diagnosticSummary(timeZone: TimeZone): String = when (ki
   TimingKind.TIMED ->
     "TIMED ${startAt?.localDateTime(timeZone)}..${endAt?.localDateTime(timeZone)}"
   TimingKind.DEADLINE -> "DEADLINE ${dueAt?.localDateTime(timeZone)}"
-  TimingKind.ALL_DAY ->
-    "ALL_DAY ${startAt?.localDateTime(timeZone)}..${endAt?.localDateTime(timeZone)}"
+  // 全天协议只携带 UTC 午夜日期槽，不能读取 TIMED 专用的 startAt/endAt。
+  TimingKind.ALL_DAY -> "ALL_DAY ${date?.localDateTime(TimeZone.UTC)?.date}"
   TimingKind.UNSCHEDULED -> "UNSCHEDULED"
 }
 
