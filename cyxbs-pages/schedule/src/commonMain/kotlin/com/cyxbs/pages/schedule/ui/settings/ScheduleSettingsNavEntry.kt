@@ -13,25 +13,43 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.config.compose.theme.LocalAppColors
+import com.cyxbs.components.config.isDebug
+import com.cyxbs.components.config.res.ConfigRes
+import com.cyxbs.components.config.service.impl
+import com.cyxbs.components.config.sp.AccountSettings
 import com.cyxbs.components.navigation.AppNav
 import com.cyxbs.components.navigation.AppNavArgument
 import com.cyxbs.components.navigation.AppNavEntry
 import com.cyxbs.components.navigation.NAV_SCHEDULE_SETTINGS
+import com.cyxbs.components.utils.compose.clickableNoIndicator
+import com.cyxbs.components.utils.extensions.toast
+import com.cyxbs.components.view.ui.ChooseDialogCompose
+import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2ApiService
+import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.ui.todo.saveScheduleTodoPinnedIds
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.painterResource
 
 /** 邮子清单设置页的无参数导航身份。 */
 @Serializable
@@ -58,6 +76,52 @@ class ScheduleSettingsNavEntry : AppNavEntry<ScheduleSettingsNavArgument>() {
 @Composable
 private fun ScheduleSettingsPage(onBack: () -> Unit) {
   val colors = LocalAppColors.current
+  val accountService = remember { IAccountService::class.impl() }
+  val api = remember { ScheduleV2ApiService::class.impl() }
+  val repository = remember { ScheduleRepositoryProvider.repository }
+  val coroutineScope = rememberCoroutineScope()
+  val showClearConfirmation = remember { mutableStateOf(false) }
+  var clearConfirmationStep by remember { mutableStateOf(1) }
+  var isClearing by remember { mutableStateOf(false) }
+  var clearResultMessage by remember { mutableStateOf<String?>(null) }
+
+  /** 使用发起操作时冻结的账号会话清空服务端与本地数据；切号后的响应不会误清新账号。 */
+  fun clearCurrentAccountSchedules() {
+    val expectedSession = accountService.session.value
+    val expectedAccountId = expectedSession.accountId
+    if (expectedAccountId == null) {
+      toast("当前没有可清空的登录账号")
+      return
+    }
+    isClearing = true
+    clearResultMessage = null
+    coroutineScope.launch {
+      var remoteCleared = false
+      try {
+        api.clearAllSchedules(expectedSession).throwApiExceptionIfFail()
+        remoteCleared = true
+        if (accountService.session.value == expectedSession) {
+          repository.clearLocalAccountData(expectedAccountId)
+          saveScheduleTodoPinnedIds(AccountSettings.get(expectedAccountId), emptyList())
+          clearResultMessage = "当前账号的服务端与本地日程已清空"
+          toast("当前账号全部日程已清空")
+        }
+      } catch (throwable: CancellationException) {
+        throw throwable
+      } catch (throwable: Throwable) {
+        if (accountService.session.value == expectedSession) {
+          clearResultMessage = if (remoteCleared) {
+            "服务端已清空，但本地清理失败：${throwable.message ?: "未知错误"}"
+          } else {
+            "清空失败：${throwable.message ?: "未知错误"}"
+          }
+        }
+      } finally {
+        if (accountService.session.value == expectedSession) isClearing = false
+      }
+    }
+  }
+
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -65,12 +129,25 @@ private fun ScheduleSettingsPage(onBack: () -> Unit) {
       .statusBarsPadding()
       .navigationBarsPadding(),
   ) {
-    Box(Modifier.fillMaxWidth().height(56.dp)) {
-      IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(50.dp)
+        .padding(top = 13.dp, start = 16.dp, end = 16.dp),
+    ) {
+      Box(
+        modifier = Modifier
+          .width(22.dp)
+          .height(37.dp)
+          .align(Alignment.CenterStart)
+          .clickableNoIndicator(onClick = onBack),
+        contentAlignment = Alignment.CenterStart,
+      ) {
         Icon(
-          imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+          painter = painterResource(ConfigRes.configIcBack()),
           contentDescription = "返回",
           tint = colors.tvLv1,
+          modifier = Modifier.width(9.dp).height(19.dp),
         )
       }
       Text(
@@ -93,6 +170,74 @@ private fun ScheduleSettingsPage(onBack: () -> Unit) {
         enabled = false,
         onCheckedChange = {},
       )
+      if (isDebug()) {
+        ScheduleSettingActionRow(
+          title = "清空当前账号全部日程",
+          summary = if (isClearing) "正在清空服务端与本地数据…" else "测试工具；操作前需要连续确认三次",
+          enabled = !isClearing,
+          danger = true,
+          onClick = {
+            clearConfirmationStep = 1
+            showClearConfirmation.value = true
+          },
+        )
+        clearResultMessage?.let { message ->
+          Text(
+            text = message,
+            color = if (message.startsWith("清空失败")) MaterialTheme.colors.error else colors.tvLv2,
+            fontSize = 13.sp,
+            modifier = Modifier.padding(horizontal = 12.dp),
+          )
+        }
+      }
+    }
+  }
+
+  if (isDebug()) {
+    ChooseDialogCompose(
+      showState = showClearConfirmation,
+      positiveBtnText = if (clearConfirmationStep < 3) "继续" else "确认清空",
+      negativeBtnText = "取消",
+      onDismissRequest = {
+        showClearConfirmation.value = false
+        clearConfirmationStep = 1
+      },
+      onClickPositiveBtn = {
+        if (clearConfirmationStep < 3) {
+          clearConfirmationStep += 1
+        } else {
+          showClearConfirmation.value = false
+          clearConfirmationStep = 1
+          clearCurrentAccountSchedules()
+        }
+      },
+      onClickNegativeBtn = {
+        showClearConfirmation.value = false
+        clearConfirmationStep = 1
+      },
+    ) {
+      Column(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 28.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        Text(
+          text = "第 $clearConfirmationStep 次确认",
+          color = colors.tvLv1,
+          fontSize = 18.sp,
+          fontWeight = FontWeight.Bold,
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(
+          text = when (clearConfirmationStep) {
+            1 -> "这会删除当前登录账号在服务端保存的全部日程、分组和单次修改。"
+            2 -> "当前设备保存的日程、临时提交和失败记录也会一起清除，操作后无法恢复。"
+            else -> "最后确认：你确定要清空当前账号的全部日程吗？"
+          },
+          color = colors.tvLv2,
+          fontSize = 15.sp,
+          textAlign = TextAlign.Center,
+        )
+      }
     }
   }
 }

@@ -154,6 +154,22 @@ class AccountSwitchingScheduleRepository internal constructor(
   }
 
   /**
+   * 只清理调用开始时仍与 [expectedAccountId] 一致的 delegate。
+   *
+   * 设置页的服务端请求可能跨越一次账号切换，因此必须在 façade 内完成账号校验，不能误删随后登录账号的数据。
+   */
+  override suspend fun clearLocalAccountData(expectedAccountId: String) {
+    val binding = currentBinding() ?: throw ScheduleRepositoryAccountRequiredException()
+    check(binding.accountId == expectedAccountId) { "Schedule repository account changed before local clear" }
+    binding.initializationJob?.join()
+    check(isCurrent(binding, expectedAccountId)) { "Schedule repository account changed before local clear" }
+    binding.delegate.clearLocalAccountData(expectedAccountId)
+    if (isCurrent(binding, expectedAccountId)) {
+      publishSnapshot(binding, binding.delegate.snapshot.value)
+    }
+  }
+
+  /**
    * 把命令直接交给调用开始时捕获的当前 delegate。
    *
    * 切号不会把已进入旧 delegate 的调用重定向到新账号；其快照与事件仍受 binding 发布门禁隔离。

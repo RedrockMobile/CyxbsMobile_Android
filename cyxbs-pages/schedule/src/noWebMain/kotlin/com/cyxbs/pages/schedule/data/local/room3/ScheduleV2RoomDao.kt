@@ -127,6 +127,10 @@ abstract class ScheduleV2RoomDao {
   @Query("SELECT local_revision_counter FROM schedule_v2_account_metadata WHERE account_id = :accountId")
   protected abstract suspend fun readLocalRevisionCounter(accountId: String): Long
 
+  /** 物理移除账号的本地 revision 元数据；只允许在完整账号清理时调用。 */
+  @Query("DELETE FROM schedule_v2_account_metadata WHERE account_id = :accountId")
+  abstract suspend fun deleteAccountMetadata(accountId: String): Int
+
   /**
    * 原子分配单调递增的 localRevision。
    *

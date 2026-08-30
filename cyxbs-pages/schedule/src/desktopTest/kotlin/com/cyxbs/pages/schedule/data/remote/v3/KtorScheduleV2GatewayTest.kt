@@ -42,7 +42,7 @@ class KtorScheduleV2GatewayTest {
     assertEquals("internal", result.info)
   }
 
-  /** 只实现本测试使用的 Sync；其余 daily 方法若误调用立即失败。 */
+  /** 只实现本测试使用的 Sync；其余 mutation 与账号清空方法若误调用立即失败。 */
   private class FakeApi(
     private val syncResponse: ApiWrapper<SyncResponse>,
   ) : ScheduleV2ApiService {
@@ -70,6 +70,10 @@ class KtorScheduleV2GatewayTest {
       input: MutationRequest,
       session: AccountSession,
     ): ApiWrapper<MutationResponse> = error("unexpected delete")
+
+    override suspend fun clearAllSchedules(
+      session: AccountSession,
+    ): ApiWrapper<Boolean> = error("unexpected account clear")
   }
 
   private fun emptyRequest(requestId: String) = SyncRequest(

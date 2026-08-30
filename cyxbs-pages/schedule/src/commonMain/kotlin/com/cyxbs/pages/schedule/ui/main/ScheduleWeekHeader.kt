@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -48,6 +50,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param clickDate 日历当前选中的日期（随翻页变化）。
  * @param onBack 返回上一页。
  * @param onBackToday 跳回今天（清除日历翻页）。
+ * @param onTodoList 切换到同一数据源的清单列表页。
  * @param onSettings 打开邮子清单设置页。
  */
 @Composable
@@ -55,6 +58,7 @@ fun ScheduleWeekHeader(
   clickDate: Date,
   onBack: () -> Unit,
   onBackToday: () -> Unit,
+  onTodoList: () -> Unit,
   onSettings: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -87,14 +91,21 @@ fun ScheduleWeekHeader(
       .background(colors.bottomBg)
       .statusBarsPadding()
       .height(64.dp)
-      .padding(horizontal = 4.dp),
+      .padding(horizontal = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    IconButton(onClick = onBack) {
+    Box(
+      modifier = Modifier
+        .width(22.dp)
+        .height(64.dp)
+        .clickableNoIndicator(onClick = onBack),
+      contentAlignment = Alignment.CenterStart,
+    ) {
       Icon(
         painter = painterResource(ConfigRes.configIcBack()),
         contentDescription = "返回",
         tint = colors.tvLv1,
+        modifier = Modifier.width(9.dp).height(19.dp),
       )
     }
     Column(
@@ -142,6 +153,13 @@ fun ScheduleWeekHeader(
           color = MaterialTheme.colors.onPrimary,
         )
       }
+    }
+    IconButton(onClick = onTodoList) {
+      Icon(
+        imageVector = Icons.AutoMirrored.Filled.List,
+        contentDescription = "切换到清单",
+        tint = colors.tvLv1,
+      )
     }
     IconButton(onClick = onSettings) {
       Icon(

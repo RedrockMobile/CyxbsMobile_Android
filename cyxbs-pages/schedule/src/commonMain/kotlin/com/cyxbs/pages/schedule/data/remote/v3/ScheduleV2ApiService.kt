@@ -50,4 +50,14 @@ interface ScheduleV2ApiService {
     @Body input: MutationRequest,
     @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
   ): ApiWrapper<MutationResponse>
+
+  /**
+   * 物理清空当前认证账号的全部 Schedule v2 数据。
+   *
+   * 接口不接受账号参数，服务端只能使用 token 对应的 owner；调用方必须在 UI 层完成三次明确确认。
+   */
+  @HTTP(method = "DELETE", path = "magipoke-todo/v2/schedules/all", hasBody = false)
+  suspend fun clearAllSchedules(
+    @Tag(EXPECTED_ACCOUNT_SESSION_ATTRIBUTE_NAME) session: AccountSession,
+  ): ApiWrapper<Boolean>
 }

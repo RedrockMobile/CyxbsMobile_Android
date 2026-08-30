@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -15,7 +16,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,6 +42,7 @@ import com.cyxbs.components.view.calendar.layout.createCalendarContentOffsetMeas
 import com.cyxbs.components.view.calendar.state.rememberCalendarState
 import com.cyxbs.components.view.ui.Window
 import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
+import com.cyxbs.pages.schedule.api.ScheduleTodoNavArgument
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrence
@@ -54,6 +56,8 @@ import com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument
 import com.cyxbs.pages.schedule.ui.timeline.HourHeight
 import com.cyxbs.pages.schedule.ui.timeline.ScheduleTimelinePane
 import com.cyxbs.pages.schedule.ui.timeline.timelineSchedulesForDate
+import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoAccentColor
+import com.cyxbs.pages.schedule.ui.todo.ScheduleTodoAddIconColor
 import com.cyxbs.pages.schedule.viewmodel.ScheduleMainViewModel
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -196,6 +200,7 @@ fun SchedulePage(
         clickDate = clickDate,
         onBack = { argument.popBackStack() },
         onBackToday = { calendarState.updateClickDate(TodayNoEffect) },
+        onTodoList = { ScheduleTodoNavArgument().navigate() },
         onSettings = { ScheduleSettingsNavArgument.navigate() },
       )
 
@@ -230,16 +235,22 @@ fun SchedulePage(
       FloatingActionButton(
         modifier = Modifier
           .align(Alignment.BottomEnd)
-          .padding(end = 24.dp, bottom = 36.dp),
+          .padding(end = 26.dp, bottom = 54.dp)
+          .size(50.dp),
         onClick = {
           editingSchedule = null
           editingOccurrence = null
           editingRecurrenceId = null
           showEdit = true
         },
-        backgroundColor = colors.positive,
+        backgroundColor = ScheduleTodoAccentColor,
       ) {
-        Icon(Icons.Default.Add, contentDescription = "添加日程", tint = MaterialTheme.colors.onPrimary)
+        Icon(
+          imageVector = Icons.Rounded.Add,
+          contentDescription = "添加日程",
+          tint = ScheduleTodoAddIconColor,
+          modifier = Modifier.size(31.dp),
+        )
       }
     }
   }

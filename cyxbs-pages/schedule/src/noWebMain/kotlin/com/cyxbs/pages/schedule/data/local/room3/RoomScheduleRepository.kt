@@ -176,6 +176,30 @@ internal class RoomScheduleRepository(
   }
 
   /**
+   * 清空当前账号在 Room 与 Settings 中保存的日程事实，并立即发布空快照。
+   *
+   * 调用方必须先成功清空服务端；这里不会再发网络请求。操作与普通本地命令共用 [mutex]，避免并发修改穿插，
+   * Room 三类状态与 revision 元数据则由同一个数据库事务删除。删除事件携带清理前全部 Schedule ID，使系统日历
+   * 投影可以移除已经写入的事件。
+   */
+  override suspend fun clearLocalAccountData(expectedAccountId: String) {
+    check(expectedAccountId == accountId) { "Cannot clear another account from RoomScheduleRepository" }
+    check(initialized) { "RoomScheduleRepository must be initialized before local clear" }
+    val removedScheduleIds = mutex.withLock {
+      val before = readCurrentState()
+      val ids = before.schedules.mapTo(linkedSetOf()) { ScheduleId(it.identity.id) }
+      stateStore.clearAccountState(accountId)
+      failureRecords.clear(accountId)
+      lastRemoteError = null
+      publishOrThrow(ScheduleV2CommonAccountState(accountId, emptyList(), emptyList(), emptyList()))
+      ids
+    }
+    if (removedScheduleIds.isNotEmpty()) {
+      changes.emit(ScheduleCalendarChange.SchedulesCommitted(accountId, removedScheduleIds))
+    }
+  }
+
+  /**
    * 本地命令先分配纯本地 revision、归约并一次替换完整 state；随后把本次 pending 及其 Schedule 关系闭包
    * 按逐资源请求立即提交。
    *

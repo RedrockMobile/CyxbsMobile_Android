@@ -62,6 +62,9 @@ internal interface ScheduleFailureRecordSink {
 
   /** 服务端确认成功或用户在本地删除日程后，删除对应 Schedule 的失败记录。 */
   fun remove(accountId: String, scheduleIds: Set<String>)
+
+  /** 明确清空账号时删除其全部失败记录，包括当前内存状态与 Settings 分块。 */
+  fun clear(accountId: String)
 }
 
 /**
@@ -127,7 +130,7 @@ internal class SettingsScheduleFailureRecordStore(
   }
 
   /** 测试和明确账号清理使用；正常成功链路应调用 [remove]。 */
-  internal fun clear(accountId: String) {
+  override fun clear(accountId: String) {
     synchronized(lock) {
       persistLocked(accountId, emptyList())
       stateLocked(accountId).value = emptyList()

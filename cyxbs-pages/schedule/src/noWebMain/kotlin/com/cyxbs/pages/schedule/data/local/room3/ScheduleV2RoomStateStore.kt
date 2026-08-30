@@ -74,6 +74,21 @@ internal class ScheduleV2RoomStateStore(
   suspend fun allocateLocalRevision(accountId: String): Long =
     database.withWriteTransaction { dao.allocateNextLocalRevision(accountId) }
 
+  /**
+   * 在一个事务内物理清理账号的全部 Schedule v2 Room 状态。
+   *
+   * Override 先于 Schedule 删除，随后删除 Category 和纯本地 revision 元数据。该操作不影响其他账号，也不重置
+   * AccountSettings 中的旧数据迁移版本；失败记录由 repository 在同一维护流程中单独清理。
+   */
+  suspend fun clearAccountState(accountId: String) {
+    database.withWriteTransaction {
+      dao.deleteOccurrenceOverrideStates(accountId)
+      dao.deleteScheduleStates(accountId)
+      dao.deleteCategoryStates(accountId)
+      dao.deleteAccountMetadata(accountId)
+    }
+  }
+
   /** 防止一次事务把其他账号的 state 误写入当前账号分区。 */
   private fun requireAccount(
     accountId: String,

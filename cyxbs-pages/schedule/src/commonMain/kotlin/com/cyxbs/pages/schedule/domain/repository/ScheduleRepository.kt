@@ -248,6 +248,15 @@ interface ScheduleRepository {
   suspend fun initialize()
 
   /**
+   * 物理清理 [expectedAccountId] 在当前设备保存的日程状态。
+   *
+   * 该能力只供“清空账号全部日程”等已经完成服务端删除的维护入口使用，不能替代正常的逐条删除命令。实现必须
+   * 校验当前绑定账号，清除本地业务状态、临时提交和失败记录，并立即发布空快照；没有本地持久化的平台可保持
+   * 默认空实现。旧数据迁移版本不属于日程业务状态，不应在这里重置。
+   */
+  suspend fun clearLocalAccountData(expectedAccountId: String) = Unit
+
+  /**
    * 应用一个命令。
    *
    * 编辑命令须原子提交本地业务事实与至多一个 typed pending；[ScheduleCommand.RequestSync] 提交当前 confirmed+pending

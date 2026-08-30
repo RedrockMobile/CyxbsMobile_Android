@@ -129,6 +129,54 @@ class ScheduleV2RoomRepositoryDesktopTest {
     }
   }
 
+  /** 账号清空会同时删除 Room 全状态、revision 元数据、失败记录并发布空快照。 */
+  @Test
+  fun clearLocalAccountDataRemovesAllLocalState() = runTest {
+    withRepositoryAndFailures { repository, _, database, failureRecords ->
+      repository.initialize()
+      val source = scheduleInput("待清空")
+      repository.execute(ScheduleCommand.Create(schedule("待清空")))
+      seedRecurringScheduleAndOverride(database)
+      failureRecords.record(
+        ACCOUNT,
+        listOf(
+          ScheduleFailureRecord(
+            scheduleId = source.id,
+            failedAt = 100L,
+            operation = ScheduleFailureOperation.CREATE,
+            reasonCode = "TEST",
+            message = "测试失败",
+            sourceSchedule = source,
+            sourceRequest = MutationRequest(
+              requestId = "clear-local-test",
+              categories = CategoryMutationRequest(emptyList(), emptyList()),
+              schedules = ScheduleMutationRequest(listOf(source), emptyList()),
+              occurrenceOverrides = OccurrenceOverrideMutationRequest(emptyList(), emptyList()),
+            ),
+          ),
+        ),
+      )
+
+      val stateStore = ScheduleV2RoomStateStore(database)
+      val stateBeforeClear = stateStore.readAccountState(ACCOUNT)
+      assertTrue(stateBeforeClear.categories.isNotEmpty())
+      assertTrue(stateBeforeClear.schedules.isNotEmpty())
+      assertTrue(stateBeforeClear.occurrenceOverrides.isNotEmpty())
+      assertTrue(failureRecords.observe(ACCOUNT).value.isNotEmpty())
+
+      repository.clearLocalAccountData(ACCOUNT)
+
+      val state = stateStore.readAccountState(ACCOUNT)
+      assertTrue(state.categories.isEmpty())
+      assertTrue(state.schedules.isEmpty())
+      assertTrue(state.occurrenceOverrides.isEmpty())
+      assertTrue(repository.snapshot.value.categories.isEmpty())
+      assertTrue(repository.snapshot.value.schedules.isEmpty())
+      assertTrue(failureRecords.observe(ACCOUNT).value.isEmpty())
+      assertEquals(1L, stateStore.allocateLocalRevision(ACCOUNT))
+    }
+  }
+
   /** 未分组日程必须经过 Room、日常请求和 canonical 回包完整往返，不能停在 LOCAL rejected。 */
   @Test
   fun uncategorizedCreateIsSentAndRoundTripsThroughRoom() = runTest {
@@ -597,6 +645,10 @@ class ScheduleV2RoomRepositoryDesktopTest {
     override fun remove(accountId: String, scheduleIds: Set<String>) {
       val state = records.getOrPut(accountId) { MutableStateFlow(emptyList()) }
       state.value = state.value.filterNot { it.scheduleId in scheduleIds }
+    }
+
+    override fun clear(accountId: String) {
+      records.getOrPut(accountId) { MutableStateFlow(emptyList()) }.value = emptyList()
     }
   }
 

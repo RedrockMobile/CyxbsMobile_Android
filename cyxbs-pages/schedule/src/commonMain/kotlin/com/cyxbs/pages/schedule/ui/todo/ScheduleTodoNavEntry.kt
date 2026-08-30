@@ -12,7 +12,8 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,10 +45,11 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -91,6 +93,7 @@ import com.cyxbs.components.navigation.NAV_SCHEDULE_TODO
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.components.view.ui.Window
+import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
 import com.cyxbs.pages.schedule.api.ScheduleTodoNavArgument
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
 import com.cyxbs.pages.schedule.domain.model.CategoryId
@@ -108,7 +111,9 @@ import com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavArgument
 import com.cyxbs.pages.schedule.ui.category.mergeScheduleCategories
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog
 import com.cyxbs.pages.schedule.ui.edit.EditScope
+import com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument
 import com.cyxbs.pages.schedule.viewmodel.ScheduleMainViewModel
+import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCategory
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoTime
 import cyxbsmobile.cyxbs_pages.schedule.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.schedule.generated.resources.schedule_ic_todo_empty_completed
@@ -347,13 +352,12 @@ fun ScheduleTodoPage(
     Column(modifier = Modifier.fillMaxSize()) {
       ScheduleTodoHeader(
         manageMode = manageMode,
-        editorEnabled = editorEnabled,
         failureCount = failureRecords.size,
         onBack = onBack,
         onFailures = { ScheduleFailureNavArgument.navigate() },
-        onManage = {
-          if (manageMode) viewModel.exitManageMode() else viewModel.enterManageMode()
-        },
+        onTimeline = { ScheduleMainNavArgument().navigate() },
+        onSettings = { ScheduleSettingsNavArgument.navigate() },
+        onManageDone = viewModel::exitManageMode,
       )
       ScheduleTodoSyncStatus(snapshot.status, viewModel.mutationMode)
       ScheduleTodoCategoryFilterBar(
@@ -409,6 +413,12 @@ fun ScheduleTodoPage(
               manageMode = manageMode,
               selected = item.schedule.id in selectedIds,
               onSelect = { viewModel.toggleSelect(item.schedule.id) },
+              onLongPress = {
+                if (editorEnabled && !manageMode) {
+                  viewModel.enterManageMode()
+                  viewModel.toggleSelect(item.schedule.id)
+                }
+              },
               onOpen = {
                 showCreateEditor = false
                 editingIdentity = item.schedule.id to item.occurrence.recurrenceId
@@ -457,6 +467,12 @@ fun ScheduleTodoPage(
               manageMode = manageMode,
               selected = item.schedule.id in selectedIds,
               onSelect = { viewModel.toggleSelect(item.schedule.id) },
+              onLongPress = {
+                if (editorEnabled && !manageMode) {
+                  viewModel.enterManageMode()
+                  viewModel.toggleSelect(item.schedule.id)
+                }
+              },
               onOpen = {
                 showCreateEditor = false
                 editingIdentity = item.schedule.id to item.occurrence.recurrenceId
@@ -615,6 +631,7 @@ private fun ScheduleTodoCategoryFilterBar(
   onManageCategories: () -> Unit,
 ) {
   val colors = LocalAppColors.current
+  val categoryIcon = rememberIcAddtodoCategory()
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -667,15 +684,27 @@ private fun ScheduleTodoCategoryFilterBar(
         }
       }
     }
-    IconButton(
-      onClick = onManageCategories,
-      modifier = Modifier.padding(top = 10.dp, end = 8.dp, bottom = 7.dp).size(40.dp),
+    Row(
+      modifier = Modifier
+        .padding(top = 10.dp, end = 12.dp, bottom = 7.dp)
+        .height(32.dp)
+        .border(1.dp, colors.tvLv2.copy(alpha = 0.24f), RoundedCornerShape(16.dp))
+        .clip(RoundedCornerShape(16.dp))
+        .clickableNoIndicator(onClick = onManageCategories)
+        .padding(horizontal = 9.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
       Icon(
-        imageVector = Icons.Outlined.Settings,
+        imageVector = categoryIcon,
         contentDescription = "管理分组",
         tint = colors.tvLv2,
-        modifier = Modifier.size(20.dp),
+        modifier = Modifier.size(17.dp),
+      )
+      Text(
+        text = "分组",
+        color = colors.tvLv2,
+        fontSize = 12.sp,
       )
     }
   }
@@ -699,11 +728,12 @@ internal fun com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence.toDomainOccu
 @Composable
 private fun ScheduleTodoHeader(
   manageMode: Boolean,
-  editorEnabled: Boolean,
   failureCount: Int,
   onBack: () -> Unit,
   onFailures: () -> Unit,
-  onManage: () -> Unit,
+  onTimeline: () -> Unit,
+  onSettings: () -> Unit,
+  onManageDone: () -> Unit,
 ) {
   val colors = LocalAppColors.current
   Surface(
@@ -759,7 +789,7 @@ private fun ScheduleTodoHeader(
               colors.tvLv1
             },
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.clickableNoIndicator(onClick = onManage),
+            modifier = Modifier.clickableNoIndicator(onClick = onManageDone),
           ) {
             Text(
               text = "完成",
@@ -770,13 +800,18 @@ private fun ScheduleTodoHeader(
             )
           }
         } else {
-          TextButton(onClick = onManage, enabled = editorEnabled) {
-            Text(
-              text = "批量管理",
-              color = if (editorEnabled) colors.tvLv1 else colors.tvLv1.copy(alpha = 0.35f),
-              fontSize = 16.sp,
-              fontWeight = FontWeight.Medium,
-              letterSpacing = 0.8.sp,
+          IconButton(onClick = onTimeline) {
+            Icon(
+              imageVector = Icons.Default.DateRange,
+              contentDescription = "切换到时间轴",
+              tint = colors.tvLv1,
+            )
+          }
+          IconButton(onClick = onSettings) {
+            Icon(
+              imageVector = Icons.Default.Settings,
+              contentDescription = "设置",
+              tint = colors.tvLv1,
             )
           }
         }
@@ -900,6 +935,7 @@ private fun ScheduleTodoCard(
   manageMode: Boolean,
   selected: Boolean,
   onSelect: () -> Unit,
+  onLongPress: () -> Unit,
   onOpen: () -> Unit,
   onComplete: () -> Unit,
   onTogglePin: () -> Unit,
@@ -1033,13 +1069,21 @@ private fun ScheduleTodoCard(
           }
         }
         .clip(cardShape)
-        .clickable {
-          when {
-            manageMode -> onSelect()
-            dragOffsetPx != 0f -> settleSwipe(0f)
-            else -> onOpen()
-          }
-        },
+        .combinedClickable(
+          onClick = {
+            when {
+              manageMode -> onSelect()
+              dragOffsetPx != 0f -> settleSwipe(0f)
+              else -> onOpen()
+            }
+          },
+          onLongClick = {
+            if (!manageMode) {
+              settleSwipe(0f)
+              onLongPress()
+            }
+          },
+        ),
     ) {
       Box {
         Column(
