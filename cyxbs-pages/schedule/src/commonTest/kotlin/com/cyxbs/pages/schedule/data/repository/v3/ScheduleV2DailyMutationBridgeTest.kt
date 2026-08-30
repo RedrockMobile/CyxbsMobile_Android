@@ -142,7 +142,7 @@ class ScheduleV2DailyMutationBridgeTest {
     categoryId = AtomicField(CATEGORY_ID, 1),
     timing = AtomicField(TimingInput(TimingKind.UNSCHEDULED), 1),
     recurrence = AtomicField(null, 1),
-    reminders = AtomicField(emptyList(), 1),
+    reminder = AtomicField(null, 1),
     todoState = AtomicField(TodoState.OPEN, 1),
     linkedToCourse = AtomicField(false, 1),
   )

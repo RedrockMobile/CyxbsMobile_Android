@@ -79,14 +79,14 @@ class ScheduleV2LocalCommandReducerTest {
         resource.categoryId.modifiedAt,
         resource.timing.modifiedAt,
         resource.recurrence.modifiedAt,
-        resource.reminders.modifiedAt,
+        resource.reminder.modifiedAt,
         resource.todoState.modifiedAt,
         resource.linkedToCourse.modifiedAt,
       ),
     )
     assertEquals(TimingKind.TIMED, resource.timing.data.kind)
     assertEquals(60 * 60 * 1_000L, resource.timing.data.endAt!! - resource.timing.data.startAt!!)
-    assertEquals(listOf(ReminderInput(15, "")), resource.reminders.data)
+    assertEquals(ReminderInput(15), resource.reminder.data)
   }
 
   /** 未分组是可同步的正式状态，创建时应直接生成 categoryId.data=null 的 pending。 */
@@ -201,7 +201,7 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(currentR.categoryId, resource.categoryId)
     assertEquals(currentR.timing, resource.timing)
     assertEquals(currentR.recurrence, resource.recurrence)
-    assertEquals(currentR.reminders, resource.reminders)
+    assertEquals(currentR.reminder, resource.reminder)
     assertEquals(currentR.todoState, resource.todoState)
     assertEquals(currentR.linkedToCourse, resource.linkedToCourse)
   }
@@ -323,7 +323,7 @@ class ScheduleV2LocalCommandReducerTest {
     )
     val weekly = schedule(
       id = SCHEDULE_ID_2,
-      timing = ScheduleTiming.AllDay(Date(2026, 7, 21), durationDays = 2),
+      timing = ScheduleTiming.AllDay(Date(2026, 7, 21)),
       recurrence = RecurrenceRule(
         frequency = UiRecurrenceFrequency.WEEKLY,
         byWeekDays = setOf(IsoWeekDay.TUESDAY, IsoWeekDay.WEDNESDAY),
@@ -331,7 +331,7 @@ class ScheduleV2LocalCommandReducerTest {
       ),
     )
     val weeklyWithoutExplicitDays = schedule(
-      timing = ScheduleTiming.AllDay(Date(2026, 7, 21), durationDays = 1),
+      timing = ScheduleTiming.AllDay(Date(2026, 7, 21)),
       recurrence = RecurrenceRule(frequency = UiRecurrenceFrequency.WEEKLY),
     )
 
@@ -359,22 +359,49 @@ class ScheduleV2LocalCommandReducerTest {
   }
 
   @Test
-  fun weeklyRecurrenceRejectsExplicitDaysMissingAnchor() {
-    val result = reduce(
+  fun weeklyRecurrenceAllowsExplicitDaysMissingAnchor() {
+    val resource = reduce(
       command = ScheduleCommand.Create(schedule(
-        timing = ScheduleTiming.AllDay(Date(2026, 7, 21), durationDays = 1),
+        timing = ScheduleTiming.AllDay(Date(2026, 7, 21)),
         recurrence = RecurrenceRule(
           frequency = UiRecurrenceFrequency.WEEKLY,
           byWeekDays = setOf(IsoWeekDay.MONDAY),
         ),
       )),
       revision = 1,
-    )
+    ).applied().schedules.single().pendingResource()
 
-    assertEquals(
-      ScheduleV2LocalCommandResult.Rejected(ScheduleV2LocalCommandRejectionReason.INVALID_STATE),
-      result,
-    )
+    assertEquals(setOf(Weekday.MO), resource.recurrence.data?.weekdays)
+  }
+
+  /** 月、年重复需要完整映射日期条件，不能再按旧协议拒绝。 */
+  @Test
+  fun monthlyAndYearlyRecurrenceMapMonthConstraints() {
+    val monthly = schedule(recurrence = RecurrenceRule(
+      frequency = UiRecurrenceFrequency.MONTHLY,
+      byMonthDays = setOf(5, 20),
+    ))
+    val yearly = schedule(id = SCHEDULE_ID_2, recurrence = RecurrenceRule(
+      frequency = UiRecurrenceFrequency.YEARLY,
+      byMonthDays = setOf(8),
+      byMonths = setOf(3, 9),
+    ))
+
+    val monthlyResource = reduce(
+      command = ScheduleCommand.Create(monthly),
+      revision = 1,
+    ).applied().schedules.single().pendingResource()
+    val yearlyResource = reduce(
+      command = ScheduleCommand.Create(yearly),
+      revision = 2,
+    ).applied().schedules.single().pendingResource()
+
+    assertEquals(RecurrenceFrequency.MONTHLY, monthlyResource.recurrence.data?.frequency)
+    assertEquals(setOf(5, 20), monthlyResource.recurrence.data?.monthDays)
+    assertEquals(emptySet(), monthlyResource.recurrence.data?.months)
+    assertEquals(RecurrenceFrequency.YEARLY, yearlyResource.recurrence.data?.frequency)
+    assertEquals(setOf(8), yearlyResource.recurrence.data?.monthDays)
+    assertEquals(setOf(3, 9), yearlyResource.recurrence.data?.months)
   }
 
   @Test
@@ -396,7 +423,7 @@ class ScheduleV2LocalCommandReducerTest {
         title = UiFieldPatch.Replace("单次标题"),
         description = UiFieldPatch.Clear,
         categoryId = UiFieldPatch.Replace(CategoryId("category-2")),
-        reminders = UiFieldPatch.Replace(listOf(deviceReminder())),
+        reminder = UiFieldPatch.Replace(deviceReminder()),
       ),
       createdAt = Instant.fromEpochMilliseconds(1),
       updatedAt = Instant.fromEpochMilliseconds(2),
@@ -419,14 +446,14 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(FieldPatch.Replace("单次标题"), resource.title.data)
     assertEquals(FieldPatch.Clear, resource.description.data)
     assertEquals(FieldPatch.Replace("category-2"), resource.categoryId.data)
-    assertEquals(FieldPatch.Replace(listOf(ReminderInput(15, ""))), resource.reminders.data)
+    assertEquals(FieldPatch.Replace(ReminderInput(15)), resource.reminder.data)
     assertEquals(List(6) { 400L }, listOf(
       resource.status.modifiedAt,
       resource.timing.modifiedAt,
       resource.title.modifiedAt,
       resource.description.modifiedAt,
       resource.categoryId.modifiedAt,
-      resource.reminders.modifiedAt,
+      resource.reminder.modifiedAt,
     ))
 
     val deleted = reduce(
@@ -695,13 +722,12 @@ class ScheduleV2LocalCommandReducerTest {
   fun unsupportedProtocolBoundariesAreRejected() {
     val recurrenceId = RecurrenceId(MinuteTimeDate(2026, 7, 23, 9, 30), "Asia/Shanghai", false)
     val unsupported = listOf(
-      ScheduleCommand.Create(schedule(recurrence = RecurrenceRule(UiRecurrenceFrequency.MONTHLY))),
       ScheduleCommand.Create(schedule(recurrence = RecurrenceRule(
         UiRecurrenceFrequency.DAILY,
         byMonthDays = setOf(20),
       ))),
       ScheduleCommand.Create(schedule(
-        reminders = listOf(deviceReminder().copy(channel = ReminderChannel.PUSH)),
+        reminder = deviceReminder().copy(channel = ReminderChannel.PUSH),
       )),
       ScheduleCommand.Create(schedule(
         timing = ScheduleTiming.Unscheduled,
@@ -762,7 +788,7 @@ class ScheduleV2LocalCommandReducerTest {
       timeZoneId = "Asia/Shanghai",
     ),
     recurrence: RecurrenceRule? = null,
-    reminders: List<ScheduleReminder> = listOf(deviceReminder()),
+    reminder: ScheduleReminder? = deviceReminder(),
     oldRevision: Long = 999,
   ): Schedule = Schedule(
     id = ScheduleId(id),
@@ -772,7 +798,7 @@ class ScheduleV2LocalCommandReducerTest {
     categoryId = categoryId,
     timing = timing,
     recurrence = recurrence,
-    reminders = reminders,
+    reminder = reminder,
     todoState = ScheduleTodoState.PENDING,
     createdAt = Instant.fromEpochMilliseconds(1),
     updatedAt = Instant.fromEpochMilliseconds(2),
@@ -799,7 +825,7 @@ class ScheduleV2LocalCommandReducerTest {
         timestamp,
       ),
       recurrence = AtomicField(null, timestamp),
-      reminders = AtomicField(listOf(ReminderInput(15, "")), timestamp),
+      reminder = AtomicField(ReminderInput(15), timestamp),
       todoState = AtomicField(TodoState.OPEN, timestamp),
       linkedToCourse = AtomicField(false, timestamp),
     )

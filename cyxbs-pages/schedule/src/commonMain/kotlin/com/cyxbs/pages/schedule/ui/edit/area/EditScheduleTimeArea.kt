@@ -27,6 +27,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.view.wheel.WheelSelectCompose
+import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleModelState
 import com.cyxbs.pages.schedule.ui.edit.ToggleChip
 import com.cyxbs.pages.schedule.ui.timeline.formatScheduleDateTime
@@ -74,7 +75,10 @@ internal fun EditScheduleTimeArea(
   val startMin0 = state.startMinuteOfDay ?: (now.hour * 60 + now.minute)
   val endMin0 = state.endMinuteOfDay ?: ((startMin0 + 60).coerceAtMost(23 * 60 + 59))
   // 时间点型：底层仍使用 Deadline 原子，但产品文案统一为“时间点”，不再暴露旧“截止”概念。
-  var deadlineOnly by remember { mutableStateOf(state.outputStartTime == null && state.outputEndTime != null) }
+  val supportsTimePoint = state.kind == ScheduleKind.TODO
+  var deadlineOnly by remember {
+    mutableStateOf(supportsTimePoint && state.outputStartTime == null && state.outputEndTime != null)
+  }
 
   val startHour = remember { Animatable((startMin0 / 60).toFloat()) }
   val startMinute = remember { Animatable((startMin0 % 60).toFloat()) }
@@ -107,23 +111,25 @@ internal fun EditScheduleTimeArea(
 
   Column(modifier = Modifier.fillMaxWidth()) {
     // 时间段 / 时间点分段切换，两种选择分别无损映射到 Timed / Deadline。
-    ScheduleTimeTypeToggle(isInterval = !deadlineOnly, onChange = { interval ->
-      deadlineOnly = !interval
-      if (interval) {
-        // 切回时间段也属于显式操作，需要立即补足最短 30 分钟并同步滚轮位置。
-        coroutineScope.launch {
-          settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.MINUTE)
+    if (supportsTimePoint) {
+      ScheduleTimeTypeToggle(isInterval = !deadlineOnly, onChange = { interval ->
+        deadlineOnly = !interval
+        if (interval) {
+          // 切回时间段也属于显式操作，需要立即补足最短 30 分钟并同步滚轮位置。
+          coroutineScope.launch {
+            settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.MINUTE)
+          }
+        } else {
+          state.applyExplicitTimeModeSelection(
+            interval = false,
+            startMinuteOfDay = startHour.value.roundToInt().coerceIn(0, 23) * 60 +
+              startMinute.value.roundToInt().coerceIn(0, 59),
+            endMinuteOfDay = endHour.value.roundToInt().coerceIn(0, 23) * 60 +
+              endMinute.value.roundToInt().coerceIn(0, 59),
+          )
         }
-      } else {
-        state.applyExplicitTimeModeSelection(
-          interval = false,
-          startMinuteOfDay = startHour.value.roundToInt().coerceIn(0, 23) * 60 +
-            startMinute.value.roundToInt().coerceIn(0, 59),
-          endMinuteOfDay = endHour.value.roundToInt().coerceIn(0, 23) * 60 +
-            endMinute.value.roundToInt().coerceIn(0, 59),
-        )
-      }
-    })
+      })
+    }
     // 去掉「完成」按钮后，滚轮整体下移一点。
     Spacer(modifier = Modifier.height(12.dp))
     Row(

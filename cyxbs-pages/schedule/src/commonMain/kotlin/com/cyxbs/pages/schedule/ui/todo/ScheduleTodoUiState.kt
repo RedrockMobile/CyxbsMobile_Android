@@ -158,7 +158,7 @@ private fun Schedule.todoOccurrence(
       title = title,
       description = description,
       categoryId = categoryId,
-      reminders = reminders,
+      reminder = reminder,
       status = if (todoState == ScheduleTodoState.COMPLETED) {
         OccurrenceStatus.COMPLETED
       } else {
@@ -213,7 +213,7 @@ private fun ScheduleUiOccurrence.boundaryInstant(viewerTimeZone: TimeZone): Inst
     value.start.toLocalDateTime().toInstant(zone) + value.durationMinutes.minutes
   }
   is ScheduleTiming.Deadline -> value.due.toLocalDateTime().toInstant(TimeZone.of(value.timeZoneId))
-  is ScheduleTiming.AllDay -> value.startDate.plusDays(value.durationDays).toLocalDate()
+  is ScheduleTiming.AllDay -> value.date.plusDays(1).toLocalDate()
     .atStartOfDayIn(viewerTimeZone)
   ScheduleTiming.Unscheduled -> null
 }
@@ -229,7 +229,7 @@ private fun ScheduleUiOccurrence.sortInstant(viewerTimeZone: TimeZone): Instant?
     value.start.toLocalDateTime().toInstant(zone) + value.durationMinutes.minutes
   }
   is ScheduleTiming.Deadline -> value.due.toLocalDateTime().toInstant(TimeZone.of(value.timeZoneId))
-  is ScheduleTiming.AllDay -> value.startDate.toLocalDate().atStartOfDayIn(viewerTimeZone)
+  is ScheduleTiming.AllDay -> value.date.toLocalDate().atStartOfDayIn(viewerTimeZone)
   ScheduleTiming.Unscheduled -> null
 }
 
@@ -251,13 +251,7 @@ private fun ScheduleTiming.todoTimeText(): String = when (this) {
       "${start.date.shortText()} ${start.minuteText()}–${end.date.shortText()} ${end.minuteText()}"
     }
   }
-  is ScheduleTiming.AllDay -> {
-    if (durationDays == 1) "${startDate.shortText()} · 全天"
-    else {
-      val endDate = startDate.plusDays(durationDays - 1)
-      "${startDate.shortText()}–${endDate.shortText()} · 全天"
-    }
-  }
+  is ScheduleTiming.AllDay -> "${date.shortText()} · 全天"
   ScheduleTiming.Unscheduled -> "未设置时间"
 }
 

@@ -16,8 +16,12 @@ class RecurrenceEngineV2Test {
   @Test fun dailyWeeklyMonthlyYearlyAndCount() {
     assertDates(expand(rule(RecurrenceFrequency.DAILY, count = 3)), "2024-01-31", "2024-02-01", "2024-02-02")
     assertDates(expand(rule(RecurrenceFrequency.WEEKLY, count = 3, days = setOf(IsoWeekDay.WEDNESDAY, IsoWeekDay.FRIDAY))), "2024-01-31", "2024-02-02", "2024-02-07")
-    assertDates(expand(rule(RecurrenceFrequency.MONTHLY, count = 3)), "2024-01-31", "2024-03-31", "2024-05-31")
-    assertDates(expand(rule(RecurrenceFrequency.YEARLY, count = 3), start = MinuteTimeDate(2024, 2, 29, 9, 0), end = MinuteTimeDate(2033, 1, 1, 0, 0)), "2024-02-29", "2028-02-29", "2032-02-29")
+    assertDates(expand(rule(RecurrenceFrequency.MONTHLY, count = 3, monthDays = setOf(31))), "2024-01-31", "2024-03-31", "2024-05-31")
+    assertDates(expand(
+      rule(RecurrenceFrequency.YEARLY, count = 3, monthDays = setOf(29), months = setOf(2)),
+      start = MinuteTimeDate(2024, 2, 29, 9, 0),
+      end = MinuteTimeDate(2033, 1, 1, 0, 0),
+    ), "2024-02-29", "2028-02-29", "2032-02-29")
   }
 
   @Test fun untilIsInclusiveAndNegativeMonthDayResolvesMonthEnd() {
@@ -25,27 +29,25 @@ class RecurrenceEngineV2Test {
     assertDates(expand(rule(RecurrenceFrequency.MONTHLY, end = RecurrenceEnd.Until(until), monthDays = setOf(-1))), "2024-01-31", "2024-02-29", "2024-03-31")
   }
 
-  /** MONTHLY 的 BYMONTH、BYMONTHDAY、BYDAY 必须同时满足，不能让任一 selector 覆盖另一个。 */
-  @Test fun monthlySelectorsUseIntersection() {
+  /** 当前 MONTHLY 子集只按月日筛选，并跳过当月不存在的日期。 */
+  @Test fun monthlySelectorsUseMonthDaysAndSkipInvalidDates() {
     val combined = RecurrenceRule(
       frequency = RecurrenceFrequency.MONTHLY,
-      byWeekDays = setOf(IsoWeekDay.MONDAY),
-      byMonthDays = setOf(5, 6, 12),
-      byMonths = setOf(2),
-      end = RecurrenceEnd.Count(2),
+      byMonthDays = setOf(5, 31),
+      end = RecurrenceEnd.Count(4),
     )
-    assertDates(expand(combined), "2024-02-05", "2024-02-12")
+    assertDates(expand(combined), "2024-01-31", "2024-02-05", "2024-03-05", "2024-03-31")
   }
 
-  /** YEARLY 有日级 selector 且缺省 BYMONTH 时遍历全年月份，并继续对 BYMONTHDAY 与 BYDAY 取交集。 */
-  @Test fun yearlyDaySelectorsWithoutByMonthTraverseWholeYear() {
+  /** 当前 YEARLY 子集由月份和月日共同确定成员。 */
+  @Test fun yearlySelectorsUseMonthsAndMonthDays() {
     val combined = RecurrenceRule(
       frequency = RecurrenceFrequency.YEARLY,
-      byWeekDays = setOf(IsoWeekDay.MONDAY),
-      byMonthDays = (1..7).toSet(),
+      byMonthDays = setOf(5),
+      byMonths = setOf(2, 8),
       end = RecurrenceEnd.Count(3),
     )
-    assertDates(expand(combined), "2024-02-05", "2024-03-04", "2024-04-01")
+    assertDates(expand(combined), "2024-02-05", "2024-08-05", "2025-02-05")
   }
 
   @Test fun timedDurationCanCrossMidnight() {
@@ -94,7 +96,7 @@ class RecurrenceEngineV2Test {
     val replacements = listOf<ScheduleTiming>(
       ScheduleTiming.Timed(MinuteTimeDate(2024, 2, 1, 10, 0), 60, "America/New_York"),
       ScheduleTiming.Deadline(MinuteTimeDate(2024, 2, 1, 10, 0), "Asia/Shanghai"),
-      ScheduleTiming.AllDay(Date(2024, 2, 1), 1),
+      ScheduleTiming.AllDay(Date(2024, 2, 1)),
     )
 
     replacements.forEach { replacement ->
@@ -110,27 +112,23 @@ class RecurrenceEngineV2Test {
     }
   }
 
-  @Test fun clearAndEmptyReminderReplacementHaveSameProjectionButRemainDifferentPatches() {
+  @Test fun clearReminderAlsoKeepsOtherClearPatches() {
     val schedule = schedule(rule(RecurrenceFrequency.DAILY, count = 1)).copy(
       categoryId = CategoryId("study"),
       description = "Body",
-      reminders = listOf(ScheduleReminder(ReminderId("r1"), 10, ReminderChannel.DEVICE)),
+      reminder = ScheduleReminder(ReminderId("r1"), 10, ReminderChannel.DEVICE),
     )
     val id = RecurrenceEngine.expandInRange(schedule, emptyList(), dt(31), dt(31).plusMinutes(1)).single().recurrenceId!!
     val clearPatch = OccurrencePatch(
       description = FieldPatch.Clear,
       categoryId = FieldPatch.Clear,
-      reminders = FieldPatch.Clear,
+      reminder = FieldPatch.Clear,
     )
-    val emptyPatch = OccurrencePatch(reminders = FieldPatch.Replace(emptyList()))
     val cleared = RecurrenceEngine.expandInRange(schedule, listOf(exception(schedule, id, OccurrenceStatus.ACTIVE, clearPatch)), dt(31), dt(31).plusMinutes(1)).single()
-    val replaced = RecurrenceEngine.expandInRange(schedule, listOf(exception(schedule, id, OccurrenceStatus.ACTIVE, emptyPatch)), dt(31), dt(31).plusMinutes(1)).single()
 
     assertEquals("", cleared.description)
     assertNull(cleared.categoryId)
-    assertEquals(emptyList(), cleared.reminders)
-    assertEquals(emptyList(), replaced.reminders)
-    assertNotEquals(clearPatch.reminders, emptyPatch.reminders)
+    assertNull(cleared.reminder)
   }
 
   @Test fun halfOpenWindowUsesEffectiveOccupiedIntervalAndRejectsEmptyWindow() {
@@ -161,17 +159,17 @@ class RecurrenceEngineV2Test {
     }
   }
 
-  @Test fun allDayDeadlineAndUnscheduledUseTheirBoundedOccupancy() {
+  @Test fun singleDayDeadlineAndUnscheduledUseTheirBoundedOccupancy() {
     val allDay = schedule(rule(RecurrenceFrequency.DAILY, count = 1)).copy(
-      timing = ScheduleTiming.AllDay(Date(2024, 1, 30), durationDays = 3),
+      timing = ScheduleTiming.AllDay(Date(2024, 1, 30)),
     )
     assertEquals(
       1,
       RecurrenceEngine.expandInRange(
         allDay,
         emptyList(),
-        MinuteTimeDate(2024, 2, 1, 0, 0),
-        MinuteTimeDate(2024, 2, 2, 0, 0),
+        MinuteTimeDate(2024, 1, 30, 0, 0),
+        MinuteTimeDate(2024, 1, 31, 0, 0),
       ).size,
     )
 
@@ -336,8 +334,21 @@ class RecurrenceEngineV2Test {
   private fun expand(rule: RecurrenceRule, start: MinuteTimeDate = dt(31), end: MinuteTimeDate = MinuteTimeDate(2030, 1, 1, 0, 0), duration: Int = 60, zone: String = "Asia/Shanghai") =
     RecurrenceEngine.expandInRange(schedule(rule, start, duration, zone), emptyList(), start, end)
   private fun assertDates(values: List<ScheduleOccurrence>, vararg dates: String) = assertEquals(dates.toList(), values.map { (it.timing as ScheduleTiming.Timed).start.date.toString() })
-  private fun rule(freq: RecurrenceFrequency, count: Int? = null, end: RecurrenceEnd = count?.let { RecurrenceEnd.Count(it) } ?: RecurrenceEnd.Never, days: Set<IsoWeekDay> = emptySet(), monthDays: Set<Int> = emptySet()) = RecurrenceRule(freq, byWeekDays = days, byMonthDays = monthDays, end = end)
-  private fun schedule(rule: RecurrenceRule, start: MinuteTimeDate = dt(31), duration: Int = 60, zone: String = "Asia/Shanghai") = Schedule(ID, 1, "Title", "Body", null, ScheduleTiming.Timed(start, duration, zone), rule, emptyList(), ScheduleTodoState.PENDING, NOW, NOW)
+  private fun rule(
+    freq: RecurrenceFrequency,
+    count: Int? = null,
+    end: RecurrenceEnd = count?.let { RecurrenceEnd.Count(it) } ?: RecurrenceEnd.Never,
+    days: Set<IsoWeekDay> = emptySet(),
+    monthDays: Set<Int> = emptySet(),
+    months: Set<Int> = emptySet(),
+  ) = RecurrenceRule(
+    frequency = freq,
+    byWeekDays = days,
+    byMonthDays = monthDays,
+    byMonths = months,
+    end = end,
+  )
+  private fun schedule(rule: RecurrenceRule, start: MinuteTimeDate = dt(31), duration: Int = 60, zone: String = "Asia/Shanghai") = Schedule(ID, 1, "Title", "Body", null, ScheduleTiming.Timed(start, duration, zone), rule, null, ScheduleTodoState.PENDING, NOW, NOW)
   private fun exception(schedule: Schedule, id: RecurrenceId, status: OccurrenceStatus, patch: OccurrencePatch? = null) = ScheduleOccurrenceException(schedule.id, id, 1, status, patch, NOW, NOW)
   private fun dt(day: Int) = MinuteTimeDate(2024, 1, day, 9, 0)
   private companion object {

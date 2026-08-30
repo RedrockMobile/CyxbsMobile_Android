@@ -45,7 +45,7 @@ internal fun DayTimedSchedule.isFullDay(): Boolean = isInterval && startMin <= 0
  *
  * 时间段会按墙上时间占用区间与 `[date 00:00, nextDate 00:00)` 相交后裁剪到当天 0..24 点，
  * 因此跨日或超过一天的实例会在每个相交日分别占据正确片段；截止项只落在 due 所在日，全天项覆盖
- * durationDays 中的每一天，未排期项仅在 [includeUnscheduled] 为 true 时进入整日栏。该布局层绝不自行
+ * 单日全天项只进入自身日期，未排期项仅在 [includeUnscheduled] 为 true 时进入整日栏。该布局层绝不自行
  * 展开重复规则，避免与业务引擎产生窗口/例外语义分叉。
  */
 internal fun timelineSchedulesForDate(
@@ -71,7 +71,7 @@ internal fun timelineSchedulesForDate(
         val minute = timing.due.minuteOfDay
         DayTimedSchedule(occurrence, false, minute, minute)
       } else null
-      is ScheduleTiming.AllDay -> if (date >= timing.startDate && date < timing.startDate.plusDays(timing.durationDays)) {
+      is ScheduleTiming.AllDay -> if (date == timing.date) {
         DayTimedSchedule(occurrence, true, 0, FULL_DAY_MINUTES)
       } else null
       ScheduleTiming.Unscheduled -> if (includeUnscheduled) DayTimedSchedule(occurrence, true, 0, FULL_DAY_MINUTES) else null

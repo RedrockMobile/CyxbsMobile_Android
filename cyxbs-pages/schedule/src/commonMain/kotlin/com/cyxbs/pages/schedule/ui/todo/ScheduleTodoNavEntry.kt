@@ -690,7 +690,7 @@ internal fun com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence.toDomainOccu
     title = title,
     description = description,
     categoryId = categoryId,
-    reminders = reminders,
+    reminder = reminder,
     status = status,
     isOverridden = isOverridden,
   )
@@ -913,10 +913,9 @@ private fun ScheduleTodoCard(
   val deleteIcon = ConfigRes.configIcDelete()
   val restoreIcon = ConfigRes.configIcRestore()
   val hasUrgencyBadge = item.isOverdue || item.isDueSoon
-  val reminderText = item.occurrence.reminders
-    .mapNotNull { reminder -> formatScheduleTodoReminder(reminder.offsetMinutes) }
-    .joinToString(separator = "、")
-    .takeIf(String::isNotEmpty)
+  val reminderText = item.occurrence.reminder?.let { reminder ->
+    formatScheduleTodoReminder(reminder.offsetMinutes)
+  }
   val timeIcon = rememberIcAddtodoTime()
   val cardShape = RoundedCornerShape(16.dp)
   val actionWidth = 110.dp

@@ -729,7 +729,7 @@ class ScheduleV2LocalCommandReducer {
       timing = timing,
       stableAnchorDate = old?.recurrence?.data?.anchorDate ?: recurrenceAnchorDate?.toUtcDaySlot(),
     )
-    val reminderValues = reminders.toWireReminders()
+    val reminderValue = reminder?.toWireReminder()
     if (old != null && old.kind != kind.toWire()) {
       reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
     }
@@ -742,7 +742,7 @@ class ScheduleV2LocalCommandReducer {
       categoryId = atomic(category, old?.categoryId, now),
       timing = atomic(timingValue, old?.timing, now),
       recurrence = atomic(recurrenceValue, old?.recurrence, now),
-      reminders = atomic(reminderValues, old?.reminders, now),
+      reminder = atomic(reminderValue, old?.reminder, now),
       todoState = atomic(todoState?.toWire(), old?.todoState, now),
       linkedToCourse = atomic(linkedToCourse, old?.linkedToCourse, now),
     )
@@ -772,7 +772,7 @@ class ScheduleV2LocalCommandReducer {
     val titleValue = patchValue.title.toWireTitlePatch()
     val descriptionValue = patchValue.description.toWireStringPatch()
     val categoryValue = patchValue.categoryId.toWireCategoryPatch()
-    val reminderValue = patchValue.reminders.toWireReminderPatch()
+    val reminderValue = patchValue.reminder.toWireReminderPatch()
     return OccurrenceOverrideResource(
       identity = identity,
       version = version,
@@ -781,7 +781,7 @@ class ScheduleV2LocalCommandReducer {
       title = atomic(titleValue, old?.title, now),
       description = atomic(descriptionValue, old?.description, now),
       categoryId = atomic(categoryValue, old?.categoryId, now),
-      reminders = atomic(reminderValue, old?.reminders, now),
+      reminder = atomic(reminderValue, old?.reminder, now),
     )
   }
 
@@ -809,11 +809,9 @@ class ScheduleV2LocalCommandReducer {
         .toEpochMilliseconds(),
     )
     is ScheduleTiming.AllDay -> {
-      val startMillis = startDate.toUtcDaySlot()
       TimingInput(
         kind = TimingKind.ALL_DAY,
-        startAt = startMillis,
-        endAt = startMillis + durationDays * UTC_DAY_MILLIS,
+        date = date.toUtcDaySlot(),
       )
     }
     ScheduleTiming.Unscheduled -> TimingInput(kind = TimingKind.UNSCHEDULED)
@@ -823,20 +821,30 @@ class ScheduleV2LocalCommandReducer {
     timing: ScheduleTiming,
     stableAnchorDate: Long?,
   ): RecurrenceInput {
-    if (byMonthDays.isNotEmpty() || byMonths.isNotEmpty()) {
+    // 先在端内边界拒绝会被当前协议忽略的 selector，避免静默丢字段后仍把操作标记为成功。
+    val hasUnsupportedSelectors = when (frequency) {
+      UiRecurrenceFrequency.DAILY ->
+        byWeekDays.isNotEmpty() || byMonthDays.isNotEmpty() || byMonths.isNotEmpty()
+      UiRecurrenceFrequency.WEEKLY ->
+        byMonthDays.isNotEmpty() || byMonths.isNotEmpty()
+      UiRecurrenceFrequency.MONTHLY ->
+        byWeekDays.isNotEmpty() || byMonths.isNotEmpty()
+      UiRecurrenceFrequency.YEARLY ->
+        byWeekDays.isNotEmpty() || byMonthDays.isEmpty() != byMonths.isEmpty()
+    }
+    if (hasUnsupportedSelectors) {
       reject(ScheduleV2LocalCommandRejectionReason.UNSUPPORTED)
     }
     val frequency = when (frequency) {
       UiRecurrenceFrequency.DAILY -> RecurrenceFrequency.DAILY
       UiRecurrenceFrequency.WEEKLY -> RecurrenceFrequency.WEEKLY
-      UiRecurrenceFrequency.MONTHLY,
-      UiRecurrenceFrequency.YEARLY,
-      -> reject(ScheduleV2LocalCommandRejectionReason.UNSUPPORTED)
+      UiRecurrenceFrequency.MONTHLY -> RecurrenceFrequency.MONTHLY
+      UiRecurrenceFrequency.YEARLY -> RecurrenceFrequency.YEARLY
     }
     val timingAnchor = when (timing) {
       is ScheduleTiming.Timed -> timing.start.date
       is ScheduleTiming.Deadline -> timing.due.date
-      is ScheduleTiming.AllDay -> timing.startDate
+      is ScheduleTiming.AllDay -> timing.date
       ScheduleTiming.Unscheduled -> reject(ScheduleV2LocalCommandRejectionReason.UNSUPPORTED)
     }
     val anchor = stableAnchorDate?.toUtcDate() ?: timingAnchor
@@ -863,29 +871,35 @@ class ScheduleV2LocalCommandReducer {
       count = count,
       untilDate = untilDate,
       weekdays = when (frequency) {
-        RecurrenceFrequency.DAILY -> byWeekDays.map { it.toWire() }.toSet()
+        RecurrenceFrequency.DAILY,
+        RecurrenceFrequency.MONTHLY,
+        RecurrenceFrequency.YEARLY,
+        -> emptySet()
         RecurrenceFrequency.WEEKLY -> {
           val anchorWeekday = requireNotNull(IsoWeekDay.fromIsoNumber(anchor.dayOfWeekNumber))
-          val effectiveWeekdays = byWeekDays.ifEmpty { setOf(anchorWeekday) }
-          if (anchorWeekday !in effectiveWeekdays) {
-            // 后端要求稳定 anchor 本身属于 WEEKLY 集合，不能静默移动系列首个 occurrence。
-            reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
-          }
-          effectiveWeekdays.map { it.toWire() }.toSet()
+          byWeekDays.ifEmpty { setOf(anchorWeekday) }.map { it.toWire() }.toSet()
         }
+      },
+      monthDays = when (frequency) {
+        RecurrenceFrequency.MONTHLY,
+        RecurrenceFrequency.YEARLY,
+        -> byMonthDays.ifEmpty { setOf(anchor.dayOfMonth) }
+        else -> emptySet()
+      },
+      months = if (frequency == RecurrenceFrequency.YEARLY) {
+        byMonths.ifEmpty { setOf(anchor.monthNumber) }
+      } else {
+        emptySet()
       },
     )
   }
 
-  private fun List<ScheduleReminder>.toWireReminders(): List<ReminderInput> = map { reminder ->
-    if (reminder.channel != ReminderChannel.DEVICE) {
+  /** 协议只保存一个设备提醒；客户端展示 identity 不参与跨设备同步。 */
+  private fun ScheduleReminder.toWireReminder(): ReminderInput {
+    if (channel != ReminderChannel.DEVICE) {
       reject(ScheduleV2LocalCommandRejectionReason.UNSUPPORTED)
     }
-    ReminderInput(
-      minutesBefore = reminder.offsetMinutes,
-      // ReminderId 只用于客户端列表 identity，协议 message 当前没有对应的用户文案来源。
-      message = "",
-    )
+    return ReminderInput(minutesBefore = offsetMinutes)
   }
 
   private fun UiFieldPatch<String>.toWireTitlePatch(): FieldPatch<String> = when (this) {
@@ -916,11 +930,11 @@ class ScheduleV2LocalCommandReducer {
     is UiFieldPatch.Replace -> FieldPatch.Replace(value)
   }
 
-  private fun UiFieldPatch<List<ScheduleReminder>>.toWireReminderPatch():
-    FieldPatch<List<ReminderInput>> = when (this) {
+  private fun UiFieldPatch<ScheduleReminder>.toWireReminderPatch():
+    FieldPatch<ReminderInput> = when (this) {
     UiFieldPatch.Inherit -> FieldPatch.Inherit
     UiFieldPatch.Clear -> FieldPatch.Clear
-    is UiFieldPatch.Replace -> FieldPatch.Replace(value.toWireReminders())
+    is UiFieldPatch.Replace -> FieldPatch.Replace(value.toWireReminder())
   }
 
   /**

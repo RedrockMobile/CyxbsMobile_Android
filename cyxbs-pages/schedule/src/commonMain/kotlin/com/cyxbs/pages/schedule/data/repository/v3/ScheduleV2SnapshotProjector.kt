@@ -43,6 +43,7 @@ import com.cyxbs.pages.schedule.domain.sync.v2.TimingInput
 import com.cyxbs.pages.schedule.domain.sync.v2.TimingKind
 import com.cyxbs.pages.schedule.domain.sync.v2.TodoState
 import com.cyxbs.pages.schedule.domain.sync.v2.Weekday
+import com.cyxbs.pages.schedule.domain.validation.ScheduleValidator
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
@@ -71,8 +72,7 @@ sealed interface ScheduleV2SnapshotProjection {
  * 因此 Timed/Deadline 必须使用调用方传入的 [timeZone] 恢复墙上时间；本类不访问 Room 或网络。
  * ScheduleRemoteSnapshot.firstRecurrenceAnchorDate 会投影为领域层稳定 recurrenceAnchorDate；整个系列移动实际
  * 日期时仍以它生成 occurrence identity，不能退回当前 timing 日期。
- * 旧 UI 同样没有 Reminder message，故只接受空 message；ReminderId 按 identity 与 canonical 顺序派生，
- * 不承诺列表重排后的 ID 稳定性，也不为此引入 sidecar。
+ * 服务端提醒没有端内 identity，故 ReminderId 按日程 identity 稳定派生；不为单个本地实现字段引入 sidecar。
  */
 class ScheduleV2SnapshotProjector {
   /**
@@ -151,7 +151,7 @@ class ScheduleV2SnapshotProjector {
       resource.categoryId.modifiedAt,
       resource.timing.modifiedAt,
       resource.recurrence.modifiedAt,
-      resource.reminders.modifiedAt,
+      resource.reminder.modifiedAt,
       resource.todoState.modifiedAt,
       resource.linkedToCourse.modifiedAt,
     )
@@ -202,13 +202,13 @@ class ScheduleV2SnapshotProjector {
       resource.categoryId.modifiedAt,
       resource.timing.modifiedAt,
       resource.recurrence.modifiedAt,
-      resource.reminders.modifiedAt,
+      resource.reminder.modifiedAt,
       resource.todoState.modifiedAt,
       resource.linkedToCourse.modifiedAt,
     )
     val (createdAt, updatedAt) = timestamps(remoteSnapshot?.meta, atomTimes)
     val timing = resource.timing.data.toUi(timeZone)
-    return Schedule(
+    val schedule = Schedule(
       id = ScheduleId(resource.identity.id),
       revision = resource.version,
       title = resource.title.data,
@@ -216,7 +216,7 @@ class ScheduleV2SnapshotProjector {
       categoryId = resource.categoryId.data?.let(::CategoryId),
       timing = timing,
       recurrence = resource.recurrence.data?.toUi(timing),
-      reminders = resource.reminders.data.toUiReminders(resource.identity.id),
+      reminder = resource.reminder.data?.toUiReminder(resource.identity.id),
       todoState = resource.todoState.data?.toUi(),
       createdAt = createdAt,
       updatedAt = updatedAt,
@@ -225,6 +225,13 @@ class ScheduleV2SnapshotProjector {
       recurrenceAnchorDate = (remoteSnapshot?.firstRecurrenceAnchorDate
         ?: resource.recurrence.data?.anchorDate)?.toUtcDate(),
     )
+    // 服务端快照属于不可信输入：wire 形状合法不代表完整领域组合合法，发布前必须统一闭合校验。
+    val issues = ScheduleValidator.validate(schedule)
+    requireProjection(
+      issues.isEmpty(),
+      issues.joinToString(prefix = "invalid Schedule: ") { "${it.field} ${it.message}" },
+    )
+    return schedule
   }
 
   /** wire 只保留绝对毫秒，恢复本地墙上时间时必须显式使用 repository 选择的时区。 */
@@ -232,7 +239,7 @@ class ScheduleV2SnapshotProjector {
     TimingKind.TIMED -> {
       val start = startAt ?: abortProjection("TIMED startAt is required")
       val end = endAt ?: abortProjection("TIMED endAt is required")
-      requireProjection(dueAt == null, "invalid TIMED dueAt")
+      requireProjection(dueAt == null && date == null, "invalid TIMED extra fields")
       requireProjection(start >= 0 && end > start, "TIMED duration must be positive")
       requireProjection(
         start % MINUTE_MILLIS == 0L && end % MINUTE_MILLIS == 0L,
@@ -248,7 +255,7 @@ class ScheduleV2SnapshotProjector {
     }
     TimingKind.DEADLINE -> {
       val due = dueAt ?: abortProjection("DEADLINE dueAt is required")
-      requireProjection(startAt == null && endAt == null, "invalid DEADLINE range fields")
+      requireProjection(startAt == null && endAt == null && date == null, "invalid DEADLINE extra fields")
       requireProjection(due >= 0, "DEADLINE dueAt must not be negative")
       requireProjection(due % MINUTE_MILLIS == 0L, "DEADLINE dueAt must align to a whole minute")
       ScheduleTiming.Deadline(
@@ -257,21 +264,13 @@ class ScheduleV2SnapshotProjector {
       )
     }
     TimingKind.ALL_DAY -> {
-      val start = startAt ?: abortProjection("ALL_DAY startAt is required")
-      val end = endAt ?: abortProjection("ALL_DAY endAt is required")
-      requireProjection(dueAt == null, "invalid ALL_DAY dueAt")
-      requireDateSlot(start, "ALL_DAY startAt")
-      requireDateSlot(end, "ALL_DAY endAt")
-      requireProjection(end > start, "ALL_DAY duration must be positive")
-      val duration = end - start
-      requireProjection(duration % UTC_DAY_MILLIS == 0L, "ALL_DAY duration must be whole days")
-      ScheduleTiming.AllDay(
-        startDate = start.toUtcDate(),
-        durationDays = (duration / UTC_DAY_MILLIS).toIntExact("ALL_DAY durationDays"),
-      )
+      val allDayDate = date ?: abortProjection("ALL_DAY date is required")
+      requireProjection(startAt == null && endAt == null && dueAt == null, "invalid ALL_DAY extra fields")
+      requireDateSlot(allDayDate, "ALL_DAY date")
+      ScheduleTiming.AllDay(date = allDayDate.toUtcDate())
     }
     TimingKind.UNSCHEDULED -> {
-      requireProjection(startAt == null && endAt == null && dueAt == null, "invalid UNSCHEDULED fields")
+      requireProjection(startAt == null && endAt == null && dueAt == null && date == null, "invalid UNSCHEDULED fields")
       ScheduleTiming.Unscheduled
     }
   }
@@ -285,20 +284,34 @@ class ScheduleV2SnapshotProjector {
     val anchor = anchorDate.toUtcDate()
     val uiWeekdays = weekdays.map { it.toUi() }.toSet()
     when (frequency) {
-      RecurrenceFrequency.DAILY ->
-        requireProjection(uiWeekdays.isEmpty(), "DAILY weekdays cannot be represented without loss")
-      RecurrenceFrequency.WEEKLY -> {
-        val anchorWeekday = IsoWeekDay.fromIsoNumber(anchor.dayOfWeekNumber)
-        requireProjection(uiWeekdays.isNotEmpty() && anchorWeekday in uiWeekdays, "WEEKLY anchor must be included")
-      }
+      RecurrenceFrequency.DAILY -> requireProjection(
+        uiWeekdays.isEmpty() && monthDays.isEmpty() && months.isEmpty(),
+        "DAILY must not carry recurrence selectors",
+      )
+      RecurrenceFrequency.WEEKLY -> requireProjection(
+        uiWeekdays.isNotEmpty() && monthDays.isEmpty() && months.isEmpty(),
+        "WEEKLY requires only weekdays",
+      )
+      RecurrenceFrequency.MONTHLY -> requireProjection(
+        uiWeekdays.isEmpty() && monthDays.isNotEmpty() && months.isEmpty(),
+        "MONTHLY requires only monthDays",
+      )
+      RecurrenceFrequency.YEARLY -> requireProjection(
+        uiWeekdays.isEmpty() && monthDays.isNotEmpty() && months.isNotEmpty(),
+        "YEARLY requires monthDays and months",
+      )
     }
     return RecurrenceRule(
       frequency = when (frequency) {
         RecurrenceFrequency.DAILY -> UiRecurrenceFrequency.DAILY
         RecurrenceFrequency.WEEKLY -> UiRecurrenceFrequency.WEEKLY
+        RecurrenceFrequency.MONTHLY -> UiRecurrenceFrequency.MONTHLY
+        RecurrenceFrequency.YEARLY -> UiRecurrenceFrequency.YEARLY
       },
       interval = interval,
       byWeekDays = uiWeekdays,
+      byMonthDays = monthDays.toSet(),
+      byMonths = months.toSet(),
       end = when {
         count != null -> RecurrenceEnd.Count(count)
         untilDate != null -> RecurrenceEnd.Until(untilDate.toUtcDate())
@@ -307,17 +320,15 @@ class ScheduleV2SnapshotProjector {
     )
   }
 
-  private fun List<ReminderInput>.toUiReminders(identity: String): List<ScheduleReminder> =
-    mapIndexed { index, reminder ->
-      requireProjection(reminder.minutesBefore >= 0, "reminder minutesBefore must not be negative")
-      requireProjection(reminder.message.isEmpty(), "non-empty reminder message cannot be represented by old UI")
-      // 无 sidecar 时 ReminderId 只能按父 identity + index 派生；仅在 canonical 列表未重排时保持稳定。
-      ScheduleReminder(
-        id = ReminderId("$identity:reminder:$index"),
-        offsetMinutes = reminder.minutesBefore,
-        channel = ReminderChannel.DEVICE,
-      )
-    }
+  /** 服务端不保存端内 identity，因此按父资源 identity 稳定派生当前唯一提醒的本地 ID。 */
+  private fun ReminderInput.toUiReminder(identity: String): ScheduleReminder {
+    requireProjection(minutesBefore >= 0, "reminder minutesBefore must not be negative")
+    return ScheduleReminder(
+      id = ReminderId("$identity:reminder"),
+      offsetMinutes = minutesBefore,
+      channel = ReminderChannel.DEVICE,
+    )
+  }
 
   private fun OccurrenceOverrideSyncState.toUi(
     resource: OccurrenceOverrideResource,
@@ -329,7 +340,7 @@ class ScheduleV2SnapshotProjector {
       resource.title.modifiedAt,
       resource.description.modifiedAt,
       resource.categoryId.modifiedAt,
-      resource.reminders.modifiedAt,
+      resource.reminder.modifiedAt,
     )
     val (createdAt, updatedAt) = timestamps(remoteSnapshot?.meta, atomTimes)
     val recurrenceId = parent.toRecurrenceId(resource.identity.occurrenceDate)
@@ -343,7 +354,7 @@ class ScheduleV2SnapshotProjector {
         title = resource.title.data.toUiTitlePatch(),
         description = resource.description.data.toUiStringPatch(),
         categoryId = resource.categoryId.data.toUiCategoryPatch(),
-        reminders = resource.reminders.data.toUiReminderPatch(
+        reminder = resource.reminder.data.toUiReminderPatch(
           "${parent.id.value}@${resource.identity.occurrenceDate}",
         ),
       ),
@@ -409,11 +420,11 @@ class ScheduleV2SnapshotProjector {
     is FieldPatch.Replace -> UiFieldPatch.Replace(value)
   }
 
-  private fun FieldPatch<List<ReminderInput>>.toUiReminderPatch(identity: String):
-    UiFieldPatch<List<ScheduleReminder>> = when (this) {
+  private fun FieldPatch<ReminderInput>.toUiReminderPatch(identity: String):
+    UiFieldPatch<ScheduleReminder> = when (this) {
     FieldPatch.Inherit -> UiFieldPatch.Inherit
     FieldPatch.Clear -> UiFieldPatch.Clear
-    is FieldPatch.Replace -> UiFieldPatch.Replace(value.toUiReminders(identity))
+    is FieldPatch.Replace -> UiFieldPatch.Replace(value.toUiReminder(identity))
   }
 
   private fun TodoState.toUi(): ScheduleTodoState = when (this) {
@@ -446,7 +457,7 @@ class ScheduleV2SnapshotProjector {
   private fun ScheduleTiming.anchorDateSlot(): Long = when (this) {
     is ScheduleTiming.Timed -> start.date.toUtcSlot()
     is ScheduleTiming.Deadline -> due.date.toUtcSlot()
-    is ScheduleTiming.AllDay -> startDate.toUtcSlot()
+    is ScheduleTiming.AllDay -> date.toUtcSlot()
     ScheduleTiming.Unscheduled -> abortProjection("Unscheduled Schedule cannot contain recurrence")
   }
 

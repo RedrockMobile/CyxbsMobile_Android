@@ -194,7 +194,7 @@ object RecurrenceEngine {
       title = schedule.title,
       description = schedule.description,
       categoryId = schedule.categoryId,
-      reminders = schedule.reminders,
+      reminder = schedule.reminder,
       status = if (schedule.todoState == ScheduleTodoState.COMPLETED) {
         OccurrenceStatus.COMPLETED
       } else {
@@ -221,7 +221,7 @@ object RecurrenceEngine {
     val inheritedTiming = when (val source = schedule.timing) {
       is ScheduleTiming.Timed -> source.copy(start = actualStart)
       is ScheduleTiming.Deadline -> source.copy(due = actualStart)
-      is ScheduleTiming.AllDay -> source.copy(startDate = actualStart.date)
+      is ScheduleTiming.AllDay -> source.copy(date = actualStart.date)
       ScheduleTiming.Unscheduled -> error("unscheduled recurrence was rejected")
     }
     val timing = patch?.timing?.resolve(inheritedTiming, clear = null) ?: inheritedTiming
@@ -232,7 +232,8 @@ object RecurrenceEngine {
       title = patch?.title?.resolve(schedule.title, clear = null) ?: schedule.title,
       description = patch?.description?.resolve(schedule.description, clear = "") ?: schedule.description,
       categoryId = if (patch == null) schedule.categoryId else patch.categoryId.resolve(schedule.categoryId, clear = null),
-      reminders = patch?.reminders?.resolve(schedule.reminders, clear = emptyList()) ?: schedule.reminders,
+      // Clear 的结果本身就是 null，不能再用 Elvis 回退成父日程提醒；只有没有 patch 时才继承。
+      reminder = if (patch == null) schedule.reminder else patch.reminder.resolve(schedule.reminder, clear = null),
       status = exception?.status ?: OccurrenceStatus.ACTIVE,
       isOverridden = exception != null,
     )
@@ -379,8 +380,8 @@ object RecurrenceEngine {
     is ScheduleTiming.Timed -> HalfOpenInterval(timing.start, timing.start.plusMinutes(timing.durationMinutes))
     is ScheduleTiming.Deadline -> HalfOpenInterval(timing.due, timing.due.plusMinutes(1))
     is ScheduleTiming.AllDay -> {
-      val start = MinuteTimeDate(timing.startDate, 0, 0)
-      HalfOpenInterval(start, MinuteTimeDate(timing.startDate.plusDays(timing.durationDays), 0, 0))
+      val start = MinuteTimeDate(timing.date, 0, 0)
+      HalfOpenInterval(start, MinuteTimeDate(timing.date.plusDays(1), 0, 0))
     }
     ScheduleTiming.Unscheduled -> null
   }
@@ -395,7 +396,7 @@ object RecurrenceEngine {
   private fun effectiveStart(timing: ScheduleTiming): MinuteTimeDate = when (timing) {
     is ScheduleTiming.Timed -> timing.start
     is ScheduleTiming.Deadline -> timing.due
-    is ScheduleTiming.AllDay -> MinuteTimeDate(timing.startDate, 0, 0)
+    is ScheduleTiming.AllDay -> MinuteTimeDate(timing.date, 0, 0)
     ScheduleTiming.Unscheduled -> error("unscheduled timing has no occurrence start")
   }
 

@@ -121,7 +121,7 @@ object ScheduleService2Impl : IScheduleService2 {
           it.title,
           it.description,
           it.categoryId,
-          it.reminders,
+          it.reminder,
           it.status,
           it.isOverridden,
         )
@@ -262,8 +262,8 @@ private fun ScheduleUiOccurrence.toApiModel(
         timeZoneId = value.timeZoneId,
       )
       is ScheduleTiming.AllDay -> ScheduleOccurrenceTiming.AllDay(
-        startDate = value.startDate,
-        durationDays = value.durationDays,
+        startDate = value.date,
+        durationDays = 1,
       )
       ScheduleTiming.Unscheduled -> ScheduleOccurrenceTiming.Unscheduled
     },

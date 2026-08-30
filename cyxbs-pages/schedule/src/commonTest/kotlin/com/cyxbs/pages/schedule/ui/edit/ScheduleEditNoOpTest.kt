@@ -156,15 +156,15 @@ class ScheduleEditNoOpTest {
   fun exactReminderSurvivesEditDraftRoundTrip() {
     val origin = parentSchedule().copy(
       recurrence = null,
-      reminders = listOf(ScheduleReminder(ReminderId("exact"), 0, ReminderChannel.DEVICE)),
+      reminder = ScheduleReminder(ReminderId("exact"), 0, ReminderChannel.DEVICE),
     )
     val state = EditScheduleModelState(origin)
 
     assertEquals(0, state.remindMinutes)
-    assertEquals(0, state.toDraft().reminders.single().offsetMinutes)
+    assertEquals(0, state.toDraft().reminder?.offsetMinutes)
   }
 
-  /** 新建编辑器用负数区分“不提醒”，领域草稿只能得到空列表，不能把默认态上传成准时提醒。 */
+  /** 新建编辑器用负数区分“不提醒”，领域草稿只能得到 null，不能把默认态上传成准时提醒。 */
   @Test
   fun newDraftDefaultsToNoReminderInsteadOfExactReminder() {
     val state = EditScheduleModelState(
@@ -177,22 +177,22 @@ class ScheduleEditNoOpTest {
     state.title.setTextAndPlaceCursorAtEnd("默认不提醒")
 
     assertEquals(-1, state.remindMinutes)
-    assertTrue(state.toDraft().reminders.isEmpty())
+    assertNull(state.toDraft().reminder)
   }
 
   /** 有时间的日程应分别把准时、提前和不提醒映射为 0、正分钟数和空 reminder。 */
   @Test
   fun timedDraftMapsAllReminderChoicesWithoutConflatingZero() {
-    val state = EditScheduleModelState(parentSchedule().copy(recurrence = null, reminders = emptyList()))
+    val state = EditScheduleModelState(parentSchedule().copy(recurrence = null, reminder = null))
 
     state.remindMinutes = 0
-    assertEquals(0, state.toDraft().reminders.single().offsetMinutes)
+    assertEquals(0, state.toDraft().reminder?.offsetMinutes)
 
     state.remindMinutes = 10
-    assertEquals(10, state.toDraft().reminders.single().offsetMinutes)
+    assertEquals(10, state.toDraft().reminder?.offsetMinutes)
 
     state.remindMinutes = -1
-    assertTrue(state.toDraft().reminders.isEmpty())
+    assertNull(state.toDraft().reminder)
   }
 
   /** 未排期没有提醒触发点或课表位置，草稿保存边界必须统一清理这两个暂存选择。 */
@@ -205,7 +205,7 @@ class ScheduleEditNoOpTest {
 
     val draft = state.toDraft()
     assertEquals(ScheduleTiming.Unscheduled, draft.timing)
-    assertTrue(draft.reminders.isEmpty())
+    assertNull(draft.reminder)
     assertFalse(draft.linkedToCourse)
   }
 
@@ -221,7 +221,7 @@ class ScheduleEditNoOpTest {
     val draft = state.toDraft()
     assertEquals(ScheduleTiming.Unscheduled, draft.timing)
     assertNull(draft.recurrence)
-    assertTrue(draft.reminders.isEmpty())
+    assertNull(draft.reminder)
     assertFalse(draft.linkedToCourse)
   }
 
@@ -244,14 +244,14 @@ class ScheduleEditNoOpTest {
     val all = (commandFor(EditScope.ALL) as ScheduleCommand.Update).schedule
     assertEquals(ScheduleTiming.Unscheduled, all.timing)
     assertNull(all.recurrence)
-    assertTrue(all.reminders.isEmpty())
+    assertNull(all.reminder)
     assertFalse(all.linkedToCourse)
 
     val following = (commandFor(EditScope.THIS_AND_FOLLOWING) as ScheduleCommand.SplitSeries)
       .followingSchedule
     assertEquals(ScheduleTiming.Unscheduled, following.timing)
     assertNull(following.recurrence)
-    assertTrue(following.reminders.isEmpty())
+    assertNull(following.reminder)
     assertFalse(following.linkedToCourse)
   }
 
@@ -286,7 +286,7 @@ class ScheduleEditNoOpTest {
       title = FieldPatch.Replace(parent.title),
       description = FieldPatch.Clear,
       categoryId = FieldPatch.Clear,
-      reminders = FieldPatch.Replace(parent.reminders),
+      reminder = FieldPatch.Replace(requireNotNull(parent.reminder)),
     )
     val existing = ScheduleOccurrenceException(
       parent.id, recurrenceId, 4, OccurrenceStatus.ACTIVE, existingPatch,
@@ -294,7 +294,7 @@ class ScheduleEditNoOpTest {
     )
     val occurrence = ScheduleOccurrence(
       parent.id, recurrenceId, occurrenceTiming, parent.title, "", null,
-      parent.reminders, OccurrenceStatus.ACTIVE, true,
+      parent.reminder, OccurrenceStatus.ACTIVE, true,
     )
     val repository = RecordingRepository(ScheduleSnapshot(
       schedules = listOf(parent), exceptions = listOf(existing), status = ScheduleRepositoryStatus.Ready(0, false),
@@ -330,7 +330,7 @@ class ScheduleEditNoOpTest {
 
   @Test
   fun partialTitleEditPreservesUntouchedExistingPatchFields() = runTest {
-    val parent = parentSchedule().copy(reminders = emptyList())
+    val parent = parentSchedule().copy(reminder = null)
     val recurrenceId = recurrenceId()
     val occurrenceTiming = occurrenceTiming(recurrenceId)
     val existingPatch = OccurrencePatch(
@@ -338,7 +338,7 @@ class ScheduleEditNoOpTest {
       title = FieldPatch.Replace(parent.title),
       description = FieldPatch.Clear,
       categoryId = FieldPatch.Clear,
-      reminders = FieldPatch.Replace(emptyList()),
+      reminder = FieldPatch.Clear,
     )
     val existing = exception(parent, recurrenceId, existingPatch)
     val repository = RecordingRepository(snapshot(parent, existing))
@@ -352,7 +352,7 @@ class ScheduleEditNoOpTest {
     assertEquals(existingPatch.description, patch.description)
     assertEquals(existingPatch.categoryId, patch.categoryId)
     assertEquals(existingPatch.timing, patch.timing)
-    assertEquals(existingPatch.reminders, patch.reminders)
+    assertEquals(existingPatch.reminder, patch.reminder)
   }
 
   @Test
@@ -411,18 +411,18 @@ class ScheduleEditNoOpTest {
       state.startTime = ""
       state.endTime = ""
       state.isInterval = false
-      assertTrue(!state.isOccurrenceRemindersChanged)
+      assertTrue(!state.isOccurrenceReminderChanged)
       repository.applyScheduleEdit(state, scope, id, FakeIds, Clock.System)
       return repository.commands.singleOrNull()
     }
 
     val all = (apply(EditScope.ALL) as ScheduleCommand.Update).schedule
     assertEquals(ScheduleTiming.Unscheduled, all.timing)
-    assertTrue(all.reminders.isEmpty())
+    assertNull(all.reminder)
     // 非重复日程没有可拆分的 occurrence，“此次及以后”防御性等价于整个系列更新。
     val following = (apply(EditScope.THIS_AND_FOLLOWING) as ScheduleCommand.Update).schedule
     assertEquals(ScheduleTiming.Unscheduled, following.timing)
-    assertTrue(following.reminders.isEmpty())
+    assertNull(following.reminder)
     assertFailsWith<IllegalArgumentException> { apply(EditScope.THIS_ONLY) }
   }
 
@@ -431,7 +431,7 @@ class ScheduleEditNoOpTest {
     val unscheduled = EditScheduleModelState(parentSchedule().copy(
       timing = ScheduleTiming.Unscheduled,
       recurrence = null,
-      reminders = emptyList(),
+      reminder = null,
     ))
     val allDayTiming = ScheduleTiming.AllDay(Date(2026, 7, 1))
     val allDay = EditScheduleModelState(parentSchedule().copy(timing = allDayTiming))
@@ -538,7 +538,7 @@ class ScheduleEditNoOpTest {
         description = "Occurrence description",
         categoryId = CategoryId("occurrence-category"),
         timing = ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 8, 15, 0), 90, "Asia/Shanghai"),
-        reminders = emptyList(),
+        reminder = null,
       )
       val repository = RecordingRepository(snapshot(parent))
       val state = EditScheduleModelState(parent, projected)
@@ -560,7 +560,7 @@ class ScheduleEditNoOpTest {
       ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 8, 15, 0), 90, "Asia/Shanghai"),
       following.timing,
     )
-    assertTrue(following.reminders.isEmpty())
+    assertNull(following.reminder)
     assertEquals(2, following.recurrence?.interval)
   }
 
@@ -612,7 +612,7 @@ class ScheduleEditNoOpTest {
     assertEquals(expected.description, actual.description)
     assertEquals(expected.categoryId, actual.categoryId)
     assertEquals(expected.timing, actual.timing)
-    assertEquals(expected.reminders, actual.reminders)
+    assertEquals(expected.reminder, actual.reminder)
   }
 
   private fun recurrenceId() =
@@ -627,7 +627,7 @@ class ScheduleEditNoOpTest {
     timing: ScheduleTiming = occurrenceTiming(recurrenceId),
   ) = ScheduleOccurrence(
     parent.id, recurrenceId, timing, parent.title, parent.description, parent.categoryId,
-    parent.reminders, OccurrenceStatus.ACTIVE, true,
+    parent.reminder, OccurrenceStatus.ACTIVE, true,
   )
 
   private fun exception(parent: Schedule, recurrenceId: RecurrenceId, patch: OccurrencePatch) =
@@ -646,7 +646,7 @@ class ScheduleEditNoOpTest {
     ScheduleId("0197f000-0000-7000-8000-000000000001"), 2, "Parent now equal", "", null,
     ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 1, 9, 0), 60, "Asia/Shanghai"),
     RecurrenceRule(RecurrenceFrequency.WEEKLY, byWeekDays = setOf(IsoWeekDay.WEDNESDAY)),
-    listOf(ScheduleReminder(ReminderId("r1"), 10, ReminderChannel.DEVICE)),
+    ScheduleReminder(ReminderId("r1"), 10, ReminderChannel.DEVICE),
     ScheduleTodoState.PENDING,
     Instant.parse("2026-07-01T00:00:00Z"), Instant.parse("2026-07-02T00:00:00Z"),
   )

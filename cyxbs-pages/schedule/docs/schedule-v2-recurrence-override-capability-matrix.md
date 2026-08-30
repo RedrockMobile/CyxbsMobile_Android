@@ -1,6 +1,6 @@
 # Schedule v2 重复日程单次覆盖与周期破坏能力矩阵
 
-> **状态：本文是最新 canonical 目标；后端 `guoxiangrui/schedule` 已提交当前支持范围内的 typed recurrence/OccurrenceOverride 合同，不实现低频历史 tombstone date-slot 重入状态机，且尚未部署；客户端与系统日历 adapter 尚未迁移。**
+> **状态：本文记录当前 canonical 合同；功能仍处于 dev 验证阶段，正式环境尚未上线。**
 >
 > 本文统一跨平台权威语义并记录 Android Calendar Provider 与 iOS EventKit 的平台能力。平台原始实例字段只能作为 adapter-only 信息，不能进入 wire identity，也不授权本次修改客户端代码、测试或部署。
 
@@ -24,7 +24,7 @@
 ```text
 TIMED      → 实际 startAt/endAt
 DEADLINE   → 实际 dueAt
-ALL_DAY    → UTC 午夜起止，endAt exclusive
+ALL_DAY    → 单个 UTC 午夜 date 日期槽
 重复锚点    → recurrence.anchorDate，稳定 UTC 午夜逻辑槽位
 本次 identity→ occurrenceDate，parent rule 真实生成的 UTC 午夜逻辑槽位
 ```
@@ -72,7 +72,7 @@ OccurrenceOverrideInput {
   title        AtomicField<FieldPatch<String>>
   description  AtomicField<FieldPatch<String>>
   categoryId   AtomicField<FieldPatch<String>>
-  reminders    AtomicField<FieldPatch<List<Reminder>>>
+  reminder     AtomicField<FieldPatch<Reminder>>
 }
 ```
 
@@ -81,10 +81,10 @@ OccurrenceOverrideInput {
 ```text
 status      = ACTIVE | COMPLETED | CANCELLED
 timing      = INHERIT | REPLACE
-title       = INHERIT | CLEAR | REPLACE
+title       = INHERIT | REPLACE
 description = INHERIT | CLEAR | REPLACE
 categoryId  = INHERIT | CLEAR | REPLACE
-reminders   = INHERIT | CLEAR | REPLACE
+reminder    = INHERIT | CLEAR | REPLACE
 ```
 
 Override 明确没有：
@@ -94,8 +94,8 @@ Override 明确没有：
 - 独立 recurrence 规则。
 
 timing `REPLACE` 上传完整 timing union，不能 `CLEAR` 或替换为 `UNSCHEDULED`，且必须与父系列保持 timing kind；
-categoryId `REPLACE` 必须引用同 owner 的 live Category。`COMPLETED` 仍物化 occurrence；只有 `CANCELLED`
-抑制该 date-slot。
+title `REPLACE` 必须是非空白文本，`CLEAR` 非法；categoryId `REPLACE` 必须引用同 owner 的 live Category。
+`COMPLETED` 仍物化 occurrence；只有 `CANCELLED` 抑制该 date-slot。
 
 完整 JSON 示例：
 
@@ -123,7 +123,7 @@ categoryId `REPLACE` 必须引用同 owner 的 live Category。`COMPLETED` 仍�
     "data": { "mode": "REPLACE", "value": "category-study" },
     "modifiedAt": 1775995200125
   },
-  "reminders": {
+  "reminder": {
     "data": { "mode": "INHERIT" },
     "modifiedAt": 1775995200126
   }
@@ -147,12 +147,11 @@ timing REPLACE 与 parent kind 一致且不是 UNSCHEDULED
 categoryId REPLACE 引用同 owner 的 live Category
 ```
 
-服务端不会自动删除不再使用的 live Override。同一 Schedule identity 的 recurrence 修改只允许在以下条件同时成立时进入 atomic batch：
+服务端不会自动删除不再使用的 live Override。同一 Schedule identity 的 recurrence 修改要求所有 live Override
+仍属于新日期集合。WEEKLY 可以取消 anchorDate 当天对应的星期；anchorDate 只保存系列的稳定日期轴，不强制成为
+每周选择项。
 
-- 所有 live Override 仍属于新日期集合；
-- WEEKLY `weekdays` 仍包含 immutable first anchor 的 weekday。
-
-如果规则变化会使 live Override 失效，客户端必须在同一个 atomic batch 中删除或迁移这些 Override；最终 staged graph 仍有失效 live Override 时，整批 `REJECTED` 并回滚。若需移除 anchor weekday，则创建新 Schedule identity。当前不检测历史 tombstone date-slot 重入，也不为该场景定义专用原因码。
+如果规则变化会使 live Override 失效，客户端需要先删除或迁移对应 Override，再提交规则更新；资源操作彼此独立，某项失败不会回滚其他已经成功的资源。失败操作仍保留在本地 pending/失败记录中，用户修正对应日程后再次提交。当前不检测历史 tombstone date-slot 重入，也不为该场景定义专用原因码。
 
 Override tombstone 仍必须保留合法的 `scheduleId + UTC occurrenceDate` identity，但不要求 tombstone 日期继续属于 parent 当前 recurrence。新 series identity 让以后重新出现的逻辑日期落在新的 Override identity 上，而不是复活旧 tombstone。
 
@@ -164,7 +163,7 @@ timing = INHERIT
 title = INHERIT
 description = INHERIT
 categoryId = INHERIT
-reminders = INHERIT
+reminder = INHERIT
 ```
 
 不要用 DELETE 表示“恢复默认”，因为 tombstone 不可复活，会阻止以后再次编辑同一 `scheduleId + occurrenceDate`。
@@ -179,29 +178,29 @@ reminders = INHERIT
 | **修改整条重复日程标题** | **权威合同支持**。更新 Schedule `title` AtomicField。 | 更新 master 标题。 | 更新 recurring event 标题。 |
 | **修改整条重复日程描述** | **权威合同支持**。更新独立 `description` AtomicField。 | 更新 master 描述。 | 更新 recurring event notes。 |
 | **修改整条重复日程分类** | **权威合同支持**。更新 parent Schedule `categoryId` AtomicField。 | 分类是应用内字段，不投影 Provider。 | 分类是应用内字段，不映射 EventKit。 |
-| **修改整条重复日程提醒** | **权威合同支持**。更新 parent 完整 reminders AtomicField。 | 更新 master reminders。 | 更新 recurring event alarms。 |
+| **修改整条重复日程提醒** | **权威合同支持**。更新 parent 单个 reminder AtomicField。 | 更新 master reminder。 | 更新 recurring event alarm。 |
 | **修改整条重复日程实际时间** | **权威合同支持**。更新独立 timing AtomicField，anchor 与 Override date-slot 不变。 | 更新 master timing；平台实例关联仅属 adapter。 | 更新 recurring event timing；平台 occurrence 信息仅属 adapter。 |
-| **改变 recurrence 规则** | **权威合同支持 atomic batch**。同 identity 仅允许保留 first anchor weekday、全部 live Override membership 且不重入 tombstone date-slot 的变化；否则必须创建新 Schedule identity 并迁移所需 Override。 | 更新或替换 master，最终只提交权威资源图。 | 可借助 recurring event/span，最终只提交权威资源图。 |
-| **删除整条重复日程** | **权威合同支持 atomic batch**。删除 parent 与全部 live Override closure。 | 删除受管 master。 | 删除 recurring event；具体 span 只属平台实现。 |
+| **改变 recurrence 规则** | **权威合同支持**。同 identity 要求全部 live Override 仍属于新规则且不重入 tombstone date-slot；WEEKLY 不要求保留 anchor weekday。否则创建新 Schedule identity，并以独立操作迁移所需 Override。 | 更新或替换 master，最终只提交权威资源图。 | 可借助 recurring event/span，最终只提交权威资源图。 |
+| **删除整条重复日程** | **权威合同支持**。Schedule 删除为 delete-wins；关联 Override 由 parent closure 一并失效。 | 删除受管 master。 | 删除 recurring event；具体 span 只属平台实现。 |
 | **仅取消本次** | **权威合同支持**。写 `status.data=CANCELLED`，该 date-slot 不再物化。 | `ORIGINAL_ID + ORIGINAL_INSTANCE_TIME + STATUS_CANCELED` 可作为 adapter-only detached row；正式 exception 导出未启用。 | `.thisEvent` 删除可表达；项目未接入，`EKEvent.occurrenceDate` 仅 adapter-only。 |
 | **仅完成本次** | **权威合同支持**。写 `status.data=COMPLETED`，仍按 parent timing 物化。 | 不应写 canceled row；正式 projection 尚未启用。 | EventKit 没有 Schedule 完成状态，不能映射为删除。 |
 | **仅编辑本次标题** | **权威合同支持**。更新独立 title `FieldPatch` AtomicField。 | detached row 可表达；adapter 已实现未启用。 | `.thisEvent` detached override 可表达；平台支持未接入。 |
 | **仅编辑本次描述** | **权威合同支持**。更新独立 description `FieldPatch` AtomicField。 | detached row 可表达；adapter 已实现未启用。 | `.thisEvent` notes override 可表达；平台支持未接入。 |
 | **仅编辑本次分类** | **权威合同支持**。更新 categoryId `FieldPatch` AtomicField。 | 分类不投影 Provider。 | 分类不映射 EventKit。 |
-| **仅编辑本次提醒** | **权威合同支持**。更新 reminders `FieldPatch` AtomicField。 | detached row 可表达；adapter 已实现未启用。 | `.thisEvent` alarm 可表达；平台支持未接入。 |
+| **仅编辑本次提醒** | **权威合同支持**。更新 reminder `FieldPatch` AtomicField。 | detached row 可表达；adapter 已实现未启用。 | `.thisEvent` alarm 可表达；平台支持未接入。 |
 | **仅改期本次** | **权威合同支持**。更新 timing `FieldPatch` AtomicField，identity 仍是原始 `occurrenceDate`。 | Provider detached timing 可作为 adapter 投影。 | `.thisEvent` timing 可作为 adapter 投影。 |
-| **恢复本次字段为系列默认** | **权威合同支持**。对应 timing/title/description/categoryId/reminders 设为 INHERIT，保留 neutral live Override。 | adapter 可删除或更新 detached row；平台投影是否保留不改变远端 identity。 | 平台可撤销 detached override；平台对象删除不等于远端 tombstone。 |
+| **恢复本次字段为系列默认** | **权威合同支持**。对应 timing/title/description/categoryId/reminder 设为 INHERIT，保留 neutral live Override。 | adapter 可删除或更新 detached row；平台投影是否保留不改变远端 identity。 | 平台可撤销 detached override；平台对象删除不等于远端 tombstone。 |
 | **恢复已取消本次** | **权威合同支持**。status 恢复 ACTIVE；无其它覆盖时仍保留 neutral live Override。 | adapter 可删除 canceled row；正式 exception 导出未启用。 | 平台可恢复 occurrence；项目未接入。 |
-| **从本次起编辑后续** | **权威合同支持 atomic batch**。截断 A、创建 B、处理 affected Overrides；B 使用新 identity/anchor。 | 应用截断旧 master 并创建新 master。 | `.futureEvents` 可在平台内部拆分；远端只接收最终 A/B/Override 图。 |
-| **从本次起删除后续** | **权威合同支持 atomic batch**。截断或删除 A，并处理 Override closure。 | 修改旧 master 结束边界。 | `.futureEvents` 可截断；远端只接收最终资源图。 |
-| **Override 跨 parent 或跨日期** | **权威合同支持原子迁移**。必须 `DELETE old + CREATE new`，identity 不可 PATCH。 | detached row 可删除后重建；原始实例字段仅 adapter-only。 | occurrence 可删除后重建；`occurrenceDate` 仅 adapter-only。 |
+| **从本次起编辑后续** | **权威合同支持**。客户端独立提交截断 A、创建 B 与 affected Overrides；B 使用新 identity/anchor，单项失败留在本地修正。 | 应用截断旧 master 并创建新 master。 | `.futureEvents` 可在平台内部拆分；远端只接收最终 A/B/Override 资源。 |
+| **从本次起删除后续** | **权威合同支持**。客户端独立提交截断或删除 A 及 Override closure。 | 修改旧 master 结束边界。 | `.futureEvents` 可截断；远端只接收最终资源。 |
+| **Override 跨 parent 或跨日期** | **权威合同支持迁移**。分别 `DELETE old + CREATE new`，identity 不可 PATCH，不承诺跨资源原子性。 | detached row 可删除后重建；原始实例字段仅 adapter-only。 | occurrence 可删除后重建；`occurrenceDate` 仅 adapter-only。 |
 | **增加规则不生成的日期（RDATE）** | **不支持**。live Override 必须指向 parent rule 真实生成的 date-slot。 | Provider 支持 RDATE，但项目不使用。 | 公共 API 未公开等价 RDATE 集合。 |
 | **排除多个指定日期（EXDATE）** | **不支持直接字段**。逐条 `CANCELLED` Override 表达。 | Provider 支持 EXDATE，但项目不使用。 | 公共 API 未公开等价 EXDATE 集合。 |
 | **系统日历反向同步到 Schedule** | **不支持**。Schedule 是一期权威源。 | 不作为生产同步链路。 | 一期仅 `Schedule → EventKit` 单向导出。 |
 
 ---
 
-## 6. recurrence 结构批次
+## 6. recurrence 结构操作
 
 后端不接收 SplitSeries、DeleteThisAndFollowing 等因果命令，只接收 typed 最终资源：
 
@@ -215,7 +214,7 @@ reminders = INHERIT
   PATCH/DELETE full Schedule A
   DELETE affected Overrides
 
-同 identity recurrence 变化会使 live Override 失效、重入 tombstone slot 或移除 anchor weekday：
+同 identity recurrence 变化会使 live Override 失效或重入 tombstone slot：
   CREATE full Schedule B
   CREATE/UPSERT B 下仍需保留的 Overrides
   DELETE A 下全部 live Overrides
@@ -226,18 +225,7 @@ Override 跨 parent/date：
   CREATE new scheduleId + occurrenceDate
 ```
 
-同一 batch 内按以下顺序模拟：
-
-```text
-Category upsert
-→ Schedule upsert
-→ OccurrenceOverride upsert
-→ OccurrenceOverride delete
-→ Schedule delete
-→ Category delete
-```
-
-服务端校验最终 Category 引用、parent closure、UTC date-slot membership、anchor history 和 tombstone。任一操作不安全则整批不写。结果只有：
+服务端分别校验 Category 引用、parent closure、UTC date-slot membership、anchor history 和 tombstone。每个上传资源都在对应的 `upsertResults` 或 `deleteResults` 中得到结果；一个资源被拒绝不会让同请求内其他合法资源回滚。常见结果包括：
 
 ```text
 APPLIED
@@ -245,7 +233,7 @@ ALREADY_SATISFIED
 REJECTED
 ```
 
-客户端根据 typed `relatedUpserts/relatedDeletes` 自动重建并重试，不要求用户处理普通冲突，也不保存 lineage 或 receipt。
+客户端接受成功结果和服务端 canonical current；失败项继续留在本地 pending 与失败记录中，不保存 lineage 或 receipt。
 
 ---
 
@@ -272,7 +260,7 @@ EventKit 的 `.thisEvent` 可操作选中 occurrence，`.futureEvents` 可操作
 - 不能进入 Schedule v2 wire identity；
 - 不能按设备时区反算 UTC date-slot；
 - 不能让 `.thisEvent` 的平台 identity 或额外字段改变权威合同；
-- `.futureEvents` 的平台内部拆分最终只映射为 A/B/Override typed atomic batch。
+- `.futureEvents` 的平台内部拆分最终只映射为 A/B/Override 独立资源操作。
 
 当前 iOS bridge 尚未接通 Schedule OccurrenceOverride 到 `.thisEvent` 的正式写入路径；foundation 应继续保守
 返回 Unsupported。未来接通后可投影单次标题、描述、提醒、取消与 timing；categoryId 是应用内分类，不映射 EventKit。
@@ -287,7 +275,7 @@ EventKit 的 `.thisEvent` 可操作选中 occurrence，`.futureEvents` 可操作
            + recurrence AtomicField
            + stable first anchor history)
   + OccurrenceOverride(scheduleId + UTC occurrenceDate
-                        + status/timing/title/description/categoryId/reminders AtomicField)
+                        + status/timing/title/description/categoryId/reminder AtomicField)
 
 客户端同步状态：
   remoteSnapshot
@@ -297,7 +285,7 @@ EventKit 的 `.thisEvent` 可操作选中 occurrence，`.futureEvents` 可操作
 远端同步：
   typed confirmed/upserts/deletes
   + /v2/schedule-mutations
-  + typed atomic batches
+  + 每项独立的 typed operation results
   + canonical resource/tombstone delta
 
 Android adapter-only：

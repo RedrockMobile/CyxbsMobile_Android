@@ -203,7 +203,7 @@ class ScheduleTodoUiStateTest {
     categoryId = null,
     timing = timing,
     recurrence = recurrence,
-    reminders = emptyList(),
+    reminder = null,
     todoState = todoState,
     createdAt = Instant.parse("2026-08-17T00:00:00Z"),
     updatedAt = updatedAt,

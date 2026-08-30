@@ -75,7 +75,7 @@ class LegacyScheduleMapperTest {
     assertNull(item.schedule.todoState)
     assertTrue(item.schedule.linkedToCourse)
     assertEquals("旧事务内容", item.schedule.description)
-    assertEquals(15, item.schedule.reminders.single().offsetMinutes)
+    assertEquals(15, item.schedule.reminder?.offsetMinutes)
     assertEquals(RecurrenceFrequency.WEEKLY, item.schedule.recurrence?.frequency)
     assertEquals(setOf(IsoWeekDay.WEDNESDAY), item.schedule.recurrence?.byWeekDays)
     assertEquals(RecurrenceEnd.Count(20), item.schedule.recurrence?.end)
@@ -103,7 +103,7 @@ class LegacyScheduleMapperTest {
       items.map { assertIs<ScheduleTiming.Timed>(it.schedule.timing).start.date },
     )
     assertTrue(items.all { it.schedule.recurrence == null })
-    assertTrue(items.all { it.schedule.reminders.isEmpty() })
+    assertTrue(items.all { it.schedule.reminder == null })
     assertNotEquals(items[0].schedule.id, items[1].schedule.id)
   }
 
@@ -209,7 +209,7 @@ class LegacyScheduleMapperTest {
     ).single()
 
     assertIs<ScheduleTiming.Deadline>(item.schedule.timing)
-    assertEquals(0, item.schedule.reminders.single().offsetMinutes)
+    assertEquals(0, item.schedule.reminder?.offsetMinutes)
   }
 
   /** 截止/通知的常用组合分别映射为无提醒、准时、提前提醒或丢弃晚于截止的非法提醒。 */
@@ -238,15 +238,15 @@ class LegacyScheduleMapperTest {
     )
 
     assertEquals(LegacyScheduleMapper.parseLegacyDateTime(due), deadlineOf(items[0]))
-    assertTrue(items[0].schedule.reminders.isEmpty())
+    assertTrue(items[0].schedule.reminder == null)
     assertEquals(LegacyScheduleMapper.parseLegacyDateTime(notify), deadlineOf(items[1]))
-    assertEquals(0, items[1].schedule.reminders.single().offsetMinutes)
+    assertEquals(0, items[1].schedule.reminder?.offsetMinutes)
     assertEquals(LegacyScheduleMapper.parseLegacyDateTime(due), deadlineOf(items[2]))
-    assertEquals(30, items[2].schedule.reminders.single().offsetMinutes)
+    assertEquals(30, items[2].schedule.reminder?.offsetMinutes)
     assertEquals(LegacyScheduleMapper.parseLegacyDateTime(due), deadlineOf(items[3]))
-    assertTrue(items[3].schedule.reminders.isEmpty())
+    assertTrue(items[3].schedule.reminder == null)
     assertEquals(ScheduleTiming.Unscheduled, items[4].schedule.timing)
-    assertTrue(items[4].schedule.reminders.isEmpty())
+    assertTrue(items[4].schedule.reminder == null)
   }
 
   /** 没有截止和通知的旧清单必须保持未排期，且不能产生提醒、重复或课表关联。 */
@@ -255,7 +255,7 @@ class LegacyScheduleMapperTest {
     val item = mapTodos(legacyTodo()).single()
 
     assertEquals(ScheduleTiming.Unscheduled, item.schedule.timing)
-    assertTrue(item.schedule.reminders.isEmpty())
+    assertTrue(item.schedule.reminder == null)
     assertNull(item.schedule.recurrence)
     assertFalse(item.schedule.linkedToCourse)
   }
@@ -313,7 +313,7 @@ class LegacyScheduleMapperTest {
     assertEquals(RecurrenceFrequency.DAILY, item.schedule.recurrence?.frequency)
     assertEquals(RecurrenceEnd.Until(Date(2026, 3, 31)), item.schedule.recurrence?.end)
     assertEquals(Date(2026, 3, 8), item.schedule.recurrenceAnchorDate)
-    assertEquals(0, item.schedule.reminders.single().offsetMinutes)
+    assertEquals(0, item.schedule.reminder?.offsetMinutes)
     assertEquals(ScheduleTodoState.PENDING, item.schedule.todoState)
   }
 
@@ -337,7 +337,7 @@ class LegacyScheduleMapperTest {
       setOf(IsoWeekDay.SUNDAY, IsoWeekDay.MONDAY, IsoWeekDay.WEDNESDAY),
       item.schedule.recurrence?.byWeekDays,
     )
-    assertTrue(item.schedule.reminders.isEmpty())
+    assertTrue(item.schedule.reminder == null)
   }
 
   /** 缺少 notify 时若当天目标时分已过，日/周重复都必须选择下一次而不是迁出过期锚点。 */
@@ -398,7 +398,7 @@ class LegacyScheduleMapperTest {
 
     assertEquals(MinuteTimeDate(2026, 3, 2, 0, 0), deadlineOf(item))
     assertEquals(RecurrenceEnd.Never, item.schedule.recurrence?.end)
-    assertTrue(item.schedule.reminders.isEmpty())
+    assertTrue(item.schedule.reminder == null)
   }
 
   /** 非法周选择器不猜测重复规则；有截止时降为一次性，无合法时间时保持未排期。 */
@@ -424,14 +424,14 @@ class LegacyScheduleMapperTest {
 
     assertEquals(MinuteTimeDate(2026, 3, 31, 14, 30), deadlineOf(items[0]))
     assertNull(items[0].schedule.recurrence)
-    assertTrue(items[0].schedule.reminders.isEmpty())
+    assertTrue(items[0].schedule.reminder == null)
     assertEquals(ScheduleTiming.Unscheduled, items[1].schedule.timing)
     assertNull(items[1].schedule.recurrence)
   }
 
-  /** 当前协议不支持月重复时只保留下一次通知，避免创建永远无法上传的 MONTHLY pending。 */
+  /** 月重复必须保留旧 day 选择器和下一次通知锚点。 */
   @Test
-  fun monthlyTodo_fallsBackToNextDeadline() {
+  fun monthlyTodo_preservesRuleAndNextDeadline() {
     val notify = "2026年3月8日14:30"
     val item = mapTodos(
       legacyTodo(
@@ -445,30 +445,53 @@ class LegacyScheduleMapperTest {
     ).single()
 
     assertEquals(LegacyScheduleMapper.parseLegacyDateTime(notify), deadlineOf(item))
-    assertNull(item.schedule.recurrence)
-    assertEquals(0, item.schedule.reminders.single().offsetMinutes)
+    assertEquals(RecurrenceFrequency.MONTHLY, item.schedule.recurrence?.frequency)
+    assertEquals(setOf(8), item.schedule.recurrence?.byMonthDays)
+    assertEquals(0, item.schedule.reminder?.offsetMinutes)
   }
 
-  /** 年重复或月重复没有下一次通知时，只能退回一次性结束时间且不能凭空产生提醒。 */
+  /** 月/年重复缺少通知时间时按选择器寻找下一次发生，且不能凭空产生提醒。 */
   @Test
-  fun unsupportedRepeatWithoutNotify_fallsBackToEndWithoutReminder() {
+  fun monthlyAndYearlyWithoutNotify_findNextOccurrenceWithoutReminder() {
     val items = mapTodos(
       legacyTodo(
         todoId = 1,
         endTime = "2026年12月31日14:30",
-        remindMode = LegacyTodoRemindModeDto(repeatMode = LegacyTodoRemindModeDto.MONTHLY),
+        remindMode = LegacyTodoRemindModeDto(
+          repeatMode = LegacyTodoRemindModeDto.MONTHLY,
+          day = listOf(8),
+        ),
       ),
       legacyTodo(
         todoId = 2,
         endTime = "2026年12月31日15:30",
-        remindMode = LegacyTodoRemindModeDto(repeatMode = LegacyTodoRemindModeDto.YEARLY),
+        remindMode = LegacyTodoRemindModeDto(
+          repeatMode = LegacyTodoRemindModeDto.YEARLY,
+          date = listOf("3.8"),
+        ),
       ),
     )
 
-    assertEquals(MinuteTimeDate(2026, 12, 31, 14, 30), deadlineOf(items[0]))
-    assertEquals(MinuteTimeDate(2026, 12, 31, 15, 30), deadlineOf(items[1]))
-    assertTrue(items.all { it.schedule.recurrence == null })
-    assertTrue(items.all { it.schedule.reminders.isEmpty() })
+    assertEquals(MinuteTimeDate(2026, 3, 8, 14, 30), deadlineOf(items[0]))
+    assertEquals(RecurrenceFrequency.MONTHLY, items[0].schedule.recurrence?.frequency)
+    assertEquals(MinuteTimeDate(2026, 3, 8, 15, 30), deadlineOf(items[1]))
+    assertEquals(RecurrenceFrequency.YEARLY, items[1].schedule.recurrence?.frequency)
+    assertTrue(items.all { it.schedule.reminder == null })
+  }
+
+  /** 旧年重复日期若不能由 BYMONTH × BYMONTHDAY 精确表达，必须降级而不能扩出用户没选的日期。 */
+  @Test
+  fun yearlyCrossProductThatWouldBroadenDates_fallsBackToOneOffDeadline() {
+    val item = mapTodos(legacyTodo(
+      endTime = "2026年12月31日15:30",
+      remindMode = LegacyTodoRemindModeDto(
+        repeatMode = LegacyTodoRemindModeDto.YEARLY,
+        date = listOf("3.8", "4.9"),
+      ),
+    )).single()
+
+    assertEquals(MinuteTimeDate(2026, 12, 31, 15, 30), deadlineOf(item))
+    assertNull(item.schedule.recurrence)
   }
 
   /** 重复结束点不晚于下一次通知时，系列无有效发生范围，应降为下一次单次截止。 */
@@ -487,7 +510,7 @@ class LegacyScheduleMapperTest {
 
     assertEquals(MinuteTimeDate(2026, 3, 8, 14, 30), deadlineOf(item))
     assertNull(item.schedule.recurrence)
-    assertEquals(0, item.schedule.reminders.single().offsetMinutes)
+    assertEquals(0, item.schedule.reminder?.offsetMinutes)
   }
 
   /** 秒、毫秒和无效旧时间戳分别规范成毫秒或迁移时刻，保证 UUID 时间部分与资源时间一致。 */

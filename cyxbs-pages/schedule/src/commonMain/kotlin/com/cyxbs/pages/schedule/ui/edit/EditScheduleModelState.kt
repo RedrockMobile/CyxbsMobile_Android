@@ -47,7 +47,8 @@ class EditScheduleModelState(
   private val initialIsInterval = initialTiming is ScheduleTiming.Timed || origin == null
   private val initialIsAllDay = initialTiming is ScheduleTiming.AllDay
   private val initialRecurrenceDraft = origin?.recurrence.toDraft()
-  private val initialReminders = if (initialOccurrence != null) initialOccurrence.reminders else origin?.reminders.orEmpty()
+  // occurrence 的 null 表示该实例最终没有提醒，不能用 Elvis 再回退到父系列提醒。
+  private val initialReminder = if (initialOccurrence != null) initialOccurrence.reminder else origin?.reminder
   val title = TextFieldState(if (initialOccurrence != null) initialOccurrence.title else origin?.title.orEmpty())
   val detail = TextFieldState(if (initialOccurrence != null) initialOccurrence.description else origin?.description.orEmpty())
   var categoryId by mutableStateOf(if (initialOccurrence != null) initialOccurrence.categoryId else origin?.categoryId)
@@ -56,7 +57,7 @@ class EditScheduleModelState(
   var isInterval by mutableStateOf(initialIsInterval)
   var isAllDay by mutableStateOf(initialIsAllDay)
   var recurrence by mutableStateOf(initialRecurrenceDraft)
-  private val initialReminderMinutes = initialReminders.firstOrNull()?.offsetMinutes ?: -1
+  private val initialReminderMinutes = initialReminder?.offsetMinutes ?: -1
   var remindMinutes by mutableStateOf(initialReminderMinutes)
   /** 创建来源不可修改；关联设置只改变清单归属和课表投射状态。 */
   val kind: ScheduleKind = origin?.kind ?: creationKind
@@ -156,7 +157,11 @@ class EditScheduleModelState(
   /** 保存草稿已经在 [toDraft] 统一清理未排期的不合法派生字段，校验不再维护第二套临时修正规则。 */
   val validationIssues: List<ScheduleValidationIssue> get() =
     ScheduleValidator.validate(toDraft().toNewDomainForValidation())
-  val canConfirm: Boolean get() = validationIssues.isEmpty()
+  /**
+   * 新建入口必须先选择日期或时间；历史迁移得到的 Unscheduled 仍可正常打开和编辑，避免兼容数据被锁死。
+   */
+  val canConfirm: Boolean get() = validationIssues.isEmpty() &&
+    !(origin == null && effectiveTiming == ScheduleTiming.Unscheduled)
   /** occurrence 投影中的标题是否被用户实际改动；用于保留其他未触碰的 existing patch。 */
   internal val isOccurrenceTitleChanged: Boolean get() = initialOccurrence?.let { outputTitle != it.title.trim() } ?: true
   /** occurrence 投影中的描述是否被用户实际改动。 */
@@ -166,14 +171,14 @@ class EditScheduleModelState(
   /** occurrence 投影中的完整 timing 是否被用户实际改动。 */
   internal val isOccurrenceTimingChanged: Boolean get() = isTimingInputChanged
   /** occurrence 的提醒控件是否被用户实际修改；timing 派生为空不得伪装成 reminder edit。 */
-  internal val isOccurrenceRemindersChanged: Boolean get() = remindMinutes != initialReminderMinutes
+  internal val isOccurrenceReminderChanged: Boolean get() = remindMinutes != initialReminderMinutes
 
   /**
    * 仅判断 occurrence 可覆盖字段是否变化；RRULE 是系列属性，不应让 THIS_ONLY 生成无意义 exception。
    */
   internal val isOccurrenceFieldsChanged: Boolean get() =
     isOccurrenceTitleChanged || isOccurrenceDescriptionChanged || isOccurrenceCategoryChanged ||
-      isOccurrenceTimingChanged || isOccurrenceRemindersChanged
+      isOccurrenceTimingChanged || isOccurrenceReminderChanged
 
   /** RRULE 是否相对父系列发生变化，供 ALL 与 THIS_AND_FOLLOWING 独立判断系列编辑。 */
   internal val isSeriesRecurrenceChanged: Boolean get() = isRecurrenceInputChanged
@@ -201,7 +206,7 @@ class EditScheduleModelState(
     return toDraft().let { draft ->
       draft.title.trim() != origin.title || draft.description.trim() != origin.description ||
         draft.categoryId != origin.categoryId || draft.timing != origin.timing ||
-        isRecurrenceInputChanged || draft.reminders != origin.reminders || isSeriesRelationChanged
+        isRecurrenceInputChanged || draft.reminder != origin.reminder || isSeriesRelationChanged
     }
   }
 
@@ -213,16 +218,14 @@ class EditScheduleModelState(
    *
    * 0 是合法的准时提醒，只有负数表示不提醒，不能用真假判断或默认值把 0 丢失。
    */
-  internal val effectiveReminders: List<ScheduleReminder> get() = when {
-    effectiveTiming == ScheduleTiming.Unscheduled -> emptyList()
-    remindMinutes < 0 -> emptyList()
-    initialReminderMinutes == remindMinutes -> initialReminders
-    else -> listOf(
-      ScheduleReminder(
-        ReminderId(initialReminders.firstOrNull()?.id?.value ?: "draft-reminder"),
-        remindMinutes,
-        ReminderChannel.DEVICE,
-      ),
+  internal val effectiveReminder: ScheduleReminder? get() = when {
+    effectiveTiming == ScheduleTiming.Unscheduled -> null
+    remindMinutes < 0 -> null
+    initialReminderMinutes == remindMinutes -> initialReminder
+    else -> ScheduleReminder(
+      ReminderId(initialReminder?.id?.value ?: "draft-reminder"),
+      remindMinutes,
+      ReminderChannel.DEVICE,
     )
   }
 
@@ -242,7 +245,7 @@ class EditScheduleModelState(
       categoryId = categoryId,
       timing = timing,
       recurrence = if (isUnscheduled) null else effectiveRecurrence,
-      reminders = effectiveReminders,
+      reminder = effectiveReminder,
       todoState = todoState,
       kind = kind,
       // 未排期没有课表投射位置；保留按钮但保存时归一化为未关联。
@@ -252,7 +255,7 @@ class EditScheduleModelState(
 
   /** 仅为运行完整领域校验补齐非编辑字段；占位时间与 revision 绝不会进入仓库。 */
   private fun ScheduleDraft.toNewDomainForValidation() = Schedule(
-    id, 0, title, description, categoryId, timing, recurrence, reminders, todoState,
+    id, 0, title, description, categoryId, timing, recurrence, reminder, todoState,
     Instant.DISTANT_PAST, Instant.DISTANT_PAST,
     kind = kind,
     linkedToCourse = linkedToCourse,
@@ -272,13 +275,13 @@ internal fun rememberEditScheduleModelState(
 private fun timingAnchorDate(timing: ScheduleTiming): Date = when (timing) {
   is ScheduleTiming.Timed -> timing.start.date
   is ScheduleTiming.Deadline -> timing.due.date
-  is ScheduleTiming.AllDay -> timing.startDate
+  is ScheduleTiming.AllDay -> timing.date
   ScheduleTiming.Unscheduled -> Date.now()
 }
 
 private fun ScheduleTiming.toStartEditText(): String = when (this) {
   is ScheduleTiming.Timed -> start.toEditText()
-  is ScheduleTiming.AllDay -> MinuteTimeDate(startDate, 0, 0).toEditText()
+  is ScheduleTiming.AllDay -> MinuteTimeDate(date, 0, 0).toEditText()
   else -> ""
 }
 
@@ -287,7 +290,7 @@ private fun ScheduleTiming.toEndEditText(): String = when (this) {
     .plus(durationMinutes, kotlinx.datetime.DateTimeUnit.MINUTE, TimeZone.of(timeZoneId))
     .toLocalDateTime(TimeZone.of(timeZoneId)).toMinuteTimeDate().toEditText()
   is ScheduleTiming.Deadline -> due.toEditText()
-  is ScheduleTiming.AllDay -> MinuteTimeDate(startDate, 0, 0).toEditText()
+  is ScheduleTiming.AllDay -> MinuteTimeDate(date, 0, 0).toEditText()
   ScheduleTiming.Unscheduled -> ""
 }
 

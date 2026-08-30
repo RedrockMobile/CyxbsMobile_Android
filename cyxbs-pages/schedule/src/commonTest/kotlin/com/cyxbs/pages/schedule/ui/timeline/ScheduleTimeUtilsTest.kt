@@ -33,12 +33,10 @@ class ScheduleTimeUtilsTest {
     assertSlice(startingAtMidnight, Date(2024, 1, 2), 0, 60)
   }
 
-  @Test fun allDayDeadlineAndExplicitUnscheduledFollowTheirOwnDayContracts() {
-    val allDay = occurrence(ScheduleTiming.AllDay(Date(2024, 1, 1), durationDays = 3))
+  @Test fun singleAllDayDeadlineAndExplicitUnscheduledFollowTheirOwnDayContracts() {
+    val allDay = occurrence(ScheduleTiming.AllDay(Date(2024, 1, 1)))
     assertSlice(allDay, Date(2024, 1, 1), 0, FULL_DAY_MINUTES)
-    assertSlice(allDay, Date(2024, 1, 2), 0, FULL_DAY_MINUTES)
-    assertSlice(allDay, Date(2024, 1, 3), 0, FULL_DAY_MINUTES)
-    assertTrue(timelineSchedulesForDate(listOf(allDay), Date(2024, 1, 4)).isEmpty())
+    assertTrue(timelineSchedulesForDate(listOf(allDay), Date(2024, 1, 2)).isEmpty())
 
     val deadline = occurrence(ScheduleTiming.Deadline(MinuteTimeDate(2024, 1, 2, 9, 30), "Asia/Shanghai"))
     assertSlice(deadline, Date(2024, 1, 2), 570, 570, isInterval = false)
@@ -77,7 +75,7 @@ class ScheduleTimeUtilsTest {
     description = "",
     categoryId = null,
     timing = timing,
-    reminders = emptyList(),
+    reminder = null,
     status = OccurrenceStatus.ACTIVE,
     isOverridden = false,
   )

@@ -52,7 +52,7 @@ class ScheduleCourseVisibilityTest {
       timeZoneId = "Asia/Shanghai",
     ),
     recurrence = null,
-    reminders = emptyList(),
+    reminder = null,
     todoState = todoState,
     createdAt = Instant.fromEpochMilliseconds(1),
     updatedAt = Instant.fromEpochMilliseconds(2),

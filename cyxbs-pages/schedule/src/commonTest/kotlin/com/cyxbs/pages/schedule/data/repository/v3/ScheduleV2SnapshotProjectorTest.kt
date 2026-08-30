@@ -76,6 +76,7 @@ class ScheduleV2SnapshotProjectorTest {
       timing = timed(2026, 7, 20, 9, 0, durationMinutes = 60),
       title = "R",
       timestamp = 100,
+      reminder = ReminderInput(15),
     )
     val scheduleState = ScheduleSyncState(
       remote.identity,
@@ -102,8 +103,8 @@ class ScheduleV2SnapshotProjectorTest {
     assertEquals(7, schedule.revision)
     assertEquals(Instant.fromEpochMilliseconds(50), schedule.createdAt)
     assertEquals(Instant.fromEpochMilliseconds(200), schedule.updatedAt)
-    assertEquals("$SCHEDULE_ID:reminder:0", schedule.reminders.single().id.value)
-    assertEquals(ReminderChannel.DEVICE, schedule.reminders.single().channel)
+    assertEquals("$SCHEDULE_ID:reminder", schedule.reminder?.id?.value)
+    assertEquals(ReminderChannel.DEVICE, schedule.reminder?.channel)
     assertEquals(
       ScheduleRepositoryStatus.Ready(pendingCount = 4, hasPendingDeletes = true),
       snapshot.status,
@@ -161,7 +162,7 @@ class ScheduleV2SnapshotProjectorTest {
       scheduleState(SCHEDULE_ID_2, TimingInput(TimingKind.DEADLINE, dueAt = deadlineDue)),
       scheduleState(
         SCHEDULE_ID_3,
-        TimingInput(TimingKind.ALL_DAY, startAt = allDayStart, endAt = allDayStart + 2 * DAY),
+        TimingInput(TimingKind.ALL_DAY, date = allDayStart),
       ),
       scheduleState(SCHEDULE_ID_4, TimingInput(TimingKind.UNSCHEDULED)),
     )
@@ -177,7 +178,7 @@ class ScheduleV2SnapshotProjectorTest {
       schedules.getValue(SCHEDULE_ID_2).timing,
     )
     assertEquals(
-      ScheduleTiming.AllDay(Date(2026, 7, 22), 2),
+      ScheduleTiming.AllDay(Date(2026, 7, 22)),
       schedules.getValue(SCHEDULE_ID_3).timing,
     )
     assertEquals(ScheduleTiming.Unscheduled, schedules.getValue(SCHEDULE_ID_4).timing)
@@ -221,7 +222,7 @@ class ScheduleV2SnapshotProjectorTest {
   }
 
   @Test
-  fun overridesRestoreIdentityFromParentAndMapOnlyFourAtoms() {
+  fun overridesRestoreIdentityFromParentAndMapEditableAtoms() {
     val occurrenceDate = Date(2026, 7, 23).utcSlot()
     val timedParent = scheduleState(SCHEDULE_ID, timed(2026, 7, 20, 9, 30, 60))
     val deadlineParent = scheduleState(
@@ -236,8 +237,7 @@ class ScheduleV2SnapshotProjectorTest {
       SCHEDULE_ID_3,
       TimingInput(
         TimingKind.ALL_DAY,
-        startAt = Date(2026, 7, 20).utcSlot(),
-        endAt = Date(2026, 7, 21).utcSlot(),
+        date = Date(2026, 7, 20).utcSlot(),
       ),
     )
     val overrides = listOf(
@@ -261,10 +261,10 @@ class ScheduleV2SnapshotProjectorTest {
     assertEquals(UiFieldPatch.Inherit, timed.patch.categoryId)
     assertEquals(UiFieldPatch.Replace("单次标题"), timed.patch.title)
     assertEquals(UiFieldPatch.Clear, timed.patch.description)
-    val reminders = assertIs<UiFieldPatch.Replace<*>>(timed.patch.reminders).value
+    val reminder = assertIs<UiFieldPatch.Replace<*>>(timed.patch.reminder).value
     assertEquals(
-      "$SCHEDULE_ID@$occurrenceDate:reminder:0",
-      assertIs<List<*>>(reminders).single().let { assertIs<com.cyxbs.pages.schedule.domain.model.ScheduleReminder>(it).id.value },
+      "$SCHEDULE_ID@$occurrenceDate:reminder",
+      assertIs<com.cyxbs.pages.schedule.domain.model.ScheduleReminder>(reminder).id.value,
     )
     assertEquals(Instant.fromEpochMilliseconds(500), timed.createdAt)
     assertEquals(Instant.fromEpochMilliseconds(650), timed.updatedAt)
@@ -299,7 +299,7 @@ class ScheduleV2SnapshotProjectorTest {
       frequency = RecurrenceFrequency.WEEKLY,
       interval = 1,
       anchorDate = Date(2026, 7, 21).utcSlot(),
-      weekdays = setOf(Weekday.MO),
+      weekdays = emptySet(),
     )
     assertIs<ScheduleV2SnapshotProjection.Failure>(
       projector.project(
@@ -377,13 +377,13 @@ class ScheduleV2SnapshotProjectorTest {
   }
 
   @Test
-  fun nonEmptyReminderMessageFailsInsteadOfBeingSilentlyDiscarded() {
+  fun unscheduledReminderFailsInsteadOfBeingSilentlyDiscarded() {
     val resource = scheduleResource(
       SCHEDULE_ID,
       version = 3,
       timing = TimingInput(TimingKind.UNSCHEDULED),
     ).copy(
-      reminders = AtomicField(listOf(ReminderInput(15, "旧 UI 无字段")), 20),
+      reminder = AtomicField(ReminderInput(15), 20),
     )
     val state = ScheduleSyncState(
       resource.identity,
@@ -469,6 +469,7 @@ class ScheduleV2SnapshotProjectorTest {
     recurrence: RecurrenceInput? = null,
     title: String = "日程",
     timestamp: Long = 10,
+    reminder: ReminderInput? = null,
   ): ScheduleResource = ScheduleResource(
     identity = ScheduleIdentity(id),
     version = version,
@@ -478,7 +479,7 @@ class ScheduleV2SnapshotProjectorTest {
     categoryId = AtomicField(CATEGORY_ID, timestamp),
     timing = AtomicField(timing, timestamp),
     recurrence = AtomicField(recurrence, timestamp),
-    reminders = AtomicField(listOf(ReminderInput(15, "")), timestamp),
+    reminder = AtomicField(reminder, timestamp),
     todoState = AtomicField(TodoState.OPEN, timestamp),
     linkedToCourse = AtomicField(false, timestamp),
   )
@@ -497,7 +498,7 @@ class ScheduleV2SnapshotProjectorTest {
       title = AtomicField(FieldPatch.Replace("单次标题"), 620),
       description = AtomicField(FieldPatch.Clear, 630),
       categoryId = AtomicField(FieldPatch.Inherit, 640),
-      reminders = AtomicField(FieldPatch.Replace(listOf(ReminderInput(5, ""))), 650),
+      reminder = AtomicField(FieldPatch.Replace(ReminderInput(5)), 650),
     )
     return OccurrenceOverrideSyncState(
       identity,
@@ -529,7 +530,6 @@ class ScheduleV2SnapshotProjectorTest {
     toLocalDate().atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
 
   private companion object {
-    const val DAY = 86_400_000L
     const val CATEGORY_ID = "category-1"
     const val SCHEDULE_ID = "0197f000-0000-7000-8000-000000000001"
     const val SCHEDULE_ID_2 = "0197f000-0000-7000-8000-000000000002"

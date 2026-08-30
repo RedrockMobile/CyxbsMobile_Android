@@ -216,7 +216,7 @@ fun SchedulePage(
             }?.let { ui ->
               ScheduleOccurrence(
                 ui.scheduleId, ui.recurrenceId, ui.timing, ui.title, ui.description,
-                ui.categoryId, ui.reminders, ui.status, ui.isOverridden,
+                ui.categoryId, ui.reminder, ui.status, ui.isOverridden,
               )
             }
             editingRecurrenceId = entity.recurrenceId

@@ -176,7 +176,7 @@ class ScheduleSyncV2StateTest {
       title = AtomicField(FieldPatch.Replace("补做一次"), 1_700_000_000_002),
       description = AtomicField(FieldPatch.Clear, 1_700_000_000_003),
       categoryId = AtomicField(FieldPatch.Inherit, 1_700_000_000_003),
-      reminders = AtomicField(FieldPatch.Inherit, 1_700_000_000_004),
+      reminder = AtomicField(FieldPatch.Inherit, 1_700_000_000_004),
     )
     val remote = OccurrenceOverrideRemoteSnapshot(
       resource = resource,
@@ -188,7 +188,7 @@ class ScheduleSyncV2StateTest {
     assertEquals(OccurrenceStatus.COMPLETED, state.effectiveResource()?.status?.data)
     assertEquals(FieldPatch.Replace("补做一次"), state.effectiveResource()?.title?.data)
     assertEquals(FieldPatch.Clear, state.effectiveResource()?.description?.data)
-    assertEquals(FieldPatch.Inherit, state.effectiveResource()?.reminders?.data)
+    assertEquals(FieldPatch.Inherit, state.effectiveResource()?.reminder?.data)
     assertFailsWith<IllegalArgumentException> {
       OccurrenceOverrideIdentity(scheduleId = "schedule-1", occurrenceDate = 1)
     }

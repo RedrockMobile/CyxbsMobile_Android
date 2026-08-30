@@ -24,7 +24,7 @@ data class ScheduleDraft(
   val categoryId: CategoryId? = null,
   val timing: ScheduleTiming = ScheduleTiming.Unscheduled,
   val recurrence: RecurrenceRule? = null,
-  val reminders: List<ScheduleReminder> = emptyList(),
+  val reminder: ScheduleReminder? = null,
   val todoState: ScheduleTodoState? = ScheduleTodoState.PENDING,
   /** 创建来源不可修改；清单归属和课表投射可由课表详情中的关联设置更新。 */
   val kind: ScheduleKind = ScheduleKind.TODO,
@@ -46,7 +46,7 @@ fun ScheduleDraft.toNewDomain(now: Instant, revision: Long = 0): Schedule = Sche
   categoryId = categoryId,
   timing = timing,
   recurrence = recurrence,
-  reminders = reminders,
+  reminder = reminder,
   todoState = todoState,
   createdAt = now,
   updatedAt = now,
@@ -64,7 +64,7 @@ fun ScheduleDraft.toUpdatedDomain(origin: Schedule, now: Instant): Schedule = or
   categoryId = categoryId,
   timing = timing,
   recurrence = recurrence,
-  reminders = reminders,
+  reminder = reminder,
   todoState = if (recurrence == null) todoState else todoState?.let { ScheduleTodoState.PENDING },
   linkedToCourse = linkedToCourse,
   updatedAt = now,
@@ -82,21 +82,21 @@ data class ScheduleUiOccurrence(
   val description: String,
   val categoryId: CategoryId?,
   val timing: ScheduleTiming,
-  val reminders: List<ScheduleReminder>,
+  val reminder: ScheduleReminder?,
   val status: OccurrenceStatus,
   val isOverridden: Boolean,
 )
 
 /** 将领域展开实例无损映射为 UI 模型，保留四态 timing、状态及稳定 recurrence identity。 */
 fun ScheduleOccurrence.toUiModel(): ScheduleUiOccurrence = ScheduleUiOccurrence(
-  scheduleId, recurrenceId, title, description, categoryId, timing, reminders, status, isOverridden,
+  scheduleId, recurrenceId, title, description, categoryId, timing, reminder, status, isOverridden,
 )
 
 /**
  * 判断 ACTIVE 实例是否已越过可操作边界。
  *
  * 时间段以自身时区中的结束 Instant 为界，截止项以 due Instant 为界；全天项没有事件时区，按 [viewerTimeZone]
- * 在“最后一天之后的零点”过期，以兼容跨时区查看和 DST 日长变化。已完成、已取消及未排期实例永不显示为过期。
+ * 在“次日零点”过期，以兼容跨时区查看和 DST 日长变化。已完成、已取消及未排期实例永不显示为过期。
  * 边界时刻本身仍不算过期，只有 [now] 严格晚于边界才返回 true。
  */
 fun ScheduleUiOccurrence.isExpired(now: Instant, viewerTimeZone: TimeZone): Boolean {
@@ -104,7 +104,7 @@ fun ScheduleUiOccurrence.isExpired(now: Instant, viewerTimeZone: TimeZone): Bool
   val boundary = when (val value = timing) {
     is ScheduleTiming.Timed -> value.start.toLocalDateTime().toInstant(TimeZone.of(value.timeZoneId)) + value.durationMinutes.minutes
     is ScheduleTiming.Deadline -> value.due.toLocalDateTime().toInstant(TimeZone.of(value.timeZoneId))
-    is ScheduleTiming.AllDay -> value.startDate.plusDays(value.durationDays).toLocalDate()
+    is ScheduleTiming.AllDay -> value.date.plusDays(1).toLocalDate()
       .atStartOfDayIn(viewerTimeZone)
     ScheduleTiming.Unscheduled -> return false
   }
@@ -126,7 +126,7 @@ fun ScheduleSnapshot.occurrencesInRange(
   if (schedule.timing == ScheduleTiming.Unscheduled) {
     if (!includeUnscheduled) emptyList() else listOf(ScheduleOccurrence(
       schedule.id, null, schedule.timing, schedule.title, schedule.description, schedule.categoryId,
-      schedule.reminders,
+      schedule.reminder,
       if (schedule.todoState == ScheduleTodoState.COMPLETED) OccurrenceStatus.COMPLETED else OccurrenceStatus.ACTIVE,
       false,
     ))

@@ -172,7 +172,7 @@ class EditScheduleDialogPreview : AppNavEntry<EditScheduleDialogNavArgument>() {
     description = "综合楼 503，记得带 U 盘", categoryId = null,
     timing = ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 4, 10, 0), 90, "Asia/Shanghai"),
     recurrence = RecurrenceRule(RecurrenceFrequency.WEEKLY, byWeekDays = setOf(IsoWeekDay.SATURDAY)),
-    reminders = listOf(ScheduleReminder(ReminderId("preview-reminder"), 10, ReminderChannel.DEVICE)),
+    reminder = ScheduleReminder(ReminderId("preview-reminder"), 10, ReminderChannel.DEVICE),
     todoState = ScheduleTodoState.PENDING, createdAt = Instant.DISTANT_PAST, updatedAt = Instant.DISTANT_PAST,
   )
 }

@@ -132,9 +132,9 @@ internal object LegacyScheduleMapper {
       categoryId = null,
       timing = mapped.timing,
       recurrence = mapped.recurrence,
-      reminders = mapped.reminderOffset?.let { offset ->
-        listOf(ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE))
-      }.orEmpty(),
+      reminder = mapped.reminderOffset?.let { offset ->
+        ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE)
+      },
       todoState = if (todo.isDone == 1 && !isRepeating) {
         ScheduleTodoState.COMPLETED
       } else {
@@ -181,9 +181,9 @@ internal object LegacyScheduleMapper {
         categoryId = null,
         timing = ScheduleTiming.Timed(start, durationMinutes, timeZoneId),
         recurrence = recurrence,
-        reminders = transaction.time.takeIf { it > 0 }?.let { offset ->
-          listOf(ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE))
-        }.orEmpty(),
+        reminder = transaction.time.takeIf { it > 0 }?.let { offset ->
+          ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE)
+        },
         todoState = null,
         createdAt = Instant.fromEpochMilliseconds(timestamp),
         updatedAt = Instant.fromEpochMilliseconds(timestamp),
@@ -278,7 +278,7 @@ internal object LegacyScheduleMapper {
     )
   }
 
-  /** 将旧重复选择器收窄为 Schedule v2 支持的规则；非法空选择器不做猜测。 */
+  /** 将旧重复选择器精确映射为 Schedule v2 规则；非法或无法无损表达的选择器不做猜测。 */
   private fun createRecurrenceRule(remindMode: LegacyTodoRemindModeDto): RecurrenceRule? =
     when (remindMode.repeatMode) {
       LegacyTodoRemindModeDto.DAILY -> RecurrenceRule(RecurrenceFrequency.DAILY)
@@ -287,10 +287,42 @@ internal object LegacyScheduleMapper {
         .toSet()
         .takeIf { it.isNotEmpty() }
         ?.let { RecurrenceRule(RecurrenceFrequency.WEEKLY, byWeekDays = it) }
-      // Schedule v2 当前 wire/后端只支持 DAILY 与 WEEKLY；月/年重复由调用方保留为下一次一次性截止。
-      LegacyTodoRemindModeDto.MONTHLY, LegacyTodoRemindModeDto.YEARLY -> null
+      LegacyTodoRemindModeDto.MONTHLY -> remindMode.day
+        .filter { it in 1..31 }
+        .toSet()
+        .takeIf { it.isNotEmpty() }
+        ?.let { RecurrenceRule(RecurrenceFrequency.MONTHLY, byMonthDays = it) }
+      LegacyTodoRemindModeDto.YEARLY -> exactLegacyYearSelectors(remindMode.date)?.let { (months, monthDays) ->
+        RecurrenceRule(
+          frequency = RecurrenceFrequency.YEARLY,
+          byMonthDays = monthDays,
+          byMonths = months,
+        )
+      }
       else -> null
     }
+
+  /**
+   * 解析旧年重复的 `M.d` 日期，并确认其能由 RRULE 的 BYMONTH × BYMONTHDAY 精确表达。
+   *
+   * 例如 `3.8, 4.9` 会被笛卡尔积扩成四天，因此必须降级；`3.8, 4.8` 则可以无损表达。
+   */
+  private fun exactLegacyYearSelectors(values: List<String>): Pair<Set<Int>, Set<Int>>? {
+    val pairs = values.mapNotNull(::parseLegacyMonthDay).toSet()
+    if (pairs.isEmpty()) return null
+    val months = pairs.mapTo(linkedSetOf()) { it.first }
+    val monthDays = pairs.mapTo(linkedSetOf()) { it.second }
+    val expanded = months.flatMapTo(linkedSetOf()) { month -> monthDays.map { day -> month to day } }
+    return if (expanded == pairs) months to monthDays else null
+  }
+
+  /** 解析旧服务年重复使用的 `M.d`，以闰年校验 2 月 29 日等合法日期。 */
+  private fun parseLegacyMonthDay(value: String): Pair<Int, Int>? {
+    val match = LEGACY_MONTH_DAY_REGEX.matchEntire(value.trim()) ?: return null
+    val month = match.groupValues[1].toInt()
+    val day = match.groupValues[2].toInt()
+    return runCatching { Date(2000, month, day) }.getOrNull()?.let { month to day }
+  }
 
   /**
    * 从当前时刻起找到旧日/周选择器的下一次发生时间。
@@ -310,7 +342,19 @@ internal object LegacyScheduleMapper {
           IsoWeekDay.fromIsoNumber(candidate.dayOfWeekNumber) in days
         }
       }
-      // 月/年重复在进入本方法前已因协议不支持而降级，不能在本地构造无法上传的隐式规则。
+      LegacyTodoRemindModeDto.MONTHLY -> {
+        val days = remindMode.day.filter { it in 1..31 }.toSet()
+        (0..62).asSequence().map(now.date::plusDays).filter { candidate ->
+          candidate.dayOfMonth in days
+        }
+      }
+      LegacyTodoRemindModeDto.YEARLY -> {
+        val pairs = remindMode.date.mapNotNull(::parseLegacyMonthDay).toSet()
+        // 覆盖闰日从普通年份跨到下一个闰年的最长等待，仍只在一次迁移中做有界扫描。
+        (0..1461).asSequence().map(now.date::plusDays).filter { candidate ->
+          candidate.monthNumber to candidate.dayOfMonth in pairs
+        }
+      }
       else -> return null
     }
     val safeMinute = minuteOfDay.coerceIn(0, 24 * 60 - 1)
@@ -355,7 +399,7 @@ internal object LegacyScheduleMapper {
   private fun timingDate(timing: ScheduleTiming): Date = when (timing) {
     is ScheduleTiming.Timed -> timing.start.date
     is ScheduleTiming.Deadline -> timing.due.date
-    is ScheduleTiming.AllDay -> timing.startDate
+    is ScheduleTiming.AllDay -> timing.date
     ScheduleTiming.Unscheduled -> error("Unscheduled cannot anchor recurrence")
   }
 
@@ -400,6 +444,7 @@ internal object LegacyScheduleMapper {
 
   private val LEGACY_DATE_TIME_REGEX =
     Regex("""(\d{4})年(\d{1,2})月(\d{1,2})日(\d{1,2}):(\d{1,2})""")
+  private val LEGACY_MONTH_DAY_REGEX = Regex("""(\d{1,2})\.(\d{1,2})""")
   private val LEGACY_START_MINUTES = intArrayOf(
     8 * 60,
     8 * 60 + 55,

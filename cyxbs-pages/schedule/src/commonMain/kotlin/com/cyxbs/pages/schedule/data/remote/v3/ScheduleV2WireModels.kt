@@ -34,7 +34,7 @@ enum class TimingKind { TIMED, DEADLINE, ALL_DAY, UNSCHEDULED }
 
 /** 当前 wire 支持的重复频率。 */
 @Serializable
-enum class RecurrenceFrequency { DAILY, WEEKLY }
+enum class RecurrenceFrequency { DAILY, WEEKLY, MONTHLY, YEARLY }
 
 /** WEEKLY recurrence 使用的 ISO 风格星期枚举。 */
 @Serializable
@@ -65,27 +65,29 @@ data class FieldPatch<T>(
 @Serializable
 data class ReminderInput(
   val minutesBefore: Int, // required 且非负；零表示事件发生时提醒。
-  val message: String, // required；空串表示没有自定义文案。
 )
 
-/** kind 决定 startAt/endAt/dueAt 的唯一合法组合。 */
+/** kind 决定 startAt/endAt/dueAt/date 的唯一合法组合。 */
 @Serializable
 data class TimingInput(
   val kind: TimingKind, // required，决定后续字段 presence。
-  val startAt: UnixMillis? = null, // TIMED/ALL_DAY required，其他 kind 省略。
-  val endAt: UnixMillis? = null, // TIMED/ALL_DAY required 且为排他结束边界。
+  val startAt: UnixMillis? = null, // TIMED required，其他 kind 省略。
+  val endAt: UnixMillis? = null, // TIMED required 且为排他结束边界。
   val dueAt: UnixMillis? = null, // DEADLINE required，其他 kind 省略。
+  val date: UnixMillis? = null, // ALL_DAY required，表示单个 UTC 午夜日期槽。
 )
 
 /** 以 UTC 日期槽表达的重复规则；count 与 untilDate 互斥。 */
 @Serializable
 data class RecurrenceInput(
-  val frequency: RecurrenceFrequency, // required，目前仅 DAILY/WEEKLY。
+  val frequency: RecurrenceFrequency, // required，支持日、周、月、年。
   val interval: Int, // required，正数周期跨度。
   val anchorDate: UnixMillis, // required，UTC 午夜日期槽。
   val count: Int? = null, // 可选成员数上限。
   val untilDate: UnixMillis? = null, // 可选包含边界，不早于 anchorDate。
   val weekdays: List<Weekday>, // required；DAILY 为空，WEEKLY 非空且不重复。
+  val monthDays: List<Int>, // required；MONTHLY/YEARLY 非空，其他频率为空。
+  val months: List<Int>, // required；YEARLY 非空，其他频率为空。
 )
 
 /** Category 的完整 live 快照；version 直接属于资源。 */
@@ -109,7 +111,7 @@ data class ScheduleInput(
   val categoryId: AtomicField<String?>, // required；data=null 表示未分组，非空时引用同 owner Category。
   val timing: AtomicField<TimingInput>, // required，完整时间联合值。
   val recurrence: AtomicField<RecurrenceInput?>, // required；data=null 明确表示非重复。
-  val reminders: AtomicField<List<ReminderInput>>, // required，空列表合法。
+  val reminder: AtomicField<ReminderInput?>, // required；data=null 表示不提醒。
   val todoState: AtomicField<TodoState?>, // required；data=null 表示当前不属于清单。
   val linkedToCourse: AtomicField<Boolean>, // required，是否请求投射到课表。
 )
@@ -125,7 +127,7 @@ data class OccurrenceOverrideInput(
   val title: AtomicField<FieldPatch<String>>, // required，标题三态原子。
   val description: AtomicField<FieldPatch<String>>, // required，详情三态原子。
   val categoryId: AtomicField<FieldPatch<String>>, // required，分类三态原子。
-  val reminders: AtomicField<FieldPatch<List<ReminderInput>>>, // required，提醒列表三态原子。
+  val reminder: AtomicField<FieldPatch<ReminderInput>>, // required，单提醒三态原子。
 )
 
 /** 客户端已持有的 live Category；tombstone 不进入 confirmed。 */

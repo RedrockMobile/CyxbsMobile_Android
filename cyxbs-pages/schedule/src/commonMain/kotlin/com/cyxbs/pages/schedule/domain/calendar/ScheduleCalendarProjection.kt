@@ -209,7 +209,7 @@ object ScheduleCalendarProjectionFactory {
       val id = CalendarProjectionId(scope, schedule.id, kind)
       val timing = schedule.timing.toCalendarTiming()
       val recurrence = schedule.recurrence?.let { encodeRecurrenceRule(it, schedule.timing) }
-      val reminders = schedule.reminders.deviceReminderMinutes()
+      val reminders = schedule.reminder.deviceReminderMinutes()
       val externalUri = CalendarProjectionUriCodec.encode(id)
       val fingerprint = CalendarProjectionFingerprint.compute(
         externalUri = externalUri,
@@ -276,7 +276,7 @@ object ScheduleCalendarProjectionFactory {
       CalendarOccurrenceExceptionOperation.CANCEL
     }
     val timing = materialized.timing.toCalendarTiming()
-    val reminders = materialized.reminders.deviceReminderMinutes()
+    val reminders = materialized.reminder.deviceReminderMinutes()
     val fingerprint = CalendarProjectionFingerprint.computeOccurrenceException(
       externalUri = externalUri,
       title = materialized.title,
@@ -300,20 +300,17 @@ object ScheduleCalendarProjectionFactory {
   /** 分类只影响应用内语义；其他四个 patch 字段才需要创建 Android Provider exception。 */
   private fun com.cyxbs.pages.schedule.domain.model.OccurrencePatch.hasCalendarVisibleChange(): Boolean =
     timing != FieldPatch.Inherit || title != FieldPatch.Inherit ||
-        description != FieldPatch.Inherit || reminders != FieldPatch.Inherit
+        description != FieldPatch.Inherit || reminder != FieldPatch.Inherit
 
-  /** 仅 DEVICE reminder 进入系统日历；排序和去重同时供 master 与 occurrence 复用。 */
-  private fun List<ScheduleReminder>.deviceReminderMinutes(): List<Int> = asSequence()
-    .filter { it.channel == ReminderChannel.DEVICE }
-    .map { it.offsetMinutes }
-    .distinct()
-    .sorted()
-    .toList()
+  /** 仅 DEVICE reminder 进入系统日历；空提醒不产生 Provider reminder row。 */
+  private fun ScheduleReminder?.deviceReminderMinutes(): List<Int> =
+    if (this?.channel == ReminderChannel.DEVICE) listOf(offsetMinutes) else emptyList()
 
   /** 将四态领域时间收窄为可导出的三态；Unscheduled 已由调用方过滤。 */
   private fun ScheduleTiming.toCalendarTiming(): CalendarTiming = when (this) {
     is ScheduleTiming.Timed -> CalendarTiming.Timed(start, durationMinutes, timeZoneId)
-    is ScheduleTiming.AllDay -> CalendarTiming.AllDay(startDate, durationDays)
+    // 领域层已收窄为单日全天；平台层仍保留 durationDays，以适配 Calendar Provider/EventKit 的写入模型。
+    is ScheduleTiming.AllDay -> CalendarTiming.AllDay(date, durationDays = 1)
     is ScheduleTiming.Deadline -> CalendarTiming.Deadline(due, timeZoneId)
     ScheduleTiming.Unscheduled -> error("Unscheduled timing cannot be exported")
   }

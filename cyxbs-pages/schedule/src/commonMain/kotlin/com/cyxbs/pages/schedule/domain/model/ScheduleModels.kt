@@ -18,7 +18,8 @@ data class Schedule(
   val categoryId: CategoryId?,
   val timing: ScheduleTiming,
   val recurrence: RecurrenceRule?,
-  val reminders: List<ScheduleReminder>,
+  /** 当前唯一提醒；`null` 表示不提醒。 */
+  val reminder: ScheduleReminder?,
   val todoState: ScheduleTodoState?,
   val createdAt: Instant,
   val updatedAt: Instant,
@@ -65,10 +66,9 @@ sealed interface ScheduleTiming {
     val timeZoneId: String,
   ) : ScheduleTiming
 
-  /** 只含日期且 [durationDays] 为正的全天区间，绝不换算成固定 24 小时。 */
+  /** 只含一个本地日期的全天日程，绝不换算成固定 24 小时。 */
   data class AllDay(
-    val startDate: Date,
-    val durationDays: Int = 1,
+    val date: Date,
   ) : ScheduleTiming
 
   /** 尚未安排时间的事项；默认不导出到系统日历。 */
@@ -204,13 +204,12 @@ sealed interface FieldPatch<out T> {
  * 某次发生的稀疏覆盖，每个字段均显式保留继承、清空和替换三态。
  *
  * [timing] 以完整 [ScheduleTiming] 原子替换，禁止拆成开始、时长与时区后产生半状态；时间和标题不允许
- * [FieldPatch.Clear]。描述与分类允许显式清空。提醒的 Clear 与 Replace(emptyList()) 严格区分并原样
- * 传输，虽然二者当前投影结果都为空列表，后续同步与审计不得擅自合并。
+ * [FieldPatch.Clear]。描述与分类允许显式清空；提醒用 Clear 表示取消，Replace 表示设置单个提醒。
  */
 data class OccurrencePatch(
   val timing: FieldPatch<ScheduleTiming> = FieldPatch.Inherit,
   val title: FieldPatch<String> = FieldPatch.Inherit,
   val description: FieldPatch<String> = FieldPatch.Inherit,
   val categoryId: FieldPatch<CategoryId> = FieldPatch.Inherit,
-  val reminders: FieldPatch<List<ScheduleReminder>> = FieldPatch.Inherit,
+  val reminder: FieldPatch<ScheduleReminder> = FieldPatch.Inherit,
 )

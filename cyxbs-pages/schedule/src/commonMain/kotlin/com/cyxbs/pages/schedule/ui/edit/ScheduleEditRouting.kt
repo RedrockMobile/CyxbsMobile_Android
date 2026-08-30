@@ -46,7 +46,7 @@ suspend fun ScheduleRepository.applyScheduleEdit(
   val editedDraft = state.toDraft()
   // 未排期与提醒在领域上不可共存；timing 的显式用户修改需原子清理 payload，但不得把提醒控件标记为 dirty。
   val effectiveDraft = if (state.isOccurrenceTimingChanged && editedDraft.timing == ScheduleTiming.Unscheduled) {
-    editedDraft.copy(reminders = emptyList())
+    editedDraft.copy(reminder = null)
   } else {
     editedDraft
   }
@@ -72,9 +72,9 @@ suspend fun ScheduleRepository.applyScheduleEdit(
     } else {
       origin.recurrence
     },
-    reminders = if (state.isOccurrenceRemindersChanged ||
+    reminder = if (state.isOccurrenceReminderChanged ||
       (state.isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled)
-    ) edited.reminders else origin.reminders,
+    ) edited.reminder else origin.reminder,
     todoState = if (state.isSeriesRelationChanged) edited.todoState else origin.todoState,
     linkedToCourse = if (state.isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled) {
       false
@@ -178,7 +178,7 @@ suspend fun ScheduleRepository.applyScheduleEdit(
         } else {
           split.followingSchedule.recurrence
         },
-        reminders = edited.reminders,
+        reminder = edited.reminder,
         todoState = edited.todoState?.let { ScheduleTodoState.PENDING },
         linkedToCourse = edited.linkedToCourse,
         createdAt = now,
@@ -294,7 +294,7 @@ private fun rebaseSeriesTiming(
   return when (editedOccurrence) {
     is ScheduleTiming.Timed -> editedOccurrence.copy(start = rebasedStart)
     is ScheduleTiming.Deadline -> editedOccurrence.copy(due = rebasedStart)
-    is ScheduleTiming.AllDay -> editedOccurrence.copy(startDate = rebasedStart.date)
+    is ScheduleTiming.AllDay -> editedOccurrence.copy(date = rebasedStart.date)
     ScheduleTiming.Unscheduled -> error("recurring schedule cannot become unscheduled")
   }
 }
@@ -303,7 +303,7 @@ private fun rebaseSeriesTiming(
 private fun ScheduleTiming.effectiveStart() = when (this) {
   is ScheduleTiming.Timed -> start
   is ScheduleTiming.Deadline -> due
-  is ScheduleTiming.AllDay -> com.cyxbs.components.config.time.MinuteTimeDate(startDate, 0, 0)
+  is ScheduleTiming.AllDay -> com.cyxbs.components.config.time.MinuteTimeDate(date, 0, 0)
   ScheduleTiming.Unscheduled -> error("unscheduled timing has no occurrence start")
 }
 
@@ -346,11 +346,11 @@ private fun EditScheduleModelState.toOccurrencePatch(
     categoryId = preserveOrBuild(isOccurrenceCategoryChanged, existing.categoryId) {
       if (edited.categoryId == null) FieldPatch.Clear else FieldPatch.Replace(edited.categoryId)
     },
-    reminders = preserveOrBuild(
-      isOccurrenceRemindersChanged || (isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled),
-      existing.reminders,
+    reminder = preserveOrBuild(
+      isOccurrenceReminderChanged || (isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled),
+      existing.reminder,
     ) {
-      if (edited.reminders.isEmpty()) FieldPatch.Clear else FieldPatch.Replace(edited.reminders)
+      edited.reminder?.let { FieldPatch.Replace(it) } ?: FieldPatch.Clear
     },
   )
   return ScheduleOccurrenceException(origin.id, recurrenceId, 0, OccurrenceStatus.ACTIVE, patch, now, now)

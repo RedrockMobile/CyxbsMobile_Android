@@ -1809,7 +1809,7 @@ class IosScheduleCalendarExportRuntimeTest {
     categoryId = null,
     timing = ScheduleTiming.Timed(MinuteTimeDate(2026, 8, 1, 9, 30), 60, "Asia/Shanghai"),
     recurrence = null,
-    reminders = emptyList(),
+    reminder = null,
     todoState = ScheduleTodoState.PENDING,
     createdAt = kotlin.time.Instant.parse("2026-08-01T00:00:00Z"),
     updatedAt = kotlin.time.Instant.parse("2026-08-01T00:00:00Z"),

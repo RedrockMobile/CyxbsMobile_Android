@@ -13,7 +13,7 @@ data class ScheduleOccurrence(
   val title: String,
   val description: String,
   val categoryId: CategoryId?,
-  val reminders: List<ScheduleReminder>,
+  val reminder: ScheduleReminder?,
   val status: OccurrenceStatus,
   val isOverridden: Boolean,
 )

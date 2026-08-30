@@ -111,7 +111,7 @@ object SeriesSplitter {
   private fun moveTiming(timing: ScheduleTiming, start: MinuteTimeDate): ScheduleTiming = when (timing) {
     is ScheduleTiming.Timed -> timing.copy(start = start)
     is ScheduleTiming.Deadline -> timing.copy(due = start)
-    is ScheduleTiming.AllDay -> timing.copy(startDate = start.date)
+    is ScheduleTiming.AllDay -> timing.copy(date = start.date)
     ScheduleTiming.Unscheduled -> error("unscheduled series cannot be split")
   }
 }

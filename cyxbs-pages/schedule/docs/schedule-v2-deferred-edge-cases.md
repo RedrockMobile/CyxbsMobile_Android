@@ -4,7 +4,7 @@
 
 当前明确不支持：
 
-- MONTHLY / YEARLY / RDATE；
+- RDATE；
 - 删除后的同 identity 复活；
 - 跨资源原子事务；
 - receipt、history、cursor、协议 rollout 状态机；

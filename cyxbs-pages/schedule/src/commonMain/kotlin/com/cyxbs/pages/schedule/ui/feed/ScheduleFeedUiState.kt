@@ -98,10 +98,9 @@ private fun ScheduleTodoItemUi.toFeedItem(
   recurrenceId = occurrence.recurrenceId,
   title = occurrence.title,
   timeText = timeText.takeIf(String::isNotBlank),
-  reminderText = occurrence.reminders
-    .mapNotNull { reminder -> formatScheduleTodoReminder(reminder.offsetMinutes) }
-    .joinToString(separator = "、")
-    .takeIf(String::isNotEmpty),
+  reminderText = occurrence.reminder?.let { reminder ->
+    formatScheduleTodoReminder(reminder.offsetMinutes)
+  },
   isOverTime = isOverdue,
   isDueSoon = isDueSoon,
   isPinned = isPinned,

@@ -42,7 +42,7 @@ object ScheduleValidator {
     if (schedule.timing == ScheduleTiming.Unscheduled && schedule.recurrence != null) {
       issue("recurrence", "unscheduled schedules cannot have recurrence")
     }
-    addAll(validateReminders(schedule.reminders, schedule.timing, pushSupported))
+    addAll(validateReminder(schedule.reminder, schedule.timing, pushSupported))
     when (schedule.kind) {
       ScheduleKind.TODO -> {
         if (schedule.todoState == null) issue("todoState", "a TODO schedule must belong to todo")
@@ -69,8 +69,7 @@ object ScheduleValidator {
       }
       is ScheduleTiming.Deadline ->
         validateTimeZone(timing.timeZoneId, "timing.timeZoneId")?.let(::add)
-      is ScheduleTiming.AllDay ->
-        if (timing.durationDays <= 0) issue("timing.durationDays", "must be positive")
+      is ScheduleTiming.AllDay -> Unit
       ScheduleTiming.Unscheduled -> Unit
     }
   }
@@ -84,9 +83,19 @@ object ScheduleValidator {
     rule.byMonths.filter { it !in 1..12 }.forEach {
       issue("recurrence.byMonths", "$it is outside 1..12")
     }
-    // 当前 WEEKLY 展开器只实现 BYDAY/BYMONTH；不能接受后静默忽略 BYMONTHDAY。
-    if (rule.frequency == RecurrenceFrequency.WEEKLY && rule.byMonthDays.isNotEmpty()) {
-      issue("recurrence.byMonthDays", "is unsupported for WEEKLY recurrence")
+    when (rule.frequency) {
+      RecurrenceFrequency.DAILY -> if (
+        rule.byWeekDays.isNotEmpty() || rule.byMonthDays.isNotEmpty() || rule.byMonths.isNotEmpty()
+      ) issue("recurrence", "DAILY must not carry selectors")
+      RecurrenceFrequency.WEEKLY -> if (
+        rule.byMonthDays.isNotEmpty() || rule.byMonths.isNotEmpty()
+      ) issue("recurrence", "WEEKLY may only carry weekdays")
+      RecurrenceFrequency.MONTHLY -> if (
+        rule.byWeekDays.isNotEmpty() || rule.byMonths.isNotEmpty()
+      ) issue("recurrence", "MONTHLY may only carry month days")
+      RecurrenceFrequency.YEARLY -> if (
+        rule.byWeekDays.isNotEmpty() || rule.byMonthDays.isEmpty() != rule.byMonths.isEmpty()
+      ) issue("recurrence", "YEARLY requires both month days and months, or neither")
     }
     if (rule.end is RecurrenceEnd.Count && rule.end.value <= 0) {
       issue("recurrence.end.count", "must be positive")
@@ -94,26 +103,24 @@ object ScheduleValidator {
   }
 
   /**
-   * 校验提醒身份唯一性及其时间语义。
+   * 校验单个提醒及其时间语义。
    *
    * 偏移量只能非负，因为模型表达“提前多少分钟”；未排期事项没有可计算锚点；后端明确声明能力前拒绝
    * PUSH，避免本地看似保存成功但永远无法投递。
    */
-  fun validateReminders(
-    reminders: List<ScheduleReminder>,
+  fun validateReminder(
+    reminder: ScheduleReminder?,
     timing: ScheduleTiming,
     pushSupported: Boolean = false,
   ): List<ScheduleValidationIssue> = buildList {
-    val duplicateIds = reminders.groupingBy { it.id }.eachCount().filterValues { it > 1 }.keys
-    if (duplicateIds.isNotEmpty()) issue("reminders.id", "reminder IDs must be unique")
-    reminders.forEachIndexed { index, reminder ->
-      if (reminder.offsetMinutes < 0) issue("reminders[$index].offsetMinutes", "must be non-negative")
-      if (reminder.channel == ReminderChannel.PUSH && !pushSupported) {
-        issue("reminders[$index].channel", "PUSH is not supported")
+    reminder?.let {
+      if (it.offsetMinutes < 0) issue("reminder.offsetMinutes", "must be non-negative")
+      if (it.channel == ReminderChannel.PUSH && !pushSupported) {
+        issue("reminder.channel", "PUSH is not supported")
       }
     }
-    if (timing == ScheduleTiming.Unscheduled && reminders.isNotEmpty()) {
-      issue("reminders", "unscheduled items cannot have reminders")
+    if (timing == ScheduleTiming.Unscheduled && reminder != null) {
+      issue("reminder", "unscheduled items cannot have reminders")
     }
   }
 
@@ -164,14 +171,10 @@ object ScheduleValidator {
     if (patch.description is FieldPatch.Replace && patch.description.value.isBlank()) {
       issue("patch.description", "use CLEAR instead of a blank replacement")
     }
-    if (patch.reminders is FieldPatch.Replace) {
-      val reminders = patch.reminders.value
-      val duplicateIds = reminders.groupingBy { it.id }.eachCount().filterValues { it > 1 }.keys
-      if (duplicateIds.isNotEmpty()) issue("patch.reminders.id", "reminder IDs must be unique")
-      reminders.forEachIndexed { index, reminder ->
-        if (reminder.offsetMinutes < 0) issue("patch.reminders[$index].offsetMinutes", "must be non-negative")
-        if (reminder.channel == ReminderChannel.PUSH) issue("patch.reminders[$index].channel", "PUSH is not supported")
-      }
+    if (patch.reminder is FieldPatch.Replace) {
+      val reminder = patch.reminder.value
+      if (reminder.offsetMinutes < 0) issue("patch.reminder.offsetMinutes", "must be non-negative")
+      if (reminder.channel == ReminderChannel.PUSH) issue("patch.reminder.channel", "PUSH is not supported")
     }
   }
 

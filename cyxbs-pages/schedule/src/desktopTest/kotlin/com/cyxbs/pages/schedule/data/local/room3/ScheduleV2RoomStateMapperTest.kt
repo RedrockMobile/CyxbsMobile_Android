@@ -237,7 +237,7 @@ class ScheduleV2RoomStateMapperTest {
       ),
       14,
     ),
-    reminders = AtomicField(listOf(ReminderInput(15, "reminder-1")), 15),
+    reminder = AtomicField(ReminderInput(15), 15),
     todoState = AtomicField(TodoState.OPEN, 16),
     linkedToCourse = AtomicField(false, 17),
   )
@@ -254,7 +254,7 @@ class ScheduleV2RoomStateMapperTest {
     title = AtomicField(FieldPatch.Replace(title), 21),
     description = AtomicField(FieldPatch.Clear, 22),
     categoryId = AtomicField(FieldPatch.Inherit, 22),
-    reminders = AtomicField(FieldPatch.Replace(listOf(ReminderInput(5, "reminder-2"))), 23),
+    reminder = AtomicField(FieldPatch.Replace(ReminderInput(5)), 23),
   )
 
   private companion object {

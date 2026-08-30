@@ -36,7 +36,7 @@ class ScheduleDomainTest {
   fun timingRepresentsFourDistinctStates() {
     val timed: ScheduleTiming = ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 12, 9, 0), 90, "Asia/Shanghai")
     val deadline: ScheduleTiming = ScheduleTiming.Deadline(MinuteTimeDate(2026, 7, 12, 18, 0), "Asia/Shanghai")
-    val allDay: ScheduleTiming = ScheduleTiming.AllDay(Date(2026, 7, 12), 2)
+    val allDay: ScheduleTiming = ScheduleTiming.AllDay(Date(2026, 7, 12))
     val unscheduled: ScheduleTiming = ScheduleTiming.Unscheduled
 
     assertIs<ScheduleTiming.Timed>(timed)
@@ -56,10 +56,7 @@ class ScheduleDomainTest {
         byMonths = setOf(0, 13),
         end = RecurrenceEnd.Count(0),
       ),
-      reminders = listOf(
-        ScheduleReminder(ReminderId("same"), -1, ReminderChannel.DEVICE),
-        ScheduleReminder(ReminderId("same"), 0, ReminderChannel.PUSH),
-      ),
+      reminder = ScheduleReminder(ReminderId("single"), -1, ReminderChannel.PUSH),
       todoState = ScheduleTodoState.COMPLETED,
     )
 
@@ -70,9 +67,8 @@ class ScheduleDomainTest {
     assertTrue("recurrence.byMonthDays" in fields)
     assertTrue("recurrence.byMonths" in fields)
     assertTrue("recurrence.end.count" in fields)
-    assertTrue("reminders.id" in fields)
-    assertTrue("reminders[0].offsetMinutes" in fields)
-    assertTrue("reminders[1].channel" in fields)
+    assertTrue("reminder.offsetMinutes" in fields)
+    assertTrue("reminder.channel" in fields)
     assertTrue("todoState" in fields)
   }
 
@@ -142,7 +138,7 @@ class ScheduleDomainTest {
     )
 
     assertTrue(issues.any {
-      it.field == "recurrence.byMonthDays" && it.message.contains("unsupported")
+      it.field == "recurrence" && it.message.contains("WEEKLY")
     })
   }
 
@@ -157,6 +153,11 @@ class ScheduleDomainTest {
     assertTrue(issues.any {
       it.field == "recurrence" && it.message == "unscheduled schedules cannot have recurrence"
     })
+    assertTrue(
+      ScheduleValidator.validate(
+        unscheduled.copy(reminder = ScheduleReminder(ReminderId("invalid"), 0, ReminderChannel.DEVICE)),
+      ).any { it.field == "reminder" },
+    )
   }
 
   @Test
@@ -254,19 +255,21 @@ class ScheduleDomainTest {
   }
 
   @Test
-  fun descriptionCategoryAndRemindersAllowExplicitClear() {
+  fun descriptionCategoryAndReminderAllowExplicitClear() {
     assertTrue(
       ScheduleValidator.validate(
         OccurrencePatch(
           description = FieldPatch.Clear,
           categoryId = FieldPatch.Clear,
-          reminders = FieldPatch.Clear,
+          reminder = FieldPatch.Clear,
         )
       ).isEmpty()
     )
     assertTrue(
       ScheduleValidator.validate(
-        OccurrencePatch(reminders = FieldPatch.Replace(emptyList()))
+        OccurrencePatch(
+          reminder = FieldPatch.Replace(ScheduleReminder(ReminderId("replacement"), 0, ReminderChannel.DEVICE)),
+        )
       ).isEmpty()
     )
   }
@@ -279,7 +282,7 @@ class ScheduleDomainTest {
     categoryId = CategoryId("work"),
     timing = ScheduleTiming.AllDay(Date(2026, 7, 12)),
     recurrence = null,
-    reminders = emptyList(),
+    reminder = null,
     todoState = ScheduleTodoState.PENDING,
     createdAt = Instant.fromEpochMilliseconds(1),
     updatedAt = Instant.fromEpochMilliseconds(2),

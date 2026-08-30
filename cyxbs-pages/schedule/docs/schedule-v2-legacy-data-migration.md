@@ -73,7 +73,7 @@ UUIDv7 后 74 位由 SHA-256 摘要提供，并显式设置 version=7 与 RFC 41
 
 `ScheduleTiming.Unscheduled` 没有提醒锚点，必须满足：
 
-- `reminders` 为空；
+- `reminder=null`；
 - `recurrence` 为空；
 - `linkedToCourse=false`；
 - 不投射到课表；
@@ -89,7 +89,7 @@ UUIDv7 后 74 位由 SHA-256 摘要提供，并显式设置 version=7 与 RFC 41
 | 准时 | `offsetMinutes=0` | 在日程开始/截止时刻提醒 |
 | 提前 | `offsetMinutes>0` | 在开始/截止前指定分钟提醒 |
 
-编辑器不能用 `0` 表示“未设置”：`-1` 仅存在于本地编辑态，保存时转换为空 reminders；`0` 必须作为
+编辑器不能用 `0` 表示“未设置”：`-1` 仅存在于本地编辑态，保存时转换为 `reminder=null`；`0` 必须作为
 `minutesBefore=0` 原样写入 Room 和 wire。新建日程默认仍为“不提醒”；用户从“不提醒/准时”切到“提前”时，
 滚轮才以 10 分钟作为初值。从“不提醒”直接点击“准时”时以 0 申请权限，授权失败再回退为不提醒。
 
@@ -113,8 +113,8 @@ UUIDv7 后 74 位由 SHA-256 摘要提供，并显式设置 version=7 与 RFC 41
 | `period` | `durationMinutes` | 使用开始/结束行的分钟差 |
 | `day` | 星期 | 旧值 0～6 对应周一～周日 |
 | `week` | 日期或 recurrence | 按下表处理 |
-| `time <= 0` | `reminders` | 空列表 |
-| `time > 0` | `reminders` | DEVICE，`offsetMinutes=time` |
+| `time <= 0` | `reminder` | `null` |
+| `time > 0` | `reminder` | DEVICE，`offsetMinutes=time` |
 | 无对应字段 | `kind` | `AFFAIR` |
 | 无对应字段 | `todoState` | `null` |
 | 无对应字段 | `linkedToCourse` | `true` |
@@ -181,8 +181,8 @@ UUIDv7 后 74 位由 SHA-256 摘要提供，并显式设置 version=7 与 RFC 41
 | 0 NONE | `null` |
 | 1 DAY | DAILY |
 | 2 WEEK | WEEKLY + `byWeekDays` |
-| 3 MONTH | 当前 v2 wire/后端不支持；保留旧服务算出的下一次通知为一次性 Deadline |
-| 4 YEAR | 当前 v2 wire/后端不支持；保留旧服务算出的下一次通知为一次性 Deadline |
+| 3 MONTH | MONTHLY + 合法且去重后的 `byMonthDays` |
+| 4 YEAR | YEARLY + 能无损表达旧 `M.d` 集合的 `byMonths × byMonthDays` |
 
 旧清单的星期值来自 `Calendar.DAY_OF_WEEK`：1=周日、2=周一、3=周二、4=周三、5=周四、6=周五、7=周六。
 
@@ -196,8 +196,9 @@ UUIDv7 后 74 位由 SHA-256 摘要提供，并显式设置 version=7 与 RFC 41
 | 重复参数非法 | 有合法时间 | 降为非重复 Deadline | 按合法通知计算 |
 | 重复参数非法 | 无合法时间 | Unscheduled | 无 |
 
-月/年重复不能直接写成客户端领域中的 MONTHLY/YEARLY：当前 reducer 会在生成 pending 前拒绝，后端也只接受
-DAILY/WEEKLY。迁移只保留旧服务已经物化的下一次通知；没有通知时退回结束时间，不构造本地永远无法上传的资源。
+月重复直接保留旧 `day` 集合。年重复旧协议使用多个 `M.d` 日期，而新规则使用
+`byMonths × byMonthDays`；只有笛卡尔积与旧日期集合完全一致时才迁移为 YEARLY。例如 `3.8,4.8` 可以无损映射，
+`3.8,4.9` 会被新规则扩成四个日期，因此降为下一次一次性 Deadline，不能静默扩大重复范围。
 
 ## 7. 明确不迁移的派生或虚构语义
 
@@ -234,7 +235,7 @@ DAILY/WEEKLY。迁移只保留旧服务已经物化的下一次通知；没有�
 
 - 旧事务：全周、指定周、多个时间位置、非法节次/星期/周数、稳定 ID、事务提醒。
 - 旧清单时间：无时间、截止时间、仅通知时间、准时提醒、提前提醒、晚于截止的非法提醒。
-- 重复规则：日/周重复、旧星期制转换、当天时刻边界、月/年降级、非法选择器、重复结束边界。
+- 重复规则：日/周/月/年重复、旧星期制转换、当天时刻边界、年重复无损/降级边界、非法选择器、重复结束边界。
 - 历史字段：秒/毫秒时间戳、缺失可选字段、空/缺失/显式 null 数组、服务端冗余字段。
 - 本地提交：重试和批内去重、分类按 ID/名称复用、同批分类只创建一次、远端失败但本地成功、
   本地日程或分类漏提交、账号不匹配与空数据。

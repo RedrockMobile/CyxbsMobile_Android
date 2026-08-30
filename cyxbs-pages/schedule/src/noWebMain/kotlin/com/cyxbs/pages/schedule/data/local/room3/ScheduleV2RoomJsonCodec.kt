@@ -123,8 +123,9 @@ private fun CategoryInput.validateForRoom() {
 
 /** Room 中 Schedule snapshot 的最低可恢复约束。 */
 private fun ScheduleInput.validateForRoom() {
-  require(id.validId() && (categoryId.data == null || categoryId.data.validId()) &&
-    reminders.data.all { it.minutesBefore >= 0 })
+  require(id.validId() && title.data.isNotBlank() &&
+    (categoryId.data == null || categoryId.data.validId()) &&
+    (reminder.data?.minutesBefore ?: 0) >= 0)
   timing.data.validateForRoom()
   recurrence.data?.validateForRoom()
   require(recurrence.data == null ||
@@ -146,8 +147,8 @@ private fun OccurrenceOverrideInput.validateForRoom() {
   require(scheduleId.validId() && occurrenceDate.isDateSlot())
   title.data.validateForRoom()
   description.data.validateForRoom()
-  reminders.data.validateForRoom()
-  require(reminders.data.value?.all { it.minutesBefore >= 0 } != false)
+  reminder.data.validateForRoom()
+  require((reminder.data.value?.minutesBefore ?: 0) >= 0)
 }
 
 private fun FieldPatch<*>.validateForRoom() {
@@ -156,12 +157,10 @@ private fun FieldPatch<*>.validateForRoom() {
 
 private fun TimingInput.validateForRoom() {
   when (kind) {
-    TimingKind.TIMED, TimingKind.ALL_DAY -> {
-      require(startAt != null && endAt != null && startAt < endAt && dueAt == null)
-      if (kind == TimingKind.ALL_DAY) require(startAt.isDateSlot() && endAt.isDateSlot())
-    }
-    TimingKind.DEADLINE -> require(dueAt != null && startAt == null && endAt == null)
-    TimingKind.UNSCHEDULED -> require(startAt == null && endAt == null && dueAt == null)
+    TimingKind.TIMED -> require(startAt != null && endAt != null && startAt < endAt && dueAt == null && date == null)
+    TimingKind.ALL_DAY -> require(date != null && date.isDateSlot() && startAt == null && endAt == null && dueAt == null)
+    TimingKind.DEADLINE -> require(dueAt != null && startAt == null && endAt == null && date == null)
+    TimingKind.UNSCHEDULED -> require(startAt == null && endAt == null && dueAt == null && date == null)
   }
 }
 
@@ -171,8 +170,16 @@ private fun RecurrenceInput.validateForRoom() {
   require(count == null || count > 0)
   require(untilDate == null || untilDate.isDateSlot() && untilDate >= anchorDate)
   require(
-    (frequency == RecurrenceFrequency.DAILY && weekdays.isEmpty()) ||
-      (frequency == RecurrenceFrequency.WEEKLY && weekdays.isNotEmpty() && weekdays.distinct().size == weekdays.size),
+    when (frequency) {
+      RecurrenceFrequency.DAILY -> weekdays.isEmpty() && monthDays.isEmpty() && months.isEmpty()
+      RecurrenceFrequency.WEEKLY -> weekdays.isNotEmpty() && weekdays.distinct().size == weekdays.size &&
+        monthDays.isEmpty() && months.isEmpty()
+      RecurrenceFrequency.MONTHLY -> weekdays.isEmpty() && monthDays.isNotEmpty() &&
+        monthDays.distinct().size == monthDays.size && monthDays.all { it in 1..31 } && months.isEmpty()
+      RecurrenceFrequency.YEARLY -> weekdays.isEmpty() && monthDays.isNotEmpty() &&
+        monthDays.distinct().size == monthDays.size && monthDays.all { it in 1..31 } &&
+        months.isNotEmpty() && months.distinct().size == months.size && months.all { it in 1..12 }
+    },
   )
 }
 

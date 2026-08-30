@@ -752,7 +752,7 @@ class ScheduleV2RoomRepositoryDesktopTest {
     categoryId = categoryId,
     timing = ScheduleTiming.Unscheduled,
     recurrence = null,
-    reminders = emptyList(),
+    reminder = null,
     todoState = ScheduleTodoState.PENDING,
     createdAt = Instant.fromEpochMilliseconds(1),
     updatedAt = Instant.fromEpochMilliseconds(1),
@@ -771,7 +771,7 @@ class ScheduleV2RoomRepositoryDesktopTest {
       100,
     ),
     recurrence = AtomicField(null, 100),
-    reminders = AtomicField(emptyList(), 100),
+    reminder = AtomicField(null, 100),
     todoState = AtomicField(
       TodoState.OPEN,
       100,
@@ -812,8 +812,15 @@ class ScheduleV2RoomRepositoryDesktopTest {
   private suspend fun seedRecurringScheduleAndOverride(database: ScheduleRoomDatabase) {
     val recurring = scheduleInput("重复日程").copy(
       version = 1u,
-      timing = AtomicField(TimingInput(TimingKind.ALL_DAY, startAt = OCCURRENCE_DATE, endAt = OCCURRENCE_DATE + DAY_MILLIS), 1),
-      recurrence = AtomicField(RecurrenceInput(RecurrenceFrequency.DAILY, 1, OCCURRENCE_DATE, weekdays = emptyList()), 1),
+      timing = AtomicField(TimingInput(TimingKind.ALL_DAY, date = OCCURRENCE_DATE), 1),
+      recurrence = AtomicField(RecurrenceInput(
+        RecurrenceFrequency.DAILY,
+        1,
+        OCCURRENCE_DATE,
+        weekdays = emptyList(),
+        monthDays = emptyList(),
+        months = emptyList(),
+      ), 1),
       todoState = AtomicField(TodoState.OPEN, 1),
     )
     ScheduleV2RoomStateStore(database).replaceAccountState(
@@ -845,7 +852,7 @@ class ScheduleV2RoomRepositoryDesktopTest {
               title = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
               description = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
               categoryId = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
-              reminders = AtomicField(FieldPatch<List<ReminderInput>>(PatchMode.INHERIT), 1),
+              reminder = AtomicField(FieldPatch<ReminderInput>(PatchMode.INHERIT), 1),
             ),
             ServerResourceMeta(1, 1),
           ),

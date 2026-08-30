@@ -63,7 +63,7 @@ class ScheduleV2DomainWireMapperTest {
         35,
       ),
       // 0 是准时提醒的显式 wire 值，资源级双向映射不能用默认值或空值把它吞掉。
-      reminders = AtomicField(listOf(ReminderInput(0, "reminder-1")), 36),
+      reminder = AtomicField(ReminderInput(0), 36),
       todoState = AtomicField(TodoState.OPEN, 37),
       linkedToCourse = AtomicField(true, 38),
     )
@@ -75,7 +75,7 @@ class ScheduleV2DomainWireMapperTest {
 
     assertEquals(resource, resource.toWire().toDomain())
     assertEquals(snapshot, snapshot.toWire().toDomain())
-    assertEquals(0, resource.toWire().toDomain().reminders.data.single().minutesBefore)
+    assertEquals(0, resource.toWire().toDomain().reminder.data?.minutesBefore)
   }
 
   @Test
@@ -88,8 +88,8 @@ class ScheduleV2DomainWireMapperTest {
       title = AtomicField(FieldPatch.Replace("临时标题"), 52),
       description = AtomicField(FieldPatch.Clear, 53),
       categoryId = AtomicField(FieldPatch.Replace("category-2"), 53),
-      reminders = AtomicField(
-        FieldPatch.Replace(listOf(ReminderInput(5, "reminder-2"))),
+      reminder = AtomicField(
+        FieldPatch.Replace(ReminderInput(5)),
         54,
       ),
     )

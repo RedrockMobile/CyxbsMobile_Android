@@ -69,7 +69,7 @@ internal fun ScheduleResource.toWire(): ScheduleInput = ScheduleInput(
   categoryId = WireAtomicField(categoryId.data, categoryId.modifiedAt),
   timing = WireAtomicField(timing.data.toWire(), timing.modifiedAt),
   recurrence = WireAtomicField(recurrence.data?.toWire(), recurrence.modifiedAt),
-  reminders = WireAtomicField(reminders.data.map { it.toWire() }, reminders.modifiedAt),
+  reminder = WireAtomicField(reminder.data?.toWire(), reminder.modifiedAt),
   todoState = WireAtomicField(todoState.data?.toWire(), todoState.modifiedAt),
   linkedToCourse = WireAtomicField(linkedToCourse.data, linkedToCourse.modifiedAt),
 )
@@ -84,7 +84,7 @@ internal fun ScheduleInput.toDomain(): ScheduleResource = ScheduleResource(
   categoryId = DomainAtomicField(categoryId.data, categoryId.modifiedAt),
   timing = DomainAtomicField(timing.data.toDomain(), timing.modifiedAt),
   recurrence = DomainAtomicField(recurrence.data?.toDomain(), recurrence.modifiedAt),
-  reminders = DomainAtomicField(reminders.data.map { it.toDomain() }, reminders.modifiedAt),
+  reminder = DomainAtomicField(reminder.data?.toDomain(), reminder.modifiedAt),
   todoState = DomainAtomicField(todoState.data?.toDomain(), todoState.modifiedAt),
   linkedToCourse = DomainAtomicField(linkedToCourse.data, linkedToCourse.modifiedAt),
 )
@@ -99,7 +99,7 @@ internal fun OccurrenceOverrideResource.toWire(): OccurrenceOverrideInput = Occu
   title = WireAtomicField(title.data.toWireStringPatch(), title.modifiedAt),
   description = WireAtomicField(description.data.toWireStringPatch(), description.modifiedAt),
   categoryId = WireAtomicField(categoryId.data.toWireStringPatch(), categoryId.modifiedAt),
-  reminders = WireAtomicField(reminders.data.toWireReminderPatch(), reminders.modifiedAt),
+  reminder = WireAtomicField(reminder.data.toWireReminderPatch(), reminder.modifiedAt),
 )
 
 /** wire OccurrenceOverride payload 到领域六原子资源的无损映射。 */
@@ -112,7 +112,7 @@ internal fun OccurrenceOverrideInput.toDomain(): OccurrenceOverrideResource =
     title = DomainAtomicField(title.data.toDomainStringPatch(), title.modifiedAt),
     description = DomainAtomicField(description.data.toDomainStringPatch(), description.modifiedAt),
     categoryId = DomainAtomicField(categoryId.data.toDomainStringPatch(), categoryId.modifiedAt),
-    reminders = DomainAtomicField(reminders.data.toDomainReminderPatch(), reminders.modifiedAt),
+    reminder = DomainAtomicField(reminder.data.toDomainReminderPatch(), reminder.modifiedAt),
   )
 
 /** wire canonical Category 到本地 remoteSnapshot 的无损映射。 */
@@ -165,6 +165,7 @@ private fun DomainTimingInput.toWire(): WireTimingInput = WireTimingInput(
   startAt = startAt,
   endAt = endAt,
   dueAt = dueAt,
+  date = date,
 )
 
 private fun WireTimingInput.toDomain(): DomainTimingInput = DomainTimingInput(
@@ -177,37 +178,46 @@ private fun WireTimingInput.toDomain(): DomainTimingInput = DomainTimingInput(
   startAt = startAt,
   endAt = endAt,
   dueAt = dueAt,
+  date = date,
 )
 
 private fun DomainRecurrenceInput.toWire(): WireRecurrenceInput = WireRecurrenceInput(
   frequency = when (frequency) {
     DomainRecurrenceFrequency.DAILY -> WireRecurrenceFrequency.DAILY
     DomainRecurrenceFrequency.WEEKLY -> WireRecurrenceFrequency.WEEKLY
+    DomainRecurrenceFrequency.MONTHLY -> WireRecurrenceFrequency.MONTHLY
+    DomainRecurrenceFrequency.YEARLY -> WireRecurrenceFrequency.YEARLY
   },
   interval = interval,
   anchorDate = anchorDate,
   count = count,
   untilDate = untilDate,
   weekdays = weekdays.map { it.toWire() }.sortedBy { it.ordinal },
+  monthDays = monthDays.sorted(),
+  months = months.sorted(),
 )
 
 private fun WireRecurrenceInput.toDomain(): DomainRecurrenceInput = DomainRecurrenceInput(
   frequency = when (frequency) {
     WireRecurrenceFrequency.DAILY -> DomainRecurrenceFrequency.DAILY
     WireRecurrenceFrequency.WEEKLY -> DomainRecurrenceFrequency.WEEKLY
+    WireRecurrenceFrequency.MONTHLY -> DomainRecurrenceFrequency.MONTHLY
+    WireRecurrenceFrequency.YEARLY -> DomainRecurrenceFrequency.YEARLY
   },
   interval = interval,
   anchorDate = anchorDate,
   count = count,
   untilDate = untilDate,
   weekdays = weekdays.map { it.toDomain() }.toSet(),
+  monthDays = monthDays.toSet(),
+  months = months.toSet(),
 )
 
 private fun DomainReminderInput.toWire(): WireReminderInput =
-  WireReminderInput(minutesBefore = minutesBefore, message = message)
+  WireReminderInput(minutesBefore = minutesBefore)
 
 private fun WireReminderInput.toDomain(): DomainReminderInput =
-  DomainReminderInput(minutesBefore = minutesBefore, message = message)
+  DomainReminderInput(minutesBefore = minutesBefore)
 
 private fun DomainTodoState.toWire(): WireTodoState = when (this) {
   DomainTodoState.OPEN -> WireTodoState.OPEN
@@ -273,11 +283,11 @@ private fun DomainFieldPatch<DomainTimingInput>.toWireTimingPatch(): WireFieldPa
   is DomainFieldPatch.Replace -> WireFieldPatch(PatchMode.REPLACE, value.toWire())
 }
 
-private fun DomainFieldPatch<List<DomainReminderInput>>.toWireReminderPatch():
-  WireFieldPatch<List<WireReminderInput>> = when (this) {
+private fun DomainFieldPatch<DomainReminderInput>.toWireReminderPatch():
+  WireFieldPatch<WireReminderInput> = when (this) {
   DomainFieldPatch.Inherit -> WireFieldPatch(PatchMode.INHERIT)
   DomainFieldPatch.Clear -> WireFieldPatch(PatchMode.CLEAR)
-  is DomainFieldPatch.Replace -> WireFieldPatch(PatchMode.REPLACE, value.map { it.toWire() })
+  is DomainFieldPatch.Replace -> WireFieldPatch(PatchMode.REPLACE, value.toWire())
 }
 
 private fun WireFieldPatch<String>.toDomainStringPatch(): DomainFieldPatch<String> = when (mode) {
@@ -294,12 +304,12 @@ private fun WireFieldPatch<WireTimingInput>.toDomainTimingPatch(): DomainFieldPa
   )
 }
 
-private fun WireFieldPatch<List<WireReminderInput>>.toDomainReminderPatch():
-  DomainFieldPatch<List<DomainReminderInput>> = when (mode) {
+private fun WireFieldPatch<WireReminderInput>.toDomainReminderPatch():
+  DomainFieldPatch<DomainReminderInput> = when (mode) {
   PatchMode.INHERIT -> DomainFieldPatch.Inherit
   PatchMode.CLEAR -> DomainFieldPatch.Clear
   PatchMode.REPLACE -> DomainFieldPatch.Replace(
-    requireNotNull(value) { "REPLACE reminders requires value" }.map { it.toDomain() },
+    requireNotNull(value) { "REPLACE reminder requires value" }.toDomain(),
   )
 }
 

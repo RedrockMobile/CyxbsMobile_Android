@@ -56,6 +56,8 @@ enum class OccurrenceStatus {
 enum class RecurrenceFrequency {
   DAILY,
   WEEKLY,
+  MONTHLY,
+  YEARLY,
 }
 
 enum class Weekday {
@@ -74,6 +76,8 @@ data class TimingInput(
   val startAt: Long? = null,
   val endAt: Long? = null,
   val dueAt: Long? = null,
+  /** ALL_DAY 唯一使用的 UTC 午夜日期槽。 */
+  val date: Long? = null,
 )
 
 /**
@@ -88,6 +92,8 @@ data class RecurrenceInput(
   val count: Int? = null,
   val untilDate: Long? = null,
   val weekdays: Set<Weekday> = emptySet(),
+  val monthDays: Set<Int> = emptySet(),
+  val months: Set<Int> = emptySet(),
 ) {
   init {
     require(interval > 0) { "recurrence interval must be positive" }
@@ -103,7 +109,6 @@ data class RecurrenceInput(
 /** 相对日程 timing 的提醒配置。 */
 data class ReminderInput(
   val minutesBefore: Int,
-  val message: String,
 )
 
 /** 服务端确认 live 资源时附带的只读时间元数据。 */
@@ -173,7 +178,7 @@ data class ScheduleResource(
   val categoryId: AtomicField<String?>,
   val timing: AtomicField<TimingInput>,
   val recurrence: AtomicField<RecurrenceInput?>,
-  val reminders: AtomicField<List<ReminderInput>>,
+  val reminder: AtomicField<ReminderInput?>,
   val todoState: AtomicField<TodoState?>,
   val linkedToCourse: AtomicField<Boolean>,
 ) : SyncResource<ScheduleIdentity> {
@@ -191,7 +196,7 @@ data class OccurrenceOverrideResource(
   val title: AtomicField<FieldPatch<String>>,
   val description: AtomicField<FieldPatch<String>>,
   val categoryId: AtomicField<FieldPatch<String>>,
-  val reminders: AtomicField<FieldPatch<List<ReminderInput>>>,
+  val reminder: AtomicField<FieldPatch<ReminderInput>>,
 ) : SyncResource<OccurrenceOverrideIdentity> {
   init {
     require(version >= 0) { "occurrence override version must not be negative" }

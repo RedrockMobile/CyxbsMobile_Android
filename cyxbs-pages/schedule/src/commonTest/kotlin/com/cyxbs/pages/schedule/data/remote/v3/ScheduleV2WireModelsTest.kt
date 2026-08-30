@@ -33,7 +33,7 @@ class ScheduleV2WireModelsTest {
           1,
         ),
         recurrence = AtomicField(null, 1),
-        reminders = AtomicField(emptyList(), 1),
+        reminder = AtomicField(null, 1),
         todoState = AtomicField(null, 1),
         linkedToCourse = AtomicField(true, 1),
       ),
@@ -42,6 +42,7 @@ class ScheduleV2WireModelsTest {
     assertContains(categoryJson, "\"color\":{\"data\":null")
     assertContains(scheduleJson, "\"categoryId\":{\"data\":null")
     assertContains(scheduleJson, "\"recurrence\":{\"data\":null")
+    assertContains(scheduleJson, "\"reminder\":{\"data\":null")
     assertContains(scheduleJson, "\"todoState\":{\"data\":null")
   }
 
@@ -55,6 +56,8 @@ class ScheduleV2WireModelsTest {
         interval = 1,
         anchorDate = 0,
         weekdays = emptyList(),
+        monthDays = emptyList(),
+        months = emptyList(),
       ),
     )
     val patchJson = defaultJson.encodeToString(FieldPatch<String>(PatchMode.INHERIT))

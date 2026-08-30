@@ -83,31 +83,26 @@ class ScheduleCalendarProjectionTest {
   }
 
   @Test
-  fun projectionKeepsTimingAndFiltersReminderChannels() {
+  fun projectionKeepsTimingAndDeviceReminder() {
     val schedule = schedule(
       timing = ScheduleTiming.Timed(
         MinuteTimeDate(2026, 11, 1, 9, 0), 90, "America/New_York",
       ),
-      reminders = listOf(
-        reminder("device-10", 10, ReminderChannel.DEVICE),
-        reminder("device-0", 0, ReminderChannel.DEVICE),
-        reminder("duplicate", 10, ReminderChannel.DEVICE),
-        reminder("push", 5, ReminderChannel.PUSH),
-      ),
+      reminder = reminder("device-10", 10, ReminderChannel.DEVICE),
     )
     val event = project(schedule).events.single()
     assertEquals(
       CalendarTiming.Timed(MinuteTimeDate(2026, 11, 1, 9, 0), 90, "America/New_York"),
       event.timing,
     )
-    assertEquals(listOf(0, 10), event.deviceReminderMinutes)
+    assertEquals(listOf(10), event.deviceReminderMinutes)
     assertNull(event.recurrenceRule)
   }
 
   @Test
-  fun allDayProjectionKeepsDateDurationAcrossDst() {
-    val event = project(schedule(timing = ScheduleTiming.AllDay(Date(2026, 3, 8), 2))).events.single()
-    assertEquals(CalendarTiming.AllDay(Date(2026, 3, 8), 2), event.timing)
+  fun allDayProjectionKeepsSingleDateAcrossDst() {
+    val event = project(schedule(timing = ScheduleTiming.AllDay(Date(2026, 3, 8)))).events.single()
+    assertEquals(CalendarTiming.AllDay(Date(2026, 3, 8), 1), event.timing)
   }
 
   @Test
@@ -140,15 +135,13 @@ class ScheduleCalendarProjectionTest {
     val rule = RecurrenceRule(
       frequency = RecurrenceFrequency.MONTHLY,
       interval = 2,
-      byWeekDays = linkedSetOf(IsoWeekDay.FRIDAY, IsoWeekDay.MONDAY),
       byMonthDays = linkedSetOf(20, -1, 1),
-      byMonths = linkedSetOf(12, 2),
       end = RecurrenceEnd.Count(8),
     )
     val event = project(schedule(recurrence = rule)).events.single()
     assertEquals(CalendarProjectionKind.SERIES_MASTER, event.id.kind)
     assertEquals(
-      "FREQ=MONTHLY;INTERVAL=2;BYDAY=MO,FR;BYMONTHDAY=-1,1,20;BYMONTH=2,12;COUNT=8",
+      "FREQ=MONTHLY;INTERVAL=2;BYMONTHDAY=-1,1,20;COUNT=8",
       event.recurrenceRule,
     )
   }
@@ -165,7 +158,7 @@ class ScheduleCalendarProjectionTest {
   @Test
   fun allDayRecurrenceUntilUsesDateValueType() {
     val event = project(schedule(
-      timing = ScheduleTiming.AllDay(Date(2026, 7, 12), 1),
+      timing = ScheduleTiming.AllDay(Date(2026, 7, 12)),
       recurrence = RecurrenceRule(
         RecurrenceFrequency.DAILY,
         end = RecurrenceEnd.Until(Date(2026, 12, 31)),
@@ -349,7 +342,7 @@ class ScheduleCalendarProjectionTest {
 
     val allDay = schedule(
       recurrence = RecurrenceRule(RecurrenceFrequency.DAILY),
-      timing = ScheduleTiming.AllDay(Date(2026, 3, 8), 1),
+      timing = ScheduleTiming.AllDay(Date(2026, 3, 8)),
     )
     val allDayIdentity = RecurrenceId(MinuteTimeDate(2026, 3, 9, 0, 0), null, true)
     val allDayNative = ScheduleCalendarProjectionFactory.project(
@@ -418,16 +411,12 @@ class ScheduleCalendarProjectionTest {
         RecurrenceFrequency.WEEKLY,
         byWeekDays = linkedSetOf(IsoWeekDay.FRIDAY, IsoWeekDay.MONDAY),
       ),
-      reminders = listOf(
-        reminder("later", 30, ReminderChannel.DEVICE),
-        reminder("sooner", 5, ReminderChannel.DEVICE),
-      ),
+      reminder = reminder("sooner", 5, ReminderChannel.DEVICE),
     )
     val reordered = first.copy(
       recurrence = first.recurrence?.copy(
         byWeekDays = linkedSetOf(IsoWeekDay.MONDAY, IsoWeekDay.FRIDAY),
       ),
-      reminders = first.reminders.reversed(),
     )
     val second = schedule(id = ScheduleId("018f0f7c-6000-7000-8000-000000000002"))
     val left = ScheduleCalendarProjectionFactory.project(
@@ -463,7 +452,7 @@ class ScheduleCalendarProjectionTest {
       MinuteTimeDate(2026, 7, 12, 9, 0), 60, "Asia/Shanghai",
     ),
     recurrence: RecurrenceRule? = null,
-    reminders: List<ScheduleReminder> = emptyList(),
+    reminder: ScheduleReminder? = null,
     todoState: ScheduleTodoState = ScheduleTodoState.PENDING,
   ) = Schedule(
     id = id,
@@ -473,7 +462,7 @@ class ScheduleCalendarProjectionTest {
     categoryId = null,
     timing = timing,
     recurrence = recurrence,
-    reminders = reminders,
+    reminder = reminder,
     todoState = todoState,
     createdAt = now,
     updatedAt = now,
