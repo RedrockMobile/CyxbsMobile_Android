@@ -35,6 +35,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -45,7 +46,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.compose.material.icons.outlined.CheckCircle
@@ -72,6 +72,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -87,13 +88,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.res.ConfigRes
 import com.cyxbs.components.config.sp.accountSettings
+import com.cyxbs.components.config.time.MinuteTimeDate
+import com.cyxbs.components.config.time.TodayNoEffect
 import com.cyxbs.components.navigation.AppNav
 import com.cyxbs.components.navigation.AppNavEntry
 import com.cyxbs.components.navigation.NAV_SCHEDULE_TODO
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.extensions.toast
+import com.cyxbs.components.view.calendar.CalendarCompose
+import com.cyxbs.components.view.calendar.layout.createCalendarContentOffsetMeasurePolicy
+import com.cyxbs.components.view.calendar.state.rememberCalendarState
 import com.cyxbs.components.view.ui.Window
-import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
 import com.cyxbs.pages.schedule.api.ScheduleTodoNavArgument
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
 import com.cyxbs.pages.schedule.domain.model.CategoryId
@@ -111,10 +116,17 @@ import com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavArgument
 import com.cyxbs.pages.schedule.ui.category.mergeScheduleCategories
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog
 import com.cyxbs.pages.schedule.ui.edit.EditScope
+import com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence
+import com.cyxbs.pages.schedule.ui.model.occurrencesInRange
 import com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument
+import com.cyxbs.pages.schedule.ui.timeline.HourHeight
+import com.cyxbs.pages.schedule.ui.timeline.ScheduleTimelinePane
+import com.cyxbs.pages.schedule.ui.timeline.timelineSchedulesForDate
 import com.cyxbs.pages.schedule.viewmodel.ScheduleMainViewModel
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCategory
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoTime
+import com.cyxbs.pages.schedule.widget.rememberScheduleListModeIcon
+import com.cyxbs.pages.schedule.widget.rememberScheduleTimelineModeIcon
 import cyxbsmobile.cyxbs_pages.schedule.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.schedule.generated.resources.schedule_ic_todo_empty_completed
 import cyxbsmobile.cyxbs_pages.schedule.generated.resources.schedule_ic_todo_empty_pending
@@ -124,6 +136,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 import kotlin.time.Clock
@@ -149,9 +162,10 @@ class ScheduleTodoNavEntry : AppNavEntry<ScheduleTodoNavArgument>() {
 /**
  * 邮子清单页面。
  *
- * 页面仅负责把共享 Schedule 快照投影成卡片列表；新增、编辑、完成和删除仍通过 [ScheduleMainViewModel]
- * 进入同一个仓库，因此这里的任何修改都会同步反映到独立的 SchedulePage。[onBack] 必须绑定实际入栈的
- * 导航参数；Desktop mock 使用独立参数类型时会显式传入自己的返回回调。
+ * 页面把共享 Schedule 快照投影成卡片列表或当天时间轴，两种展示共用标题栏、分组筛选和编辑会话。
+ * 新增、编辑、完成和删除仍通过 [ScheduleMainViewModel] 进入同一个仓库，因此切换视图不会创建第二份
+ * 数据状态。[onBack] 必须绑定实际入栈的导航参数；Desktop mock 使用独立参数类型时会显式传入自己的
+ * 返回回调。
  */
 @Composable
 fun ScheduleTodoPage(
@@ -179,11 +193,20 @@ fun ScheduleTodoPage(
   val visibleCategories = remember(snapshot.categories) {
     mergeScheduleCategories(snapshot.categories)
   }
+  val calendarState = rememberCalendarState(
+    initialClickDate = TodayNoEffect,
+    endDate = TodayNoEffect.plusYears(8).lastDate,
+  )
+  val clickDate = calendarState.clickDate
 
   var showCreateEditor by remember { mutableStateOf(false) }
   var editingIdentity by remember { mutableStateOf<Pair<ScheduleId, RecurrenceId?>?>(null) }
+  var timelineEditingOccurrence by remember { mutableStateOf<ScheduleUiOccurrence?>(null) }
   var selectedCategoryId by remember(currentAccountSettings.stuNum) {
     mutableStateOf<CategoryId?>(null)
+  }
+  var viewMode by remember(currentAccountSettings.stuNum) {
+    mutableStateOf(loadScheduleTodoViewMode(currentAccountSettings))
   }
   // 置顶只保存在当前账号 Settings，不进入 Schedule v2 协议；切号后 remember 会加载对应账号的数据。
   var pinnedIds by remember(currentAccountSettings.stuNum) {
@@ -206,6 +229,7 @@ fun ScheduleTodoPage(
     if (!editorEnabled) {
       showCreateEditor = false
       editingIdentity = null
+      timelineEditingOccurrence = null
       viewModel.exitManageMode()
     }
   }
@@ -244,6 +268,17 @@ fun ScheduleTodoPage(
     // 条目被删除或同步结果使其不再可见时关闭编辑器，避免同 identity 将来重建后意外重新弹出。
     if (editingIdentity != null && editingItem == null) editingIdentity = null
   }
+  val timelineEditingSchedule = remember(snapshot.schedules, timelineEditingOccurrence) {
+    timelineEditingOccurrence?.let { occurrence ->
+      snapshot.schedules.firstOrNull { it.id == occurrence.scheduleId }
+    }
+  }
+  LaunchedEffect(timelineEditingOccurrence, timelineEditingSchedule) {
+    // 同步删除了所点系列时及时关闭时间轴编辑器，避免保留已失效的 occurrence 快照。
+    if (timelineEditingOccurrence != null && timelineEditingSchedule == null) {
+      timelineEditingOccurrence = null
+    }
+  }
   val filteredPending = remember(projection.pending, selectedCategoryId) {
     projection.pending.filter { selectedCategoryId == null || it.schedule.categoryId == selectedCategoryId }
   }
@@ -255,6 +290,25 @@ fun ScheduleTodoPage(
   }
   // 已完成列表按完成事实排序，不再让端上置顶干预历史顺序。
   val completed = filteredCompleted
+  val timelineVisibleOccurrences = remember(snapshot, clickDate, selectedCategoryId) {
+    snapshot.occurrencesInRange(
+      MinuteTimeDate(clickDate, 0, 0),
+      MinuteTimeDate(clickDate.plusDays(1), 0, 0),
+    ).filter { occurrence ->
+      selectedCategoryId == null || occurrence.categoryId == selectedCategoryId
+    }
+  }
+  val timelineDayEvents = remember(timelineVisibleOccurrences, clickDate) {
+    timelineSchedulesForDate(timelineVisibleOccurrences, clickDate)
+  }
+  val timelineScrollState = rememberScrollState()
+  val density = LocalDensity.current
+  LaunchedEffect(Unit) {
+    val currentHour = Clock.System.now()
+      .toLocalDateTime(TimeZone.currentSystemDefault()).hour
+    val target = with(density) { (HourHeight * (currentHour - 1).coerceAtLeast(0)).toPx() }
+    timelineScrollState.scrollTo(target.toInt())
+  }
   LaunchedEffect(
     argument.scheduleId,
     argument.recurrenceId,
@@ -353,9 +407,17 @@ fun ScheduleTodoPage(
       ScheduleTodoHeader(
         manageMode = manageMode,
         failureCount = failureRecords.size,
+        viewMode = viewMode,
         onBack = onBack,
         onFailures = { ScheduleFailureNavArgument.navigate() },
-        onTimeline = { ScheduleMainNavArgument().navigate() },
+        onToggleViewMode = {
+          viewMode = if (viewMode == ScheduleTodoViewMode.LIST) {
+            ScheduleTodoViewMode.TIMELINE
+          } else {
+            ScheduleTodoViewMode.LIST
+          }
+          saveScheduleTodoViewMode(currentAccountSettings, viewMode)
+        },
         onSettings = { ScheduleSettingsNavArgument.navigate() },
         onManageDone = viewModel::exitManageMode,
       )
@@ -366,138 +428,163 @@ fun ScheduleTodoPage(
         onSelect = { selectedCategoryId = it },
         onManageCategories = { ScheduleCategoryManageNavArgument.navigate() },
       )
-      AnimatedVisibility(
-        visible = visibleUrgentCount > 0,
-        enter = fadeIn(tween(durationMillis = 180)) + expandVertically(
-          animationSpec = tween(durationMillis = 220),
-          expandFrom = Alignment.Top,
-        ),
-        exit = fadeOut(tween(durationMillis = 160)) + shrinkVertically(
-          animationSpec = tween(durationMillis = 220),
-          shrinkTowards = Alignment.Top,
-        ),
-      ) {
-        ScheduleTodoUrgentBanner(displayedUrgentCount)
-      }
-      LazyColumn(
-        // 列表视口止于系统导航栏上方，滚动中的卡片不会绘制到导航按钮背后。
-        modifier = Modifier.fillMaxSize().navigationBarsPadding(),
-        state = listState,
-        contentPadding = PaddingValues(
-          start = 16.dp,
-          // 提示条存在时，从其底部到“未完成”文字顶部保持设计稿的 17dp：13dp + 标题自身 4dp。
-          top = urgentListTopPadding,
-          end = 16.dp,
-          bottom = if (manageMode) 92.dp else 88.dp,
-        ),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-      ) {
-        item(key = "pending-title") {
-          ScheduleTodoSectionTitle("未完成")
+      if (viewMode == ScheduleTodoViewMode.LIST) {
+        AnimatedVisibility(
+          visible = visibleUrgentCount > 0,
+          enter = fadeIn(tween(durationMillis = 180)) + expandVertically(
+            animationSpec = tween(durationMillis = 220),
+            expandFrom = Alignment.Top,
+          ),
+          exit = fadeOut(tween(durationMillis = 160)) + shrinkVertically(
+            animationSpec = tween(durationMillis = 220),
+            shrinkTowards = Alignment.Top,
+          ),
+        ) {
+          ScheduleTodoUrgentBanner(displayedUrgentCount)
         }
-        if (pending.isEmpty()) {
-          item(key = "pending-empty") {
-            ScheduleTodoEmptyCard(completed = false)
+        LazyColumn(
+          // 列表视口止于系统导航栏上方，滚动中的卡片不会绘制到导航按钮背后。
+          modifier = Modifier.fillMaxSize().navigationBarsPadding(),
+          state = listState,
+          contentPadding = PaddingValues(
+            start = 16.dp,
+            // 提示条存在时，从其底部到“未完成”文字顶部保持设计稿的 17dp：13dp + 标题自身 4dp。
+            top = urgentListTopPadding,
+            end = 16.dp,
+            bottom = if (manageMode) 92.dp else 88.dp,
+          ),
+          verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+          item(key = "pending-title") {
+            ScheduleTodoSectionTitle("未完成")
           }
-        } else {
-          items(pending, key = ScheduleTodoItemUi::key) { item ->
-            ScheduleTodoCard(
-              modifier = Modifier.animateItem(
-                fadeInSpec = tween(durationMillis = 180),
-                placementSpec = tween(durationMillis = 320),
-                fadeOutSpec = tween(durationMillis = 160),
-              ),
-              item = item,
-              highlighted = item.key == highlightedItemKey,
-              isPinned = item.schedule.id in pinnedIds,
-              manageMode = manageMode,
-              selected = item.schedule.id in selectedIds,
-              onSelect = { viewModel.toggleSelect(item.schedule.id) },
-              onLongPress = {
-                if (editorEnabled && !manageMode) {
-                  viewModel.enterManageMode()
-                  viewModel.toggleSelect(item.schedule.id)
-                }
-              },
-              onOpen = {
-                showCreateEditor = false
-                editingIdentity = item.schedule.id to item.occurrence.recurrenceId
-              },
-              onComplete = {
-                viewModel.completeSchedule(
-                  item.schedule.id,
-                  item.occurrence.recurrenceId,
-                  completed = true,
-                )
-              },
-              onTogglePin = {
-                togglePinnedSchedule(item.schedule.id, revealPendingTop = true)
-              },
-              isLinkedToCalendar = item.schedule.id in calendarLinkedScheduleIds,
-              onToggleCalendarLink = { toggleCalendarLink(item.schedule.id) },
-              onDelete = {
-                viewModel.deleteScheduleScoped(
-                  item.schedule.id,
-                  if (item.occurrence.recurrenceId == null) EditScope.ALL else EditScope.THIS_ONLY,
-                  item.occurrence.recurrenceId,
-                )
-              },
-            )
+          if (pending.isEmpty()) {
+            item(key = "pending-empty") {
+              ScheduleTodoEmptyCard(completed = false)
+            }
+          } else {
+            items(pending, key = ScheduleTodoItemUi::key) { item ->
+              ScheduleTodoCard(
+                modifier = Modifier.animateItem(
+                  fadeInSpec = tween(durationMillis = 180),
+                  placementSpec = tween(durationMillis = 320),
+                  fadeOutSpec = tween(durationMillis = 160),
+                ),
+                item = item,
+                highlighted = item.key == highlightedItemKey,
+                isPinned = item.schedule.id in pinnedIds,
+                manageMode = manageMode,
+                selected = item.schedule.id in selectedIds,
+                onSelect = { viewModel.toggleSelect(item.schedule.id) },
+                onLongPress = {
+                  if (editorEnabled && !manageMode) {
+                    viewModel.enterManageMode()
+                    viewModel.toggleSelect(item.schedule.id)
+                  }
+                },
+                onOpen = {
+                  showCreateEditor = false
+                  timelineEditingOccurrence = null
+                  editingIdentity = item.schedule.id to item.occurrence.recurrenceId
+                },
+                onComplete = {
+                  viewModel.completeSchedule(
+                    item.schedule.id,
+                    item.occurrence.recurrenceId,
+                    completed = true,
+                  )
+                },
+                onTogglePin = {
+                  togglePinnedSchedule(item.schedule.id, revealPendingTop = true)
+                },
+                isLinkedToCalendar = item.schedule.id in calendarLinkedScheduleIds,
+                onToggleCalendarLink = { toggleCalendarLink(item.schedule.id) },
+                onDelete = {
+                  viewModel.deleteScheduleScoped(
+                    item.schedule.id,
+                    if (item.occurrence.recurrenceId == null) EditScope.ALL else EditScope.THIS_ONLY,
+                    item.occurrence.recurrenceId,
+                  )
+                },
+              )
+            }
           }
-        }
 
-        item(key = "completed-title") {
-          ScheduleTodoSectionTitle("已完成")
+          item(key = "completed-title") {
+            ScheduleTodoSectionTitle("已完成")
+          }
+          if (completed.isEmpty()) {
+            item(key = "completed-empty") {
+              ScheduleTodoEmptyCard(completed = true)
+            }
+          } else {
+            items(completed, key = ScheduleTodoItemUi::key) { item ->
+              ScheduleTodoCard(
+                modifier = Modifier.animateItem(
+                  fadeInSpec = tween(durationMillis = 180),
+                  placementSpec = tween(durationMillis = 320),
+                  fadeOutSpec = tween(durationMillis = 160),
+                ),
+                item = item,
+                highlighted = item.key == highlightedItemKey,
+                isPinned = item.schedule.id in pinnedIds,
+                manageMode = manageMode,
+                selected = item.schedule.id in selectedIds,
+                onSelect = { viewModel.toggleSelect(item.schedule.id) },
+                onLongPress = {
+                  if (editorEnabled && !manageMode) {
+                    viewModel.enterManageMode()
+                    viewModel.toggleSelect(item.schedule.id)
+                  }
+                },
+                onOpen = {
+                  showCreateEditor = false
+                  timelineEditingOccurrence = null
+                  editingIdentity = item.schedule.id to item.occurrence.recurrenceId
+                },
+                onComplete = {
+                  viewModel.completeSchedule(
+                    item.schedule.id,
+                    item.occurrence.recurrenceId,
+                    completed = false,
+                  )
+                },
+                onTogglePin = {
+                  togglePinnedSchedule(item.schedule.id, revealPendingTop = false)
+                },
+                isLinkedToCalendar = item.schedule.id in calendarLinkedScheduleIds,
+                onToggleCalendarLink = { toggleCalendarLink(item.schedule.id) },
+                onDelete = {
+                  viewModel.deleteScheduleScoped(
+                    item.schedule.id,
+                    if (item.occurrence.recurrenceId == null) EditScope.ALL else EditScope.THIS_ONLY,
+                    item.occurrence.recurrenceId,
+                  )
+                },
+              )
+            }
+          }
         }
-        if (completed.isEmpty()) {
-          item(key = "completed-empty") {
-            ScheduleTodoEmptyCard(completed = true)
-          }
-        } else {
-          items(completed, key = ScheduleTodoItemUi::key) { item ->
-            ScheduleTodoCard(
-              modifier = Modifier.animateItem(
-                fadeInSpec = tween(durationMillis = 180),
-                placementSpec = tween(durationMillis = 320),
-                fadeOutSpec = tween(durationMillis = 160),
-              ),
-              item = item,
-              highlighted = item.key == highlightedItemKey,
-              isPinned = item.schedule.id in pinnedIds,
-              manageMode = manageMode,
-              selected = item.schedule.id in selectedIds,
-              onSelect = { viewModel.toggleSelect(item.schedule.id) },
-              onLongPress = {
-                if (editorEnabled && !manageMode) {
-                  viewModel.enterManageMode()
-                  viewModel.toggleSelect(item.schedule.id)
-                }
-              },
-              onOpen = {
-                showCreateEditor = false
-                editingIdentity = item.schedule.id to item.occurrence.recurrenceId
-              },
-              onComplete = {
-                viewModel.completeSchedule(
-                  item.schedule.id,
-                  item.occurrence.recurrenceId,
-                  completed = false,
-                )
-              },
-              onTogglePin = {
-                togglePinnedSchedule(item.schedule.id, revealPendingTop = false)
-              },
-              isLinkedToCalendar = item.schedule.id in calendarLinkedScheduleIds,
-              onToggleCalendarLink = { toggleCalendarLink(item.schedule.id) },
-              onDelete = {
-                viewModel.deleteScheduleScoped(
-                  item.schedule.id,
-                  if (item.occurrence.recurrenceId == null) EditScope.ALL else EditScope.THIS_ONLY,
-                  item.occurrence.recurrenceId,
-                )
-              },
-            )
-          }
+      } else {
+        CalendarCompose(
+          modifier = Modifier
+            .weight(1f)
+            .background(colors.bottomBg)
+            .navigationBarsPadding(),
+          state = calendarState,
+        ) {
+          ScheduleTimelinePane(
+            modifier = Modifier.layout(calendarState.createCalendarContentOffsetMeasurePolicy()),
+            timed = timelineDayEvents,
+            categories = visibleCategories,
+            scrollState = timelineScrollState,
+            onScheduleClick = { occurrence ->
+              if (!editorEnabled) return@ScheduleTimelinePane
+              showCreateEditor = false
+              editingIdentity = null
+              timelineEditingOccurrence = occurrence
+            },
+          )
         }
       }
     }
@@ -511,6 +598,7 @@ fun ScheduleTodoPage(
           .size(50.dp),
         onClick = {
           editingIdentity = null
+          timelineEditingOccurrence = null
           showCreateEditor = true
         },
         backgroundColor = ScheduleTodoAccentColor,
@@ -558,7 +646,9 @@ fun ScheduleTodoPage(
     }
   }
 
-  if (editorEnabled && (showCreateEditor || editingItem != null)) {
+  if (editorEnabled &&
+    (showCreateEditor || editingItem != null || timelineEditingOccurrence != null)
+  ) {
     // Window 包住完整编辑流程，范围选择和未保存确认与主 BottomSheet 共用同一窗口层级。
     Window(dismissOnBackPress = null) {
       Box(modifier = Modifier.fillMaxSize()) {
@@ -609,6 +699,45 @@ fun ScheduleTodoPage(
                 item.occurrence.recurrenceId,
                 completed,
               )
+            },
+          )
+        }
+        val timelineOccurrence = timelineEditingOccurrence
+        val timelineSchedule = timelineEditingSchedule
+        if (timelineOccurrence != null && timelineSchedule != null) {
+          EditScheduleDialog(
+            show = true,
+            editSchedule = timelineSchedule,
+            editOccurrence = timelineOccurrence.toDomainOccurrence(),
+            recurrenceId = timelineOccurrence.recurrenceId,
+            categoryRepository = viewModel.repository,
+            showCourseRelation = true,
+            onDismiss = { timelineEditingOccurrence = null },
+            onConfirm = { state, scope, newCategory ->
+              viewModel.saveSchedule(
+                state,
+                scope,
+                timelineOccurrence.recurrenceId,
+                newCategory,
+              )
+              timelineEditingOccurrence = null
+            },
+            onDelete = { scope ->
+              viewModel.deleteScheduleScoped(
+                timelineSchedule.id,
+                scope,
+                timelineOccurrence.recurrenceId,
+              )
+              timelineEditingOccurrence = null
+            },
+            onToggleCompleted = timelineSchedule.todoState?.let {
+              { completed ->
+                viewModel.completeSchedule(
+                  timelineSchedule.id,
+                  timelineOccurrence.recurrenceId,
+                  completed,
+                )
+              }
             },
           )
         }
@@ -729,13 +858,16 @@ internal fun com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence.toDomainOccu
 private fun ScheduleTodoHeader(
   manageMode: Boolean,
   failureCount: Int,
+  viewMode: ScheduleTodoViewMode,
   onBack: () -> Unit,
   onFailures: () -> Unit,
-  onTimeline: () -> Unit,
+  onToggleViewMode: () -> Unit,
   onSettings: () -> Unit,
   onManageDone: () -> Unit,
 ) {
   val colors = LocalAppColors.current
+  val timelineIcon = rememberScheduleTimelineModeIcon()
+  val listIcon = rememberScheduleListModeIcon()
   Surface(
     color = colors.bottomBg,
     // 页面以 edge-to-edge 方式绘制；只由标题栏消费顶部安全区，避免标题进入状态栏或列表重复留白。
@@ -800,10 +932,18 @@ private fun ScheduleTodoHeader(
             )
           }
         } else {
-          IconButton(onClick = onTimeline) {
+          IconButton(onClick = onToggleViewMode) {
             Icon(
-              imageVector = Icons.Default.DateRange,
-              contentDescription = "切换到时间轴",
+              imageVector = if (viewMode == ScheduleTodoViewMode.LIST) {
+                timelineIcon
+              } else {
+                listIcon
+              },
+              contentDescription = if (viewMode == ScheduleTodoViewMode.LIST) {
+                "切换到时间轴"
+              } else {
+                "切换到清单列表"
+              },
               tint = colors.tvLv1,
             )
           }

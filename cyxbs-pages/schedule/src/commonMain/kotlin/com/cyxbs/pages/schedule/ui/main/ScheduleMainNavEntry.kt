@@ -50,6 +50,7 @@ import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryMutationMode
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.domain.repository.canSubmitScheduleMutation
+import com.cyxbs.pages.schedule.ui.category.mergeScheduleCategories
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog
 import com.cyxbs.pages.schedule.ui.model.occurrencesInRange
 import com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument
@@ -179,6 +180,9 @@ fun SchedulePage(
   val dayEvents = remember(visibleOccurrences, clickDate) {
     timelineSchedulesForDate(visibleOccurrences, clickDate)
   }
+  val visibleCategories = remember(snapshot.categories) {
+    mergeScheduleCategories(snapshot.categories)
+  }
 
   val scrollState = rememberScrollState()
   val density = LocalDensity.current
@@ -211,6 +215,7 @@ fun SchedulePage(
         ScheduleTimelinePane(
           modifier = Modifier.layout(calendarState.createCalendarContentOffsetMeasurePolicy()),
           timed = dayEvents,
+          categories = visibleCategories,
           scrollState = scrollState,
           // 点击某条日程：只在当前可写时打开统一编辑弹窗，并带上「点击那一天」用于重复系列三态。
           onScheduleClick = { entity ->
