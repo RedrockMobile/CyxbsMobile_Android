@@ -95,7 +95,7 @@ deeplink: cyxbs://dialog/update?versionName={String}&updateContent={String}&down
 - argument: `com.cyxbs.pages.course.api.CourseNavArgument`
 
 ```text
-deeplink: cyxbs://course?stuNum={String}&stableKey=[String?]
+deeplink: cyxbs://course?stuNum=[String?]&stableKey=[String?]
 ```
 
 ### course_find
