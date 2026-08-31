@@ -2,6 +2,10 @@ package com.cyxbs.pages.schedule.api
 
 import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.components.navigation.AppNavArgument
+import com.cyxbs.components.navigation.appNavBackStack
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
@@ -76,5 +80,37 @@ data class ScheduleMainNavArgument(
     require(recurrenceId == null || scheduleId != null) {
       "recurrenceId requires a scheduleId"
     }
+  }
+
+  /**
+   * 打开日程主页；重复打开同一个定位目标时不堆叠页面，而是通知现有页面重新定位并播放高亮。
+   *
+   * Android 的系统日历可能在应用已停留于目标日程时再次发送完全相同的 deeplink。通用导航栈会
+   * 拒绝与栈顶完全相等的参数，因此这里把该场景转为一次页面内事件；其他参数仍按标准导航入栈。
+   */
+  override fun navigate() {
+    if (appNavBackStack.lastOrNull() == this) {
+      ScheduleMainNavigationRequests.dispatch(this)
+    } else {
+      super.navigate()
+    }
+  }
+}
+
+/**
+ * 日程主页对重复定位请求的进程内事件通道。
+ *
+ * 通道只承载已经通过导航解码与类型校验的参数，不负责持久化；缓冲用于覆盖 Intent 到达与页面协程
+ * 恢复之间的短暂时序差，当前可见的日程主页消费后即移除。
+ */
+object ScheduleMainNavigationRequests {
+  private val channel = Channel<ScheduleMainNavArgument>(capacity = Channel.BUFFERED)
+
+  /** 重复定位请求流；日程主页应仅处理与自身参数相等的请求。 */
+  val requests: Flow<ScheduleMainNavArgument> = channel.receiveAsFlow()
+
+  /** 导航入口在主线程提交已校验请求；缓冲关闭等异常不应影响现有页面。 */
+  internal fun dispatch(argument: ScheduleMainNavArgument) {
+    channel.trySend(argument)
   }
 }

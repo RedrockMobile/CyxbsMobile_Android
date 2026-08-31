@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,6 +48,7 @@ import com.cyxbs.components.view.calendar.layout.createCalendarContentOffsetMeas
 import com.cyxbs.components.view.calendar.state.rememberCalendarState
 import com.cyxbs.components.view.ui.Window
 import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
+import com.cyxbs.pages.schedule.api.ScheduleMainNavigationRequests
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
@@ -134,9 +136,22 @@ fun ScheduleTodoPage(
   var highlightedItemKey by remember(argument.scheduleId, argument.recurrenceId) {
     mutableStateOf<String?>(null)
   }
+  var deepLinkReplayVersion by remember(argument.scheduleId, argument.recurrenceId) {
+    mutableIntStateOf(0)
+  }
 
   LaunchedEffect(Unit) {
     viewModel.initialize()
+  }
+  LaunchedEffect(argument) {
+    ScheduleMainNavigationRequests.requests.collect { request ->
+      if (request == argument) {
+        // 相同 deeplink 不会重复压栈；重置消费态后复用下方定位与高亮流程。
+        highlightedItemKey = null
+        deepLinkConsumed = false
+        deepLinkReplayVersion++
+      }
+    }
   }
   LaunchedEffect(editorEnabled) {
     if (!editorEnabled) {
@@ -229,6 +244,7 @@ fun ScheduleTodoPage(
     pending,
     completed,
     snapshot.schedules,
+    deepLinkReplayVersion,
   ) {
     if (deepLinkConsumed) return@LaunchedEffect
     val scheduleId = argument.scheduleId ?: return@LaunchedEffect
