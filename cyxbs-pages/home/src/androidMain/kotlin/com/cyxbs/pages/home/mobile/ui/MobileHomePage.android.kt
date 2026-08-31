@@ -17,8 +17,6 @@ import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.service.startActivity
 import com.cyxbs.components.config.sp.SP_COURSE_SHOW_STATE
 import com.cyxbs.components.config.sp.defaultSp
-import com.cyxbs.components.navigation.AppScheme
-import com.cyxbs.components.utils.extensions.logg
 import com.cyxbs.components.utils.logger.TrackingUtils
 import com.cyxbs.components.utils.logger.event.ClickEvent
 import com.cyxbs.functions.update.api.IAppUpdateService
@@ -97,15 +95,6 @@ private fun execIntentAction(
           courseBottomNavViewModel.state.value = true
         }
       }
-    }
-  }
-  // data URI 在冷启动和 singleTask 的 onNewIntent 中都必须处理；否则系统日历首次唤起 App 只会停在主页。
-  val url = intent.data
-  if (url != null) {
-    runCatching {
-      AppScheme.jump(url.toString())
-    }.onFailure {
-      logg(it.stackTraceToString())
     }
   }
 }
