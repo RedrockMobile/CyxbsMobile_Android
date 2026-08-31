@@ -27,6 +27,42 @@ class RecurrenceEditModelTest {
       ).toRecurrenceRule(anchor)!!.end,
     )
   }
+
+  /**
+   * 重复结束选项必须逐一映射到领域值；Count(1) 表示仅生成锚点实例，不能被误解为“不重复”。
+   */
+  @Test
+  fun every_repeat_end_option_maps_without_ambiguity() {
+    assertEquals(
+      RecurrenceEnd.Never,
+      RecurrenceDraft(freq = RepeatFreqOption.DAILY).toRecurrenceRule(anchor)!!.end,
+    )
+    assertEquals(
+      RecurrenceEnd.Count(1),
+      RecurrenceDraft(
+        freq = RepeatFreqOption.DAILY,
+        endOption = RepeatEndOption.COUNT,
+        count = 1,
+      ).toRecurrenceRule(anchor)!!.end,
+    )
+    assertEquals(
+      RecurrenceEnd.Count(6),
+      RecurrenceDraft(
+        freq = RepeatFreqOption.DAILY,
+        endOption = RepeatEndOption.COUNT,
+        count = 6,
+      ).toRecurrenceRule(anchor)!!.end,
+    )
+    assertEquals(
+      RecurrenceEnd.Until(Date(2026, 8, 1)),
+      RecurrenceDraft(
+        freq = RepeatFreqOption.DAILY,
+        endOption = RepeatEndOption.UNTIL,
+        until = Date(2026, 8, 1),
+      ).toRecurrenceRule(anchor)!!.end,
+    )
+  }
+
   @Test fun round_trip_keeps_v2_fields() {
     val rule = RecurrenceRule(
       RecurrenceFrequency.WEEKLY, 2, setOf(IsoWeekDay.MONDAY, IsoWeekDay.WEDNESDAY),

@@ -186,6 +186,47 @@ class RecurrenceEngineV2Test {
     assertEquals(emptyList(), RecurrenceEngine.expandInRange(unscheduled, emptyList(), dt(31), dt(31).plusMinutes(1)))
   }
 
+  /**
+   * 周重复必须对全天、时间点和时间段使用同一日期选择规则，同时保留各自的稳定 occurrence identity。
+   */
+  @Test
+  fun weeklyRecurrenceKeepsTimingKindAndIdentityForAllSupportedTimings() {
+    val recurrence = rule(
+      RecurrenceFrequency.WEEKLY,
+      count = 2,
+      days = setOf(IsoWeekDay.WEDNESDAY),
+    )
+    val timings = listOf(
+      ScheduleTiming.AllDay(Date(2024, 1, 31)),
+      ScheduleTiming.Deadline(dt(31), "Asia/Shanghai"),
+      ScheduleTiming.Timed(dt(31), 60, "Asia/Shanghai"),
+    )
+
+    timings.forEach { timing ->
+      val parent = schedule(recurrence).copy(timing = timing)
+      val occurrences = RecurrenceEngine.expandInRange(
+        parent,
+        emptyList(),
+        dt(31),
+        MinuteTimeDate(2024, 2, 8, 0, 0),
+      )
+
+      assertEquals(2, occurrences.size)
+      assertEquals(listOf("2024-01-31", "2024-02-07"), occurrences.map { occurrence ->
+        val date = when (val value = occurrence.timing) {
+          is ScheduleTiming.AllDay -> value.date
+          is ScheduleTiming.Deadline -> value.due.date
+          is ScheduleTiming.Timed -> value.start.date
+          ScheduleTiming.Unscheduled -> error("周重复不允许无日期 timing")
+        }
+        date.toString()
+      })
+      assertEquals(timing::class, occurrences.first().timing::class)
+      assertTrue(occurrences.all { it.recurrenceId != null })
+      assertEquals(2, occurrences.map { it.recurrenceId }.toSet().size)
+    }
+  }
+
   @Test fun movedOccurrencesCanEnterOrLeaveWindowWhileKeepingOriginalIdentity() {
     val schedule = schedule(rule(RecurrenceFrequency.DAILY, count = 2))
     val ids = RecurrenceEngine.expandInRange(schedule, emptyList(), dt(31), MinuteTimeDate(2024, 2, 2, 0, 0))
