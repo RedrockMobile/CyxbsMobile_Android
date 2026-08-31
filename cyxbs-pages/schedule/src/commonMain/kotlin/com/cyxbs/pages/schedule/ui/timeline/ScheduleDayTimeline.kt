@@ -341,6 +341,8 @@ private fun FullDayTitleOverlay(
       Box(
         modifier = Modifier
           .weight(1f)
+          // 标题与底层全天彩色条分层绘制，必须复用同一圆角边界，避免窄列中的长文本画到相邻条外。
+          .clip(RoundedCornerShape(6.dp))
           .clickableNoIndicator(onClick = { onScheduleClick(e.occurrence) }),
         contentAlignment = Alignment.Center,
       ) {
