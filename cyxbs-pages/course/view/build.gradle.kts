@@ -14,5 +14,8 @@ kotlin {
       implementation(projects.cyxbsPages.course.api)
       implementation(projects.cyxbsPages.schedule.api)
     }
+    commonTest.dependencies {
+      implementation(kotlin("test"))
+    }
   }
 }
