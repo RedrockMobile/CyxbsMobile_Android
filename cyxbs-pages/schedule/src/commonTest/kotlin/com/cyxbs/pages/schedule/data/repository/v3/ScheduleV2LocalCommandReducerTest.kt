@@ -22,6 +22,7 @@ import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
 import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
+import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.sync.v2.AtomicField
 import com.cyxbs.pages.schedule.domain.sync.v2.CategoryIdentity
@@ -52,6 +53,7 @@ import kotlinx.datetime.toInstant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 import kotlin.time.Instant
 
 /** UI 命令到 v2 typed pending 的纯 reducer 合同测试。 */
@@ -126,8 +128,12 @@ class ScheduleV2LocalCommandReducerTest {
   @Test
   fun saveScheduleWithNewCategoryUsesOneLocalRevision() {
     val category = ScheduleCategory(CategoryId(CATEGORY_ID), 0, "学习", null, 0)
+    val completeSchedule = schedule().copy(
+      recurrence = RecurrenceRule(UiRecurrenceFrequency.DAILY, end = RecurrenceEnd.Count(3)),
+      linkedToCourse = true,
+    )
     val result = reduce(
-      command = ScheduleCommand.SaveScheduleWithNewCategory(category, schedule()),
+      command = ScheduleCommand.SaveScheduleWithNewCategory(category, completeSchedule),
       now = 20_000,
       revision = 7,
     ).applied()
@@ -144,6 +150,10 @@ class ScheduleV2LocalCommandReducerTest {
       CATEGORY_ID,
       assertIs<ScheduleResource>(schedulePending.resource).categoryId.data,
     )
+    val scheduleResource = assertIs<ScheduleResource>(schedulePending.resource)
+    assertEquals(RecurrenceFrequency.DAILY, scheduleResource.recurrence.data?.frequency)
+    assertEquals(ReminderInput(15), scheduleResource.reminder.data)
+    assertEquals(true, scheduleResource.linkedToCourse.data)
   }
 
   /** 分类创建不能用首尾空白或英文字母大小写绕过同名限制。 */
@@ -204,6 +214,127 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(currentR.reminder, resource.reminder)
     assertEquals(currentR.todoState, resource.todoState)
     assertEquals(currentR.linkedToCourse, resource.linkedToCourse)
+  }
+
+  /** 清空备注、分类和提醒是三个明确的字段值变化，不得误改标题、时间和完成态。 */
+  @Test
+  fun updateCanClearNullableFieldsWithoutTouchingOtherAtoms() {
+    val remote = scheduleResource(version = 7, timestamp = 100)
+    val state = ScheduleSyncState(
+      remote.identity,
+      ScheduleRemoteSnapshot(remote, ServerResourceMeta(1, 2)),
+    )
+    val cleared = schedule(categoryId = null, reminder = null).copy(description = "")
+
+    val resource = reduce(
+      schedules = listOf(state),
+      command = ScheduleCommand.Update(cleared),
+      now = 200,
+      revision = 2,
+    ).applied().schedules.single().pendingResource()
+
+    assertEquals(AtomicField("", 200), resource.description)
+    assertEquals(AtomicField<String?>(null, 200), resource.categoryId)
+    assertEquals(AtomicField<ReminderInput?>(null, 200), resource.reminder)
+    assertEquals(remote.title, resource.title)
+    assertEquals(remote.timing, resource.timing)
+    assertEquals(remote.todoState, resource.todoState)
+  }
+
+  /** 编辑已完成普通清单的内容时，完成态不是表单脏字段，必须保留原值和时间戳。 */
+  @Test
+  fun editingCompletedScheduleKeepsCompletionState() {
+    val remote = scheduleResource(version = 7, timestamp = 100).copy(
+      todoState = AtomicField(TodoState.COMPLETED, 120),
+    )
+    val state = ScheduleSyncState(
+      remote.identity,
+      ScheduleRemoteSnapshot(remote, ServerResourceMeta(1, 2)),
+    )
+    val edited = schedule(title = "新标题").copy(
+      description = "新备注",
+      todoState = ScheduleTodoState.COMPLETED,
+    )
+
+    val resource = reduce(
+      schedules = listOf(state),
+      command = ScheduleCommand.Update(edited),
+      now = 200,
+      revision = 2,
+    ).applied().schedules.single().pendingResource()
+
+    assertEquals(AtomicField<TodoState?>(TodoState.COMPLETED, 120), resource.todoState)
+    assertEquals(AtomicField("新标题", 200), resource.title)
+    assertEquals(AtomicField("新备注", 200), resource.description)
+  }
+
+  /**
+   * 整系列修改墙上时间后，wire 中按日期保存的单次移动例外应使用父系列新时刻恢复 identity。
+   * 该测试覆盖 reducer、双快照投影和重复展开的真实链路，防止把旧 UI identity 直接复用而产生重复实例。
+   */
+  @Test
+  fun parentTimeShiftRehydratesMovedOverrideWithNewIdentityTime() {
+    val recurrence = RecurrenceRule(UiRecurrenceFrequency.DAILY, end = RecurrenceEnd.Count(3))
+    val parent = schedule(categoryId = null, recurrence = recurrence, reminder = null)
+    val created = reduce(
+      command = ScheduleCommand.Create(parent),
+      revision = 1,
+    ).applied()
+    val movedTiming = ScheduleTiming.Timed(
+      MinuteTimeDate(2026, 7, 30, 15, 0),
+      durationMinutes = 60,
+      timeZoneId = "Asia/Shanghai",
+    )
+    val withMovedOccurrence = reduce(
+      schedules = created.schedules,
+      command = ScheduleCommand.UpsertOccurrenceException(exception(
+        recurrenceId = RecurrenceId(
+          MinuteTimeDate(2026, 7, 21, 9, 0),
+          "Asia/Shanghai",
+          allDay = false,
+        ),
+        patch = OccurrencePatch(timing = UiFieldPatch.Replace(movedTiming)),
+      )),
+      revision = 2,
+    ).applied()
+    val shiftedParent = parent.copy(
+      timing = ScheduleTiming.Timed(
+        MinuteTimeDate(2026, 7, 20, 10, 0),
+        durationMinutes = 60,
+        timeZoneId = "Asia/Shanghai",
+      ),
+    )
+    val shifted = reduce(
+      schedules = withMovedOccurrence.schedules,
+      occurrenceOverrides = withMovedOccurrence.occurrenceOverrides,
+      command = ScheduleCommand.Update(shiftedParent),
+      revision = 3,
+    ).applied()
+
+    val projection = assertIs<ScheduleV2SnapshotProjection.Success>(
+      ScheduleV2SnapshotProjector().project(
+        accountId = "test-account",
+        timeZone = TimeZone.of("Asia/Shanghai"),
+        categories = shifted.categories,
+        schedules = shifted.schedules,
+        occurrenceOverrides = shifted.occurrenceOverrides,
+      ),
+    ).snapshot
+    val restoredException = projection.exceptions.single()
+    assertEquals(
+      MinuteTimeDate(2026, 7, 21, 10, 0),
+      restoredException.recurrenceId.originalDateTime,
+    )
+
+    val occurrences = RecurrenceEngine.expandInRange(
+      schedule = projection.schedules.single(),
+      exceptions = projection.exceptions,
+      rangeStartInclusive = MinuteTimeDate(2026, 7, 20, 0, 0),
+      rangeEndExclusive = MinuteTimeDate(2026, 8, 1, 0, 0),
+    )
+    assertEquals(3, occurrences.size)
+    assertEquals(3, occurrences.map { it.recurrenceId }.toSet().size)
+    assertTrue(occurrences.single { it.recurrenceId == restoredException.recurrenceId }.timing == movedTiming)
   }
 
   @Test
@@ -493,11 +624,22 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(500, updatedCategory.color.modifiedAt)
     assertEquals(500, updatedCategory.sortOrder.modifiedAt)
 
-    val deleted = reduce(
+    val recolored = reduce(
       categories = updated.categories,
-      command = ScheduleCommand.DeleteCategory(CategoryId(CATEGORY_ID)),
+      command = ScheduleCommand.UpdateCategory(category.copy(name = "课程", color = "color-json")),
       now = 502,
       revision = 3,
+    ).applied()
+    val recoloredCategory = recolored.categories.single().pendingCategoryResource()
+    assertEquals("课程", recoloredCategory.name.data)
+    assertEquals("color-json", recoloredCategory.color.data)
+    assertEquals(1, recolored.categories.size)
+
+    val deleted = reduce(
+      categories = recolored.categories,
+      command = ScheduleCommand.DeleteCategory(CategoryId(CATEGORY_ID)),
+      now = 503,
+      revision = 4,
     ).applied()
     assertIs<PendingDelete<*, *>>(deleted.categories.single().pending)
 

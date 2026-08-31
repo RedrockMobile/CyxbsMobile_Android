@@ -184,6 +184,44 @@ class ScheduleV2SnapshotProjectorTest {
     assertEquals(ScheduleTiming.Unscheduled, schedules.getValue(SCHEDULE_ID_4).timing)
   }
 
+  /** 分钟边界和富文本字段必须经过 typed wire 投影后原样恢复，不能跨日或发生字符集归一化。 */
+  @Test
+  fun deadlineMinuteBoundariesAndRichTextRoundTripExactly() {
+    val midnight = MinuteTimeDate(2026, 8, 31, 0, 0)
+      .toLocalDateTime().toInstant(zone).toEpochMilliseconds()
+    val lastMinute = MinuteTimeDate(2026, 8, 31, 23, 59)
+      .toLocalDateTime().toInstant(zone).toEpochMilliseconds()
+    val richTitle = "中英 123 🎓"
+    val richDescription = "第一行\nSecond line ✅"
+    val states = listOf(
+      scheduleResource(
+        id = SCHEDULE_ID,
+        version = 1,
+        timing = TimingInput(TimingKind.DEADLINE, dueAt = midnight),
+      ),
+      scheduleResource(
+        id = SCHEDULE_ID_2,
+        version = 1,
+        timing = TimingInput(TimingKind.DEADLINE, dueAt = lastMinute),
+        title = richTitle,
+        description = richDescription,
+      ),
+    ).map { resource ->
+      ScheduleSyncState(
+        resource.identity,
+        ScheduleRemoteSnapshot(resource, ServerResourceMeta(createdAt = 1, remoteModifiedAt = 2)),
+      )
+    }
+
+    val schedules = project(schedules = states).snapshot.schedules.associateBy { it.id.value }
+
+    assertEquals(ScheduleTiming.Deadline(MinuteTimeDate(2026, 8, 31, 0, 0), zone.id), schedules.getValue(SCHEDULE_ID).timing)
+    val last = schedules.getValue(SCHEDULE_ID_2)
+    assertEquals(ScheduleTiming.Deadline(MinuteTimeDate(2026, 8, 31, 23, 59), zone.id), last.timing)
+    assertEquals(richTitle, last.title)
+    assertEquals(richDescription, last.description)
+  }
+
   @Test
   fun recurrenceProjectsDailyWeeklyAndAllEndKinds() {
     val dailyUntil = RecurrenceInput(
@@ -468,6 +506,7 @@ class ScheduleV2SnapshotProjectorTest {
     timing: TimingInput,
     recurrence: RecurrenceInput? = null,
     title: String = "日程",
+    description: String = "描述",
     timestamp: Long = 10,
     reminder: ReminderInput? = null,
   ): ScheduleResource = ScheduleResource(
@@ -475,7 +514,7 @@ class ScheduleV2SnapshotProjectorTest {
     version = version,
     kind = ScheduleKind.TODO,
     title = AtomicField(title, timestamp),
-    description = AtomicField("描述", timestamp),
+    description = AtomicField(description, timestamp),
     categoryId = AtomicField(CATEGORY_ID, timestamp),
     timing = AtomicField(timing, timestamp),
     recurrence = AtomicField(recurrence, timestamp),

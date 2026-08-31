@@ -79,6 +79,43 @@ class RecurrenceEngineV2Test {
     assertEquals(MinuteTimeDate(2024, 2, 10, 15, 0), (actual.last().timing as ScheduleTiming.Timed).start)
   }
 
+  /**
+   * 完成态只覆盖 occurrence 状态；父系列后续修改标题或分类时，未被 patch 的字段必须继续继承新值。
+   */
+  @Test
+  fun completedOccurrenceInheritsLaterParentFieldUpdates() {
+    val original = schedule(rule(RecurrenceFrequency.DAILY, count = 2)).copy(
+      title = "旧标题",
+      categoryId = CategoryId("old-category"),
+    )
+    val occurrences = RecurrenceEngine.expandInRange(
+      original,
+      emptyList(),
+      dt(31),
+      MinuteTimeDate(2024, 2, 2, 0, 0),
+    )
+    val completed = exception(
+      original,
+      requireNotNull(occurrences.first().recurrenceId),
+      OccurrenceStatus.COMPLETED,
+    )
+    val updated = original.copy(
+      title = "新标题",
+      categoryId = CategoryId("new-category"),
+    )
+
+    val projected = RecurrenceEngine.expandInRange(
+      updated,
+      listOf(completed),
+      dt(31),
+      MinuteTimeDate(2024, 2, 2, 0, 0),
+    )
+
+    assertEquals(OccurrenceStatus.COMPLETED, projected.first().status)
+    assertTrue(projected.all { it.title == "新标题" })
+    assertTrue(projected.all { it.categoryId == CategoryId("new-category") })
+  }
+
   @Test fun forgedExceptionIsRejectedAndRemovingExceptionRestoresDefault() {
     val schedule = schedule(rule(RecurrenceFrequency.DAILY, count = 2))
     val forged = RecurrenceId(MinuteTimeDate(2024, 2, 20, 9, 0), "Asia/Shanghai", false)
@@ -225,6 +262,41 @@ class RecurrenceEngineV2Test {
       assertTrue(occurrences.all { it.recurrenceId != null })
       assertEquals(2, occurrences.map { it.recurrenceId }.toSet().size)
     }
+  }
+
+  /** 修改周选择器后只按新规则生成，旧星期不能作为残留实例继续出现。 */
+  @Test
+  fun replacingWeeklySelectorsRemovesOldWeekdays() {
+    val original = schedule(RecurrenceRule(
+      frequency = RecurrenceFrequency.WEEKLY,
+      byWeekDays = setOf(IsoWeekDay.MONDAY, IsoWeekDay.WEDNESDAY, IsoWeekDay.FRIDAY),
+      end = RecurrenceEnd.Count(4),
+    ))
+    val changed = original.copy(recurrence = original.recurrence?.copy(
+      byWeekDays = setOf(IsoWeekDay.TUESDAY, IsoWeekDay.THURSDAY),
+    ))
+
+    val oldDates = RecurrenceEngine.expandInRange(
+      original,
+      emptyList(),
+      dt(31),
+      MinuteTimeDate(2024, 2, 15, 0, 0),
+    ).map { it.recurrenceId!!.originalDateTime.date }
+    val changedDates = RecurrenceEngine.expandInRange(
+      changed,
+      emptyList(),
+      dt(31),
+      MinuteTimeDate(2024, 2, 15, 0, 0),
+    ).map { it.recurrenceId!!.originalDateTime.date }
+
+    assertEquals(
+      listOf(Date(2024, 1, 31), Date(2024, 2, 2), Date(2024, 2, 5), Date(2024, 2, 7)),
+      oldDates,
+    )
+    assertEquals(
+      listOf(Date(2024, 2, 1), Date(2024, 2, 6), Date(2024, 2, 8), Date(2024, 2, 13)),
+      changedDates,
+    )
   }
 
   @Test fun movedOccurrencesCanEnterOrLeaveWindowWhileKeepingOriginalIdentity() {

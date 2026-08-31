@@ -22,6 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Instant
 
 /** 邮子清单投影的纯领域测试，不启动 Compose、Room 或网络。 */
@@ -109,6 +110,34 @@ class ScheduleTodoUiStateTest {
     )
     assertEquals("未设置时间", projection.completed.single().timeText)
     assertEquals("已完成事项", projection.completed.single().schedule.title)
+  }
+
+  /** 已完成列表包含恰好七天边界，并排除只早一分钟的记录。 */
+  @Test
+  fun completedItemsUseInclusiveSevenDayBoundary() {
+    val now = Instant.parse("2026-08-17T08:00:00Z")
+    val exactlySevenDays = schedule(
+      suffix = "006",
+      title = "恰好七天",
+      timing = ScheduleTiming.Unscheduled,
+      todoState = ScheduleTodoState.COMPLETED,
+      updatedAt = now - 7.days,
+    )
+    val sevenDaysAndOneMinute = schedule(
+      suffix = "007",
+      title = "七天零一分钟",
+      timing = ScheduleTiming.Unscheduled,
+      todoState = ScheduleTodoState.COMPLETED,
+      updatedAt = now - 7.days - 1.minutes,
+    )
+
+    val completed = projectScheduleTodo(
+      ScheduleSnapshot(schedules = listOf(sevenDaysAndOneMinute, exactlySevenDays)),
+      now,
+      TimeZone.UTC,
+    ).completed
+
+    assertEquals(listOf("恰好七天"), completed.map { it.schedule.title })
   }
 
   /** 未完成排序遵循超期、置顶、24 小时临期、普通、无截止时间，超期不会被置顶覆盖。 */
