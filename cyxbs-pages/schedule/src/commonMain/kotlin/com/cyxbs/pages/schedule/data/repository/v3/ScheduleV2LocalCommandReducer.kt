@@ -727,7 +727,8 @@ class ScheduleV2LocalCommandReducer {
     val timingValue = timing.toWireTiming()
     val recurrenceValue = recurrence?.toWireRecurrence(
       timing = timing,
-      stableAnchorDate = old?.recurrence?.data?.anchorDate ?: recurrenceAnchorDate?.toUtcDaySlot(),
+      // 活跃系列继续使用旧 anchor；规则已清除时重新启用属于新序列，必须按当前 timing 建立日期轴。
+      stableAnchorDate = old?.recurrence?.data?.anchorDate,
     )
     val reminderValue = reminder?.toWireReminder()
     if (old != null && old.kind != kind.toWire()) {
@@ -847,6 +848,7 @@ class ScheduleV2LocalCommandReducer {
       is ScheduleTiming.AllDay -> timing.date
       ScheduleTiming.Unscheduled -> reject(ScheduleV2LocalCommandRejectionReason.UNSUPPORTED)
     }
+    // 同一 Schedule identity 的 recurrence 日期轴首次启用后保持稳定；当前 timing 可以相对它产生正负偏移。
     val anchor = stableAnchorDate?.toUtcDate() ?: timingAnchor
     val count: Int?
     val untilDate: Long?

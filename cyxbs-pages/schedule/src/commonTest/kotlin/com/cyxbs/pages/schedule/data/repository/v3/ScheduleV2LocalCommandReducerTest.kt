@@ -216,6 +216,49 @@ class ScheduleV2LocalCommandReducerTest {
     assertEquals(currentR.linkedToCourse, resource.linkedToCourse)
   }
 
+  /** 取消重复后再换日期重新启用重复，必须以当前日期建立新的 occurrence identity 日期轴。 */
+  @Test
+  fun reEnablingRecurrenceUsesCurrentTimingAfterClear() {
+    val historicalAnchor = Date(2026, 7, 20)
+    val currentDate = Date(2026, 7, 21)
+    val remote = scheduleResource(version = 7, timestamp = 100)
+    val state = ScheduleSyncState(
+      identity = remote.identity,
+      remoteSnapshot = ScheduleRemoteSnapshot(
+        remote,
+        ServerResourceMeta(1, 2),
+        firstRecurrenceAnchorDate = historicalAnchor.utcDaySlot(),
+      ),
+    )
+    val update = schedule(
+      timing = ScheduleTiming.Timed(
+        MinuteTimeDate(currentDate, 11, 0),
+        durationMinutes = 30,
+        timeZoneId = "Asia/Shanghai",
+      ),
+      recurrence = RecurrenceRule(UiRecurrenceFrequency.WEEKLY),
+    ).copy(recurrenceAnchorDate = historicalAnchor)
+
+    val result = reduce(
+      schedules = listOf(state),
+      command = ScheduleCommand.Update(update),
+      now = 200,
+      revision = 2,
+    ).applied()
+    val resource = result.schedules.single().pendingResource()
+
+    assertEquals(currentDate.utcDaySlot(), resource.recurrence.data?.anchorDate)
+    assertIs<ScheduleV2SnapshotProjection.Success>(
+      ScheduleV2SnapshotProjector().project(
+        accountId = "2020214988",
+        timeZone = TimeZone.of("Asia/Shanghai"),
+        categories = emptyList(),
+        schedules = result.schedules,
+        occurrenceOverrides = emptyList(),
+      ),
+    )
+  }
+
   /** 清空备注、分类和提醒是三个明确的字段值变化，不得误改标题、时间和完成态。 */
   @Test
   fun updateCanClearNullableFieldsWithoutTouchingOtherAtoms() {

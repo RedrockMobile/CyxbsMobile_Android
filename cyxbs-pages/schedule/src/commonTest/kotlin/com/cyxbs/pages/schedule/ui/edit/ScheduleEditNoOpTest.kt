@@ -404,6 +404,19 @@ class ScheduleEditNoOpTest {
     assertEquals(RecurrenceEnd.Until(until), update.schedule.recurrence?.end)
   }
 
+  /** 修改日期后首次开启每周重复，应默认选择新日期星期，而不是父日程的旧星期。 */
+  @Test
+  fun changedDateUsesNewAnchorWhenEnablingWeeklyRecurrence() {
+    val state = EditScheduleModelState(parentSchedule().copy(recurrence = null))
+    val changedDate = Date(2026, 7, 2)
+
+    state.applyExplicitDateSelection(changedDate)
+    state.recurrence = RecurrenceDraft(freq = RepeatFreqOption.WEEKLY)
+
+    assertEquals(changedDate, state.recurrenceAnchorDate)
+    assertEquals(setOf(IsoWeekDay.THURSDAY), state.outputRecurrence?.byWeekDays)
+  }
+
   @Test
   fun timingOnlyUnscheduledDoesNotFakeReminderDirtyAndScopesStayValid() = runTest {
     suspend fun apply(scope: EditScope): ScheduleCommand? {

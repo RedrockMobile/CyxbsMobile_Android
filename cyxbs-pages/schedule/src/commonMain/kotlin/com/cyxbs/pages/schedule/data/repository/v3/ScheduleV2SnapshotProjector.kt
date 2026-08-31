@@ -3,7 +3,6 @@ package com.cyxbs.pages.schedule.data.repository.v3
 import com.cyxbs.components.config.time.Date
 import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.components.config.time.toDate
-import com.cyxbs.components.config.time.toLocalDate
 import com.cyxbs.components.config.time.toMinuteTimeDate
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleInput
 import com.cyxbs.pages.schedule.domain.model.CategoryId
@@ -45,7 +44,6 @@ import com.cyxbs.pages.schedule.domain.sync.v2.TodoState
 import com.cyxbs.pages.schedule.domain.sync.v2.Weekday
 import com.cyxbs.pages.schedule.domain.validation.ScheduleValidator
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 import com.cyxbs.pages.schedule.domain.model.FieldPatch as UiFieldPatch
@@ -215,7 +213,7 @@ class ScheduleV2SnapshotProjector {
       description = resource.description.data,
       categoryId = resource.categoryId.data?.let(::CategoryId),
       timing = timing,
-      recurrence = resource.recurrence.data?.toUi(timing),
+      recurrence = resource.recurrence.data?.toUi(),
       reminder = resource.reminder.data?.toUiReminder(resource.identity.id),
       todoState = resource.todoState.data?.toUi(),
       createdAt = createdAt,
@@ -275,13 +273,11 @@ class ScheduleV2SnapshotProjector {
     }
   }
 
-  private fun RecurrenceInput.toUi(parentTiming: ScheduleTiming): RecurrenceRule {
+  private fun RecurrenceInput.toUi(): RecurrenceRule {
     requireDateSlot(anchorDate, "recurrence anchorDate")
     untilDate?.let { requireDateSlot(it, "recurrence untilDate") }
-    // 协议循环起点必须能由旧 UI 的 timing 无损重建；历史 occurrence identity 另由 sidecar 保留。
-    requireProjection(anchorDate == parentTiming.anchorDateSlot(), "recurrence anchorDate must match timing date")
+    // anchorDate 是稳定 occurrence 日期轴；当前 timing 允许相对它产生正负偏移，不能要求二者日期相同。
     requireProjection(untilDate == null || untilDate >= anchorDate, "recurrence untilDate precedes anchorDate")
-    val anchor = anchorDate.toUtcDate()
     val uiWeekdays = weekdays.map { it.toUi() }.toSet()
     when (frequency) {
       RecurrenceFrequency.DAILY -> requireProjection(
@@ -453,14 +449,6 @@ class ScheduleV2SnapshotProjector {
     Weekday.SU -> IsoWeekDay.SUNDAY
   }
 
-  /** 将 UI timing 的本地日期转回协议 UTC 日期槽，用于证明 recurrence 可以无损回写。 */
-  private fun ScheduleTiming.anchorDateSlot(): Long = when (this) {
-    is ScheduleTiming.Timed -> start.date.toUtcSlot()
-    is ScheduleTiming.Deadline -> due.date.toUtcSlot()
-    is ScheduleTiming.AllDay -> date.toUtcSlot()
-    ScheduleTiming.Unscheduled -> abortProjection("Unscheduled Schedule cannot contain recurrence")
-  }
-
   private fun timestamps(meta: ServerResourceMeta?, atomTimes: List<Long>): Pair<Instant, Instant> {
     requireProjection(atomTimes.isNotEmpty(), "resource must contain atomic fields")
     val created = meta?.createdAt ?: atomTimes.min()
@@ -470,9 +458,6 @@ class ScheduleV2SnapshotProjector {
 
   private fun Long.toUtcDate(): Date =
     Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.UTC).date.toDate()
-
-  private fun Date.toUtcSlot(): Long =
-    toLocalDate().atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
 
   private fun requireDateSlot(value: Long, label: String) {
     requireProjection(value >= 0 && value % UTC_DAY_MILLIS == 0L, "$label must be a UTC date slot")

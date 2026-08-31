@@ -90,8 +90,17 @@ class EditScheduleModelState(
     }
   }
 
-  /** RRULE 编辑预览必须以父系列起点为 anchor，不能使用 moved occurrence 的展示日期。 */
-  val recurrenceAnchorDate: Date get() = origin?.timing?.let(::timingAnchorDate) ?: anchorDate
+  /**
+   * RRULE 编辑预览使用的系列 anchor。
+   *
+   * 未修改时间时保留父系列的稳定 anchor，不能被 moved occurrence 的展示日期污染；用户已经明确修改
+   * 日期后则改用新日期，否则从“不重复”切到每周/月/年时会错误继承编辑前的星期或月日。
+   */
+  val recurrenceAnchorDate: Date get() = if (isTimingInputChanged) {
+    anchorDate
+  } else {
+    origin?.recurrenceAnchorDate ?: origin?.timing?.let(::timingAnchorDate) ?: anchorDate
+  }
 
   val anchorDate: Date get() = parseScheduleDateTime(outputStartTime)?.date
     ?: parseScheduleDateTime(outputEndTime)?.date

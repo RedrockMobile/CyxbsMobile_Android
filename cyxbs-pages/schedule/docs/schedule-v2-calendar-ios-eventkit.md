@@ -199,7 +199,7 @@ Compose 设置页用户点击
 | --- | --- | --- |
 | Wire 时间 | 有符号 `int64` Unix 毫秒，不保存时区。 | common projection 使用 `MinuteTimeDate + IANA timeZoneId`，foundation 进行 DST wall-time 可逆校验。 |
 | All-day | UTC 午夜 `[startAt, endAt)`，结束 exclusive。 | 旧 `Date + durationDays`，bridge 以 UTC 午夜写 EventKit。 |
-| Recurrence anchor | 稳定 `recurrence.anchorDate`，UTC 午夜 date-slot；首次 anchor history 不可替换。 | 旧 `RecurrenceRule` 与实际 timing 直接编码 RRULE，没有接入 typed `firstRecurrenceAnchorDate`。 |
+| Recurrence anchor | 活跃系列使用稳定 `recurrence.anchorDate`（UTC 午夜 date-slot）；清除规则后重新启用会按当前 timing 建立新 anchor。 | 旧 `RecurrenceRule` 与实际 timing 直接编码 RRULE，没有接入 typed `firstRecurrenceAnchorDate`。 |
 | Occurrence identity | `scheduleId + occurrenceDate`，其中 `occurrenceDate` 是 parent rule 生成的 UTC 午夜 date-slot。 | 旧 common exception 使用 `recurrenceId`，并允许旧模型的 timing/category patch。 |
 | Timing 变化 | 改 actual timing，不迁移 anchor 或已有 Override identity。 | 旧 projection 可能从本地墙钟/时区材料化 occurrence。 |
 | DST | 不保存时区；UTC date-slot + 完整 offset 是权威。 | 旧 foundation 以 IANA gap/overlap resolver 保证墙钟往返。 |

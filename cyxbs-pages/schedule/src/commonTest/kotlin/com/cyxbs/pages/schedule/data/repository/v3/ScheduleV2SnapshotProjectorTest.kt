@@ -397,12 +397,16 @@ class ScheduleV2SnapshotProjectorTest {
     )
     assertProjectionFailure(scheduleState(SCHEDULE_ID, timing, untilBeforeAnchor))
 
-    val mismatchedAnchor = RecurrenceInput(
+    val stableAnchorBeforeTiming = RecurrenceInput(
       RecurrenceFrequency.DAILY,
       interval = 1,
-      anchorDate = Date(2026, 7, 22).utcSlot(),
+      anchorDate = Date(2026, 7, 20).utcSlot(),
     )
-    assertProjectionFailure(scheduleState(SCHEDULE_ID, timing, mismatchedAnchor))
+    val movedSeries = project(
+      schedules = listOf(scheduleState(SCHEDULE_ID, timing, stableAnchorBeforeTiming)),
+    ).snapshot.schedules.single()
+    assertEquals(Date(2026, 7, 20), movedSeries.recurrenceAnchorDate)
+    assertEquals(Date(2026, 7, 21), (movedSeries.timing as ScheduleTiming.Timed).start.date)
 
     val unscheduledRecurrence = RecurrenceInput(
       RecurrenceFrequency.DAILY,

@@ -29,7 +29,7 @@ ALL_DAY    → 单个 UTC 午夜 date 日期槽
 本次 identity→ occurrenceDate，parent rule 真实生成的 UTC 午夜逻辑槽位
 ```
 
-第一次启用 recurrence 时确定稳定 `anchorDate`。后端独立保存首次 anchor history：`ScheduleCurrent.firstRecurrenceAnchorDate` 在规则清除后仍下发；客户端再次启用同一 identity 时必须复用，不能换 anchor。需要另一条 occurrence 序列时创建新的 Schedule identity。
+第一次启用 recurrence 时确定稳定 `anchorDate`。重复规则仍生效期间，普通修改只能调整 timing 或规则结构，不能切换 anchor；否则既有 Override identity 会失去含义。清除 recurrence 会结束当前 occurrence 序列，`ScheduleCurrent.firstRecurrenceAnchorDate` 仍作为历史信息下发；之后在同一 Schedule identity 上重新启用 recurrence 时，以当前 timing 日期建立新的 anchor，并替换这份历史信息。
 
 客户端物化 occurrence：
 
@@ -153,7 +153,7 @@ categoryId REPLACE 引用同 owner 的 live Category
 
 如果规则变化会使 live Override 失效，客户端需要先删除或迁移对应 Override，再提交规则更新；资源操作彼此独立，某项失败不会回滚其他已经成功的资源。失败操作仍保留在本地 pending/失败记录中，用户修正对应日程后再次提交。当前不检测历史 tombstone date-slot 重入，也不为该场景定义专用原因码。
 
-Override tombstone 仍必须保留合法的 `scheduleId + UTC occurrenceDate` identity，但不要求 tombstone 日期继续属于 parent 当前 recurrence。新 series identity 让以后重新出现的逻辑日期落在新的 Override identity 上，而不是复活旧 tombstone。
+Override tombstone 仍必须保留合法的 `scheduleId + UTC occurrenceDate` identity，但不要求 tombstone 日期继续属于 parent 当前 recurrence。重新启用 recurrence 不会复活或删除旧 tombstone；正常向未来建立的新序列会使用新的 occurrenceDate。
 
 将某次恢复为系列默认状态时，保存 neutral live Override：
 
