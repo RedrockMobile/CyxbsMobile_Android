@@ -363,6 +363,66 @@ class ScheduleV2RoomRepositoryDesktopTest {
     }
   }
 
+  /** 分类离线创建、改名、换色和重排都立即发布最终本地状态，恢复后的 Sync 只提交最终资源。 */
+  @Test
+  fun offlineCategoryEditsCoalesceAndRecoverThroughSync() = runTest {
+    withRepository { repository, gateway, database ->
+      gateway.createResponder = {
+        ScheduleV2CallResult.TransportFailure(null, IllegalStateException("offline"))
+      }
+      repository.initialize()
+      val initial = ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "离线创建", null, 2)
+      assertIs<ScheduleSyncResult.Failure>(
+        repository.execute(ScheduleCommand.CreateCategory(initial)),
+      )
+
+      val color = """{"background":"#FFA3C5FF","content":"#FF173E78","darkBackground":"#BF1F426E"}"""
+      val created = repository.snapshot.value.categories.first { it.id == initial.id }
+      assertIs<ScheduleSyncResult.Failure>(
+        repository.execute(ScheduleCommand.UpdateCategory(
+          created.copy(name = "离线最终分类", color = color),
+        )),
+      )
+      val categories = repository.snapshot.value.categories
+      val updated = categories.first { it.id == initial.id }
+      val existing = categories.first { it.id != initial.id }
+      assertIs<ScheduleSyncResult.Failure>(
+        repository.execute(ScheduleCommand.ReorderCategories(listOf(updated, existing))),
+      )
+
+      val local = repository.snapshot.value.categories.first { it.id == initial.id }
+      assertEquals("离线最终分类", local.name)
+      assertEquals(color, local.color)
+      assertEquals(0, local.sortOrder)
+      gateway.syncResponder = { request ->
+        val confirmed = emptySyncResponse(request)
+        confirmed.copy(
+          categories = confirmed.categories.copy(
+            upsertResults = request.categories.upserts.map {
+              CategoryUpsertResult(
+                it.id,
+                if (it.version == 0uL) MutationResultCode.CREATED else MutationResultCode.APPLIED,
+                current = CategoryCurrent(
+                  it.copy(version = nextVersion(it.version)),
+                  ServerResourceMeta(1, 2),
+                ),
+              )
+            },
+          ),
+        )
+      }
+
+      assertIs<ScheduleSyncResult.Success>(repository.execute(ScheduleCommand.RequestSync))
+
+      val state = ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
+      assertTrue(state.categories.all { it.localRevision == null })
+      val canonical = state.categories.first { it.categoryId == SECOND_CATEGORY_ID }.remoteSnapshot!!.resource
+      assertEquals("离线最终分类", canonical.name.data)
+      assertEquals(color, canonical.color.data)
+      assertEquals(0, canonical.sortOrder.data)
+    }
+  }
+
   @Test
   fun http200DecodeFailureMapsToInvalidResponse() = runTest {
     withRepository { repository, gateway, _ ->
@@ -623,6 +683,45 @@ class ScheduleV2RoomRepositoryDesktopTest {
 
       assertIs<ScheduleSyncResult.Success>(result)
       assertEquals(1, gateway.deleteCalls)
+      assertTrue(ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.isEmpty())
+    }
+  }
+
+  /** 删除传输失败后本地保持隐藏；网络恢复的完整 Sync 确认 tombstone 后不能把旧资源复活。 */
+  @Test
+  fun offlineDeleteConvergesThroughSyncWithoutResurrectingSchedule() = runTest {
+    withRepository { repository, gateway, database ->
+      repository.initialize()
+      assertIs<ScheduleSyncResult.Success>(repository.execute(ScheduleCommand.Create(schedule("离线删除"))))
+      gateway.deleteResponder = {
+        ScheduleV2CallResult.TransportFailure(null, IllegalStateException("offline"))
+      }
+
+      assertIs<ScheduleSyncResult.Failure>(
+        repository.execute(ScheduleCommand.Delete(ScheduleId(SCHEDULE_ID))),
+      )
+      assertTrue(repository.snapshot.value.schedules.isEmpty())
+      assertTrue(
+        ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().pendingOperation != null,
+      )
+
+      gateway.syncResponder = { request ->
+        val confirmed = emptySyncResponse(request)
+        confirmed.copy(
+          schedules = confirmed.schedules.copy(
+            deleteResults = request.schedules.deletes.map {
+              ScheduleDeleteResult(
+                it.id,
+                MutationResultCode.DELETED,
+                tombstone = ScheduleTombstone(it.id, 2),
+              )
+            },
+          ),
+        )
+      }
+      assertIs<ScheduleSyncResult.Success>(repository.execute(ScheduleCommand.RequestSync))
+
+      assertTrue(repository.snapshot.value.schedules.isEmpty())
       assertTrue(ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.isEmpty())
     }
   }
