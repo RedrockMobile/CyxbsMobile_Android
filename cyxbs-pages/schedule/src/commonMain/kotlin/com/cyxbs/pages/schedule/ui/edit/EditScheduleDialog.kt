@@ -294,6 +294,9 @@ fun EditScheduleDialog(
       SeriesSplitter.canSplitAt(editSchedule, recurrenceId)
   }
   val overlayContent: @Composable () -> Unit = {
+    // 平台权限引导也必须跟随当前 Window 根节点，不能在课表外部宿主内再创建独立 Dialog。
+    reminderAuthorization.overlayContent()
+
     // 三态选择
     EditScopeChooserSheet(
       show = scopeChooser != null,

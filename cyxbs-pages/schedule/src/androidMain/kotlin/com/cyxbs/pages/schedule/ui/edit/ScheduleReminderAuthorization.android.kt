@@ -105,36 +105,6 @@ internal actual fun rememberScheduleReminderAuthorization(
     onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
   }
 
-  ScheduleConfirmDialog(
-    show = showSettingsGuidance,
-    title = "需要日历权限",
-    message = "系统已不再弹出日历权限请求，请前往应用设置，为掌邮单独开启日历权限。",
-    confirmText = "去设置",
-    dismissText = "暂不使用",
-    onConfirm = {
-      showSettingsGuidance = false
-      val exactSession = currentSession
-      if (exactSession == null) {
-        currentOnResult(false)
-      } else {
-        settingsSession = exactSession
-        context.startActivity(
-          Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", context.packageName, null),
-          ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        )
-      }
-    },
-    onDismiss = {
-      // ScheduleConfirmDialog 确认后还会调用 onDismiss，先关闭状态可区分“去设置”和真正取消。
-      if (showSettingsGuidance) {
-        showSettingsGuidance = false
-        currentOnResult(false)
-      }
-    },
-  )
-
   return ScheduleReminderAuthorization(
     authorized = authorized,
     requestAuthorization = {
@@ -147,6 +117,38 @@ internal actual fun rememberScheduleReminderAuthorization(
         requestedSession = exactSession
         permissionLauncher.launch(CalendarReminderPermissions)
       }
+    },
+    overlayContent = {
+      ScheduleConfirmDialog(
+        show = showSettingsGuidance,
+        title = "需要日历权限",
+        message = "系统已不再弹出日历权限请求，请前往应用设置，为掌邮单独开启日历权限。",
+        confirmText = "去设置",
+        dismissText = "暂不使用",
+        embeddedInWindow = true,
+        onConfirm = {
+          showSettingsGuidance = false
+          val exactSession = currentSession
+          if (exactSession == null) {
+            currentOnResult(false)
+          } else {
+            settingsSession = exactSession
+            context.startActivity(
+              Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", context.packageName, null),
+              ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
+          }
+        },
+        onDismiss = {
+          // ScheduleConfirmDialog 确认后还会调用 onDismiss，先关闭状态可区分“去设置”和真正取消。
+          if (showSettingsGuidance) {
+            showSettingsGuidance = false
+            currentOnResult(false)
+          }
+        },
+      )
     },
   )
 }
