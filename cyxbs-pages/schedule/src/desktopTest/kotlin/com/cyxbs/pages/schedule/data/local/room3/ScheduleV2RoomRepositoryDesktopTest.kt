@@ -241,6 +241,70 @@ class ScheduleV2RoomRepositoryDesktopTest {
     }
   }
 
+  /** 首次使用新分类保存日程时，两种资源必须进入同一个普通请求并分别收敛 canonical 状态。 */
+  @Test
+  fun saveScheduleWithNewCategorySendsAndCommitsBothResources() = runTest {
+    withRepository { repository, gateway, database ->
+      repository.initialize()
+      val category = ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "新分类", null, 1)
+      val schedule = schedule("同次保存", category.id)
+
+      val result = repository.execute(ScheduleCommand.SaveScheduleWithNewCategory(category, schedule))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      val request = requireNotNull(gateway.firstCreatedRequest)
+      assertEquals(listOf(SECOND_CATEGORY_ID), request.categories.upserts.map { it.id })
+      assertEquals(listOf(SCHEDULE_ID), request.schedules.upserts.map { it.id })
+      val state = ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
+      assertNull(state.categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision)
+      assertNull(state.schedules.single().localRevision)
+      assertEquals(SECOND_CATEGORY_ID, state.schedules.single().remoteSnapshot?.resource?.categoryId?.data)
+    }
+  }
+
+  /**
+   * 同次请求允许资源级部分成功：已创建分类立即确认，失败日程保留 pending，失败页只记录对应主日程。
+   */
+  @Test
+  fun saveScheduleWithNewCategoryKeepsOnlyRejectedSchedulePending() = runTest {
+    withRepositoryAndFailures { repository, gateway, database, failureRecords ->
+      gateway.createResponder = { request ->
+        val applied = appliedMutationResult(request)
+        ScheduleV2CallResult.Completed(ApiWrapper(
+          applied.copy(
+            schedules = ScheduleMutationResponse(
+              upsertResults = request.schedules.upserts.map {
+                ScheduleUpsertResult(
+                  id = it.id,
+                  result = MutationResultCode.REJECTED,
+                  reason = ResultReason.INVALID_REQUEST,
+                  info = "schedule.title is invalid",
+                )
+              },
+              deleteResults = emptyList(),
+            ),
+          ),
+          10000,
+          "partially applied",
+        ))
+      }
+      repository.initialize()
+      val category = ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "可用分类", null, 1)
+      val schedule = schedule("被拒绝日程", category.id)
+
+      val result = repository.execute(ScheduleCommand.SaveScheduleWithNewCategory(category, schedule))
+
+      assertIs<ScheduleSyncResult.Failure>(result)
+      val state = ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
+      assertNull(state.categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision)
+      assertEquals(1L, state.schedules.single().localRevision)
+      val failure = failureRecords.observe(ACCOUNT).value.single()
+      assertEquals(SCHEDULE_ID, failure.scheduleId)
+      assertEquals("INVALID_REQUEST", failure.reasonCode)
+      assertEquals("schedule.title is invalid", failure.message)
+    }
+  }
+
   @Test
   fun dailyTransportFailureKeepsLocallyPersistedPending() = runTest {
     withRepositoryAndFailures { repository, gateway, database, failureRecords ->

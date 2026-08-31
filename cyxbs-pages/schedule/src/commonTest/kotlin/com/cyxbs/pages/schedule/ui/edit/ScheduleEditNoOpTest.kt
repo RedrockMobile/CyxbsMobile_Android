@@ -667,6 +667,70 @@ class ScheduleEditNoOpTest {
     )
   }
 
+  /**
+   * 删除范围必须映射为三种不同命令：单次只取消 occurrence，后续范围截断父系列，全部才删除父资源。
+   * 已完成状态不改变删除语义，且取消已有例外时需要保留其 patch 与 revision。
+   */
+  @Test
+  fun deleteScopesRouteWithoutOverDeletingSeries() = runTest {
+    val parent = parentSchedule()
+    val id = recurrenceId()
+    val existingPatch = OccurrencePatch(title = FieldPatch.Replace("单次标题"))
+    val existing = exception(parent, id, existingPatch)
+
+    val thisOnlyRepository = RecordingRepository(snapshot(parent, existing))
+    thisOnlyRepository.applyScheduleDelete(parent.id, EditScope.THIS_ONLY, id, Clock.System)
+    val cancelled = (thisOnlyRepository.commands.single() as
+      ScheduleCommand.UpsertOccurrenceException).exception
+    assertEquals(OccurrenceStatus.CANCELLED, cancelled.status)
+    assertEquals(existing.revision, cancelled.revision)
+    assertEquals(existingPatch, cancelled.patch)
+
+    val followingRepository = RecordingRepository(snapshot(parent, existing))
+    followingRepository.applyScheduleDelete(
+      parent.id,
+      EditScope.THIS_AND_FOLLOWING,
+      id,
+      Clock.System,
+    )
+    val following = followingRepository.commands.single() as ScheduleCommand.DeleteThisAndFollowing
+    assertEquals(id, following.recurrenceId)
+    assertEquals(RecurrenceEnd.Until(Date(2026, 7, 1)), following.previousSchedule.recurrence?.end)
+
+    val completed = parent.copy(recurrence = null, todoState = ScheduleTodoState.COMPLETED)
+    val allRepository = RecordingRepository(snapshot(completed))
+    allRepository.applyScheduleDelete(completed.id, EditScope.ALL, null, Clock.System)
+    assertEquals(ScheduleCommand.Delete(completed.id), allRepository.commands.single())
+  }
+
+  /** 修改日期跨周、跨月或跨年时，只迁移 timing 日期，标题、备注、分类、提醒和重复规则保持原值。 */
+  @Test
+  fun explicitDateChangesPreserveNonTimingFieldsAcrossCalendarBoundaries() {
+    val parent = parentSchedule().copy(
+      description = "跨日期备注",
+      categoryId = CategoryId("category-date-boundary"),
+    )
+    listOf(
+      Date(2026, 7, 8),
+      Date(2026, 8, 1),
+      Date(2027, 1, 1),
+    ).forEach { targetDate ->
+      val state = EditScheduleModelState(parent)
+      state.applyExplicitDateSelection(targetDate)
+
+      val draft = state.toDraft()
+      assertEquals(parent.title, draft.title)
+      assertEquals(parent.description, draft.description)
+      assertEquals(parent.categoryId, draft.categoryId)
+      assertEquals(parent.reminder, draft.reminder)
+      assertEquals(parent.recurrence, draft.recurrence)
+      assertEquals(
+        targetDate,
+        (draft.timing as ScheduleTiming.Timed).start.date,
+      )
+    }
+  }
+
   @Test
   fun dstOverlapTimingNoEditKeepsOriginalDuration() {
     val overlapTiming = ScheduleTiming.Timed(
