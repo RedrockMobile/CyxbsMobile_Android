@@ -22,6 +22,7 @@ import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.pages.course.view.item.extension.LocalCourseItemBottomSheetDialog
 import com.cyxbs.pages.course.view.item.extension.rememberCourseItemBottomSheetDialogState
+import com.cyxbs.pages.course.frame.item.DefaultCourseCreateItemFactory
 import com.cyxbs.pages.course.frame.item.DefaultCourseLessonItemFactory
 import com.cyxbs.pages.course.frame.item.DefaultCourseLinkLessonItemFactory
 import com.cyxbs.pages.course.frame.item.DefaultScheduleItemFactory
@@ -29,6 +30,7 @@ import com.cyxbs.pages.course.view.AbstractCourseFrame
 import com.cyxbs.pages.course.view.HomeCoursePageContent
 import com.cyxbs.pages.course.view.decoration.CoursePageDecorationManager
 import com.cyxbs.pages.course.view.decoration.impl.CourseLessonPageDecoration
+import com.cyxbs.pages.course.view.decoration.impl.CreateItemPageDecoration
 import com.cyxbs.pages.course.view.decoration.impl.LinkLessonPageDecoration
 import com.cyxbs.pages.course.view.decoration.impl.ScheduleAffairPageDecoration
 import com.cyxbs.pages.course.view.decoration.impl.ScheduleAllDayPageDecoration
@@ -128,6 +130,10 @@ private fun createCoursePageDecorationManager(
           coroutineScope = coroutineScope,
           platformItemFactory = DefaultScheduleItemFactory,
         ), // 截止时间点始终位于课表最上层
+        CreateItemPageDecoration(
+          courseFrame = frame,
+          platformItemFactory = DefaultCourseCreateItemFactory,
+        ), // 完整课表也需要响应空白处轻击/长按创建事务
         SelfLessonPageDecoration(platformItemFactory = DefaultCourseLessonItemFactory), // 自己的课程
         ScheduleTodoTimedPageDecoration(
           courseFrame = frame,
