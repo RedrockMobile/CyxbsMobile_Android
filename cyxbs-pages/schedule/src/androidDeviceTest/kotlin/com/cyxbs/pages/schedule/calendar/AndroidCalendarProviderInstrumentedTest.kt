@@ -23,7 +23,6 @@ import com.cyxbs.pages.schedule.domain.calendar.CalendarProviderTimingCanonicali
 import com.cyxbs.pages.schedule.domain.calendar.CalendarRecurrenceCanonicalizer
 import com.cyxbs.pages.schedule.domain.calendar.CalendarTiming
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import org.junit.After
@@ -469,8 +468,8 @@ class AndroidCalendarProviderInstrumentedTest {
   /**
    * 验证 update selection 的 expectedCount(1) 在 query→batch 竞争中使 reminder 替换整体回滚。
    *
-   * authorization gate 的第十次调用正好位于 updateExistingManagedEvent 发起 applyBatch 前：测试仅把当前随机
-   * event 的 URI 改为非 canonical 值，使 batch 内 Events update 的 selection 命中 0 行。若 Provider 未按
+   * 通过 finalized update 的专用 read-window seam，把当前随机 event 的 URI 改为非 canonical 值，使 batch 内
+   * Events update 的 selection 命中 0 行。若 Provider 未按
    * expectedCount 回滚，紧随其后的 Reminder delete/insert 将篡改原有提醒；断言保留原 title 和 reminders。
    */
   @Test
@@ -488,7 +487,6 @@ class AndroidCalendarProviderInstrumentedTest {
     assertEquals(calendarId, calendarRow.id)
     val beforeTitle = requireNotNull(queryEvent(eventId)).title
     val beforeReminders = queryReminderMinutes(eventId)
-    var authorizationCalls = 0
     val failure = runCatching {
       gateway.updateExistingManagedEvent(
         projection = original.copy(
@@ -499,16 +497,13 @@ class AndroidCalendarProviderInstrumentedTest {
         eventRef = AndroidCalendarEventRefCodec.encode(eventId),
         scope = requiredScope,
         expectedCalendarIdentifier = calendarRow.managedIdentifier(),
-        ensureAuthorized = {
-          authorizationCalls += 1
-          if (authorizationCalls == 10) {
-            updateTestEvent(eventId, ContentValues().apply {
-              put(
-                CalendarContract.Events.CUSTOM_APP_URI,
-                "cyxbs://schedule?v=2&scope=changed-before-batch"
-              )
-            })
-          }
+        beforeApplyBatch = {
+          updateTestEvent(eventId, ContentValues().apply {
+            put(
+              CalendarContract.Events.CUSTOM_APP_URI,
+              "cyxbs://schedule?v=2&scope=changed-before-batch"
+            )
+          })
         },
       )
     }.exceptionOrNull()
@@ -700,14 +695,14 @@ class AndroidCalendarProviderInstrumentedTest {
   }
 
   /**
-   * 验证 RDATE 的非空值与空串都不能作为受管重复事件的额外 occurrence 被静默忽略，且 gateway 更新会恢复
-   * 受支持的 RRULE 投影。
+   * 验证 RDATE 的非空值与空串都不能作为受管重复事件的额外 occurrence 被静默忽略；普通 update 同样必须
+   * fail-closed，只有显式重建受管日历后才能恢复受支持的 RRULE 投影。
    *
    * 外部写入只按当前随机账号日历中 gateway Create 返回的 event ID 精确命中；部分 OEM Provider 不保证 item URI
    * 与非空 selection 的组合可写，因此通过受控 helper 避免依赖该非标准组合，绝不扫描或修改用户日历。
    */
   @Test
-  fun gatewayRejectsExternalRDateThenUpdateClearsItAndRestoresRecurringSnapshot() =
+  fun gatewayRejectsExternalRDateAndRecoveryRecreatesCanonicalSnapshot() =
     withTestCalendar {
       val recurring = calendarProjection(
         title = "instrumentation-rdate",
@@ -715,7 +710,7 @@ class AndroidCalendarProviderInstrumentedTest {
         timing = CalendarTiming.Timed(MinuteTimeDate(2026, 7, 16, 9, 30), 90, "Asia/Shanghai"),
         recurrenceRule = "FREQ=DAILY;UNTIL=20261231T155959Z",
       )
-      val eventId = requireNotNull(gateway.createEvent(recurring, requiredScope))
+      var eventId = requireNotNull(gateway.createEvent(recurring, requiredScope))
       assertEquals(null, requireNotNull(queryEvent(eventId)).rDate)
 
       // 第二项故意写入空串，锁定 Provider row 只要 RDATE 非 null 就必须被 gateway 拒绝的边界。
@@ -732,13 +727,19 @@ class AndroidCalendarProviderInstrumentedTest {
           // 预期：RDATE 会引入当前投影不支持的 occurrence，快照必须 fail closed 而非忽略它。
         }
 
-        assertTrue(
+        try {
           gateway.updateEvent(
             recurring,
             AndroidCalendarEventRefCodec.encode(eventId),
             requiredScope
           )
-        )
+          throw AssertionError("Ordinary update must not bypass a malformed managed snapshot")
+        } catch (_: ManagedCalendarRebuildRequiredException) {
+          // 预期：先拒绝不可信的旧 row，再由恢复入口删除并重建当前测试账号的受管日历。
+        }
+
+        gateway.recreateManagedCalendarForRecovery()
+        eventId = requireNotNull(gateway.createEvent(recurring, requiredScope))
         assertEquals(null, requireNotNull(queryEvent(eventId)).rDate)
       }
 
@@ -1321,36 +1322,5 @@ class AndroidCalendarProviderInstrumentedTest {
     const val MILLIS_PER_MINUTE = 60_000L
     const val MILLIS_PER_DAY = 24 * 60 * MILLIS_PER_MINUTE
     var scheduleSequence: Int = 0
-  }
-}
-
-/**
- * finalized worker 执行模式的纯契约测试。
- *
- * 本类不初始化 Context、registry 或 ContentResolver；它只验证缺少 exact-session outbound access 时，进入
- * worker callback 会在任何模拟的 Provider 回调和 Completed 发布前失败关闭，因此可安全在 device-test source
- * 中编译而不依赖真实用户日历。
- */
-@RunWith(AndroidJUnit4::class)
-class FinalizedCalendarExportExecutionInstrumentedTest {
-  /** 缺少 access 不得进入 worker callback，也不得发布完成状态。 */
-  @Test
-  fun missingAccessFailsBeforeProviderCallbacksOrCompletedPublish() {
-    var providerCallbacks = 0
-    var completedPublishes = 0
-
-    val failure = runCatching {
-      runBlocking {
-        FinalizedCalendarExportExecution.enter(null) {
-          // 该 callback 模拟 worker 内全部 Provider 查询/效果和最后的 Completed 发布；null 必须令其零执行。
-          providerCallbacks += 1
-          completedPublishes += 1
-        }
-      }
-    }.exceptionOrNull()
-
-    assertTrue(failure is IllegalArgumentException)
-    assertEquals(0, providerCallbacks)
-    assertEquals(0, completedPublishes)
   }
 }

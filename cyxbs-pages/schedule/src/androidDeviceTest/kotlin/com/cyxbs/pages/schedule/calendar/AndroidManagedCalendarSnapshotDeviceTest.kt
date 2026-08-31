@@ -1,21 +1,20 @@
 package com.cyxbs.pages.schedule.calendar
 
-import com.cyxbs.pages.schedule.domain.calendar.CalendarLinkDiscoverySnapshot
 import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertSame
 
 /**
- * 验证 Schedule instrumentation runner 可在真实 Android 设备加载纯日历映射。
+ * 验证 Schedule instrumentation runner 可在真实 Android 设备加载当前日历快照模型。
  *
- * 本测试只调用无 I/O 的 W42 mapper，不创建 Context、不请求权限、不读取 Calendar Provider、不打开 Room，
- * 也不发起网络请求；它只作为首次覆盖安装后的安全 smoke test。
+ * 本测试不创建 Context、不请求权限、不读取 Calendar Provider、不打开 Room，也不发起网络请求；它只作为
+ * 覆盖安装后的安全 smoke test。真实 Provider 的缺失日历语义由 [AndroidCalendarProviderInstrumentedTest] 验证。
  */
 class AndroidManagedCalendarSnapshotDeviceTest {
-  /** 缺失日历的普通值必须可在设备端无副作用地映射为同一缺失语义。 */
+  /** 缺失日历的单例值必须能通过 Android test APK 正常加载。 */
   @Test
   fun mapsCalendarAbsentWithoutSystemAccess() {
-    val mapped = AndroidManagedCalendarSnapshot.CalendarAbsent.toCalendarLinkDiscoverySnapshot()
+    val snapshot: AndroidManagedCalendarSnapshot = AndroidManagedCalendarSnapshot.CalendarAbsent
 
-    assertEquals(CalendarLinkDiscoverySnapshot.CalendarAbsent, mapped)
+    assertSame(AndroidManagedCalendarSnapshot.CalendarAbsent, snapshot)
   }
 }

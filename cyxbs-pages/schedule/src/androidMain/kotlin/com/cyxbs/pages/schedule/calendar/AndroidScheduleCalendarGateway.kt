@@ -552,6 +552,7 @@ class AndroidScheduleCalendarGateway private constructor(
    * identity、同数字 id replacement 或 ownership 漂移都返回 `false`，且不会发起 Event/Reminder 写。Provider 不支持
    * 将 Calendars preflight 与 Events collection update 原子化，因此仍保留 finalized selection/expectedCount 边界，
    * 不增加推测性的 CAS 或 assert-query。每个阻塞查询和 applyBatch 前后都复核 [ensureAuthorized]。
+   * [beforeApplyBatch] 只提供给真机测试稳定制造 query→batch 竞争窗口，正式调用保持默认 no-op。
    */
   fun updateExistingManagedEvent(
     projection: CalendarEventProjection,
@@ -559,6 +560,7 @@ class AndroidScheduleCalendarGateway private constructor(
     scope: CalendarExportScope,
     expectedCalendarIdentifier: String,
     ensureAuthorized: () -> Unit = {},
+    beforeApplyBatch: () -> Unit = {},
   ): Boolean {
     val preparedExceptions = AndroidOccurrenceExceptionWritePlanner.prepare(projection)
     ensureAuthorized()
@@ -640,6 +642,7 @@ class AndroidScheduleCalendarGateway private constructor(
       calendarId = calendarId,
       masterEventId = eventId,
     )
+    beforeApplyBatch()
     ensureAuthorized()
     context.contentResolver.applyBatch(CalendarContract.AUTHORITY, operations)
     ensureAuthorized()
