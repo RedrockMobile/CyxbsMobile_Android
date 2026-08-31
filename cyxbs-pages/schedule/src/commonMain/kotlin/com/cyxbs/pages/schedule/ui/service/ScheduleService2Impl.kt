@@ -3,8 +3,8 @@ package com.cyxbs.pages.schedule.ui.service
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import com.cyxbs.components.init.appCoroutineScope
 import com.cyxbs.pages.schedule.api.IScheduleService2
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceKind
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceTiming
@@ -109,7 +109,6 @@ object ScheduleService2Impl : IScheduleService2 {
   ) {
     val details by detailByIdentity.collectAsState()
     val detail = details[occurrence.identity] ?: return
-    val scope = rememberCoroutineScope()
     EditScheduleDialog(
       show = true,
       editSchedule = detail.schedule,
@@ -135,7 +134,8 @@ object ScheduleService2Impl : IScheduleService2 {
       onWindowOverlayContentChanged = onWindowOverlayContentChanged,
       onDismiss = onDismiss,
       onConfirm = { state, editScope, newCategory ->
-        scope.launch {
+        // 保存按钮会立即关闭课表详情；使用应用级 scope，避免 Composable 离场取消尚未落库的命令。
+        appCoroutineScope.launch {
           repository.applyScheduleEdit(
             state,
             editScope,
@@ -147,7 +147,8 @@ object ScheduleService2Impl : IScheduleService2 {
         }
       },
       onDelete = { editScope ->
-        scope.launch {
+        // 删除同样必须独立于详情弹窗生命周期，否则关闭 Window 时可能静默丢失操作。
+        appCoroutineScope.launch {
           repository.applyScheduleDelete(
             detail.schedule.id,
             editScope,
@@ -157,7 +158,7 @@ object ScheduleService2Impl : IScheduleService2 {
         }
       },
       onToggleCompleted = { completed ->
-        scope.launch {
+        appCoroutineScope.launch {
           repository.applyScheduleCompletion(
             scheduleId = detail.schedule.id,
             recurrenceId = detail.occurrence.recurrenceId,
@@ -186,7 +187,6 @@ object ScheduleService2Impl : IScheduleService2 {
     onDismissRequestChanged: (((suspend () -> Boolean)?) -> Unit),
     onWindowOverlayContentChanged: (((@Composable () -> Unit)?) -> Unit),
   ) {
-    val scope = rememberCoroutineScope()
     EditScheduleDialog(
       show = true,
       creationKind = ScheduleKind.AFFAIR,
@@ -199,7 +199,8 @@ object ScheduleService2Impl : IScheduleService2 {
       onWindowOverlayContentChanged = onWindowOverlayContentChanged,
       onDismiss = onDismiss,
       onConfirm = { state, editScope, newCategory ->
-        scope.launch {
+        // 编辑器确认后会立刻离开组合，创建命令必须由进程生命周期持有到本地落库完成。
+        appCoroutineScope.launch {
           repository.applyScheduleEdit(
             state,
             editScope,
