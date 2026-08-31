@@ -3,6 +3,7 @@ package com.cyxbs.pages.schedule.data.migration
 import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
+import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRemoteError
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
@@ -177,6 +178,22 @@ class LegacyScheduleMigrationPersistenceTest {
     assertTrue(repository.commands.isEmpty())
     assertTrue(repository.snapshot.value.schedules.isEmpty())
     assertTrue(repository.snapshot.value.categories.isEmpty())
+  }
+
+  /** 已有置顶顺序优先，迁移项按旧接口顺序追加，跨两侧的重复 ID 只保留第一次。 */
+  @Test
+  fun migratedPinsAppendWithoutOverwritingExistingOrder() {
+    val first = ScheduleId(LegacyScheduleMapper.deterministicUuidV7(1, "pin-1"))
+    val second = ScheduleId(LegacyScheduleMapper.deterministicUuidV7(2, "pin-2"))
+    val third = ScheduleId(LegacyScheduleMapper.deterministicUuidV7(3, "pin-3"))
+
+    assertEquals(
+      listOf(first, second, third),
+      LegacyScheduleMigrationCoordinator.mergeMigratedPinnedIds(
+        existing = listOf(first, second),
+        migrated = listOf(second, third, first),
+      ),
+    )
   }
 
   /** 构造一条无需时间解析的旧清单映射结果，让测试只关注持久化职责。 */

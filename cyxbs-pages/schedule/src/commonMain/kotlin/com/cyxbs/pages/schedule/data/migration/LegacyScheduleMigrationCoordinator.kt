@@ -8,6 +8,7 @@ import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.components.config.time.SchoolCalendar
 import com.cyxbs.pages.course.api.CourseUtils
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
+import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
 import com.cyxbs.pages.schedule.ui.todo.main.loadScheduleTodoPinnedIds
@@ -138,14 +139,27 @@ internal object LegacyScheduleMigrationCoordinator {
     if (finalSnapshot.accountId != accountId) return false
     if (!finalSnapshot.schedules.mapTo(mutableSetOf()) { it.id }.containsAll(expectedIds)) return false
 
-    val migratedPins = items.asSequence().filter(LegacyScheduleMigrationItem::pinned).map { it.schedule.id }
     saveScheduleTodoPinnedIds(
       settings,
-      (loadScheduleTodoPinnedIds(settings).asSequence() + migratedPins).distinct().toList(),
+      mergeMigratedPinnedIds(
+        existing = loadScheduleTodoPinnedIds(settings),
+        migrated = items.filter(LegacyScheduleMigrationItem::pinned).map { it.schedule.id },
+      ),
     )
     settings.putInt(MIGRATION_VERSION_KEY, CURRENT_MIGRATION_VERSION)
     return true
   }
+
+  /**
+   * 将旧清单置顶顺序追加到当前账号已有顺序，并按首次出现去重。
+   *
+   * 已有端上顺序优先，迁移项保持旧接口返回顺序；重复执行迁移不会覆盖用户现有置顶，也不会插入重复 ID。
+   */
+  internal fun mergeMigratedPinnedIds(
+    existing: List<ScheduleId>,
+    migrated: List<ScheduleId>,
+  ): List<ScheduleId> =
+    (existing.asSequence() + migrated.asSequence()).distinct().toList()
 
   /**
    * 逐条保存映射结果。

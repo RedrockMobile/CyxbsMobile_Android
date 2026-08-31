@@ -287,9 +287,11 @@ class LegacyScheduleMapperTest {
       legacyTodo(todoId = 1, type = "study", isPinned = 1),
       legacyTodo(todoId = 2, type = "生活"),
       legacyTodo(todoId = 3, type = "unknown"),
+      legacyTodo(todoId = 4, type = "other"),
+      legacyTodo(todoId = 5, type = ""),
     )
 
-    assertEquals(listOf("学习", "生活", "其他"), items.map { it.categoryName })
+    assertEquals(listOf("学习", "生活", "其他", "其他", "其他"), items.map { it.categoryName })
     assertTrue(items[0].pinned)
     assertFalse(items[1].pinned)
     assertTrue(items.all { it.schedule.categoryId == null })
@@ -448,6 +450,24 @@ class LegacyScheduleMapperTest {
     assertEquals(RecurrenceFrequency.MONTHLY, item.schedule.recurrence?.frequency)
     assertEquals(setOf(8), item.schedule.recurrence?.byMonthDays)
     assertEquals(0, item.schedule.reminder?.offsetMinutes)
+  }
+
+  /** 旧月重复的 29/30/31 选择器必须完整保留，合法日期跳过语义由当前重复引擎统一处理。 */
+  @Test
+  fun monthlyTodo_preservesLateMonthDaySelectors() {
+    val item = mapTodos(
+      legacyTodo(
+        endTime = "2027年12月31日14:30",
+        remindMode = LegacyTodoRemindModeDto(
+          repeatMode = LegacyTodoRemindModeDto.MONTHLY,
+          day = listOf(29, 30, 31),
+          notifyDateTime = "2026年3月29日14:30",
+        ),
+      ),
+    ).single()
+
+    assertEquals(RecurrenceFrequency.MONTHLY, item.schedule.recurrence?.frequency)
+    assertEquals(setOf(29, 30, 31), item.schedule.recurrence?.byMonthDays)
   }
 
   /** 月/年重复缺少通知时间时按选择器寻找下一次发生，且不能凭空产生提醒。 */
