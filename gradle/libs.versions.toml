@@ -136,7 +136,7 @@ compose-multiplatform = "1.11.0"
 compose-navigation3 = "1.1.1"
 # https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-lifecycle.html
 # 看 compose 发布时给出的版本
-compose-lifecycle = "2.11.0-beta01"
+compose-lifecycle = "2.11.0"
 # 看 compose 发布时给出的版本
 compose-savedstate = "1.4.0"
 # 看 compose 发布时给出的版本
@@ -440,6 +440,5 @@ views = [
     "material",
     "flexbox",
 ]
-
 
 
