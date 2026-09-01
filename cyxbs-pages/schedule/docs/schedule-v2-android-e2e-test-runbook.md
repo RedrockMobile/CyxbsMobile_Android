@@ -167,7 +167,7 @@
 - [x] A02 事务编辑器不展示“时间点”和“全天”，不能生成非法 timing。（`EditScheduleTimeArea` 仅在 `kind == TODO` 时组合三态切换，AFFAIR 固定走 INTERVAL；`affairCreationUsesInitialTimingWithoutTodoState` 验证事务创建保持 TIMED、默认关联课表且不伪造清单完成态。）
 - [x] A03 点击事务打开与旧事务一致的详情弹窗，时间轴、透明背景、重叠左右切换正确。（真机点击 `E2E-SV2-0831-AFFAIREDIT` 后，详情正常展示标题、日期、时间、重复、提醒、清单关联、备注和编辑/删除入口；A13 三重叠数据验证通用弹窗可依次左右切换三项。宿主统一使用透明 scrim、`BeginFinalTimeShowModifier` 时间轴和同一重叠 Pager，事务与清单只替换详情业务内容。）
 - [x] A04 长按拖动事务时可预览移动，松手返回原位置，不提交新时间。（在同一远端触点先 DOWN、等待超过长按阈值、再 MOVE 并保持：`E2E-SV2-0831-AFFAIR-WEEKLY` 节点从 `[113,427][245,579]` 移到 `[113,627][245,779]`；UP 后恢复原边界，期间没有本地持久化、revision 或 UPDATE 日志。）
-- [ ] A05 修改事务标题、备注、日期、时间、重复与提醒，保存后课表和远端一致。（已把 `AFFAIREDIT` 一次性修改为标题 `e2e-affair-fields`、备注 `e2e-affair-note-fields`、9 月 16 日 12:00–13:30、每周三和准时提醒；客户端本地完整快照与 pending 均正确。后端 BUG-008 修复已推送，但 9 月 1 日 07:57 与正常包覆盖安装后的 08:09 两次 Sync 仍返回旧服务的 `REJECTED/INVALID_REQUEST`，pending=1；等待 dev/test 部署生效后重试收敛。）
+- [x] A05 修改事务标题、备注、日期、时间、重复与提醒，保存后课表和远端一致。（把 `AFFAIREDIT` 一次性修改为标题 `e2e-affair-fields`、备注 `e2e-affair-note-fields`、9 月 16 日 12:00–13:30、每周三和准时提醒；BUG-008 部署后重新 Sync，服务端返回 `APPLIED`、version 6→7，本地 pending 归零，canonical 标题、时间与重复规则和提交一致。）
 - [x] A06 将事务关联到清单，出现完成圆圈和分类入口；课表仍保留事务条纹。（事务编辑态一次点击切换为“已关联清单”，同时出现“未分组”入口；保存后 version 4→5、服务端 `APPLIED`、pending=0，清单列表出现同一 ScheduleId 的完成圆圈，课表周二 11:00–11:30 投射仍存在。条纹由 `ScheduleAffairBackgroundItemModifier` 持续按 AFFAIR 来源绘制。）
 - [x] A07 已关联清单的事务切换分类，清单与课表使用同一分类配色，条纹仍可辨认。（选择 `E2E-SV2-0831-CatA-Renamed` 后同一次 UPDATE 成功；课表 Item 仅在 `isLinkedTodoAffair` 时读取 categoryColor，并以该背景色作为斜纹色、透明间隙透出课表底色，未把事务退化为普通 TODO 块。）
 - [x] A08 完成由事务关联出的清单后，事务仍显示在课表，清单完成态正确。（`completionOnlyHidesTodoOrigin` 覆盖同为 COMPLETED occurrence 时 TODO 隐藏、AFFAIR 继续可见；AFFAIR 的完成态由 todoState 表达，不改变事务来源。）
@@ -279,7 +279,7 @@
 | BUG-005 | U05 / 课表详情保存编辑 | 已修复 | 从清单页改期可正常提交；从课表全天详情把 9 月 7 日改为 9 月 8 日后，弹窗关闭但没有本地命令、网络请求或课表更新。 | 课表详情和事务新建使用 `rememberCoroutineScope` 持有持久化命令，保存时编辑器同步关闭 Window，Composable 离场会取消尚未执行的协程。改为进程级应用 scope 后，UI 生命周期不再取消落库与同步。 | 客户端 `7d3eebf22` |
 | BUG-006 | E00-07 / 非主页接收 deep link | 已修复 | 冷启动或停留主页时 deep link 可用；进入清单后再发送 `cyxbs://course`，系统确认 Intent 已送达 MainActivity，但应用无解析日志且页面不跳转。 | `onNewIntentListener` 绑定在主页 Composable，离开主页后随 `onDispose` 被移除；直接在 Activity `onCreate` 入栈又早于导航栈首次组合。现改为 App 根组合中的常驻 `DisposableEffect`，在 `AppNavDisplay` 就绪后处理初始 Intent，并跨页面持续监听。 | 客户端 `cfdf6868f` |
 | BUG-007 | A05 / 事务改期后首次开启重复 | 已修复 | 把非重复事务日期从 9 月 14 日改到 9 月 15 日并开启每周重复时，选择器曾显示旧日期星期；修正后显示“每周二”，本地 pending 使用 9 月 15 日。 | 编辑器无条件使用父日程旧 timing 作为 recurrence 预览 anchor；projector 又错误要求稳定 anchor 必须等于当前 timing 日期，导致合法的系列移动无法发布本地快照。 | 客户端 `13e698f79` |
-| BUG-008 | A05 / 清除重复后重新启用 | 已修复并推送，部署未生效 | 同一事务曾经清除重复，再改日期重新启用时，dev/test 后端返回 `REJECTED/INVALID_REQUEST`；后端提交推送后于 07:57、正常包覆盖安装后于 08:09 再次 Sync，响应仍为旧行为且 pending=1。 | 后端把首次 anchor 锁定到整个 Schedule 生命周期；但 recurrence 清除已经结束旧 occurrence 序列，重新启用应在同一 Schedule identity 下以当前 timing 建立新序列。 | 后端 `32e9fe3`，已推送 `dev/test` |
+| BUG-008 | A05 / 清除重复后重新启用 | 已修复并部署 | 同一事务曾经清除重复，再改日期重新启用时，旧 dev/test 实例返回 `REJECTED/INVALID_REQUEST`；确认首次 CI 失败并重新部署成功后，09:48 再次 Sync 返回 `APPLIED`、version 6→7、pending=0。 | 后端把首次 anchor 锁定到整个 Schedule 生命周期；但 recurrence 清除已经结束旧 occurrence 序列，重新启用应在同一 Schedule identity 下以当前 timing 建立新序列。 | 后端 `32e9fe3` |
 | BUG-009 | E00-07 / 裸课表 deeplink | 已修复 | 根监听修复后，`cyxbs://course?stuNum=2020214988` 可跳转，但裸 `cyxbs://course` 仍记录“未识别页面协议”并停留原页；覆盖安装修复包后，从清单页发送裸 URI 可进入当前账号第一周课表。 | 导航 KSP 依据字段可空性生成协议，`stuNum: String` 即使业务上可推导仍会被生成为必填 query。现改为可空参数，并只在 `CourseNavEntry` 内把省略值解析为当前登录学号；显式学号行为不变。 | 客户端 `6ad426277` |
 | BUG-010 | A12 / 完整课表创建事务 | 已修复 | 主页课表空白处可以创建事务，但裸 deeplink 打开的完整课表对轻击和长按均无响应；修复包覆盖安装后，轻击会生成一小时占位项，点击占位项可打开事务编辑器，并成功创建每日/每周事务。 | `HomeCourseFrame` 注册了 `CreateItemPageDecoration`，重构后的 `AdaptiveCourseFrame` 却遗漏该层；完整课表因此没有任何空白手势接收者。现为自适应课表补充平台 factory 并注册创建 Decoration，不改数据库或协议。 | 客户端 `772b77f78` |
 | BUG-011 | K02 / 日历权限永久拒绝引导 | 已修复 | 课表事务详情中永久拒绝日历权限后，再点“去授权”会关闭当前详情且看不到应用的设置引导；修复包中引导保留在当前 Window，点击“去设置”直达应用详情，授权返回后仍停留原事务详情。 | Android actual 原先独立组合 `ScheduleConfirmDialog`，但课表详情由外部 BottomSheet/Window 承载，权限回调与宿主离场会让独立引导状态丢失。现由平台实现提供 overlay 内容，并统一挂到 `EditScheduleDialog` 根层，同一窗口内完成引导和返回。 | 客户端 `ad3ce1ba2` |
@@ -295,7 +295,7 @@
 
 ## 16. 最终清理与验收
 
-- [ ] Z01 删除所有 `E2E-SV2-0831-` 分类、日程和 occurrence override，不触碰其他数据。
-- [ ] Z02 确认本地 pending=0、失败记录无测试残留、后端 Sync 不再下发测试资源。
-- [ ] Z03 恢复迁移版本、网络模拟、权限与系统日历测试环境。
-- [ ] Z04 汇总通过/失败/跳过数量、所有修复提交和仍需人工确认的视觉项。
+- [x] Z01 删除所有 `E2E-SV2-0831-` 分类、日程和 occurrence override，不触碰其他数据。（通过正式逐资源 DELETE 接口删除 13 条测试日程、3 条 occurrence override 和 1 个测试分类；服务端均返回 `DELETED`，随后客户端 Sync 应用 tombstone。标题 `222`、内置“学习/生活/其他”均保留。）
+- [x] Z02 确认本地 pending=0、失败记录无测试残留、后端 Sync 不再下发测试资源。（最终 Room 仅剩 `222 / version=1`，三个内置分类，无 override；`failureRecordCount=0`，Sync 成功且 `pendingCount=0`、`discoveredResult=EMPTY`。）
+- [x] Z03 恢复迁移版本、网络模拟、权限与系统日历测试环境。（迁移版本与应用级网络故障注入已在 M12 恢复并覆盖正式测试包；日历权限处于正常已授权状态，Provider 查询无 `E2E-*` 测试事件。）
+- [x] Z04 汇总通过/失败/跳过数量、所有修复提交和仍需人工确认的视觉项。（最终 194/194 项完成，无失败、无待执行或因权限/大改造跳过的阻塞项。客户端修复：`bffcd4fa9`、`877ef53b1`、`7d3eebf22`、`cfdf6868f`、`13e698f79`、`6ad426277`、`772b77f78`、`ad3ce1ba2`、`b5e8e3c58`；后端修复：`539793d`、`32e9fe3`；`BUG-012` 经真机证据排除，无代码改动。视觉与交互项均已通过真机语义、布局或源码证据闭合，无剩余人工确认项。）
