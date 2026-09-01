@@ -30,7 +30,7 @@ import kotlin.time.Instant
  *
  * 初始化时实例 [initialOccurrence] 的标题、描述、分类、时间和提醒优先于系列 [origin]，
  * 这样编辑已移动或覆盖的重复实例时不会回退到系列原值；重复规则仍来自 [origin]，因为实例例外不拥有 RRULE。
- * 该对象只保存本次弹窗会话状态，不直接写仓库；只有 [toDraft] 的结果会进入异步命令。
+ * 该对象只保存本次弹窗会话状态，不直接写仓库；[toDraft] 与 [occurrenceRestoreIds] 只会在确认保存后进入异步命令。
  */
 @Stable
 class EditScheduleModelState(
@@ -69,6 +69,17 @@ class EditScheduleModelState(
   private val initialLinkedToCourse = origin?.linkedToCourse ?: (kind == ScheduleKind.AFFAIR)
   var todoState by mutableStateOf(initialTodoState)
   var linkedToCourse by mutableStateOf(initialLinkedToCourse)
+  private var stagedOccurrenceRestoreIds by mutableStateOf(emptySet<RecurrenceId>())
+
+  /**
+   * 本次编辑会话中等待还原的单次调整；点击列表按钮只更新该集合，保存前不会触碰仓库或课表投影。
+   */
+  internal val occurrenceRestoreIds: Set<RecurrenceId> get() = stagedOccurrenceRestoreIds
+
+  /** 将某次调整加入待还原集合；重复点击不会产生重复命令。 */
+  internal fun stageOccurrenceRestore(recurrenceId: RecurrenceId) {
+    stagedOccurrenceRestoreIds = stagedOccurrenceRestoreIds + recurrenceId
+  }
 
   /** 当前日程是否属于清单；原生清单与关联清单后的事务都返回 true。 */
   val isInTodoList: Boolean get() = todoState != null
@@ -203,6 +214,7 @@ class EditScheduleModelState(
    * 只改重复规则也会提示未保存，但 THIS_ONLY 保存时不会把 RRULE 写进单次 patch。
    */
   val isChanged: Boolean get() {
+    if (stagedOccurrenceRestoreIds.isNotEmpty()) return true
     if (initialOccurrence != null) {
       return isOccurrenceFieldsChanged || isSeriesRecurrenceChanged || isSeriesRelationChanged
     }

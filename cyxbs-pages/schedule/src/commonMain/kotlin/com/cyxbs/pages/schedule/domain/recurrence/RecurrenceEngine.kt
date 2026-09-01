@@ -108,6 +108,41 @@ object RecurrenceEngine {
   }
 
   /**
+   * 判断 [targetId] 是否为有限重复系列中最后一个尚未取消的实例。
+   *
+   * 该查询只遍历规则生成的 identity，不构造展示用 [ScheduleOccurrence]；遇到第二个未取消实例便立即返回。
+   * 无限重复没有“最后一次”，固定返回 `false`。调用方可据此把最后一次单次删除提升为删除父系列，避免
+   * 服务端长期保留一个全部由 `CANCELLED` 例外组成的空系列。
+   */
+  internal fun isOnlyRemainingOccurrence(
+    schedule: Schedule,
+    exceptions: List<ScheduleOccurrenceException>,
+    targetId: RecurrenceId,
+  ): Boolean {
+    require(ScheduleValidator.validate(schedule).isEmpty()) { "schedule is invalid" }
+    val recurrence = requireNotNull(schedule.recurrence) { "identity requires recurring schedule" }
+    if (recurrence.end == RecurrenceEnd.Never) return false
+    require(schedule.timing != ScheduleTiming.Unscheduled) { "unscheduled items cannot recur" }
+    require(exceptions.map { it.recurrenceId }.distinct().size == exceptions.size) {
+      "duplicate exception recurrenceId"
+    }
+    exceptions.forEach { requireStructurallyCompatibleException(schedule, it) }
+    requireGeneratedIdentity(schedule, targetId)
+
+    val cancelledIds = exceptions.asSequence()
+      .filter { it.status == OccurrenceStatus.CANCELLED }
+      .mapTo(mutableSetOf()) { it.recurrenceId }
+    var remainingId: RecurrenceId? = null
+    for (start in generatedStarts(identityAnchor(schedule), recurrence, validationEndInclusive = null)) {
+      val candidateId = recurrenceId(schedule.timing, start)
+      if (candidateId in cancelledIds) continue
+      if (remainingId != null) return false
+      remainingId = candidateId
+    }
+    return remainingId == targetId
+  }
+
+  /**
    * 查询并证明 [recurrenceId] 是 [schedule] 的原始规则实例。
    *
    * 返回从零开始的规则 occurrence 序号和前一个原始开始时间，供“此次及后续”拆分维持 COUNT 语义；
@@ -254,7 +289,7 @@ object RecurrenceEngine {
   private fun generatedStarts(
     anchor: MinuteTimeDate,
     rule: RecurrenceRule,
-    validationEndInclusive: MinuteTimeDate,
+    validationEndInclusive: MinuteTimeDate?,
   ): List<MinuteTimeDate> {
     val result = ArrayList<MinuteTimeDate>()
     var period = 0
@@ -263,7 +298,7 @@ object RecurrenceEngine {
       for (candidate in candidates) {
         if (rule.end is RecurrenceEnd.Until && candidate.date > rule.end.date) return result
         if (rule.end is RecurrenceEnd.Count && result.size >= rule.end.value) return result
-        if (candidate > validationEndInclusive) return result
+        if (validationEndInclusive != null && candidate > validationEndInclusive) return result
         result += candidate
       }
       period++

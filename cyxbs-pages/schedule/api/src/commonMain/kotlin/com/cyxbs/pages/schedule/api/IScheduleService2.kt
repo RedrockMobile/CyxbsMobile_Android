@@ -111,7 +111,10 @@ interface IScheduleService2 {
     onDismiss: () -> Unit,
     /** 内容进入或退出编辑态时通知外层宿主，用于锁定当前正在编辑的日程。 */
     onEditModeChanged: (Boolean) -> Unit = {},
-    /** 注册内容的关闭拦截；外层蒙层点击和返回键必须先通过该回调，null 表示解除注册。 */
+    /**
+     * 向外部宿主注册关闭拦截函数：函数返回 true 表示允许继续收起，返回 false 表示拦截关闭，宿主需将
+     * 已被拖动的 BottomSheet 回弹至展开状态；传入 null 表示内容已离开组合，宿主应解除注册。
+     */
     onDismissRequestChanged: (((suspend () -> Boolean)?) -> Unit) = {},
     /** 将范围选择、未保存确认等内容交给外层 Window 根布局绘制；null 表示清除。 */
     onWindowOverlayContentChanged: (((@Composable () -> Unit)?) -> Unit) = {},
@@ -131,7 +134,10 @@ interface IScheduleService2 {
     onCreated: () -> Unit,
     /** 创建表单始终处于编辑态，外层重叠宿主可据此只保留当前页。 */
     onEditModeChanged: (Boolean) -> Unit = {},
-    /** 注册内容的关闭拦截；外层蒙层点击和返回键必须先通过该回调，null 表示解除注册。 */
+    /**
+     * 向外部宿主注册关闭拦截函数：函数返回 true 表示允许继续收起，返回 false 表示拦截关闭，宿主需将
+     * 已被拖动的 BottomSheet 回弹至展开状态；传入 null 表示内容已离开组合，宿主应解除注册。
+     */
     onDismissRequestChanged: (((suspend () -> Boolean)?) -> Unit) = {},
     /** 将范围选择、未保存确认等内容交给外层 Window 根布局绘制；null 表示清除。 */
     onWindowOverlayContentChanged: (((@Composable () -> Unit)?) -> Unit) = {},

@@ -103,7 +103,7 @@ private class MobileScheduleBottomSheetExtension(
     scheduleService.ScheduleDetailContent(
       occurrence = item.occurrence,
       embeddedInHost = true,
-      onDismiss = state::dismissDialog,
+      onDismiss = state::dismissDialogAnimated,
       onEditModeChanged = { isEditing ->
         if (isEditing) state.lockCurrentPage()
       },

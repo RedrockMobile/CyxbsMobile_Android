@@ -612,7 +612,6 @@ fun ScheduleTodoPage(
                 item.occurrence.recurrenceId,
                 newCategory,
               )
-              editingIdentity = null
             },
             onDelete = { scope ->
               viewModel.deleteScheduleScoped(
@@ -649,7 +648,6 @@ fun ScheduleTodoPage(
                 timelineOccurrence.recurrenceId,
                 newCategory,
               )
-              timelineEditingOccurrence = null
             },
             onDelete = { scope ->
               viewModel.deleteScheduleScoped(

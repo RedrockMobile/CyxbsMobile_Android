@@ -36,6 +36,7 @@ import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -87,7 +88,9 @@ import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrence
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
+import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
 import com.cyxbs.pages.schedule.domain.recurrence.SeriesSplitter
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
 import com.cyxbs.pages.schedule.ui.category.rememberScheduleCategoryCatalog
@@ -99,6 +102,7 @@ import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleRemindArea
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleTimeArea
 import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoCompletedIndicatorColor
 import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoPendingIndicatorColor
+import com.cyxbs.pages.schedule.ui.model.ScheduleDraft
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCalendar
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCategory
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoNotice
@@ -148,6 +152,11 @@ fun EditScheduleDialog(
   embeddedInExternalHost: Boolean = false,
   /** 是否展示“关联清单/关联课表”入口；清单页与课表页可按各自业务入口启用。 */
   showCourseRelation: Boolean = false,
+  /**
+   * 新建日程保存后是否关闭当前弹窗。课表创建事务会传 false，等待本地创建完成后在同一宿主中替换为详情；
+   * 普通清单新建仍保持保存后关闭。
+   */
+  dismissAfterCreateSave: Boolean = true,
   onDismiss: () -> Unit,
   /** 第三个参数仅在所选固定默认分类尚未落库时非空，调用方需沿用原子保存命令。 */
   onConfirm: (EditScheduleModelState, EditScope, ScheduleCategory?) -> Unit,
@@ -156,7 +165,10 @@ fun EditScheduleDialog(
   onToggleCompleted: ((Boolean) -> Unit)? = null,
   /** 嵌入外部宿主时报告查看/编辑模式；普通 ScheduleBottomSheet 可忽略。 */
   onEditModeChanged: (Boolean) -> Unit = {},
-  /** 嵌入外部宿主时注册关闭拦截；传入 null 表示当前编辑内容已离开组合。 */
+  /**
+   * 嵌入外部宿主时注册关闭拦截函数：函数返回 true 表示允许宿主继续收起，返回 false 表示拦截关闭，
+   * 宿主需要把已被拖动的 BottomSheet 回弹到展开状态；传入 null 表示编辑内容已离开组合，应注销拦截。
+   */
   onDismissRequestChanged: (((suspend () -> Boolean)?) -> Unit) = {},
   /** 嵌入外部宿主时把子弹层交给 Window 根布局绘制；传入 null 表示清除。 */
   onWindowOverlayContentChanged: (((@Composable () -> Unit)?) -> Unit) = {},
@@ -170,12 +182,22 @@ fun EditScheduleDialog(
     creationTiming,
   )
   val categoryCatalog = rememberScheduleCategoryCatalog(categoryRepository)
+  val repositorySnapshot by categoryRepository.snapshot.collectAsState()
 
   var showUnsavedExit by remember { mutableStateOf(false) }
   var showReminderPermissionExplanation by remember { mutableStateOf(false) }
   var resetReminderAfterRejectedAuthorization by remember { mutableStateOf(false) }
   var pendingDismissDecision by remember { mutableStateOf<CompletableDeferred<Boolean>?>(null) }
   var scopeChooser by remember { mutableStateOf<ScopeAction?>(null) }
+  // 普通日程直接记录 ALL；重复日程先选择范围，再统一进入删除确认，避免任何入口绕过二次确认。
+  var pendingDeleteScope by remember { mutableStateOf<EditScope?>(null) }
+  // 最后一个可见实例的单次删除会升级为整系列删除，确认文案需要明确告知这一影响范围。
+  var deletingLastOccurrence by remember { mutableStateOf(false) }
+  var contentUiState by remember(modelState) {
+    mutableStateOf<ScheduleUi>(if (modelState.origin == null) ScheduleUi.Edit.Note else ScheduleUi.Show)
+  }
+  var acceptedDraft by remember(modelState) { mutableStateOf<ScheduleDraft?>(null) }
+  var acceptedRestoreIds by remember(modelState) { mutableStateOf<Set<RecurrenceId>>(emptySet()) }
   val coroutineScope = rememberCoroutineScope()
   val reminderAuthorization = rememberScheduleReminderAuthorization { granted ->
     showReminderPermissionExplanation = false
@@ -193,9 +215,10 @@ fun EditScheduleDialog(
       categoryCatalog.findMissingDefaultCategory(modelState.categoryId),
     )
   }
-
   val dismissGate: suspend () -> Boolean = {
-    if (modelState.isChanged) {
+    val currentChangesWereAccepted = acceptedDraft == modelState.toDraft() &&
+      acceptedRestoreIds == modelState.occurrenceRestoreIds
+    if (modelState.isChanged && !currentChangesWereAccepted) {
       val decision = pendingDismissDecision ?: CompletableDeferred<Boolean>().also {
         pendingDismissDecision = it
         showUnsavedExit = true
@@ -204,12 +227,6 @@ fun EditScheduleDialog(
     } else {
       true
     }
-  }
-  val requestDismiss: () -> Unit = {
-    coroutineScope.launch {
-      if (dismissGate()) onDismiss()
-    }
-    Unit
   }
   DisposableEffect(embeddedInExternalHost, modelState, onDismissRequestChanged) {
     // 外部 BottomSheet 必须复用编辑器的 dirty 判断，否则点击蒙层会绕过未保存确认。
@@ -221,23 +238,41 @@ fun EditScheduleDialog(
   DisposableEffect(modelState) {
     onDispose { pendingDismissDecision?.cancel() }
   }
-  val doSave: () -> Unit = {
-    if (needScope) scopeChooser = ScopeAction.SAVE
-    else {
-      confirm(EditScope.ALL)
-      onDismiss()
-    }
-  }
   val doDelete: () -> Unit = {
     if (onDelete != null) {
       if (needScope) scopeChooser = ScopeAction.DELETE
-      else {
-        onDelete(EditScope.ALL); onDismiss()
-      }
+      else pendingDeleteScope = EditScope.ALL
     }
   }
 
-  val sheetContent: @Composable () -> Unit = {
+  /** 保存已被调用方接收后，已有日程回到查看态；新建入口按宿主策略关闭或等待详情替换。 */
+  val finishSave: (EditScope, () -> Unit) -> Unit = { scope, requestAnimatedDismiss ->
+    confirm(scope)
+    acceptedDraft = modelState.toDraft()
+    acceptedRestoreIds = modelState.occurrenceRestoreIds
+    when {
+      modelState.origin != null -> contentUiState = ScheduleUi.Show
+      dismissAfterCreateSave -> requestAnimatedDismiss()
+      else -> Unit // 创建事务由调用方在本地写入完成后原位替换为详情。
+    }
+  }
+
+  val sheetContent: @Composable (requestAnimatedDismiss: () -> Unit) -> Unit = { requestAnimatedDismiss ->
+    val requestDismiss: () -> Unit = {
+      coroutineScope.launch {
+        if (dismissGate()) requestAnimatedDismiss()
+      }
+      Unit
+    }
+    val doSave: () -> Unit = {
+      when {
+        // 已有日程即使没有改动，勾选也只退出编辑态；新建入口没有可展示资源，仍按宿主策略处理。
+        !modelState.isChanged && modelState.origin != null -> contentUiState = ScheduleUi.Show
+        !modelState.isChanged -> if (dismissAfterCreateSave) requestAnimatedDismiss()
+        needScope -> scopeChooser = ScopeAction.SAVE
+        else -> finishSave(EditScope.ALL, requestAnimatedDismiss)
+      }
+    }
     Column(
       modifier = Modifier
         .fillMaxWidth()
@@ -250,8 +285,13 @@ fun EditScheduleDialog(
     ) {
       ScheduleContent(
         modelState = modelState,
+        uiState = contentUiState,
+        onUiStateChanged = { contentUiState = it },
         firstMonday = firstMonday,
         categories = categoryCatalog.selectableCategories,
+        occurrenceExceptions = repositorySnapshot.exceptions.filterNot {
+          it.recurrenceId in modelState.occurrenceRestoreIds
+        },
         showCourseRelation = showCourseRelation,
         reminderAuthorized = reminderAuthorization.authorized,
         onRequestReminderAuthorization = { resetOnFailure ->
@@ -266,23 +306,14 @@ fun EditScheduleDialog(
         onSave = { doSave() },
         onCancel = { requestDismiss() },
         onDelete = { doDelete() },
+        onRestoreOccurrenceAdjustment = { exception ->
+          modelState.stageOccurrenceRestore(exception.recurrenceId)
+        },
         onToggleCompleted = onToggleCompleted,
         onEditModeChanged = onEditModeChanged,
       )
     }
   }
-  if (embeddedInExternalHost) {
-    sheetContent()
-  } else {
-    ScheduleBottomSheet(
-      show = true,
-      onDismiss = onDismiss,
-      scrimColor = scrimColor,
-      onDismissRequest = dismissGate,
-      content = sheetContent,
-    )
-  }
-
   val resolveDismissDecision: (Boolean) -> Unit = { allowDismiss ->
     val decision = pendingDismissDecision
     pendingDismissDecision = null
@@ -293,7 +324,7 @@ fun EditScheduleDialog(
     editSchedule != null && recurrenceId != null &&
       SeriesSplitter.canSplitAt(editSchedule, recurrenceId)
   }
-  val overlayContent: @Composable () -> Unit = {
+  val overlayContent: @Composable (requestAnimatedDismiss: () -> Unit) -> Unit = { requestAnimatedDismiss ->
     // 平台权限引导也必须跟随当前 Window 根节点，不能在课表外部宿主内再创建独立 Dialog。
     reminderAuthorization.overlayContent()
 
@@ -305,12 +336,49 @@ fun EditScheduleDialog(
       onDismiss = { scopeChooser = null },
       onChoose = { scope ->
         when (scopeChooser) {
-          ScopeAction.SAVE -> confirm(scope)
-          ScopeAction.DELETE -> onDelete?.invoke(scope)
+          ScopeAction.SAVE -> {
+            scopeChooser = null
+            finishSave(scope, requestAnimatedDismiss)
+          }
+          ScopeAction.DELETE -> {
+            scopeChooser = null
+            val deletesLast = scope == EditScope.THIS_ONLY && editSchedule != null && recurrenceId != null &&
+              RecurrenceEngine.isOnlyRemainingOccurrence(
+                editSchedule,
+                repositorySnapshot.exceptions.filter { it.scheduleId == editSchedule.id },
+                recurrenceId,
+              )
+            deletingLastOccurrence = deletesLast
+            pendingDeleteScope = if (deletesLast) EditScope.ALL else scope
+          }
           null -> {}
         }
-        scopeChooser = null
-        onDismiss()
+      },
+    )
+
+    ScheduleConfirmDialog(
+      show = pendingDeleteScope != null,
+      title = "删除日程",
+      message = when {
+        deletingLastOccurrence ->
+          "这是该重复日程最后一个未删除的日期，继续删除将同时删除整个重复日程。"
+        pendingDeleteScope == EditScope.THIS_ONLY ->
+          "是否确认删除？(“仅删除此次”可在重复设置的调整中恢复)"
+        else -> "删除后将无法恢复，是否确认删除？"
+      },
+      confirmText = "删除",
+      dismissText = "取消",
+      embeddedInWindow = true,
+      onConfirm = {
+        val scope = pendingDeleteScope ?: return@ScheduleConfirmDialog
+        pendingDeleteScope = null
+        deletingLastOccurrence = false
+        onDelete?.invoke(scope)
+        requestAnimatedDismiss()
+      },
+      onDismiss = {
+        pendingDeleteScope = null
+        deletingLastOccurrence = false
       },
     )
 
@@ -348,14 +416,22 @@ fun EditScheduleDialog(
     )
   }
   if (embeddedInExternalHost) {
+    sheetContent(onDismiss)
     val currentOverlayContent = rememberUpdatedState(overlayContent)
     DisposableEffect(onWindowOverlayContentChanged) {
       // 外部宿主在同一个 Window 的根布局末尾绘制，避免弹层跟随被拖下去的内容一起隐藏。
-      onWindowOverlayContentChanged { currentOverlayContent.value() }
+      onWindowOverlayContentChanged { currentOverlayContent.value(onDismiss) }
       onDispose { onWindowOverlayContentChanged(null) }
     }
   } else {
-    overlayContent()
+    ScheduleBottomSheet(
+      show = true,
+      onDismiss = onDismiss,
+      scrimColor = scrimColor,
+      onDismissRequest = dismissGate,
+      overlayContent = overlayContent,
+      content = sheetContent,
+    )
   }
 }
 
@@ -386,24 +462,22 @@ private sealed interface ScheduleUi {
 @Composable
 private fun ScheduleContent(
   modelState: EditScheduleModelState,
+  uiState: ScheduleUi,
+  onUiStateChanged: (ScheduleUi) -> Unit,
   firstMonday: Date?,
   categories: List<ScheduleCategory>,
+  occurrenceExceptions: List<ScheduleOccurrenceException>,
   showCourseRelation: Boolean,
   reminderAuthorized: Boolean,
   onRequestReminderAuthorization: (resetOnFailure: Boolean) -> Unit,
   onSave: () -> Unit,
   onCancel: () -> Unit,
   onDelete: () -> Unit,
+  onRestoreOccurrenceAdjustment: (ScheduleOccurrenceException) -> Unit,
   onToggleCompleted: ((Boolean) -> Unit)?,
   onEditModeChanged: (Boolean) -> Unit,
 ) {
   val colors = LocalAppColors.current
-  var uiState by remember(modelState.origin) {
-    // 新建没有可供“查看”的既有资源，直接进入表单；已有日程仍先展示只读详情。
-    mutableStateOf<ScheduleUi>(
-      if (modelState.origin == null) ScheduleUi.Edit.Note else ScheduleUi.Show,
-    )
-  }
   LaunchedEffect(uiState is ScheduleUi.Edit) {
     onEditModeChanged(uiState is ScheduleUi.Edit)
   }
@@ -468,7 +542,7 @@ private fun ScheduleContent(
       TitleRightIcons(
         modelState = modelState,
         uiState = uiState,
-        onEdit = { uiState = ScheduleUi.Edit.Note },
+        onEdit = { onUiStateChanged(ScheduleUi.Edit.Note) },
         onSave = onSave,
         onCancel = onCancel,
         onDelete = onDelete,
@@ -482,9 +556,9 @@ private fun ScheduleContent(
       showCourseRelation = showCourseRelation,
       reminderAuthorized = reminderAuthorized,
       editable = uiState is ScheduleUi.Edit,
-      onClickDate = { uiState = ScheduleUi.Edit.Date },
-      onClickTime = { uiState = ScheduleUi.Edit.Time },
-      onClickRepeat = { uiState = ScheduleUi.Edit.Repeat },
+      onClickDate = { onUiStateChanged(ScheduleUi.Edit.Date) },
+      onClickTime = { onUiStateChanged(ScheduleUi.Edit.Time) },
+      onClickRepeat = { onUiStateChanged(ScheduleUi.Edit.Repeat) },
       onClickRemind = {
         if (modelState.effectiveTiming == ScheduleTiming.Unscheduled) {
           "请先设置时间后再开启提醒".toast()
@@ -493,10 +567,10 @@ private fun ScheduleContent(
         val editing = uiState is ScheduleUi.Edit
         // 只有“从不提醒切换为提醒”的新选择在授权失败后回退；其他设备同步来的提醒必须保留业务值。
         val enablingNewReminder = editing && modelState.remindMinutes < 0
-        if (editing) uiState = ScheduleUi.Edit.Remind
+        if (editing) onUiStateChanged(ScheduleUi.Edit.Remind)
         onRequestReminderAuthorization(enablingNewReminder)
       },
-      onClickCategory = { uiState = ScheduleUi.Edit.Category },
+      onClickCategory = { onUiStateChanged(ScheduleUi.Edit.Category) },
       onClickRelation = {
         if (modelState.effectiveTiming == ScheduleTiming.Unscheduled) {
           "请先设置时间后再关联课表".toast()
@@ -536,6 +610,9 @@ private fun ScheduleContent(
       draft = modelState.recurrence,
       anchorDate = modelState.recurrenceAnchorDate,
       firstMonday = firstMonday,
+      schedule = modelState.origin,
+      occurrenceExceptions = occurrenceExceptions,
+      onRestoreOccurrenceAdjustment = onRestoreOccurrenceAdjustment,
       onChange = { modelState.recurrence = it },
       modifier = Modifier.fillMaxWidth(),
     )

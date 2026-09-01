@@ -21,6 +21,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Clock
@@ -152,6 +153,31 @@ class ScheduleEditNoOpTest {
     assertEquals(timing, draft.timing)
     assertEquals(null, draft.todoState)
     assertTrue(draft.linkedToCourse)
+  }
+
+  /** 新建事务保存后返回同一个已落库领域对象，课表弹窗才能原位切换到对应详情而不是先关闭。 */
+  @Test
+  fun affairCreationReturnsCreatedScheduleForDetailTransition() = runTest {
+    val timing = ScheduleTiming.Timed(
+      MinuteTimeDate(2026, 8, 25, 14, 30),
+      90,
+      "Asia/Shanghai",
+    )
+    val state = EditScheduleModelState(
+      origin = null,
+      creationKind = ScheduleKind.AFFAIR,
+      creationTiming = timing,
+    )
+    state.title.setTextAndPlaceCursorAtEnd("课表事务")
+    val repository = RecordingRepository(ScheduleSnapshot())
+
+    val created = assertNotNull(
+      repository.applyScheduleEdit(state, EditScope.ALL, null, FakeIds, Clock.System),
+    )
+
+    assertEquals(ScheduleKind.AFFAIR, created.kind)
+    assertEquals(timing, created.timing)
+    assertEquals(created, (repository.commands.single() as ScheduleCommand.Create).schedule)
   }
 
   /** 0 是正式的准时提醒值，从既有日程进入编辑再保存时不能被默认值或空提醒覆盖。 */
@@ -716,6 +742,120 @@ class ScheduleEditNoOpTest {
     assertEquals(ScheduleCommand.Delete(completed.id), allRepository.commands.single())
   }
 
+  /** 有限系列逐次删除到只剩最后一次时，最后一次直接删除父系列，不再写一条多余的取消例外。 */
+  @Test
+  fun deletingLastRemainingOccurrenceDeletesFiniteSeries() = runTest {
+    val finiteEnds = listOf<RecurrenceEnd>(
+      RecurrenceEnd.Count(3),
+      RecurrenceEnd.Until(Date(2026, 7, 15)),
+    )
+    finiteEnds.forEach { end ->
+      val parent = parentSchedule().copy(recurrence = RecurrenceRule(
+        frequency = RecurrenceFrequency.WEEKLY,
+        byWeekDays = setOf(IsoWeekDay.WEDNESDAY),
+        end = end,
+      ))
+      val first = RecurrenceId(MinuteTimeDate(2026, 7, 1, 9, 0), "Asia/Shanghai", false)
+      val second = recurrenceId()
+      val third = RecurrenceId(MinuteTimeDate(2026, 7, 15, 9, 0), "Asia/Shanghai", false)
+      val cancelled = listOf(first, third).map { id ->
+        exception(parent, id, OccurrencePatch()).copy(status = OccurrenceStatus.CANCELLED)
+      }
+      val repository = RecordingRepository(snapshot(parent, cancelled))
+
+      repository.applyScheduleDelete(parent.id, EditScope.THIS_ONLY, second, Clock.System)
+
+      assertEquals(ScheduleCommand.Delete(parent.id), repository.commands.single())
+    }
+  }
+
+  /** 仍有其他可见实例或系列永不结束时，单次删除继续只写当前实例的取消状态。 */
+  @Test
+  fun deletingOccurrenceKeepsSeriesWhenAnotherOccurrenceCanRemain() = runTest {
+    suspend fun assertCancelled(parent: Schedule) {
+      val repository = RecordingRepository(snapshot(parent))
+      repository.applyScheduleDelete(parent.id, EditScope.THIS_ONLY, recurrenceId(), Clock.System)
+      val command = repository.commands.single() as ScheduleCommand.UpsertOccurrenceException
+      assertEquals(OccurrenceStatus.CANCELLED, command.exception.status)
+    }
+
+    assertCancelled(parentSchedule().copy(recurrence = RecurrenceRule(
+      frequency = RecurrenceFrequency.WEEKLY,
+      byWeekDays = setOf(IsoWeekDay.WEDNESDAY),
+      end = RecurrenceEnd.Count(3),
+    )))
+    assertCancelled(parentSchedule())
+  }
+
+  /**
+   * 还原单次调整时，普通修改和单次删除移除整条例外；已完成实例只清空 patch，保留完成事实。
+   */
+  @Test
+  fun restoreOccurrenceAdjustmentPreservesIndependentCompletionState() = runTest {
+    val parent = parentSchedule()
+    val id = recurrenceId()
+    val patch = OccurrencePatch(title = FieldPatch.Replace("单次标题"))
+
+    listOf(OccurrenceStatus.ACTIVE, OccurrenceStatus.CANCELLED).forEach { status ->
+      val existing = exception(parent, id, patch).copy(status = status)
+      val repository = RecordingRepository(snapshot(parent, existing))
+
+      repository.restoreOccurrenceAdjustment(parent.id, id, Clock.System)
+
+      assertEquals(
+        ScheduleCommand.DeleteOccurrenceException(parent.id, id),
+        repository.commands.single(),
+      )
+    }
+
+    val completed = exception(parent, id, patch).copy(status = OccurrenceStatus.COMPLETED)
+    val completedRepository = RecordingRepository(snapshot(parent, completed))
+    completedRepository.restoreOccurrenceAdjustment(parent.id, id, Clock.System)
+    val restored = (completedRepository.commands.single() as
+      ScheduleCommand.UpsertOccurrenceException).exception
+    assertEquals(OccurrenceStatus.COMPLETED, restored.status)
+    assertNull(restored.patch)
+    assertEquals(completed.revision, restored.revision)
+  }
+
+  /** 没有内容调整的正常或已完成实例不属于“单次调整”，误调用还原也必须保持 no-op。 */
+  @Test
+  fun restoreOccurrenceAdjustmentIgnoresStatusOnlyException() = runTest {
+    val parent = parentSchedule()
+    val id = recurrenceId()
+    val completed = exception(parent, id, OccurrencePatch()).copy(
+      status = OccurrenceStatus.COMPLETED,
+      patch = null,
+    )
+    val repository = RecordingRepository(snapshot(parent, completed))
+
+    repository.restoreOccurrenceAdjustment(parent.id, id, Clock.System)
+
+    assertTrue(repository.commands.isEmpty())
+  }
+
+  /** 点击还原只修改编辑草稿，直到用户确认保存才删除对应 occurrence exception。 */
+  @Test
+  fun occurrenceRestoreIsStagedUntilEditConfirmation() = runTest {
+    val parent = parentSchedule()
+    val id = recurrenceId()
+    val existing = exception(parent, id, OccurrencePatch(title = FieldPatch.Replace("单次标题")))
+    val repository = RecordingRepository(snapshot(parent, existing))
+    val state = EditScheduleModelState(parent, occurrence(parent, id).copy(title = "单次标题"))
+
+    state.stageOccurrenceRestore(id)
+
+    assertTrue(state.isChanged)
+    assertTrue(repository.commands.isEmpty())
+
+    repository.applyScheduleEdit(state, EditScope.THIS_ONLY, id, FakeIds, Clock.System)
+
+    assertEquals(
+      ScheduleCommand.DeleteOccurrenceException(parent.id, id),
+      repository.commands.single(),
+    )
+  }
+
   /** 修改日期跨周、跨月或跨年时，只迁移 timing 日期，标题、备注、分类、提醒和重复规则保持原值。 */
   @Test
   fun explicitDateChangesPreserveNonTimingFieldsAcrossCalendarBoundaries() {
@@ -798,9 +938,12 @@ class ScheduleEditNoOpTest {
       Instant.parse("2026-07-01T00:00:00Z"), Instant.parse("2026-07-02T00:00:00Z"),
     )
 
-  private fun snapshot(parent: Schedule, exception: ScheduleOccurrenceException? = null) = ScheduleSnapshot(
+  private fun snapshot(parent: Schedule, exception: ScheduleOccurrenceException? = null) =
+    snapshot(parent, listOfNotNull(exception))
+
+  private fun snapshot(parent: Schedule, exceptions: List<ScheduleOccurrenceException>) = ScheduleSnapshot(
     schedules = listOf(parent),
-    exceptions = listOfNotNull(exception),
+    exceptions = exceptions,
     status = ScheduleRepositoryStatus.Ready(0, false),
   )
 

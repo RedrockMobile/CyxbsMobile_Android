@@ -3,6 +3,7 @@ package com.cyxbs.pages.schedule.ui.edit
 import com.cyxbs.components.config.time.toLocalDateTime
 import com.cyxbs.pages.schedule.data.repository.ScheduleIdGenerators
 import com.cyxbs.pages.schedule.domain.model.*
+import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
 import com.cyxbs.pages.schedule.domain.recurrence.SeriesSplitter
 import com.cyxbs.pages.schedule.domain.repository.*
 import com.cyxbs.pages.schedule.ui.model.toNewDomain
@@ -22,6 +23,8 @@ import kotlin.time.Instant
  * @param newCategory 所选固定默认分类尚不存在时提供完整分类；仅在整系列 CREATE/PATCH 时与日程同批提交。
  *
  * 此函数会挂起并写入仓库；无实际字段变化时不发命令。Compose 层不会接触 record/DTO。
+ *
+ * @return 新建时返回已经写入仓库的日程，供创建弹窗原位切换到详情；编辑已有日程时返回 null。
  */
 suspend fun ScheduleRepository.applyScheduleEdit(
   state: EditScheduleModelState,
@@ -30,7 +33,25 @@ suspend fun ScheduleRepository.applyScheduleEdit(
   idGenerators: ScheduleIdGenerators,
   clock: Clock,
   newCategory: ScheduleCategory? = null,
-) {
+) : Schedule? {
+  val created = applyScheduleFieldEdit(state, scope, recurrenceId, idGenerators, clock, newCategory)
+  val scheduleId = state.origin?.id ?: return created
+  // 单次调整属于同一编辑会话，但不与 scope 混为一个 occurrence patch；表单保存成功后再逐条恢复继承。
+  state.occurrenceRestoreIds.forEach { id ->
+    restoreOccurrenceAdjustment(scheduleId, id, clock)
+  }
+  return null
+}
+
+/** 执行标题、时间、重复规则和关联关系等原有表单字段保存，不处理暂存的单次调整还原。 */
+private suspend fun ScheduleRepository.applyScheduleFieldEdit(
+  state: EditScheduleModelState,
+  scope: EditScope,
+  recurrenceId: RecurrenceId?,
+  idGenerators: ScheduleIdGenerators,
+  clock: Clock,
+  newCategory: ScheduleCategory? = null,
+) : Schedule? {
   val now = clock.now()
   val origin = state.origin
 
@@ -41,7 +62,7 @@ suspend fun ScheduleRepository.applyScheduleEdit(
       newCategory?.let { ScheduleCommand.SaveScheduleWithNewCategory(it, created) }
         ?: ScheduleCommand.Create(created),
     )
-    return
+    return created
   }
   val editedDraft = state.toDraft()
   // 未排期与提醒在领域上不可共存；timing 的显式用户修改需原子清理 payload，但不得把提醒控件标记为 dirty。
@@ -115,7 +136,7 @@ suspend fun ScheduleRepository.applyScheduleEdit(
       // 关联关系属于整个系列；“仅本次”只约束标题、时间等 occurrence 字段，不能生成单次关联例外。
       if (state.isSeriesRelationChanged) execute(ScheduleCommand.Update(relationEdited))
       // RRULE 只属于系列；仅修改 recurrence 后选择 THIS_ONLY 按 no-op 处理，不创建空 occurrence exception。
-      if (!state.isOccurrenceFieldsChanged) return
+      if (!state.isOccurrenceFieldsChanged) return null
       require(!(state.isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled)) {
         "THIS_ONLY occurrence timing cannot become unscheduled"
       }
@@ -152,12 +173,12 @@ suspend fun ScheduleRepository.applyScheduleEdit(
               ?: ScheduleCommand.Update(seriesEdited),
           )
         }
-        return
+        return null
       }
       // 只修改系列级关联关系时无需拆分；关系对原系列所有 occurrence 一次生效。
       if (!hasSeriesContentChanges) {
         if (state.isSeriesRelationChanged) execute(ScheduleCommand.Update(relationEdited))
-        return
+        return null
       }
       val split = SeriesSplitter.split(
         schedule = origin,
@@ -192,6 +213,7 @@ suspend fun ScheduleRepository.applyScheduleEdit(
       execute(ScheduleCommand.SplitSeries(previous, following, boundary, newCategory))
     }
   }
+  return null
 }
 
 /**
@@ -238,7 +260,8 @@ suspend fun ScheduleRepository.applyScheduleCompletion(
  * @param recurrenceId 单实例和后续范围的稳定锚点；对应范围下为空会立即失败。
  * @param clock 创建或更新单实例墓碑时使用，确保删除能参与后续同步。
  *
- * 该函数会挂起并写仓库；单实例删除不会物理删除系列，也不会丢失已有例外的 revision。
+ * 该函数会挂起并写仓库；普通单实例删除不会物理删除系列，也不会丢失已有例外的 revision。若有限系列
+ * 只剩当前实例，则删除当前实例等价于删除父系列，避免留下没有任何可见 occurrence 的空资源。
  */
 suspend fun ScheduleRepository.applyScheduleDelete(
   scheduleId: ScheduleId,
@@ -250,8 +273,16 @@ suspend fun ScheduleRepository.applyScheduleDelete(
     EditScope.ALL -> execute(ScheduleCommand.Delete(scheduleId))
     EditScope.THIS_ONLY -> {
       val id = requireNotNull(recurrenceId)
+      val currentSnapshot = snapshot.value
+      val schedule = currentSnapshot.schedules.firstOrNull { it.id == scheduleId }
+        ?: return
+      val scheduleExceptions = currentSnapshot.exceptions.filter { it.scheduleId == scheduleId }
+      if (RecurrenceEngine.isOnlyRemainingOccurrence(schedule, scheduleExceptions, id)) {
+        execute(ScheduleCommand.Delete(scheduleId))
+        return
+      }
       val now = clock.now()
-      val existing = snapshot.value.exceptions.firstOrNull {
+      val existing = scheduleExceptions.firstOrNull {
         it.scheduleId == scheduleId && it.recurrenceId == id
       }
       execute(ScheduleCommand.UpsertOccurrenceException(
@@ -274,6 +305,31 @@ suspend fun ScheduleRepository.applyScheduleDelete(
         ))
       }
     }
+  }
+}
+
+/**
+ * 删除某次发生的单次调整，使其重新继承重复系列。
+ *
+ * 单次删除和普通单次修改都可以直接删除 exception；已完成实例还承载完成态，因此只清空 [OccurrencePatch]，
+ * 避免用户还原时间或内容时把“已完成”一并撤销。没有调整内容的正常/完成实例不会产生任何命令。
+ */
+suspend fun ScheduleRepository.restoreOccurrenceAdjustment(
+  scheduleId: ScheduleId,
+  recurrenceId: RecurrenceId,
+  clock: Clock,
+) {
+  val existing = snapshot.value.exceptions.firstOrNull {
+    it.scheduleId == scheduleId && it.recurrenceId == recurrenceId
+  } ?: return
+  if (existing.status != OccurrenceStatus.CANCELLED && existing.patch == null) return
+
+  if (existing.status == OccurrenceStatus.COMPLETED) {
+    execute(ScheduleCommand.UpsertOccurrenceException(
+      existing.copy(patch = null, updatedAt = clock.now()),
+    ))
+  } else {
+    execute(ScheduleCommand.DeleteOccurrenceException(scheduleId, recurrenceId))
   }
 }
 

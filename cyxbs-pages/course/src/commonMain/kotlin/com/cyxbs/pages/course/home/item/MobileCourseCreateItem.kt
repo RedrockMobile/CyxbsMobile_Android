@@ -61,7 +61,7 @@ private class MobileCreateBottomSheetExtension(
     scheduleService.ScheduleCreateAffairContent(
       initialTiming = initialTiming,
       embeddedInHost = true,
-      onDismiss = state::dismissDialog,
+      onDismiss = state::dismissDialogAnimated,
       onCreated = item::removeDraft,
       onEditModeChanged = { isEditing ->
         if (isEditing) state.lockCurrentPage()

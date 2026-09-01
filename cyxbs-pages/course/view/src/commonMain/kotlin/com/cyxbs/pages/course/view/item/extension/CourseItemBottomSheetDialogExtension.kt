@@ -158,6 +158,13 @@ class CourseItemBottomSheetDialogState {
   }
 
   /**
+   * 请求宿主弹窗先执行收起动画；[BottomSheet] 监听到 Collapsed 后才会调用 [dismissDialog] 清理内容。
+   */
+  fun dismissDialogAnimated() {
+    bottomSheetState.collapseAsync()
+  }
+
+  /**
    * 将重叠项 Pager 锁定在当前页。
    *
    * 编辑期间禁止切换对象并隐藏分页提示，但不改写 [dialogContents]，从而保留当前表单的 Compose 状态。
@@ -170,7 +177,8 @@ class CourseItemBottomSheetDialogState {
   /**
    * 更新当前业务内容的关闭拦截。
    *
-   * [gate] 返回 false 时宿主保持展开，由业务内容自行展示确认层；传入 null 恢复直接关闭。
+   * [gate] 返回 true 时允许宿主继续收起；返回 false 时宿主会回弹至展开状态，由业务内容继续展示确认层；
+   * 传入 null 表示业务内容已离开组合，解除拦截并恢复直接关闭。
    */
   fun updateDismissRequestGate(gate: (suspend () -> Boolean)?) {
     dismissRequestGate = gate

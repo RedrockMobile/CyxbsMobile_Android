@@ -3,7 +3,12 @@ package com.cyxbs.pages.schedule.ui.service
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import com.cyxbs.components.config.time.Date
+import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.components.init.appCoroutineScope
 import com.cyxbs.pages.schedule.api.IScheduleService2
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceKind
@@ -11,6 +16,7 @@ import com.cyxbs.pages.schedule.api.ScheduleOccurrenceTiming
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceView
 import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrence
@@ -32,6 +38,12 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** API occurrence 对应的 Schedule 领域详情，只在服务实现文件内用于点击与创建后的弹窗切换。 */
+private data class Detail(
+  val occurrence: ScheduleUiOccurrence,
+  val schedule: Schedule,
+)
+
 /**
  * Schedule 只读服务实现。
  *
@@ -39,12 +51,6 @@ import kotlinx.coroutines.launch
  */
 @ImplProvider(clazz = IScheduleService2::class)
 object ScheduleService2Impl : IScheduleService2 {
-
-  private data class Detail(
-    val occurrence: ScheduleUiOccurrence,
-    val schedule: Schedule,
-  )
-
   private val repository
     get() = ScheduleRepositoryProvider.repository
 
@@ -134,7 +140,7 @@ object ScheduleService2Impl : IScheduleService2 {
       onWindowOverlayContentChanged = onWindowOverlayContentChanged,
       onDismiss = onDismiss,
       onConfirm = { state, editScope, newCategory ->
-        // 保存按钮会立即关闭课表详情；使用应用级 scope，避免 Composable 离场取消尚未落库的命令。
+        // 保存后详情仍留在当前弹窗；使用应用级 scope，避免宿主页面切换时取消尚未落库的命令。
         appCoroutineScope.launch {
           repository.applyScheduleEdit(
             state,
@@ -187,6 +193,19 @@ object ScheduleService2Impl : IScheduleService2 {
     onDismissRequestChanged: (((suspend () -> Boolean)?) -> Unit),
     onWindowOverlayContentChanged: (((@Composable () -> Unit)?) -> Unit),
   ) {
+    var createdOccurrence by remember(initialTiming) { mutableStateOf<ScheduleOccurrenceView?>(null) }
+    createdOccurrence?.let { occurrence ->
+      ScheduleDetailContent(
+        occurrence = occurrence,
+        embeddedInHost = embeddedInHost,
+        onDismiss = onDismiss,
+        onEditModeChanged = onEditModeChanged,
+        onDismissRequestChanged = onDismissRequestChanged,
+        onWindowOverlayContentChanged = onWindowOverlayContentChanged,
+      )
+      return
+    }
+
     EditScheduleDialog(
       show = true,
       creationKind = ScheduleKind.AFFAIR,
@@ -194,26 +213,72 @@ object ScheduleService2Impl : IScheduleService2 {
       scrimColor = Color.Transparent,
       embeddedInExternalHost = embeddedInHost,
       showCourseRelation = true,
+      // 创建成功后由本 Composable 把表单替换成详情，不能先让外层课表宿主收起。
+      dismissAfterCreateSave = false,
       onEditModeChanged = onEditModeChanged,
       onDismissRequestChanged = onDismissRequestChanged,
       onWindowOverlayContentChanged = onWindowOverlayContentChanged,
       onDismiss = onDismiss,
       onConfirm = { state, editScope, newCategory ->
-        // 编辑器确认后会立刻离开组合，创建命令必须由进程生命周期持有到本地落库完成。
+        // 创建命令由进程生命周期持有；成功后在同一个课表弹窗中原位切换到刚创建的事务详情。
         appCoroutineScope.launch {
-          repository.applyScheduleEdit(
+          val created = repository.applyScheduleEdit(
             state,
             editScope,
             recurrenceId = null,
             idGenerators = ScheduleRepositoryProvider.idGenerators,
             clock = ScheduleRepositoryProvider.clock,
             newCategory = newCategory,
-          )
+          ) ?: return@launch
+          val detail = created.toInitialDetail()
+          val identity = occurrenceIdentity(detail.occurrence)
+          val apiOccurrence = detail.occurrence.toApiModel(identity, created, categoryColor = null)
+          detailByIdentity.update { current -> current + (identity to detail) }
+          createdOccurrence = apiOccurrence
           onCreated()
         }
       },
     )
   }
+}
+
+/**
+ * 为刚创建的日程构造首个可查看实例，避免等待课表下一轮窗口订阅后才能把创建表单切换成详情。
+ * 新建系列尚未发生整系列位移，其稳定 identity 直接由当前 timing 的日期、时分和时区构造。
+ */
+private fun Schedule.toInitialDetail(): Detail {
+  val occurrence = ScheduleUiOccurrence(
+    scheduleId = id,
+    recurrenceId = recurrence?.let { timing.toInitialRecurrenceId(recurrenceAnchorDate) },
+    title = title,
+    description = description,
+    categoryId = categoryId,
+    timing = timing,
+    reminder = reminder,
+    status = OccurrenceStatus.ACTIVE,
+    isOverridden = false,
+  )
+  return Detail(occurrence, this)
+}
+
+/** 使用新建系列的原始墙上时间构造首个 occurrence identity；未排期重复已在领域校验中禁止。 */
+private fun ScheduleTiming.toInitialRecurrenceId(anchorDate: Date?): RecurrenceId = when (this) {
+  is ScheduleTiming.Timed -> RecurrenceId(
+    MinuteTimeDate(anchorDate ?: start.date, start.time),
+    timeZoneId,
+    false,
+  )
+  is ScheduleTiming.Deadline -> RecurrenceId(
+    MinuteTimeDate(anchorDate ?: due.date, due.time),
+    timeZoneId,
+    false,
+  )
+  is ScheduleTiming.AllDay -> RecurrenceId(
+    MinuteTimeDate(anchorDate ?: date, 0, 0),
+    null,
+    true,
+  )
+  ScheduleTiming.Unscheduled -> error("unscheduled schedule cannot recur")
 }
 
 /**
