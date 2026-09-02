@@ -483,7 +483,7 @@ class ScheduleV2LocalCommandReducerTest {
       occurrenceOverrides = deleted.occurrenceOverrides,
     )
     assertEquals(1, capture.request.schedules.deletes.size)
-    assertEquals(3, capture.request.occurrenceOverrides.deletes.size)
+    assertEquals(1, capture.request.occurrenceOverrides.deletes.size)
   }
 
   @Test
@@ -636,7 +636,7 @@ class ScheduleV2LocalCommandReducerTest {
       now = 401,
       revision = 6,
     ).applied()
-    assertIs<PendingDelete<*, *>>(deleted.occurrenceOverrides.single().pending)
+    assertTrue(deleted.occurrenceOverrides.isEmpty())
   }
 
   @Test

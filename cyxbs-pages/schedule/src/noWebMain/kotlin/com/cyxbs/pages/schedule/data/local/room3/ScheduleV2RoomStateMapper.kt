@@ -14,6 +14,7 @@ import com.cyxbs.pages.schedule.domain.sync.v2.PendingUpsert
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleIdentity
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleResource
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleSyncState
+import com.cyxbs.pages.schedule.domain.sync.v2.VersionedRemoteTombstone
 
 /**
  * 一个账号的 common 双快照集合。
@@ -109,8 +110,11 @@ internal fun ScheduleV2OccurrenceOverrideStateEntity.toCommonSyncState(): Occurr
   val identity = OccurrenceOverrideIdentity(scheduleId, occurrenceDate)
   return OccurrenceOverrideSyncState(
     identity = identity,
-    remoteSnapshot = remoteSnapshot?.toDomain(),
+    remoteSnapshot = remoteState?.current?.toDomain(),
     pending = toOccurrenceOverridePending(identity),
+    remoteTombstone = remoteState?.tombstone?.let {
+      VersionedRemoteTombstone(identity, remoteState.version.toLong(), it.deletedAt)
+    },
   )
 }
 
@@ -122,7 +126,20 @@ internal fun OccurrenceOverrideSyncState.toRoomEntity(accountId: String): Schedu
     accountId = accountId,
     scheduleId = identity.scheduleId,
     occurrenceDate = identity.occurrenceDate,
-    remoteSnapshot = remoteSnapshot?.toWire(),
+    remoteState = when {
+      remoteSnapshot != null -> ScheduleV2OccurrenceOverrideRemoteState(
+        version = remoteSnapshot.version.toULong(),
+        current = remoteSnapshot.toWire(),
+      )
+      remoteTombstone != null -> ScheduleV2OccurrenceOverrideRemoteState(
+        version = remoteTombstone.version.toULong(),
+        tombstone = com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideTombstone(
+          deletedAt = remoteTombstone.deletedAt,
+        ),
+      )
+
+      else -> null
+    },
     pendingOperation = when (pending) {
       null -> null
       is PendingUpsert -> ScheduleV2PendingOperation.UPSERT
@@ -178,18 +195,21 @@ private fun ScheduleV2CategoryStateEntity.toCategoryPending(
     }
     null
   }
+
   ScheduleV2PendingOperation.UPSERT -> {
     require(pendingSnapshot != null && pendingLocalModifiedAt == null && localRevision != null) {
       "category UPSERT pending shape is invalid"
     }
     PendingUpsert(pendingSnapshot.toDomain(), localRevision)
   }
+
   ScheduleV2PendingOperation.DELETE -> {
     require(pendingSnapshot == null && pendingLocalModifiedAt != null && localRevision != null) {
       "category DELETE pending shape is invalid"
     }
     PendingDelete(identity, pendingLocalModifiedAt, localRevision)
   }
+
   else -> error("unsupported category pending operation=$pendingOperation")
 }
 
@@ -203,42 +223,49 @@ private fun ScheduleV2ScheduleStateEntity.toSchedulePending(
     }
     null
   }
+
   ScheduleV2PendingOperation.UPSERT -> {
     require(pendingSnapshot != null && pendingLocalModifiedAt == null && localRevision != null) {
       "schedule UPSERT pending shape is invalid"
     }
     PendingUpsert(pendingSnapshot.toDomain(), localRevision)
   }
+
   ScheduleV2PendingOperation.DELETE -> {
     require(pendingSnapshot == null && pendingLocalModifiedAt != null && localRevision != null) {
       "schedule DELETE pending shape is invalid"
     }
     PendingDelete(identity, pendingLocalModifiedAt, localRevision)
   }
+
   else -> error("unsupported schedule pending operation=$pendingOperation")
 }
 
 /** 按 OccurrenceOverride 行的 pending 列构建 common pending，并拒绝损坏或不完整数据。 */
 private fun ScheduleV2OccurrenceOverrideStateEntity.toOccurrenceOverridePending(
   identity: OccurrenceOverrideIdentity,
-): PendingChange<OccurrenceOverrideIdentity, OccurrenceOverrideResource>? = when (pendingOperation) {
-  null -> {
-    require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null) {
-      "occurrence override has pending fields without pending operation"
+): PendingChange<OccurrenceOverrideIdentity, OccurrenceOverrideResource>? =
+  when (pendingOperation) {
+    null -> {
+      require(pendingSnapshot == null && pendingLocalModifiedAt == null && localRevision == null) {
+        "occurrence override has pending fields without pending operation"
+      }
+      null
     }
-    null
-  }
-  ScheduleV2PendingOperation.UPSERT -> {
-    require(pendingSnapshot != null && pendingLocalModifiedAt == null && localRevision != null) {
-      "occurrence override UPSERT pending shape is invalid"
+
+    ScheduleV2PendingOperation.UPSERT -> {
+      require(pendingSnapshot != null && pendingLocalModifiedAt == null && localRevision != null) {
+        "occurrence override UPSERT pending shape is invalid"
+      }
+      PendingUpsert(pendingSnapshot.toDomain(), localRevision)
     }
-    PendingUpsert(pendingSnapshot.toDomain(), localRevision)
-  }
-  ScheduleV2PendingOperation.DELETE -> {
-    require(pendingSnapshot == null && pendingLocalModifiedAt != null && localRevision != null) {
-      "occurrence override DELETE pending shape is invalid"
+
+    ScheduleV2PendingOperation.DELETE -> {
+      require(pendingSnapshot == null && pendingLocalModifiedAt != null && localRevision != null) {
+        "occurrence override DELETE pending shape is invalid"
+      }
+      PendingDelete(identity, pendingLocalModifiedAt, localRevision)
     }
-    PendingDelete(identity, pendingLocalModifiedAt, localRevision)
+
+    else -> error("unsupported occurrence override pending operation=$pendingOperation")
   }
-  else -> error("unsupported occurrence override pending operation=$pendingOperation")
-}

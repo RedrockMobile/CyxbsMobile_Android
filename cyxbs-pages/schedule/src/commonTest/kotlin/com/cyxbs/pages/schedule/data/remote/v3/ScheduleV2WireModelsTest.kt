@@ -69,4 +69,31 @@ class ScheduleV2WireModelsTest {
     assertFalse("untilDate" in recurrenceJson)
     assertFalse("value" in patchJson)
   }
+
+  /** Tombstone 始终嵌在 typed result 中，JSON 不应重复外层已经提供的 identity。 */
+  @Test
+  fun tombstoneOmitsOuterIdentity() {
+    val categoryJson = defaultJson.encodeToString(CategoryTombstone(deletedAt = 100))
+    val scheduleJson = defaultJson.encodeToString(ScheduleTombstone(deletedAt = 100))
+    val overrideTombstoneJson = defaultJson.encodeToString(
+      OccurrenceOverrideTombstone(deletedAt = 100),
+    )
+    val overrideResultJson = defaultJson.encodeToString(
+      OccurrenceOverrideUpsertResult(
+        scheduleId = "schedule-1",
+        occurrenceDate = 0,
+        result = MutationResultCode.RESOURCE_DELETED,
+        version = 5uL,
+        tombstone = OccurrenceOverrideTombstone(deletedAt = 100),
+      ),
+    )
+
+    assertFalse("\"id\":" in categoryJson)
+    assertFalse("\"id\":" in scheduleJson)
+    assertFalse("\"scheduleId\"" in overrideTombstoneJson)
+    assertFalse("\"occurrenceDate\"" in overrideTombstoneJson)
+    assertFalse("\"version\"" in overrideTombstoneJson)
+    assertContains(overrideResultJson, "\"version\":5")
+    assertContains(overrideResultJson, "\"tombstone\":{\"deletedAt\":100}")
+  }
 }

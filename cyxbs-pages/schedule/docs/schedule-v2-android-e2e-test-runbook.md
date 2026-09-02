@@ -299,3 +299,30 @@
 - [x] Z02 确认本地 pending=0、失败记录无测试残留、后端 Sync 不再下发测试资源。（最终 Room 仅剩 `222 / version=1`，三个内置分类，无 override；`failureRecordCount=0`，Sync 成功且 `pendingCount=0`、`discoveredResult=EMPTY`。）
 - [x] Z03 恢复迁移版本、网络模拟、权限与系统日历测试环境。（迁移版本与应用级网络故障注入已在 M12 恢复并覆盖正式测试包；日历权限处于正常已授权状态，Provider 查询无 `E2E-*` 测试事件。）
 - [x] Z04 汇总通过/失败/跳过数量、所有修复提交和仍需人工确认的视觉项。（最终 194/194 项完成，无失败、无待执行或因权限/大改造跳过的阻塞项。客户端修复：`bffcd4fa9`、`877ef53b1`、`7d3eebf22`、`cfdf6868f`、`13e698f79`、`6ad426277`、`772b77f78`、`ad3ce1ba2`、`b5e8e3c58`；后端修复：`539793d`、`32e9fe3`；`BUG-012` 经真机证据排除，无代码改动。视觉与交互项均已通过真机语义、布局或源码证据闭合，无剩余人工确认项。）
+
+## 17. 可恢复单次调整增量回归（2026-09-02）
+
+本节验证 OccurrenceOverride 改为“带版本、可恢复 tombstone”后的行为。它是第 16 节历史验收之后新增的独立回归，
+测试资源统一使用 `E2E-SV2-0902-OVR-` 前缀。旧开发版 Room JSON 不做兼容；若设备仍保存旧格式，只能通过清空
+账号数据入口或清除测试应用数据重建，不能为了测试在正式代码中添加旧格式 reader。
+
+- [x] VR01 使用项目安装脚本覆盖安装当前测试包，保留登录与应用数据；确认正式清单入口、设备时间和 dev/test 后端均可用。证据：测试包覆盖安装成功，正式入口可达；初始化 SYNC 返回 `businessStatus=10000`，既有 3 条日程均 `CONFIRMED`，本地 `pendingCount=0`。
+- [x] VR02 新建每日重复时间段 `E2E-SV2-0902-OVR-BASE`，设置父标题、备注、学习分类、15:00–16:00 和提前 10 分钟提醒；生成三个实例并完成远端同步。证据：CREATE 返回 `CREATED`、服务端版本 `1`，本地合并后 `pending=NONE`、`pendingCount=0`。
+- [x] VR03 对第二个实例选择“仅此次”，改为标题 `E2E-SV2-0902-OVR-ONLY`、备注 `ONLY-NOTE`、生活分类、18:00–19:00 和准时提醒；9 月 3 日与 9 月 5 日实例仍保持父标题、`BASE-NOTE`、学习分类、15:00–16:00 和提前 10 分钟提醒。请求完成后本地 `pendingCount=0`。
+- [x] VR04 强停且不清数据后重启并 Sync；父日程 version `1` 被服务端 `CONFIRMED`，`discoveredResult/upsertResult/deleteResult` 均为空、`pendingCount=0`。9 月 4 日仍为 18:00–19:00 的单次字段，9 月 3 日与 9 月 5 日仍为 15:00–16:00 的父字段，无重复实例、日期漂移或 sibling 串值。
+- [ ] VR05 在第二个实例的重复设置中展开“单次调整”，点击还原后先不确认保存；课表、清单与网络日志均不得提前变化。确认保存后，该实例恢复父标题、备注、分类、15:00–16:00 和提前 10 分钟提醒。（确认前不生效已通过；最终提交受 `VR-BLOCK-01` 阻塞。）
+- [ ] VR06 核对 VR05 的请求与回包：客户端发送携带当前 live version 的 Override DELETE；服务端返回 `DELETED`、外层 version+1 与 metadata-only tombstone；tombstone JSON 不重复 identity/version，Room 行以主键保存 identity、remote state 外层保存 version，pending 清零且不残留 18:00–19:00 等旧业务字段。
+- [ ] VR07 在 VR05 已还原的同一实例上再次选择“仅此次”，只把提醒改为准时；新 Override 使用 tombstone version 重建，标题、备注、分类和时间均从父系列继承，旧单次字段不得复活。
+- [ ] VR08 再次还原 VR07，然后对同一实例执行“删除仅此次”；该实例消失、后续实例仍存在，生成的 CANCELLED Override 不携带曾经的 18:00–19:00 或旧标题补丁。
+- [ ] VR09 从重复设置还原 VR08 的单次删除，确认实例重新出现并完整继承父系列；确认前不更新，确认后才提交 Override DELETE 并保存新 tombstone 版本。
+- [ ] VR10 将第三个实例标记完成，再对该实例增加单次标题和时间调整；从重复设置还原单次调整后，完成态继续保留，但标题、时间等 patch 全部恢复继承。
+- [ ] VR11 对 VR10 的已完成实例取消完成，确认它恢复为普通实例且不会带回已清除的单次标题、时间、备注、分类或提醒。
+- [ ] VR12 强停并重启应用后执行 Sync，逐项复查 VR07–VR11 的最终状态；本地 pending=0、失败记录为空，远端不会下发旧业务 payload 或复活已还原调整。
+- [x] VR13 运行客户端 planner/applier、reducer、Room codec/repository 以及后端 wire、领域、DAO、service 聚焦测试，覆盖版本删除、R→U、重复删除、旧版本拒绝和 tombstone 后完整重建。证据：客户端 `:cyxbs-pages:schedule:desktopTest` 成功；后端 `go test ./schedulev2wire ./schedulev2 ./dao` 与 `go test ./service -run ScheduleV2 -count=1 -timeout=120s` 均通过。
+- [ ] VR14 删除 `E2E-SV2-0902-OVR-` 测试系列及相关 Override，确认本地 pending=0、失败记录无残留、最终 Sync 不再发现该前缀资源。
+
+### 17.1 增量问题记录
+
+| ID | 用例 | 状态 | 现象与证据 | 根因 | 修复提交 |
+|---|---|---|---|---|---|
+| VR-BLOCK-01 | VR05–VR12 | 待部署 | 客户端保存还原后写入 `PendingDelete` 并发起 `DELETE`，dev/test 返回 HTTP 400、`status=20001`、`request contains unsupported field`；客户端保留原 live override 且 `pendingCount=1`。 | dev/test 仍运行旧协议，不识别新版 Override DELETE 的 `version` 字段；后端 `dev/test` 分支已有 11 个文件的未提交实现，尚未部署。 | 待用户授权提交并推送后端。 |

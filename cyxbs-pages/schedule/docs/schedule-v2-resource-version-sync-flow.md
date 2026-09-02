@@ -8,6 +8,7 @@
 
 ```text
 remoteSnapshot?
+remoteTombstone?        // 仅 OccurrenceOverride；与 remoteSnapshot 互斥
 pendingOperation?       // UPSERT | DELETE
 pendingSnapshot?        // UPSERT 时的完整目标资源
 pendingLocalModifiedAt? // DELETE 时刻
@@ -21,9 +22,11 @@ localRevision?          // 本地 pending 代数
 - remote resource 自带服务端 `version`。
 - 新建 pending 使用 `version=0`。
 - 编辑已有资源时，pending 使用最后确认 remote 的正版本。
-- DELETE 不带 version。
+- Category/Schedule DELETE 不带 version。
+- OccurrenceOverride DELETE 携带当前 live version；服务端只删除精确匹配的版本。
 - accepted response 返回完整 current，current.resource.version 是下一次修改基线。
-- tombstone 不带 version。
+- Category/Schedule tombstone 不带 version；OccurrenceOverride 的递增正 version 位于外层结果/本地远端状态。
+- 三种 tombstone 都不重复 identity；Category/Schedule 使用外层 `id`，Override 使用外层 `scheduleId + occurrenceDate`。
 
 ## 3. 日常请求
 
@@ -65,7 +68,7 @@ MutationResponse {
 | --- | --- | --- |
 | CREATED / APPLIED | 接受 current | localRevision 仍等于 uploadedRevision 时清除 |
 | ALREADY_EXISTS / ALREADY_SATISFIED / SERVER_WON | 接受 current | 同上 |
-| DELETED | 接受 tombstone 并删除 remote | 同上 |
+| DELETED | Category/Schedule 删除 remote；Override 保存无业务 payload 的版本化 tombstone | 同上 |
 | RESOURCE_DELETED | 接受 tombstone | 同上 |
 | REJECTED | 可接受返回的 current/tombstone 作为 remote | 永远保留本地 pending |
 
@@ -76,7 +79,7 @@ MutationResponse {
 请求：
 
 ```text
-confirmed[] = 所有 live remote identity + version
+confirmed[] = 所有 remote identity + version；Override 包含 live 与 tombstone
 upserts[]   = 所有 UPSERT pending
 deletes[]   = 所有 DELETE pending
 ```
@@ -94,7 +97,7 @@ deleteResults[]     // 与 deletes 对齐
 
 - CONFIRMED：版本一致，只确认版本；
 - CHANGED：使用 current 更新 remote；
-- DELETED：使用 tombstone 删除 remote。
+- DELETED：Category/Schedule 使用 tombstone 删除 remote；Override 改存版本化 tombstone。
 
 `discoveredResults` 直接加入 remote，但不能覆盖同 identity 的本地 pending 显示。
 
@@ -110,6 +113,10 @@ t5  U 在下一次日常请求或 Sync 中上传
 ```
 
 因此服务端回包永远不能直接无条件清 pending。
+
+对于 Override 的“还原 R → 请求期间再次编辑 U”：R 的响应先把 live 更新为 versioned tombstone，
+但 compare-and-clear 会保留 U；下一次投影 U 时使用本地 remoteTombstone 的 version，业务字段来自 U 的完整新快照，
+不读取删除前的时间、标题、提醒等补丁。
 
 ## 7. 部分成功
 

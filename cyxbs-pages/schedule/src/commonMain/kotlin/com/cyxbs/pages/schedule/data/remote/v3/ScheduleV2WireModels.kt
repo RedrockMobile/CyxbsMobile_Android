@@ -144,7 +144,7 @@ data class ConfirmedSchedule(
   val version: ULong, // required 且 >0，客户端已确认的服务端版本。
 )
 
-/** 客户端已持有的 live OccurrenceOverride。 */
+/** 客户端已持有的 OccurrenceOverride 当前版本；live 与 tombstone 都进入 confirmed。 */
 @Serializable
 data class ConfirmedOccurrenceOverride(
   val scheduleId: String, // required，parent identity。
@@ -166,11 +166,12 @@ data class ScheduleDelete(
   val localModifiedAt: UnixMillis, // required，本地删除时刻；零值合法。
 )
 
-/** delete-wins 的 Override 删除输入；parent/date 构成 identity，不携带 version。 */
+/** Override 条件删除输入；删除表示还原本次调整，必须携带当前 live version。 */
 @Serializable
 data class OccurrenceOverrideDelete(
   val scheduleId: String, // required，parent identity。
   val occurrenceDate: UnixMillis, // required，UTC 午夜日期槽。
+  val version: ULong, // required 且 >0；旧版本不能删除另一端刚写入的新调整。
   val localModifiedAt: UnixMillis, // required，本地删除时刻；零值合法。
 )
 
@@ -190,10 +191,10 @@ data class ScheduleSyncRequest(
   val deletes: List<ScheduleDelete>, // 结果与 deleteResults 按下标对齐。
 )
 
-/** Override live inventory 与普通 pending；三个列表都 required。 */
+/** Override live/tombstone inventory 与普通 pending；三个列表都 required。 */
 @Serializable
 data class OccurrenceOverrideSyncRequest(
-  val confirmed: List<ConfirmedOccurrenceOverride>, // live-only parent/date inventory。
+  val confirmed: List<ConfirmedOccurrenceOverride>, // live 与 tombstone 共用的 parent/date/version inventory。
   val upserts: List<OccurrenceOverrideInput>, // 结果与 upsertResults 按下标对齐。
   val deletes: List<OccurrenceOverrideDelete>, // 结果与 deleteResults 按下标对齐。
 )
@@ -266,27 +267,23 @@ data class OccurrenceOverrideCurrent(
   val meta: ServerResourceMeta, // required，服务端时间元数据。
 )
 
-/** Category 删除状态；不携带 version/deleteVersion。 */
+/** Category 删除状态；identity 由外层结果提供，不在 tombstone 中重复。 */
 @Serializable
 data class CategoryTombstone(
-  val id: String, // required，被删除 identity。
   val deletedAt: UnixMillis, // required，服务端确认删除时刻。
   val reason: ResultReason? = null, // 可选稳定原因；无值时省略。
 )
 
-/** Schedule 删除状态；不携带 version/deleteVersion。 */
+/** Schedule 删除状态；identity 由外层结果提供，不在 tombstone 中重复。 */
 @Serializable
 data class ScheduleTombstone(
-  val id: String, // required，被删除 identity。
   val deletedAt: UnixMillis, // required，服务端确认删除时刻。
   val reason: ResultReason? = null, // 可选稳定原因；无值时省略。
 )
 
-/** OccurrenceOverride 删除状态；仍使用 parent/date identity。 */
+/** OccurrenceOverride 可恢复删除状态；复合 identity 由外层结果提供。 */
 @Serializable
 data class OccurrenceOverrideTombstone(
-  val scheduleId: String, // required，parent identity。
-  val occurrenceDate: UnixMillis, // required，UTC 午夜日期槽。
   val deletedAt: UnixMillis, // required，服务端确认删除时刻。
   val reason: ResultReason? = null, // 可选稳定原因；无值时省略。
 )
@@ -319,6 +316,7 @@ data class OccurrenceOverrideUpsertResult(
   val scheduleId: String, // required，对应输入 parent identity。
   val occurrenceDate: UnixMillis, // required，对应输入 UTC 日期槽。
   val result: MutationResultCode, // required，稳定处理结论。
+  val version: ULong? = null, // current/tombstone 最终 canonical 版本；无远端状态时省略。
   val reason: ResultReason? = null, // 可选，通常只在拒绝时存在。
   val info: String? = null, // 可选安全业务说明。
   val current: OccurrenceOverrideCurrent? = null, // live 最终状态；与 tombstone 互斥。
@@ -353,6 +351,7 @@ data class OccurrenceOverrideDeleteResult(
   val scheduleId: String, // required，对应输入 parent identity。
   val occurrenceDate: UnixMillis, // required，对应输入 UTC 日期槽。
   val result: MutationResultCode, // required，删除或拒绝结论。
+  val version: ULong? = null, // current/tombstone 最终 canonical 版本；无远端状态时省略。
   val reason: ResultReason? = null, // 可选机器原因。
   val info: String? = null, // 可选安全业务说明。
   val current: OccurrenceOverrideCurrent? = null, // 删除拒绝时的 live 状态；与 tombstone 互斥。

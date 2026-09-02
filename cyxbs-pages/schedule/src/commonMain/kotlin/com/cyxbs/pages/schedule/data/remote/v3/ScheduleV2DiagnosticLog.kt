@@ -50,7 +50,8 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
     label = "RESPONSE SYNC confirmedResult",
     items = schedules.confirmedResults.map {
       "id=${it.id}, result=${it.result}, version=${it.version}, " +
-        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${it.tombstone?.id}"
+        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, " +
+        "tombstoneDeletedAt=${it.tombstone?.deletedAt}"
     },
   )
   logItems(
@@ -61,14 +62,16 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
     label = "RESPONSE SYNC upsertResult",
     items = schedules.upsertResults.map { result ->
       "id=${result.id}, result=${result.result}, reason=${result.reason}, info=${result.info}, " +
-        "current=${result.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${result.tombstone?.id}"
+        "current=${result.current?.resource?.diagnosticSummary(timeZone)}, " +
+        "tombstoneDeletedAt=${result.tombstone?.deletedAt}"
     },
   )
   logItems(
     label = "RESPONSE SYNC deleteResult",
     items = schedules.deleteResults.map { result ->
       "id=${result.id}, result=${result.result}, reason=${result.reason}, info=${result.info}, " +
-        "current=${result.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${result.tombstone?.id}"
+        "current=${result.current?.resource?.diagnosticSummary(timeZone)}, " +
+        "tombstoneDeletedAt=${result.tombstone?.deletedAt}"
     },
   )
 }
@@ -80,14 +83,16 @@ internal fun MutationResponse.logScheduleResponse(timeZone: TimeZone) {
     label = "RESPONSE MUTATION upsertResult",
     items = schedules.upsertResults.map {
       "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
-        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${it.tombstone?.id}"
+        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, " +
+        "tombstoneDeletedAt=${it.tombstone?.deletedAt}"
     },
   )
   logItems(
     label = "RESPONSE MUTATION deleteResult",
     items = schedules.deleteResults.map {
       "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
-        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, tombstoneId=${it.tombstone?.id}"
+        "current=${it.current?.resource?.diagnosticSummary(timeZone)}, " +
+        "tombstoneDeletedAt=${it.tombstone?.deletedAt}"
     },
   )
 }

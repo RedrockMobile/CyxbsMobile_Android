@@ -151,22 +151,21 @@ categoryId REPLACE 引用同 owner 的 live Category
 仍属于新日期集合。WEEKLY 可以取消 anchorDate 当天对应的星期；anchorDate 只保存系列的稳定日期轴，不强制成为
 每周选择项。
 
-如果规则变化会使 live Override 失效，客户端需要先删除或迁移对应 Override，再提交规则更新；资源操作彼此独立，某项失败不会回滚其他已经成功的资源。失败操作仍保留在本地 pending/失败记录中，用户修正对应日程后再次提交。当前不检测历史 tombstone date-slot 重入，也不为该场景定义专用原因码。
+如果规则变化会使 live Override 失效，客户端需要先删除或迁移对应 Override，再提交规则更新；资源操作彼此独立，某项失败不会回滚其他已经成功的资源。失败操作仍保留在本地 pending/失败记录中，用户修正对应日程后再次提交。
 
-Override tombstone 仍必须保留合法的 `scheduleId + UTC occurrenceDate` identity，但不要求 tombstone 日期继续属于 parent 当前 recurrence。重新启用 recurrence 不会复活或删除旧 tombstone；正常向未来建立的新序列会使用新的 occurrenceDate。
+Override tombstone 保留合法的 `scheduleId + UTC occurrenceDate` identity、递增后的正版本与删除时间，
+但清空全部业务补丁。后续再次编辑同一 occurrence 时，客户端以 tombstone version 上传完整新 Override，
+服务端校验版本后重建 live 资源；它不会自动复活删除前的字段。
 
-将某次恢复为系列默认状态时，保存 neutral live Override：
+将某次全部恢复为系列默认状态时，条件删除该 Override：
 
 ```text
-status = ACTIVE
-timing = INHERIT
-title = INHERIT
-description = INHERIT
-categoryId = INHERIT
-reminder = INHERIT
+DELETE scheduleId + occurrenceDate + currentVersion
+→ tombstone version = currentVersion + 1
 ```
 
-不要用 DELETE 表示“恢复默认”，因为 tombstone 不可复活，会阻止以后再次编辑同一 `scheduleId + occurrenceDate`。
+若本次仍需保留 `COMPLETED` 等实例状态，只恢复某个补丁字段，则继续 UPSERT live Override，并把对应字段设为
+`INHERIT`。只有恢复全部单次调整时才 DELETE；之后再次编辑会从空补丁重建，不继承旧时间或标题。
 
 ---
 
@@ -189,8 +188,8 @@ reminder = INHERIT
 | **仅编辑本次分类** | **权威合同支持**。更新 categoryId `FieldPatch` AtomicField。 | 分类不投影 Provider。 | 分类不映射 EventKit。 |
 | **仅编辑本次提醒** | **权威合同支持**。更新 reminder `FieldPatch` AtomicField。 | detached row 可表达；adapter 已实现未启用。 | `.thisEvent` alarm 可表达；平台支持未接入。 |
 | **仅改期本次** | **权威合同支持**。更新 timing `FieldPatch` AtomicField，identity 仍是原始 `occurrenceDate`。 | Provider detached timing 可作为 adapter 投影。 | `.thisEvent` timing 可作为 adapter 投影。 |
-| **恢复本次字段为系列默认** | **权威合同支持**。对应 timing/title/description/categoryId/reminder 设为 INHERIT，保留 neutral live Override。 | adapter 可删除或更新 detached row；平台投影是否保留不改变远端 identity。 | 平台可撤销 detached override；平台对象删除不等于远端 tombstone。 |
-| **恢复已取消本次** | **权威合同支持**。status 恢复 ACTIVE；无其它覆盖时仍保留 neutral live Override。 | adapter 可删除 canceled row；正式 exception 导出未启用。 | 平台可恢复 occurrence；项目未接入。 |
+| **恢复本次全部调整** | **权威合同支持**。按当前 version 条件 DELETE Override，服务端生成清空业务补丁的 versioned tombstone；以后可按该版本完整重建。 | adapter 可删除或更新 detached row；平台投影是否保留不改变远端 identity。 | 平台可撤销 detached override；平台对象删除不等于远端 tombstone。 |
+| **恢复已取消本次** | **权威合同支持**。若没有其它实例状态/补丁则条件 DELETE；仍需保留完成态等状态时，UPSERT `status` 与各字段 `INHERIT`。 | adapter 可删除 canceled row；正式 exception 导出未启用。 | 平台可恢复 occurrence；项目未接入。 |
 | **从本次起编辑后续** | **权威合同支持**。客户端独立提交截断 A、创建 B 与 affected Overrides；B 使用新 identity/anchor，单项失败留在本地修正。 | 应用截断旧 master 并创建新 master。 | `.futureEvents` 可在平台内部拆分；远端只接收最终 A/B/Override 资源。 |
 | **从本次起删除后续** | **权威合同支持**。客户端独立提交截断或删除 A 及 Override closure。 | 修改旧 master 结束边界。 | `.futureEvents` 可截断；远端只接收最终资源。 |
 | **Override 跨 parent 或跨日期** | **权威合同支持迁移**。分别 `DELETE old + CREATE new`，identity 不可 PATCH，不承诺跨资源原子性。 | detached row 可删除后重建；原始实例字段仅 adapter-only。 | occurrence 可删除后重建；`occurrenceDate` 仅 adapter-only。 |

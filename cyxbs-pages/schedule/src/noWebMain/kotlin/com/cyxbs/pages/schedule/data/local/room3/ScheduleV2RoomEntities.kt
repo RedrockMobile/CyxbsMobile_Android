@@ -7,13 +7,40 @@ import com.cyxbs.pages.schedule.data.remote.v3.CategoryCurrent
 import com.cyxbs.pages.schedule.data.remote.v3.CategoryInput
 import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideCurrent
 import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideInput
+import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideTombstone
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleCurrent
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleInput
+import kotlinx.serialization.Serializable
 
 /** 待提交侧仅有的操作类型；没有逐条 outbox、回执或重试阶段。 */
 internal object ScheduleV2PendingOperation {
   const val UPSERT = "UPSERT"
   const val DELETE = "DELETE"
+}
+
+/**
+ * 复用原 remote_snapshot_json 列保存 Override 的唯一远端状态。
+ *
+ * [current] 与 [tombstone] 必须且只能存在一个，因此 SQL 表结构仍是原来的 nullable TEXT 列；
+ * identity 由外层 Room 行主键提供；remote state 保存共用 version，tombstone 分支只保存 deletedAt，
+ * 不夹带删除前的业务 payload。
+ */
+@Serializable
+data class ScheduleV2OccurrenceOverrideRemoteState(
+  /** live/tombstone 共用的 canonical 版本；identity 由外层 Room 行主键提供。 */
+  val version: ULong,
+  val current: OccurrenceOverrideCurrent? = null,
+  val tombstone: OccurrenceOverrideTombstone? = null,
+) {
+  init {
+    require(version > 0uL)
+    require((current == null) != (tombstone == null)) {
+      "OccurrenceOverride remote state must contain exactly one branch"
+    }
+    require(current == null || current.resource.version == version) {
+      "OccurrenceOverride current version must match remote state version"
+    }
+  }
 }
 
 /**
@@ -99,8 +126,8 @@ data class ScheduleV2OccurrenceOverrideStateEntity(
   @ColumnInfo(name = "account_id") val accountId: String,
   @ColumnInfo(name = "schedule_id") val scheduleId: String,
   @ColumnInfo(name = "occurrence_date") val occurrenceDate: Long,
-  /** 服务端确认的完整快照；构造 confirmed 时读取，不原样上传。 */
-  @ColumnInfo(name = "remote_snapshot_json") val remoteSnapshot: OccurrenceOverrideCurrent?,
+  /** 服务端确认的 live 或可恢复 tombstone；构造 confirmed 时只上传 identity/version。 */
+  @ColumnInfo(name = "remote_snapshot_json") val remoteState: ScheduleV2OccurrenceOverrideRemoteState?,
   /** 本地待提交操作，仅 UPSERT 或 DELETE；不作为 wire 字段上传。 */
   @ColumnInfo(name = "pending_operation") val pendingOperation: String?,
   /** UPSERT 要上传的完整输入；DELETE 时为 null。 */

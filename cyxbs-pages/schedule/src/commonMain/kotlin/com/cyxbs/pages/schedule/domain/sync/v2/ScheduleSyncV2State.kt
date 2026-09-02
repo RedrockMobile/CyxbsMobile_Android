@@ -251,6 +251,23 @@ data class OccurrenceOverrideRemoteSnapshot(
 }
 
 /**
+ * 服务端确认的可恢复 tombstone。
+ *
+ * 当前只有 OccurrenceOverride 使用该状态：还原单次调整后仍保留正版本，后续重新调整同一 occurrence
+ * 必须以此版本提交完整新 Override，不能再读取删除前的业务补丁。
+ */
+data class VersionedRemoteTombstone<I : ResourceIdentity>(
+  val identity: I,
+  val version: Long,
+  val deletedAt: Long,
+) {
+  init {
+    require(version > 0) { "tombstone version must be positive" }
+    require(deletedAt > 0) { "tombstone deletedAt must be positive" }
+  }
+}
+
+/**
  * 本地尚未被服务端确认的单一变更。
  *
  * localRevision 只服务于本地 CAS，与服务端 resource version 完全独立。上传 pending R 时，调用方
@@ -280,7 +297,8 @@ data class PendingUpsert<I : ResourceIdentity, R : SyncResource<I>>(
 /**
  * 待上传的删除操作。
  *
- * 协议刻意不携带资源版本：删除优先级最高，由服务端按 identity 与 localModifiedAt 处理。
+ * Category/Schedule 仍是 delete-wins；OccurrenceOverride 的请求版本由 planner 从当前 remote live
+ * 快照投影，避免把协议基线复制进纯本地 pending 状态。
  */
 data class PendingDelete<I : ResourceIdentity, R : SyncResource<I>>(
   override val identity: I,
@@ -302,22 +320,30 @@ data class PendingDelete<I : ResourceIdentity, R : SyncResource<I>>(
  * compare-and-clear，未被清除的 U 继续作为 effective 值并在下一轮上传后收敛。
  */
 data class LocalSyncState<
-  I : ResourceIdentity,
-  R : SyncResource<I>,
-  S : RemoteSnapshot<I, R>,
->(
+    I : ResourceIdentity,
+    R : SyncResource<I>,
+    S : RemoteSnapshot<I, R>,
+    >(
   val identity: I,
   val remoteSnapshot: S?,
   val pending: PendingChange<I, R>? = null,
+  /** 仅 OccurrenceOverride 使用；与 [remoteSnapshot] 互斥，但可和请求期间形成的新 pending 共存。 */
+  val remoteTombstone: VersionedRemoteTombstone<I>? = null,
 ) {
   init {
     require(remoteSnapshot == null || remoteSnapshot.identity == identity) {
       "remoteSnapshot identity must match state identity"
     }
+    require(remoteTombstone == null || remoteTombstone.identity == identity) {
+      "remoteTombstone identity must match state identity"
+    }
+    require(remoteSnapshot == null || remoteTombstone == null) {
+      "live remoteSnapshot and remoteTombstone are mutually exclusive"
+    }
     pending?.let { change ->
       require(change.identity == identity) { "pending identity must match state identity" }
       if (change is PendingUpsert) {
-        if (remoteSnapshot == null) {
+        if (remoteSnapshot == null && remoteTombstone == null) {
           require(change.resource.version == 0L) { "CREATE upsert version must be 0" }
         } else {
           // CREATE R 发出期间形成的 U 仍是 version=0；R 成功推进 remote 后也必须原样保留 U。
@@ -340,6 +366,9 @@ data class LocalSyncState<
     null -> remoteSnapshot?.resource
   }
 
+  /** 返回请求使用的服务端当前版本；live 与可恢复 tombstone 共享同一版本序列。 */
+  fun remoteVersion(): Long? = remoteSnapshot?.version ?: remoteTombstone?.version
+
   /** 用更晚的同 identity pending 覆盖旧 pending，并再次执行版本与 identity 不变量校验。 */
   fun replacePending(newPending: PendingChange<I, R>?): LocalSyncState<I, R, S> {
     if (newPending != null && pending != null) {
@@ -354,4 +383,4 @@ data class LocalSyncState<
 typealias CategorySyncState = LocalSyncState<CategoryIdentity, CategoryResource, CategoryRemoteSnapshot>
 typealias ScheduleSyncState = LocalSyncState<ScheduleIdentity, ScheduleResource, ScheduleRemoteSnapshot>
 typealias OccurrenceOverrideSyncState =
-  LocalSyncState<OccurrenceOverrideIdentity, OccurrenceOverrideResource, OccurrenceOverrideRemoteSnapshot>
+    LocalSyncState<OccurrenceOverrideIdentity, OccurrenceOverrideResource, OccurrenceOverrideRemoteSnapshot>

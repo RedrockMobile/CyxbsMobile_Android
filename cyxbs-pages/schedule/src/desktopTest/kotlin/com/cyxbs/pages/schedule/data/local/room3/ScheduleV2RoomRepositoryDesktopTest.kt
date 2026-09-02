@@ -113,6 +113,7 @@ class ScheduleV2RoomRepositoryDesktopTest {
       settings.clear()
     }
   }
+
   @Test
   fun initializeThenDailyCreatePersistsAndClearsPending() = runTest {
     withRepository { repository, gateway, database ->
@@ -216,12 +217,14 @@ class ScheduleV2RoomRepositoryDesktopTest {
       assertEquals(1, status.pendingCount)
       assertEquals("拒绝", repository.snapshot.value.schedules.single().title)
       assertEquals(
-        1L,ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().localRevision
+        1L,
+        ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().localRevision
       )
       assertEquals("拒绝", failureRecords.observe(ACCOUNT).value.single().sourceSchedule.title.data)
       assertEquals(
         ResultReason.RESOURCE_CHANGED.name,
-        failureRecords.observe(ACCOUNT).value.single().reasonCode)
+        failureRecords.observe(ACCOUNT).value.single().reasonCode
+      )
     }
   }
 
@@ -231,13 +234,23 @@ class ScheduleV2RoomRepositoryDesktopTest {
       repository.initialize()
 
       val result = repository.execute(
-        ScheduleCommand.CreateCategory(ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "分类", null, 0)),
+        ScheduleCommand.CreateCategory(
+          ScheduleCategory(
+            CategoryId(SECOND_CATEGORY_ID),
+            0,
+            "分类",
+            null,
+            0
+          )
+        ),
       )
 
       assertIs<ScheduleSyncResult.Success>(result)
       assertEquals(1, gateway.createCalls)
-      assertEquals(null, ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
-        .categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision)
+      assertEquals(
+        null, ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
+        .categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision
+      )
     }
   }
 
@@ -249,7 +262,8 @@ class ScheduleV2RoomRepositoryDesktopTest {
       val category = ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "新分类", null, 1)
       val schedule = schedule("同次保存", category.id)
 
-      val result = repository.execute(ScheduleCommand.SaveScheduleWithNewCategory(category, schedule))
+      val result =
+        repository.execute(ScheduleCommand.SaveScheduleWithNewCategory(category, schedule))
 
       assertIs<ScheduleSyncResult.Success>(result)
       val request = requireNotNull(gateway.firstCreatedRequest)
@@ -258,7 +272,10 @@ class ScheduleV2RoomRepositoryDesktopTest {
       val state = ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
       assertNull(state.categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision)
       assertNull(state.schedules.single().localRevision)
-      assertEquals(SECOND_CATEGORY_ID, state.schedules.single().remoteSnapshot?.resource?.categoryId?.data)
+      assertEquals(
+        SECOND_CATEGORY_ID,
+        state.schedules.single().remoteSnapshot?.resource?.categoryId?.data
+      )
     }
   }
 
@@ -270,29 +287,32 @@ class ScheduleV2RoomRepositoryDesktopTest {
     withRepositoryAndFailures { repository, gateway, database, failureRecords ->
       gateway.createResponder = { request ->
         val applied = appliedMutationResult(request)
-        ScheduleV2CallResult.Completed(ApiWrapper(
-          applied.copy(
-            schedules = ScheduleMutationResponse(
-              upsertResults = request.schedules.upserts.map {
-                ScheduleUpsertResult(
-                  id = it.id,
-                  result = MutationResultCode.REJECTED,
-                  reason = ResultReason.INVALID_REQUEST,
-                  info = "schedule.title is invalid",
-                )
-              },
-              deleteResults = emptyList(),
+        ScheduleV2CallResult.Completed(
+          ApiWrapper(
+            applied.copy(
+              schedules = ScheduleMutationResponse(
+                upsertResults = request.schedules.upserts.map {
+                  ScheduleUpsertResult(
+                    id = it.id,
+                    result = MutationResultCode.REJECTED,
+                    reason = ResultReason.INVALID_REQUEST,
+                    info = "schedule.title is invalid",
+                  )
+                },
+                deleteResults = emptyList(),
+              ),
             ),
-          ),
-          10000,
-          "partially applied",
-        ))
+            10000,
+            "partially applied",
+          )
+        )
       }
       repository.initialize()
       val category = ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "可用分类", null, 1)
       val schedule = schedule("被拒绝日程", category.id)
 
-      val result = repository.execute(ScheduleCommand.SaveScheduleWithNewCategory(category, schedule))
+      val result =
+        repository.execute(ScheduleCommand.SaveScheduleWithNewCategory(category, schedule))
 
       assertIs<ScheduleSyncResult.Failure>(result)
       val state = ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
@@ -317,7 +337,10 @@ class ScheduleV2RoomRepositoryDesktopTest {
 
       assertIs<ScheduleSyncResult.Failure>(result)
       assertIs<ScheduleRepositoryStatus.Unavailable>(repository.snapshot.value.status)
-      assertEquals(1L, ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().localRevision)
+      assertEquals(
+        1L,
+        ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().localRevision
+      )
       assertTrue(failureRecords.observe(ACCOUNT).value.isEmpty())
     }
   }
@@ -334,9 +357,12 @@ class ScheduleV2RoomRepositoryDesktopTest {
 
       assertIs<ScheduleRemoteError.InvalidResponse>(assertIs<ScheduleSyncResult.Failure>(result).error)
       assertEquals(
-        "非法数据",ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().pendingSnapshot?.title?.data)
+        "非法数据",
+        ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().pendingSnapshot?.title?.data
+      )
       assertEquals(
-        1, assertIs<ScheduleRepositoryStatus.Unavailable>(repository.snapshot.value.status).pendingCount
+        1,
+        assertIs<ScheduleRepositoryStatus.Unavailable>(repository.snapshot.value.status).pendingCount
       )
       val record = failureRecords.observe(ACCOUNT).value.single()
       assertEquals("HTTP_400", record.reasonCode)
@@ -353,13 +379,23 @@ class ScheduleV2RoomRepositoryDesktopTest {
       repository.initialize()
 
       assertIs<ScheduleSyncResult.Failure>(
-        repository.execute(ScheduleCommand.CreateCategory(ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "分类", null, 0))),
+        repository.execute(
+          ScheduleCommand.CreateCategory(
+            ScheduleCategory(
+              CategoryId(
+                SECOND_CATEGORY_ID
+              ), 0, "分类", null, 0
+            )
+          )
+        ),
       )
 
       assertIs<ScheduleRepositoryStatus.Unavailable>(repository.snapshot.value.status)
       assertEquals(1, gateway.createCalls)
-      assertEquals(1L, ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
-        .categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision)
+      assertEquals(
+        1L, ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
+        .categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision
+      )
     }
   }
 
@@ -376,12 +412,15 @@ class ScheduleV2RoomRepositoryDesktopTest {
         repository.execute(ScheduleCommand.CreateCategory(initial)),
       )
 
-      val color = """{"background":"#FFA3C5FF","content":"#FF173E78","darkBackground":"#BF1F426E"}"""
+      val color =
+        """{"background":"#FFA3C5FF","content":"#FF173E78","darkBackground":"#BF1F426E"}"""
       val created = repository.snapshot.value.categories.first { it.id == initial.id }
       assertIs<ScheduleSyncResult.Failure>(
-        repository.execute(ScheduleCommand.UpdateCategory(
-          created.copy(name = "离线最终分类", color = color),
-        )),
+        repository.execute(
+          ScheduleCommand.UpdateCategory(
+            created.copy(name = "离线最终分类", color = color),
+          )
+        ),
       )
       val categories = repository.snapshot.value.categories
       val updated = categories.first { it.id == initial.id }
@@ -416,7 +455,8 @@ class ScheduleV2RoomRepositoryDesktopTest {
 
       val state = ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
       assertTrue(state.categories.all { it.localRevision == null })
-      val canonical = state.categories.first { it.categoryId == SECOND_CATEGORY_ID }.remoteSnapshot!!.resource
+      val canonical =
+        state.categories.first { it.categoryId == SECOND_CATEGORY_ID }.remoteSnapshot!!.resource
       assertEquals("离线最终分类", canonical.name.data)
       assertEquals(color, canonical.color.data)
       assertEquals(0, canonical.sortOrder.data)
@@ -441,7 +481,10 @@ class ScheduleV2RoomRepositoryDesktopTest {
   fun requestTimeoutMapsToTimeout() = runTest {
     withRepository { repository, gateway, _ ->
       gateway.createResponder = {
-        ScheduleV2CallResult.TransportFailure(null, HttpRequestTimeoutException("https://schedule.test", 100L))
+        ScheduleV2CallResult.TransportFailure(
+          null,
+          HttpRequestTimeoutException("https://schedule.test", 100L)
+        )
       }
       repository.initialize()
 
@@ -481,7 +524,10 @@ class ScheduleV2RoomRepositoryDesktopTest {
 
       assertIs<ScheduleSyncResult.Success>(requestR.await())
       assertEquals("U", repository.snapshot.value.schedules.single().title)
-      assertEquals(2L, ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().localRevision)
+      assertEquals(
+        2L,
+        ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT).schedules.single().localRevision
+      )
     }
   }
 
@@ -493,7 +539,15 @@ class ScheduleV2RoomRepositoryDesktopTest {
         ScheduleV2CallResult.TransportFailure(null, IllegalStateException("offline"))
       }
       assertIs<ScheduleSyncResult.Failure>(
-        repository.execute(ScheduleCommand.CreateCategory(ScheduleCategory(CategoryId(SECOND_CATEGORY_ID), 0, "分类", null, 0))),
+        repository.execute(
+          ScheduleCommand.CreateCategory(
+            ScheduleCategory(
+              CategoryId(
+                SECOND_CATEGORY_ID
+              ), 0, "分类", null, 0
+            )
+          )
+        ),
       )
       gateway.syncResponder = { request ->
         val response = emptySyncResponse(request)
@@ -513,12 +567,14 @@ class ScheduleV2RoomRepositoryDesktopTest {
       val result = repository.execute(ScheduleCommand.RequestSync)
 
       val failure = assertIs<ScheduleSyncResult.Failure>(result)
-      assertEquals(ScheduleRemoteError.MutationRejected(
-        com.cyxbs.pages.schedule.domain.repository.ScheduleMutationBusinessRejectionReason.CATEGORY_NOT_FOUND,
-      ), failure.error)
       assertEquals(
-        1L,ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
-        .categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision
+        ScheduleRemoteError.MutationRejected(
+          com.cyxbs.pages.schedule.domain.repository.ScheduleMutationBusinessRejectionReason.CATEGORY_NOT_FOUND,
+        ), failure.error
+      )
+      assertEquals(
+        1L, ScheduleV2RoomStateStore(database).readAccountState(ACCOUNT)
+          .categories.first { it.categoryId == SECOND_CATEGORY_ID }.localRevision
       )
     }
   }
@@ -635,7 +691,11 @@ class ScheduleV2RoomRepositoryDesktopTest {
     withRepositoryAndFailures { repository, gateway, _, failureRecords ->
       gateway.createResponder = { request ->
         ScheduleV2CallResult.Completed(
-          ApiWrapper(rejectedMutationResult(request, ResultReason.INVALID_REQUEST), 10000, "rejected"),
+          ApiWrapper(
+            rejectedMutationResult(request, ResultReason.INVALID_REQUEST),
+            10000,
+            "rejected"
+          ),
         )
       }
       repository.initialize()
@@ -713,7 +773,7 @@ class ScheduleV2RoomRepositoryDesktopTest {
               ScheduleDeleteResult(
                 it.id,
                 MutationResultCode.DELETED,
-                tombstone = ScheduleTombstone(it.id, 2),
+                tombstone = ScheduleTombstone(2),
               )
             },
           ),
@@ -740,7 +800,9 @@ class ScheduleV2RoomRepositoryDesktopTest {
       assertEquals(1, gateway.lastDeletedRequest?.schedules?.deletes?.size)
       assertEquals(1, gateway.lastDeletedRequest?.occurrenceOverrides?.deletes?.size)
       assertTrue(state.schedules.isEmpty())
-      assertTrue(state.occurrenceOverrides.isEmpty())
+      assertEquals(1, state.occurrenceOverrides.size)
+      assertEquals(2uL, state.occurrenceOverrides.single().remoteState?.version)
+      assertNull(state.occurrenceOverrides.single().pendingOperation)
     }
   }
 
@@ -822,25 +884,39 @@ class ScheduleV2RoomRepositoryDesktopTest {
     var firstCreatedRequest: MutationRequest? = null
     var lastDeletedRequest: MutationRequest? = null
     var syncResponder: (SyncRequest) -> SyncResponse = { request -> emptySyncResponse(request) }
-    var createResponder: suspend (MutationRequest) -> ScheduleV2CallResult<MutationResponse> = { request ->
-      ScheduleV2CallResult.Completed(ApiWrapper(appliedMutationResult(request), 10000, "ok"))
-    }
-    var deleteResponder: suspend (MutationRequest) -> ScheduleV2CallResult<MutationResponse> = createResponder
+    var createResponder: suspend (MutationRequest) -> ScheduleV2CallResult<MutationResponse> =
+      { request ->
+        ScheduleV2CallResult.Completed(ApiWrapper(appliedMutationResult(request), 10000, "ok"))
+      }
+    var deleteResponder: suspend (MutationRequest) -> ScheduleV2CallResult<MutationResponse> =
+      createResponder
 
-    override suspend fun sync(accountId: String, request: SyncRequest): ScheduleV2CallResult<SyncResponse> =
+    override suspend fun sync(
+      accountId: String,
+      request: SyncRequest
+    ): ScheduleV2CallResult<SyncResponse> =
       ScheduleV2CallResult.Completed(ApiWrapper(syncResponder(request), 10000, "ok"))
 
-    override suspend fun createSchedule(accountId: String, input: MutationRequest): ScheduleV2CallResult<MutationResponse> {
+    override suspend fun createSchedule(
+      accountId: String,
+      input: MutationRequest
+    ): ScheduleV2CallResult<MutationResponse> {
       createCalls += 1
       if (firstCreatedRequest == null) firstCreatedRequest = input
       return createResponder(input)
     }
 
-    override suspend fun updateSchedule(accountId: String, input: MutationRequest): ScheduleV2CallResult<MutationResponse> {
+    override suspend fun updateSchedule(
+      accountId: String,
+      input: MutationRequest
+    ): ScheduleV2CallResult<MutationResponse> {
       return createResponder(input)
     }
 
-    override suspend fun deleteSchedule(accountId: String, input: MutationRequest): ScheduleV2CallResult<MutationResponse> {
+    override suspend fun deleteSchedule(
+      accountId: String,
+      input: MutationRequest
+    ): ScheduleV2CallResult<MutationResponse> {
       deleteCalls += 1
       lastDeletedRequest = input
       return deleteResponder(input)
@@ -855,11 +931,18 @@ class ScheduleV2RoomRepositoryDesktopTest {
         CategoryUpsertResult(
           id = it.id,
           result = if (it.version == 0uL) MutationResultCode.CREATED else MutationResultCode.APPLIED,
-          current = CategoryCurrent(it.copy(version = nextVersion(it.version)), ServerResourceMeta(1, 2)),
+          current = CategoryCurrent(
+            it.copy(version = nextVersion(it.version)),
+            ServerResourceMeta(1, 2)
+          ),
         )
       },
       deleteResults = request.categories.deletes.map {
-        CategoryDeleteResult(it.id, MutationResultCode.DELETED, tombstone = CategoryTombstone(it.id, 2))
+        CategoryDeleteResult(
+          it.id,
+          MutationResultCode.DELETED,
+          tombstone = CategoryTombstone(2)
+        )
       },
     ),
     schedules = ScheduleMutationResponse(
@@ -867,11 +950,18 @@ class ScheduleV2RoomRepositoryDesktopTest {
         ScheduleUpsertResult(
           id = it.id,
           result = if (it.version == 0uL) MutationResultCode.CREATED else MutationResultCode.APPLIED,
-          current = ScheduleCurrent(it.copy(version = nextVersion(it.version)), ServerResourceMeta(1, 2)),
+          current = ScheduleCurrent(
+            it.copy(version = nextVersion(it.version)),
+            ServerResourceMeta(1, 2)
+          ),
         )
       },
       deleteResults = request.schedules.deletes.map {
-        ScheduleDeleteResult(it.id, MutationResultCode.DELETED, tombstone = ScheduleTombstone(it.id, 2))
+        ScheduleDeleteResult(
+          it.id,
+          MutationResultCode.DELETED,
+          tombstone = ScheduleTombstone(2)
+        )
       },
     ),
     occurrenceOverrides = OccurrenceOverrideMutationResponse(
@@ -880,6 +970,7 @@ class ScheduleV2RoomRepositoryDesktopTest {
           scheduleId = it.scheduleId,
           occurrenceDate = it.occurrenceDate,
           result = if (it.version == 0uL) MutationResultCode.CREATED else MutationResultCode.APPLIED,
+          version = nextVersion(it.version),
           current = OccurrenceOverrideCurrent(
             it.copy(version = nextVersion(it.version)),
             ServerResourceMeta(1, 2),
@@ -891,32 +982,70 @@ class ScheduleV2RoomRepositoryDesktopTest {
           scheduleId = it.scheduleId,
           occurrenceDate = it.occurrenceDate,
           result = MutationResultCode.DELETED,
-          tombstone = OccurrenceOverrideTombstone(it.scheduleId, it.occurrenceDate, 2),
+          version = it.version + 1uL,
+          tombstone = OccurrenceOverrideTombstone(
+            deletedAt = 2,
+          ),
         )
       },
     ),
   )
 
   /** 构造完整对齐的业务拒绝结果；服务端不返回任何伪 canonical 快照。 */
-  private fun rejectedMutationResult(request: MutationRequest, reason: ResultReason) = MutationResponse(
-    requestId = request.requestId,
-    categories = CategoryMutationResponse(
-      request.categories.upserts.map { CategoryUpsertResult(it.id, MutationResultCode.REJECTED, reason) },
-      request.categories.deletes.map { CategoryDeleteResult(it.id, MutationResultCode.REJECTED, reason) },
-    ),
-    schedules = ScheduleMutationResponse(
-      request.schedules.upserts.map { ScheduleUpsertResult(it.id, MutationResultCode.REJECTED, reason) },
-      request.schedules.deletes.map { ScheduleDeleteResult(it.id, MutationResultCode.REJECTED, reason) },
-    ),
-    occurrenceOverrides = OccurrenceOverrideMutationResponse(
-      request.occurrenceOverrides.upserts.map {
-        OccurrenceOverrideUpsertResult(it.scheduleId, it.occurrenceDate, MutationResultCode.REJECTED, reason)
-      },
-      request.occurrenceOverrides.deletes.map {
-        OccurrenceOverrideDeleteResult(it.scheduleId, it.occurrenceDate, MutationResultCode.REJECTED, reason)
-      },
-    ),
-  )
+  private fun rejectedMutationResult(request: MutationRequest, reason: ResultReason) =
+    MutationResponse(
+      requestId = request.requestId,
+      categories = CategoryMutationResponse(
+        request.categories.upserts.map {
+          CategoryUpsertResult(
+            it.id,
+            MutationResultCode.REJECTED,
+            reason
+          )
+        },
+        request.categories.deletes.map {
+          CategoryDeleteResult(
+            it.id,
+            MutationResultCode.REJECTED,
+            reason
+          )
+        },
+      ),
+      schedules = ScheduleMutationResponse(
+        request.schedules.upserts.map {
+          ScheduleUpsertResult(
+            it.id,
+            MutationResultCode.REJECTED,
+            reason
+          )
+        },
+        request.schedules.deletes.map {
+          ScheduleDeleteResult(
+            it.id,
+            MutationResultCode.REJECTED,
+            reason
+          )
+        },
+      ),
+      occurrenceOverrides = OccurrenceOverrideMutationResponse(
+        request.occurrenceOverrides.upserts.map {
+          OccurrenceOverrideUpsertResult(
+            scheduleId = it.scheduleId,
+            occurrenceDate = it.occurrenceDate,
+            result = MutationResultCode.REJECTED,
+            reason = reason,
+          )
+        },
+        request.occurrenceOverrides.deletes.map {
+          OccurrenceOverrideDeleteResult(
+            scheduleId = it.scheduleId,
+            occurrenceDate = it.occurrenceDate,
+            result = MutationResultCode.REJECTED,
+            reason = reason,
+          )
+        },
+      ),
+    )
 
   /** Create 从 version=0 进入 version=1；后续更新仅用于测试中模拟一次服务端递增。 */
   private fun nextVersion(version: ULong): ULong = if (version == 0uL) 1uL else version + 1uL
@@ -1028,14 +1157,16 @@ class ScheduleV2RoomRepositoryDesktopTest {
     val recurring = scheduleInput("重复日程").copy(
       version = 1u,
       timing = AtomicField(TimingInput(TimingKind.ALL_DAY, date = OCCURRENCE_DATE), 1),
-      recurrence = AtomicField(RecurrenceInput(
-        RecurrenceFrequency.DAILY,
-        1,
-        OCCURRENCE_DATE,
-        weekdays = emptyList(),
-        monthDays = emptyList(),
-        months = emptyList(),
-      ), 1),
+      recurrence = AtomicField(
+        RecurrenceInput(
+          RecurrenceFrequency.DAILY,
+          1,
+          OCCURRENCE_DATE,
+          weekdays = emptyList(),
+          monthDays = emptyList(),
+          months = emptyList(),
+        ), 1
+      ),
       todoState = AtomicField(TodoState.OPEN, 1),
     )
     ScheduleV2RoomStateStore(database).replaceAccountState(
@@ -1057,19 +1188,22 @@ class ScheduleV2RoomRepositoryDesktopTest {
           ACCOUNT,
           SCHEDULE_ID,
           OCCURRENCE_DATE,
-          OccurrenceOverrideCurrent(
-            OccurrenceOverrideInput(
-              scheduleId = SCHEDULE_ID,
-              occurrenceDate = OCCURRENCE_DATE,
-              version = 1u,
-              status = AtomicField(OccurrenceStatus.ACTIVE, 1),
-              timing = AtomicField(FieldPatch<TimingInput>(PatchMode.INHERIT), 1),
-              title = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
-              description = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
-              categoryId = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
-              reminder = AtomicField(FieldPatch<ReminderInput>(PatchMode.INHERIT), 1),
+          ScheduleV2OccurrenceOverrideRemoteState(
+            version = 1u,
+            current = OccurrenceOverrideCurrent(
+              OccurrenceOverrideInput(
+                scheduleId = SCHEDULE_ID,
+                occurrenceDate = OCCURRENCE_DATE,
+                version = 1u,
+                status = AtomicField(OccurrenceStatus.ACTIVE, 1),
+                timing = AtomicField(FieldPatch<TimingInput>(PatchMode.INHERIT), 1),
+                title = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
+                description = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
+                categoryId = AtomicField(FieldPatch<String>(PatchMode.INHERIT), 1),
+                reminder = AtomicField(FieldPatch<ReminderInput>(PatchMode.INHERIT), 1),
+              ),
+              ServerResourceMeta(1, 1),
             ),
-            ServerResourceMeta(1, 1),
           ),
           null,
           null,

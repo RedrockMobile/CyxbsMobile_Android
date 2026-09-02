@@ -81,7 +81,11 @@ internal object ScheduleV2RoomJsonCodec {
 
   /** 解码并校验 OccurrenceOverride pending snapshot。 */
   fun decodeOccurrenceOverrideInput(raw: String): OccurrenceOverrideInput =
-    decode(raw, OccurrenceOverrideInput.serializer(), "OccurrenceOverrideInput") { it.validateForRoom() }
+    decode(
+      raw,
+      OccurrenceOverrideInput.serializer(),
+      "OccurrenceOverrideInput"
+    ) { it.validateForRoom() }
 
   /** 编码已确认的 OccurrenceOverride remote snapshot。 */
   fun encodeOccurrenceOverrideCurrent(value: OccurrenceOverrideCurrent): String {
@@ -95,6 +99,27 @@ internal object ScheduleV2RoomJsonCodec {
     decode(raw, OccurrenceOverrideCurrent.serializer(), "OccurrenceOverrideCurrent") {
       it.resource.validateForRoom()
       require(it.resource.version > 0uL) { "remote OccurrenceOverrideCurrent requires version>0" }
+    }
+
+  /** 编码 Override 唯一远端状态，不允许 live 与 tombstone 同时落库。 */
+  fun encodeOccurrenceOverrideRemoteState(value: ScheduleV2OccurrenceOverrideRemoteState): String {
+    value.current?.let { encodeOccurrenceOverrideCurrent(it) }
+    value.tombstone?.validateForRoom()
+    return encode(ScheduleV2OccurrenceOverrideRemoteState.serializer(), value)
+  }
+
+  /** 解码 Override 唯一远端状态；未上线的旧 JSON 不做兼容，由本地数据库毁灭性重建处理。 */
+  fun decodeOccurrenceOverrideRemoteState(raw: String): ScheduleV2OccurrenceOverrideRemoteState =
+    decode(
+      raw,
+      ScheduleV2OccurrenceOverrideRemoteState.serializer(),
+      "OccurrenceOverrideRemoteState"
+    ) {
+      it.current?.let { current ->
+        current.resource.validateForRoom()
+        require(current.resource.version > 0uL)
+      }
+      it.tombstone?.validateForRoom()
     }
 
   private fun <T> encode(serializer: KSerializer<T>, value: T): String =
@@ -123,18 +148,23 @@ private fun CategoryInput.validateForRoom() {
 
 /** Room 中 Schedule snapshot 的最低可恢复约束。 */
 private fun ScheduleInput.validateForRoom() {
-  require(id.validId() && title.data.isNotBlank() &&
-    (categoryId.data == null || categoryId.data.validId()) &&
-    (reminder.data?.minutesBefore ?: 0) >= 0)
+  require(
+    id.validId() && title.data.isNotBlank() &&
+        (categoryId.data == null || categoryId.data.validId()) &&
+        (reminder.data?.minutesBefore ?: 0) >= 0
+  )
   timing.data.validateForRoom()
   recurrence.data?.validateForRoom()
-  require(recurrence.data == null ||
-    (timing.data.kind != TimingKind.UNSCHEDULED && todoState.data != TodoState.COMPLETED))
+  require(
+    recurrence.data == null ||
+        (timing.data.kind != TimingKind.UNSCHEDULED && todoState.data != TodoState.COMPLETED)
+  )
   when (kind) {
     ScheduleKind.TODO -> {
       require(todoState.data != null)
       require(!linkedToCourse.data || timing.data.kind != TimingKind.UNSCHEDULED)
     }
+
     ScheduleKind.AFFAIR -> {
       require(linkedToCourse.data)
       require(timing.data.kind == TimingKind.TIMED)
@@ -155,6 +185,11 @@ private fun FieldPatch<*>.validateForRoom() {
   require((mode == PatchMode.REPLACE) == (value != null)) { "FieldPatch mode/value mismatch" }
 }
 
+/** Room 中 versioned Override tombstone 的最低可恢复约束。 */
+private fun com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideTombstone.validateForRoom() {
+  require(deletedAt > 0)
+}
+
 private fun TimingInput.validateForRoom() {
   when (kind) {
     TimingKind.TIMED -> require(startAt != null && endAt != null && startAt < endAt && dueAt == null && date == null)
@@ -173,12 +208,14 @@ private fun RecurrenceInput.validateForRoom() {
     when (frequency) {
       RecurrenceFrequency.DAILY -> weekdays.isEmpty() && monthDays.isEmpty() && months.isEmpty()
       RecurrenceFrequency.WEEKLY -> weekdays.isNotEmpty() && weekdays.distinct().size == weekdays.size &&
-        monthDays.isEmpty() && months.isEmpty()
+          monthDays.isEmpty() && months.isEmpty()
+
       RecurrenceFrequency.MONTHLY -> weekdays.isEmpty() && monthDays.isNotEmpty() &&
-        monthDays.distinct().size == monthDays.size && monthDays.all { it in 1..31 } && months.isEmpty()
+          monthDays.distinct().size == monthDays.size && monthDays.all { it in 1..31 } && months.isEmpty()
+
       RecurrenceFrequency.YEARLY -> weekdays.isEmpty() && monthDays.isNotEmpty() &&
-        monthDays.distinct().size == monthDays.size && monthDays.all { it in 1..31 } &&
-        months.isNotEmpty() && months.distinct().size == months.size && months.all { it in 1..12 }
+          monthDays.distinct().size == monthDays.size && monthDays.all { it in 1..31 } &&
+          months.isNotEmpty() && months.distinct().size == months.size && months.all { it in 1..12 }
     },
   )
 }

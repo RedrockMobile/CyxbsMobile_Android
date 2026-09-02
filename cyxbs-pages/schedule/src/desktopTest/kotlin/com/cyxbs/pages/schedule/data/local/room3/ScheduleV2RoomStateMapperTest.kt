@@ -1,6 +1,7 @@
 package com.cyxbs.pages.schedule.data.local.room3
 
 import com.cyxbs.pages.schedule.data.repository.v3.toWire
+import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideTombstone
 import com.cyxbs.pages.schedule.domain.sync.v2.AtomicField
 import com.cyxbs.pages.schedule.domain.sync.v2.CategoryIdentity
 import com.cyxbs.pages.schedule.domain.sync.v2.CategoryRemoteSnapshot
@@ -89,6 +90,31 @@ class ScheduleV2RoomStateMapperTest {
   }
 
   @Test
+  fun occurrenceOverrideTombstoneRoundTripsWithoutBusinessPayload() {
+    val identity = OccurrenceOverrideIdentity("schedule-deleted", 259_200_000)
+    val entity = ScheduleV2OccurrenceOverrideStateEntity(
+      accountId = ACCOUNT_ID,
+      scheduleId = identity.scheduleId,
+      occurrenceDate = identity.occurrenceDate,
+      remoteState = ScheduleV2OccurrenceOverrideRemoteState(
+        version = 4u,
+        tombstone = OccurrenceOverrideTombstone(
+          deletedAt = 999,
+        ),
+      ),
+      pendingOperation = null,
+      pendingSnapshot = null,
+      pendingLocalModifiedAt = null,
+      localRevision = null,
+    )
+
+    val common = entity.toCommonSyncState()
+    assertEquals(null, common.remoteSnapshot)
+    assertEquals(4, common.remoteTombstone?.version)
+    assertEquals(entity, common.toRoomEntity(ACCOUNT_ID))
+  }
+
+  @Test
   fun illegalPendingShapesAndPartitionMismatchFailFast() {
     val category = categoryUpsertEntity()
     val delete = categoryDeleteEntity()
@@ -154,7 +180,11 @@ class ScheduleV2RoomStateMapperTest {
     return ScheduleV2ScheduleStateEntity(
       accountId = ACCOUNT_ID,
       scheduleId = remote.identity.id,
-      remoteSnapshot = ScheduleRemoteSnapshot(remote, ServerResourceMeta(20, 21), 86_400_000).toWire(),
+      remoteSnapshot = ScheduleRemoteSnapshot(
+        remote,
+        ServerResourceMeta(20, 21),
+        86_400_000
+      ).toWire(),
       pendingOperation = ScheduleV2PendingOperation.UPSERT,
       pendingSnapshot = pending.toWire(),
       pendingLocalModifiedAt = null,
@@ -170,7 +200,10 @@ class ScheduleV2RoomStateMapperTest {
       accountId = ACCOUNT_ID,
       scheduleId = remote.identity.scheduleId,
       occurrenceDate = remote.identity.occurrenceDate,
-      remoteSnapshot = OccurrenceOverrideRemoteSnapshot(remote, ServerResourceMeta(30, 31)).toWire(),
+      remoteState = ScheduleV2OccurrenceOverrideRemoteState(
+        version = remote.version.toULong(),
+        current = OccurrenceOverrideRemoteSnapshot(remote, ServerResourceMeta(30, 31)).toWire(),
+      ),
       pendingOperation = ScheduleV2PendingOperation.UPSERT,
       pendingSnapshot = pending.toWire(),
       pendingLocalModifiedAt = null,
@@ -205,7 +238,7 @@ class ScheduleV2RoomStateMapperTest {
     accountId = ACCOUNT_ID,
     scheduleId = "schedule-delete",
     occurrenceDate = 259_200_000,
-    remoteSnapshot = null,
+    remoteState = null,
     pendingOperation = ScheduleV2PendingOperation.DELETE,
     pendingSnapshot = null,
     pendingLocalModifiedAt = 102,

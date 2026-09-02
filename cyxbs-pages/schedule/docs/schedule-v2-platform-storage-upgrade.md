@@ -52,14 +52,21 @@ pending DELETE → UI 隐藏
 ```
 
 接收服务端 current/tombstone 时只更新 remote；是否清 pending 由 uploadedRevision 比较决定。
+OccurrenceOverride 的 `remote_snapshot_json` 保存严格二选一的 `current` 或 `tombstone` 包装；tombstone
+分支只有 deletedAt，不保存删除前的业务补丁；共用 version 位于包装外层，identity 使用 Room 行已有的
+scheduleId/occurrenceDate 主键。
 
 ## 5. 删除
 
-DELETE pending 不保存版本，只保存 identity 与 `pendingLocalModifiedAt`。服务端确认 DELETED 后移除 remote 与 matching pending。不存在单独 tombstone 表。
+DELETE pending 本身不复制版本，只保存 identity 与 `pendingLocalModifiedAt`。Category/Schedule 的请求不带版本；
+OccurrenceOverride 请求由 planner 从 live remote 投影当前版本。服务端确认 DELETED 后，Category/Schedule
+移除 remote；OccurrenceOverride 改存版本化 tombstone，并清除 matching pending。不存在单独 tombstone 表。
 
 ## 6. 数据库版本
 
-当前 schema version 为 8，变化是删除尚未上线的 `localBatchId` 列。Schedule v2 还没有发布，因此不编写从开发中间版本升级的 migration；本地旧开发库需要清除应用数据或重装。
+当前 schema version 为 1。Schedule v2 还没有发布，因此不兼容开发中间版本的旧 Override JSON，也不编写 migration；
+Android、iOS、Desktop 均启用 `fallbackToDestructiveMigration(dropAllTables = true)`。测试设备若持有旧的同版本开发库，
+直接使用清空账号数据入口或清除应用数据，不在业务代码中保留旧结构 reader。
 
 ## 7. 账号隔离
 

@@ -8,6 +8,7 @@ import com.cyxbs.pages.schedule.data.remote.v3.MutationResponse
 import com.cyxbs.pages.schedule.data.remote.v3.MutationResultCode
 import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideConfirmedResult
 import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideDeleteResult
+import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideTombstone
 import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideUpsertResult
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleConfirmedResult
 import com.cyxbs.pages.schedule.data.remote.v3.ScheduleDeleteResult
@@ -18,6 +19,7 @@ import com.cyxbs.pages.schedule.domain.sync.v2.CategoryRemoteSnapshot
 import com.cyxbs.pages.schedule.domain.sync.v2.CategorySyncState
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideIdentity
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideRemoteSnapshot
+import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideResource
 import com.cyxbs.pages.schedule.domain.sync.v2.OccurrenceOverrideSyncState
 import com.cyxbs.pages.schedule.domain.sync.v2.PendingChange
 import com.cyxbs.pages.schedule.domain.sync.v2.PendingDelete
@@ -28,6 +30,7 @@ import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleIdentity
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleRemoteSnapshot
 import com.cyxbs.pages.schedule.domain.sync.v2.ScheduleSyncState
 import com.cyxbs.pages.schedule.domain.sync.v2.SyncResource
+import com.cyxbs.pages.schedule.domain.sync.v2.VersionedRemoteTombstone
 
 /** fail-closed 拒绝整次应用时的最小原因分类。 */
 enum class ScheduleV2ApplyFailureReason {
@@ -135,24 +138,25 @@ class ScheduleV2ResponseApplier {
   }
 
   /** 将结构校验异常统一转换为可诊断的 Failure，调用方不会提交半套状态。 */
-  private inline fun guardedApply(block: () -> ScheduleV2ApplyResult.Success): ScheduleV2ApplyResult = try {
-    block()
-  } catch (failure: ApplyAbort) {
-    ScheduleV2ApplyResult.Failure(failure.reason, failure.message ?: "Schedule v2 apply failed")
-  } catch (failure: IllegalArgumentException) {
-    ScheduleV2ApplyResult.Failure(
-      ScheduleV2ApplyFailureReason.INVALID_PAYLOAD,
-      failure.message ?: "Schedule v2 response contains invalid payload",
-    )
-  }
+  private inline fun guardedApply(block: () -> ScheduleV2ApplyResult.Success): ScheduleV2ApplyResult =
+    try {
+      block()
+    } catch (failure: ApplyAbort) {
+      ScheduleV2ApplyResult.Failure(failure.reason, failure.message ?: "Schedule v2 apply failed")
+    } catch (failure: IllegalArgumentException) {
+      ScheduleV2ApplyResult.Failure(
+        ScheduleV2ApplyFailureReason.INVALID_PAYLOAD,
+        failure.message ?: "Schedule v2 response contains invalid payload",
+      )
+    }
 
   /** 校验 confirmedResults 的数量、identity 以及不同结果码必须携带的 canonical 数据。 */
   private fun validateConfirmed(capture: ScheduleV2SyncCapture, response: SyncResponse) {
     abortUnless(
       response.categories.confirmedResults.size == capture.request.categories.confirmed.size &&
-        response.schedules.confirmedResults.size == capture.request.schedules.confirmed.size &&
-        response.occurrenceOverrides.confirmedResults.size ==
-        capture.request.occurrenceOverrides.confirmed.size,
+          response.schedules.confirmedResults.size == capture.request.schedules.confirmed.size &&
+          response.occurrenceOverrides.confirmedResults.size ==
+          capture.request.occurrenceOverrides.confirmed.size,
       ScheduleV2ApplyFailureReason.RESPONSE_CORRELATION,
       "confirmed result counts do not match request",
     )
@@ -202,8 +206,13 @@ class ScheduleV2ResponseApplier {
   private fun validateConfirmedPayload(result: OccurrenceOverrideConfirmedResult) {
     when (result.result) {
       ConfirmedResultCode.CONFIRMED -> requireNotNull(result.version)
-      ConfirmedResultCode.CHANGED -> requireNotNull(result.current)
-      ConfirmedResultCode.DELETED -> Unit
+      ConfirmedResultCode.CHANGED -> requireNotNull(result.current).also {
+        require(result.version == it.resource.version)
+      }
+      ConfirmedResultCode.DELETED -> result.tombstone?.let {
+        requireNotNull(result.version)
+        require(result.version > 0uL)
+      }
     }
   }
 
@@ -227,11 +236,11 @@ class ScheduleV2ResponseApplier {
     val overrideDeletes = overrides.filter { it.kind == UploadedPendingKind.DELETE }
     abortUnless(
       categoryUpserts.size == categoryUpsertResults.size &&
-        categoryDeletes.size == categoryDeleteResults.size &&
-        scheduleUpserts.size == scheduleUpsertResults.size &&
-        scheduleDeletes.size == scheduleDeleteResults.size &&
-        overrideUpserts.size == overrideUpsertResults.size &&
-        overrideDeletes.size == overrideDeleteResults.size,
+          categoryDeletes.size == categoryDeleteResults.size &&
+          scheduleUpserts.size == scheduleUpsertResults.size &&
+          scheduleDeletes.size == scheduleDeleteResults.size &&
+          overrideUpserts.size == overrideUpsertResults.size &&
+          overrideDeletes.size == overrideDeleteResults.size,
       ScheduleV2ApplyFailureReason.RESPONSE_CORRELATION,
       "mutation result counts do not match capture",
     )
@@ -260,12 +269,13 @@ class ScheduleV2ResponseApplier {
       if (result.result.canClearPending()) scheduleClears[uploaded.identity] = uploaded
     }
 
-    val overrideClears = linkedMapOf<OccurrenceOverrideIdentity, UploadedOccurrenceOverridePending>()
+    val overrideClears =
+      linkedMapOf<OccurrenceOverrideIdentity, UploadedOccurrenceOverridePending>()
     overrideUpsertResults.forEachIndexed { index, result ->
       val uploaded = overrideUpserts[index]
       requireIdentity(
         result.scheduleId == uploaded.identity.scheduleId &&
-          result.occurrenceDate == uploaded.identity.occurrenceDate,
+            result.occurrenceDate == uploaded.identity.occurrenceDate,
         "OccurrenceOverride upsert",
       )
       if (result.result.canClearPending()) overrideClears[uploaded.identity] = uploaded
@@ -274,7 +284,7 @@ class ScheduleV2ResponseApplier {
       val uploaded = overrideDeletes[index]
       requireIdentity(
         result.scheduleId == uploaded.identity.scheduleId &&
-          result.occurrenceDate == uploaded.identity.occurrenceDate,
+            result.occurrenceDate == uploaded.identity.occurrenceDate,
         "OccurrenceOverride delete",
       )
       if (result.result.canClearPending()) overrideClears[uploaded.identity] = uploaded
@@ -310,7 +320,10 @@ class ScheduleV2ResponseApplier {
       when (result.result) {
         ConfirmedResultCode.CONFIRMED -> Unit
         ConfirmedResultCode.CHANGED -> candidates.add(requireNotNull(result.current).toDomain())
-        ConfirmedResultCode.DELETED -> candidates.delete(identity)
+        ConfirmedResultCode.DELETED -> result.tombstone?.let {
+          candidates.add(identity, requireNotNull(result.version), it)
+        }
+          ?: candidates.deleteMissing(identity)
       }
     }
     response.categories.discoveredResults.forEach { candidates.add(it.toDomain()) }
@@ -353,31 +366,35 @@ class ScheduleV2ResponseApplier {
   ) {
     categoryUpserts.forEach {
       it.current?.let { value -> candidates.add(value.toDomain()) }
-      it.tombstone?.let { value -> candidates.delete(CategoryIdentity(value.id)) }
+      if (it.tombstone != null) candidates.delete(CategoryIdentity(it.id))
     }
     categoryDeletes.forEach {
       it.current?.let { value -> candidates.add(value.toDomain()) }
-      it.tombstone?.let { value -> candidates.delete(CategoryIdentity(value.id)) }
+      if (it.tombstone != null) candidates.delete(CategoryIdentity(it.id))
     }
     scheduleUpserts.forEach {
       it.current?.let { value -> candidates.add(value.toDomain()) }
-      it.tombstone?.let { value -> candidates.delete(ScheduleIdentity(value.id)) }
+      if (it.tombstone != null) candidates.delete(ScheduleIdentity(it.id))
     }
     scheduleDeletes.forEach {
       it.current?.let { value -> candidates.add(value.toDomain()) }
-      it.tombstone?.let { value -> candidates.delete(ScheduleIdentity(value.id)) }
+      if (it.tombstone != null) candidates.delete(ScheduleIdentity(it.id))
     }
     overrideUpserts.forEach {
-      it.current?.let { value -> candidates.add(value.toDomain()) }
-      it.tombstone?.let { value ->
-        candidates.delete(OccurrenceOverrideIdentity(value.scheduleId, value.occurrenceDate))
+      val identity = OccurrenceOverrideIdentity(it.scheduleId, it.occurrenceDate)
+      it.current?.let { value ->
+        require(it.version == value.resource.version)
+        candidates.add(value.toDomain())
       }
+      it.tombstone?.let { value -> candidates.add(identity, requireNotNull(it.version), value) }
     }
     overrideDeletes.forEach {
-      it.current?.let { value -> candidates.add(value.toDomain()) }
-      it.tombstone?.let { value ->
-        candidates.delete(OccurrenceOverrideIdentity(value.scheduleId, value.occurrenceDate))
+      val identity = OccurrenceOverrideIdentity(it.scheduleId, it.occurrenceDate)
+      it.current?.let { value ->
+        require(it.version == value.resource.version)
+        candidates.add(value.toDomain())
       }
+      it.tombstone?.let { value -> candidates.add(identity, requireNotNull(it.version), value) }
     }
   }
 
@@ -401,7 +418,11 @@ class ScheduleV2ResponseApplier {
             categoryUpdates.containsKey(identity) && remote == null,
             old.matches(clears.categories[identity]),
           )
-          if (remote == null && pending == null) null else CategorySyncState(identity, remote, pending)
+          if (remote == null && pending == null) null else CategorySyncState(
+            identity,
+            remote,
+            pending
+          )
         },
         schedules = (states.schedules.keys + scheduleUpdates.keys).mapNotNull { identity ->
           val old = states.schedules[identity]
@@ -412,19 +433,27 @@ class ScheduleV2ResponseApplier {
             scheduleUpdates.containsKey(identity) && remote == null,
             old.matches(clears.schedules[identity]),
           )
-          if (remote == null && pending == null) null else ScheduleSyncState(identity, remote, pending)
+          if (remote == null && pending == null) null else ScheduleSyncState(
+            identity,
+            remote,
+            pending
+          )
         },
         occurrenceOverrides = (states.overrides.keys + overrideUpdates.keys).mapNotNull { identity ->
           val old = states.overrides[identity]
-          val remote = if (overrideUpdates.containsKey(identity)) overrideUpdates[identity]
-          else old?.remoteSnapshot
-          val pending = pendingAfterRemoteUpdate(
+          val update = overrideUpdates[identity]
+          val remote =
+            if (overrideUpdates.containsKey(identity)) update?.live else old?.remoteSnapshot
+          val tombstone = if (overrideUpdates.containsKey(identity)) update?.tombstone
+          else old?.remoteTombstone
+          val pending = pendingAfterOverrideRemoteUpdate(
             old?.pending,
-            overrideUpdates.containsKey(identity) && remote == null,
+            remoteMissing = overrideUpdates.containsKey(identity) && remote == null && tombstone == null,
+            remoteTombstone = tombstone != null,
             old.matches(clears.overrides[identity]),
           )
-          if (remote == null && pending == null) null
-          else OccurrenceOverrideSyncState(identity, remote, pending)
+          if (remote == null && tombstone == null && pending == null) null
+          else OccurrenceOverrideSyncState(identity, remote, pending, tombstone)
         },
       )
     } catch (failure: IllegalArgumentException) {
@@ -440,9 +469,15 @@ class ScheduleV2ResponseApplier {
     states: Map<CategoryIdentity, CategorySyncState>,
   ): Map<CategoryIdentity, CategoryRemoteSnapshot?> = buildMap {
     (candidates.categoryLive.keys + candidates.categoryDeleted).forEach { identity ->
-      put(identity, if (identity in candidates.categoryDeleted) null else {
-        selectRemote(identity.id, candidates.categoryLive.getValue(identity), states[identity]?.remoteSnapshot)
-      })
+      put(
+        identity, if (identity in candidates.categoryDeleted) null else {
+          selectRemote(
+            identity.id,
+            candidates.categoryLive.getValue(identity),
+            states[identity]?.remoteSnapshot
+          )
+        }
+      )
     }
   }
 
@@ -451,29 +486,68 @@ class ScheduleV2ResponseApplier {
     states: Map<ScheduleIdentity, ScheduleSyncState>,
   ): Map<ScheduleIdentity, ScheduleRemoteSnapshot?> = buildMap {
     (candidates.scheduleLive.keys + candidates.scheduleDeleted).forEach { identity ->
-      put(identity, if (identity in candidates.scheduleDeleted) null else {
-        selectRemote(identity.id, candidates.scheduleLive.getValue(identity), states[identity]?.remoteSnapshot)
-      })
+      put(
+        identity, if (identity in candidates.scheduleDeleted) null else {
+          selectRemote(
+            identity.id,
+            candidates.scheduleLive.getValue(identity),
+            states[identity]?.remoteSnapshot
+          )
+        }
+      )
     }
   }
 
   private fun resolveOverrides(
     candidates: RemoteCandidates,
     states: Map<OccurrenceOverrideIdentity, OccurrenceOverrideSyncState>,
-  ): Map<OccurrenceOverrideIdentity, OccurrenceOverrideRemoteSnapshot?> = buildMap {
-    (candidates.overrideLive.keys + candidates.overrideDeleted).forEach { identity ->
-      put(identity, if (identity in candidates.overrideDeleted) null else {
-        selectRemote(
-          "${identity.scheduleId}@${identity.occurrenceDate}",
-          candidates.overrideLive.getValue(identity),
-          states[identity]?.remoteSnapshot,
+  ): Map<OccurrenceOverrideIdentity, ResolvedOverrideRemote> = buildMap {
+    val identities = candidates.overrideLive.keys + candidates.overrideTombstones.keys +
+        candidates.overrideMissing
+    identities.forEach { identity ->
+      val values = buildList {
+        candidates.overrideLive[identity]?.forEach { add(OverrideRemoteCandidate.Live(it)) }
+        candidates.overrideTombstones[identity]?.forEach { add(OverrideRemoteCandidate.Deleted(it)) }
+      }
+      if (values.isEmpty()) {
+        put(identity, ResolvedOverrideRemote())
+      } else {
+        val label = "${identity.scheduleId}@${identity.occurrenceDate}"
+        val selected = values.maxBy { it.version }
+        abortUnless(
+          values.filter { it.version == selected.version }.all { it == selected },
+          ScheduleV2ApplyFailureReason.SAME_VERSION_CONFLICT,
+          "$label has different live/tombstone states at version ${selected.version}",
         )
-      })
+        val old = states[identity]
+        val existing = old?.remoteSnapshot?.let(OverrideRemoteCandidate::Live)
+          ?: old?.remoteTombstone?.let(OverrideRemoteCandidate::Deleted)
+        abortUnless(
+          existing == null || selected.version >= existing.version,
+          ScheduleV2ApplyFailureReason.REMOTE_VERSION_REGRESSION,
+          "$label remote version regressed from ${existing?.version} to ${selected.version}",
+        )
+        abortUnless(
+          existing == null || existing.version != selected.version || existing == selected,
+          ScheduleV2ApplyFailureReason.SAME_VERSION_CONFLICT,
+          "$label conflicts with existing state at version ${selected.version}",
+        )
+        put(
+          identity, when (selected) {
+            is OverrideRemoteCandidate.Live -> ResolvedOverrideRemote(live = selected.value)
+            is OverrideRemoteCandidate.Deleted -> ResolvedOverrideRemote(tombstone = selected.value)
+          }
+        )
+      }
     }
   }
 
   /** 选择最高版本 canonical，并拒绝同版本不同内容或版本倒退。 */
-  private fun <T : RemoteSnapshot<*, *>> selectRemote(label: String, values: List<T>, existing: T?): T {
+  private fun <T : RemoteSnapshot<*, *>> selectRemote(
+    label: String,
+    values: List<T>,
+    existing: T?
+  ): T {
     val selected = values.maxBy { it.version }
     abortUnless(
       values.filter { it.version == selected.version }.all { it == selected },
@@ -528,6 +602,21 @@ private fun <I : ResourceIdentity, R : SyncResource<I>> pendingAfterRemoteUpdate
   else -> pending
 }
 
+/**
+ * Override tombstone 可被后续完整 upsert 重建，因此服务端删除不能无条件丢弃请求期间形成的新 U。
+ * 已上传的 R 仍按 revision 清除；远端已不存在 Override 时，重复 DELETE 也可直接收敛。
+ */
+private fun pendingAfterOverrideRemoteUpdate(
+  pending: PendingChange<OccurrenceOverrideIdentity, OccurrenceOverrideResource>?,
+  remoteMissing: Boolean,
+  remoteTombstone: Boolean,
+  uploadedMatches: Boolean,
+): PendingChange<OccurrenceOverrideIdentity, OccurrenceOverrideResource>? = when {
+  uploadedMatches -> null
+  (remoteMissing || remoteTombstone) && pending is PendingDelete -> null
+  else -> pending
+}
+
 private fun MutationResultCode.canClearPending(): Boolean = this != MutationResultCode.REJECTED
 
 private fun CategorySyncState?.matches(uploaded: UploadedCategoryPending?): Boolean {
@@ -550,15 +639,18 @@ private fun OccurrenceOverrideSyncState?.matches(uploaded: UploadedOccurrenceOve
 
 private fun PendingChange<*, *>.matches(kind: UploadedPendingKind): Boolean =
   (kind == UploadedPendingKind.UPSERT && this is PendingUpsert) ||
-    (kind == UploadedPendingKind.DELETE && this is PendingDelete)
+      (kind == UploadedPendingKind.DELETE && this is PendingDelete)
 
 private class RemoteCandidates {
   val categoryLive = linkedMapOf<CategoryIdentity, MutableList<CategoryRemoteSnapshot>>()
   val categoryDeleted = linkedSetOf<CategoryIdentity>()
   val scheduleLive = linkedMapOf<ScheduleIdentity, MutableList<ScheduleRemoteSnapshot>>()
   val scheduleDeleted = linkedSetOf<ScheduleIdentity>()
-  val overrideLive = linkedMapOf<OccurrenceOverrideIdentity, MutableList<OccurrenceOverrideRemoteSnapshot>>()
-  val overrideDeleted = linkedSetOf<OccurrenceOverrideIdentity>()
+  val overrideLive =
+    linkedMapOf<OccurrenceOverrideIdentity, MutableList<OccurrenceOverrideRemoteSnapshot>>()
+  val overrideTombstones =
+    linkedMapOf<OccurrenceOverrideIdentity, MutableList<VersionedRemoteTombstone<OccurrenceOverrideIdentity>>>()
+  val overrideMissing = linkedSetOf<OccurrenceOverrideIdentity>()
 
   fun add(value: CategoryRemoteSnapshot) {
     categoryLive.getOrPut(value.identity) { mutableListOf() } += value
@@ -572,6 +664,13 @@ private class RemoteCandidates {
     overrideLive.getOrPut(value.identity) { mutableListOf() } += value
   }
 
+  /** 收集带版本 tombstone；reason 只用于提示，不参与本地状态与并发比较。 */
+  fun add(identity: OccurrenceOverrideIdentity, version: ULong, value: OccurrenceOverrideTombstone) {
+    require(version > 0uL)
+    val tombstone = VersionedRemoteTombstone(identity, version.toLong(), value.deletedAt)
+    overrideTombstones.getOrPut(identity) { mutableListOf() } += tombstone
+  }
+
   fun delete(identity: CategoryIdentity) {
     categoryDeleted += identity
   }
@@ -580,8 +679,32 @@ private class RemoteCandidates {
     scheduleDeleted += identity
   }
 
-  fun delete(identity: OccurrenceOverrideIdentity) {
-    overrideDeleted += identity
+  fun deleteMissing(identity: OccurrenceOverrideIdentity) {
+    overrideMissing += identity
+  }
+}
+
+/** Override 响应解析后的唯一远端分支。 */
+private data class ResolvedOverrideRemote(
+  val live: OccurrenceOverrideRemoteSnapshot? = null,
+  val tombstone: VersionedRemoteTombstone<OccurrenceOverrideIdentity>? = null,
+) {
+  init {
+    require(live == null || tombstone == null)
+  }
+}
+
+/** 将 live 与 tombstone 放进同一版本序列后进行最高版本选择。 */
+private sealed interface OverrideRemoteCandidate {
+  val version: Long
+
+  data class Live(val value: OccurrenceOverrideRemoteSnapshot) : OverrideRemoteCandidate {
+    override val version: Long = value.version
+  }
+
+  data class Deleted(val value: VersionedRemoteTombstone<OccurrenceOverrideIdentity>) :
+    OverrideRemoteCandidate {
+    override val version: Long = value.version
   }
 }
 

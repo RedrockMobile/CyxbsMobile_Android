@@ -119,6 +119,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.Update -> updateSchedule(
         categories,
         schedules,
@@ -127,6 +128,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.Delete -> deleteSchedule(
         categories,
         schedules,
@@ -135,6 +137,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.CompleteNonRepeating -> completeNonRepeating(
         categories,
         schedules,
@@ -144,6 +147,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.CreateCategory -> createCategory(
         categories,
         schedules,
@@ -152,6 +156,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.UpdateCategory -> updateCategory(
         categories,
         schedules,
@@ -160,6 +165,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.ReorderCategories -> reorderCategories(
         categories,
         schedules,
@@ -168,6 +174,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.SaveScheduleWithNewCategory -> saveScheduleWithNewCategory(
         categories,
         schedules,
@@ -177,6 +184,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.DeleteCategory -> deleteCategory(
         categories,
         schedules,
@@ -185,6 +193,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.UpsertOccurrenceException -> upsertOccurrence(
         categories,
         schedules,
@@ -193,6 +202,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.DeleteOccurrenceException -> deleteOccurrence(
         categories,
         schedules,
@@ -201,6 +211,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.SplitSeries -> splitSeries(
         categories,
         schedules,
@@ -209,6 +220,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       is ScheduleCommand.DeleteThisAndFollowing -> deleteThisAndFollowing(
         categories,
         schedules,
@@ -217,6 +229,7 @@ class ScheduleV2LocalCommandReducer {
         nowMillis,
         localRevision,
       )
+
       ScheduleCommand.RequestSync -> ScheduleV2LocalCommandResult.NoOp
     }
   } catch (rejected: ReducerRejected) {
@@ -275,11 +288,8 @@ class ScheduleV2LocalCommandReducer {
   ): ScheduleV2LocalCommandResult {
     val state = schedules.firstOrNull { it.identity == identity }
       ?: reject(ScheduleV2LocalCommandRejectionReason.NOT_FOUND)
-    val liveChildren = overrides.filter {
-      it.identity.scheduleId == identity.id &&
-        (it.remoteSnapshot != null || it.effectiveResource() != null)
-    }
-    // 本地 effective 或服务端 remote 仍 live 的 Override 都使用同一 revision，日常 capture 会一次上传。
+    val childOverrides = overrides.filter { it.identity.scheduleId == identity.id }
+    // 只有服务端 live Override 才能生成带版本 DELETE；本地临时 Override 直接移除，tombstone 保持原状。
     val updated = state.replacePending(
       PendingDelete(
         identity,
@@ -287,13 +297,13 @@ class ScheduleV2LocalCommandReducer {
         localRevision = revision,
       ),
     )
-    val updatedOverrides = if (liveChildren.isEmpty()) {
+    val updatedOverrides = if (childOverrides.isEmpty()) {
       overrides
     } else {
-      overrides.map { child ->
-        if (child !in liveChildren) {
+      overrides.mapNotNull { child ->
+        if (child !in childOverrides || child.remoteTombstone != null) {
           child
-        } else {
+        } else if (child.remoteSnapshot != null) {
           child.replacePending(
             PendingDelete(
               identity = child.identity,
@@ -301,6 +311,8 @@ class ScheduleV2LocalCommandReducer {
               localRevision = revision,
             ),
           )
+        } else {
+          null
         }
       }
     }
@@ -439,8 +451,8 @@ class ScheduleV2LocalCommandReducer {
     if (normalizedName.isEmpty()) return false
     return categories.any { state ->
       state.identity != excluding &&
-        (state.effectiveResource() ?: state.remoteSnapshot?.resource)
-          ?.name?.data?.trim()?.equals(normalizedName, ignoreCase = true) == true
+          (state.effectiveResource() ?: state.remoteSnapshot?.resource)
+            ?.name?.data?.trim()?.equals(normalizedName, ignoreCase = true) == true
     }
   }
 
@@ -501,11 +513,11 @@ class ScheduleV2LocalCommandReducer {
       ?: reject(ScheduleV2LocalCommandRejectionReason.NOT_FOUND)
     val categoryInUse = schedules.any {
       it.remoteSnapshot?.resource?.categoryId?.data == identity.id ||
-        it.effectiveResource()?.categoryId?.data == identity.id
+          it.effectiveResource()?.categoryId?.data == identity.id
     } || overrides.any {
       // remote 引用即使被本地 pending 隐藏，在服务端确认前仍会阻止分类删除。
       it.remoteSnapshot?.resource?.categoryId?.data == FieldPatch.Replace(identity.id) ||
-        it.effectiveResource()?.categoryId?.data == FieldPatch.Replace(identity.id)
+          it.effectiveResource()?.categoryId?.data == FieldPatch.Replace(identity.id)
     }
     if (categoryInUse) {
       // remote 即使被本地 pending DELETE 隐藏，确认前仍会让服务端拒绝分类删除，因此本地先拒绝。
@@ -528,7 +540,8 @@ class ScheduleV2LocalCommandReducer {
     val identity = occurrenceIdentity(exception.scheduleId.value, exception.recurrenceId)
     val existing = overrides.firstOrNull { it.identity == identity }
     val effective = existing?.effectiveResource()
-    val version = effective?.version ?: 0
+    // tombstone 后重新调整必须沿用删除版本；业务 payload 则从空状态完整重建，防止旧补丁复活。
+    val version = existing?.remoteVersion() ?: effective?.version ?: 0
     val resource = exception.toResource(identity, version, effective, now)
     if (resource == effective) return ScheduleV2LocalCommandResult.NoOp
     val updated = if (existing == null) {
@@ -557,6 +570,11 @@ class ScheduleV2LocalCommandReducer {
   ): ScheduleV2LocalCommandResult {
     val state = overrides.firstOrNull { it.identity == identity }
       ?: reject(ScheduleV2LocalCommandRejectionReason.NOT_FOUND)
+    if (state.remoteTombstone != null) return ScheduleV2LocalCommandResult.NoOp
+    if (state.remoteSnapshot == null) {
+      // 从未上传成功的本地 Override 无需产生服务端 DELETE，直接移除这条临时状态。
+      return applied(categories, schedules, overrides.filterNot { it.identity == identity })
+    }
     val updated = state.replacePending(
       PendingDelete(identity, localModifiedAt = now, localRevision = revision),
     )
@@ -663,11 +681,13 @@ class ScheduleV2LocalCommandReducer {
       } else if (override.remoteSnapshot == null) {
         null
       } else {
-        override.replacePending(PendingDelete(
-          identity = override.identity,
-          localModifiedAt = now,
-          localRevision = revision,
-        ))
+        override.replacePending(
+          PendingDelete(
+            identity = override.identity,
+            localModifiedAt = now,
+            localRevision = revision,
+          )
+        )
       }
     }
     return applied(categories, nextSchedules, nextOverrides)
@@ -694,25 +714,31 @@ class ScheduleV2LocalCommandReducer {
       }
       val effective = state.effectiveResource()
       if (state.remoteSnapshot != null) {
-        add(state.replacePending(PendingDelete(
-          identity = state.identity,
-          localModifiedAt = now,
-          localRevision = revision,
-        )))
+        add(
+          state.replacePending(
+            PendingDelete(
+              identity = state.identity,
+              localModifiedAt = now,
+              localRevision = revision,
+            )
+          )
+        )
       }
       if (state.identity.occurrenceDate > boundaryDate && effective != null) {
         val followingOverrideIdentity = OccurrenceOverrideIdentity(
           scheduleId = followingScheduleId,
           occurrenceDate = state.identity.occurrenceDate,
         )
-        add(OccurrenceOverrideSyncState(
-          identity = followingOverrideIdentity,
-          remoteSnapshot = null,
-          pending = PendingUpsert(
-            resource = effective.copy(identity = followingOverrideIdentity, version = 0),
-            localRevision = revision,
-          ),
-        ))
+        add(
+          OccurrenceOverrideSyncState(
+            identity = followingOverrideIdentity,
+            remoteSnapshot = null,
+            pending = PendingUpsert(
+              resource = effective.copy(identity = followingOverrideIdentity, version = 0),
+              localRevision = revision,
+            ),
+          )
+        )
       }
     }
   }
@@ -803,18 +829,21 @@ class ScheduleV2LocalCommandReducer {
         endAt = startMillis + durationMinutes.minutes.inWholeMilliseconds,
       )
     }
+
     is ScheduleTiming.Deadline -> TimingInput(
       kind = TimingKind.DEADLINE,
       dueAt = due.toLocalDateTime()
         .toInstant(TimeZone.of(timeZoneId))
         .toEpochMilliseconds(),
     )
+
     is ScheduleTiming.AllDay -> {
       TimingInput(
         kind = TimingKind.ALL_DAY,
         date = date.toUtcDaySlot(),
       )
     }
+
     ScheduleTiming.Unscheduled -> TimingInput(kind = TimingKind.UNSCHEDULED)
   }
 
@@ -826,10 +855,13 @@ class ScheduleV2LocalCommandReducer {
     val hasUnsupportedSelectors = when (frequency) {
       UiRecurrenceFrequency.DAILY ->
         byWeekDays.isNotEmpty() || byMonthDays.isNotEmpty() || byMonths.isNotEmpty()
+
       UiRecurrenceFrequency.WEEKLY ->
         byMonthDays.isNotEmpty() || byMonths.isNotEmpty()
+
       UiRecurrenceFrequency.MONTHLY ->
         byWeekDays.isNotEmpty() || byMonths.isNotEmpty()
+
       UiRecurrenceFrequency.YEARLY ->
         byWeekDays.isNotEmpty() || byMonthDays.isEmpty() != byMonths.isEmpty()
     }
@@ -857,10 +889,12 @@ class ScheduleV2LocalCommandReducer {
         count = null
         untilDate = null
       }
+
       is RecurrenceEnd.Count -> {
         count = recurrenceEnd.value
         untilDate = null
       }
+
       is RecurrenceEnd.Until -> {
         count = null
         untilDate = recurrenceEnd.date.toUtcDaySlot()
@@ -876,7 +910,8 @@ class ScheduleV2LocalCommandReducer {
         RecurrenceFrequency.DAILY,
         RecurrenceFrequency.MONTHLY,
         RecurrenceFrequency.YEARLY,
-        -> emptySet()
+          -> emptySet()
+
         RecurrenceFrequency.WEEKLY -> {
           val anchorWeekday = requireNotNull(IsoWeekDay.fromIsoNumber(anchor.dayOfWeekNumber))
           byWeekDays.ifEmpty { setOf(anchorWeekday) }.map { it.toWire() }.toSet()
@@ -885,7 +920,8 @@ class ScheduleV2LocalCommandReducer {
       monthDays = when (frequency) {
         RecurrenceFrequency.MONTHLY,
         RecurrenceFrequency.YEARLY,
-        -> byMonthDays.ifEmpty { setOf(anchor.dayOfMonth) }
+          -> byMonthDays.ifEmpty { setOf(anchor.dayOfMonth) }
+
         else -> emptySet()
       },
       months = if (frequency == RecurrenceFrequency.YEARLY) {
@@ -911,14 +947,15 @@ class ScheduleV2LocalCommandReducer {
   }
 
   /** timing 是不可清空的联合值；单次移动始终以完整 REPLACE 上传。 */
-  private fun UiFieldPatch<ScheduleTiming>.toWireTimingPatch(): FieldPatch<TimingInput> = when (this) {
-    UiFieldPatch.Inherit -> FieldPatch.Inherit
-    UiFieldPatch.Clear -> reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
-    is UiFieldPatch.Replace -> {
-      if (value == ScheduleTiming.Unscheduled) reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
-      FieldPatch.Replace(value.toWireTiming())
+  private fun UiFieldPatch<ScheduleTiming>.toWireTimingPatch(): FieldPatch<TimingInput> =
+    when (this) {
+      UiFieldPatch.Inherit -> FieldPatch.Inherit
+      UiFieldPatch.Clear -> reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
+      is UiFieldPatch.Replace -> {
+        if (value == ScheduleTiming.Unscheduled) reject(ScheduleV2LocalCommandRejectionReason.INVALID_STATE)
+        FieldPatch.Replace(value.toWireTiming())
+      }
     }
-  }
 
   private fun UiFieldPatch<CategoryId>.toWireCategoryPatch(): FieldPatch<String> = when (this) {
     UiFieldPatch.Inherit -> FieldPatch.Inherit
@@ -933,7 +970,7 @@ class ScheduleV2LocalCommandReducer {
   }
 
   private fun UiFieldPatch<ScheduleReminder>.toWireReminderPatch():
-    FieldPatch<ReminderInput> = when (this) {
+      FieldPatch<ReminderInput> = when (this) {
     UiFieldPatch.Inherit -> FieldPatch.Inherit
     UiFieldPatch.Clear -> FieldPatch.Clear
     is UiFieldPatch.Replace -> FieldPatch.Replace(value.toWireReminder())

@@ -46,9 +46,10 @@ DELETE /v2/schedules
 关键约束：
 
 - 新建资源 `version=0`，修改资源携带当前正版本；
-- DELETE 不上传 version；
+- Category/Schedule DELETE 不上传 version；OccurrenceOverride DELETE 表示还原单次调整，必须上传当前正 version；
 - 重复 DELETE 统一视为 `DELETED`；
-- tombstone 不带 version，identity 删除后不可复活；
+- Category/Schedule tombstone 不带 version 且 identity 不可复活；OccurrenceOverride tombstone 保留正 version，可由完整 Override 快照按该版本重建；
+- Override tombstone 只保留 `scheduleId/occurrenceDate/version/deletedAt`，不得保存删除前的时间、标题等业务补丁；
 - 服务端不感知“此次及以后”，客户端拆成普通资源增删改；
 - 结构合法且已处理的响应统一 HTTP 200 / `status=10000`；
 - 单资源业务错误使用 `result=REJECTED + reason + 可选安全 info`，不影响同请求其他资源；

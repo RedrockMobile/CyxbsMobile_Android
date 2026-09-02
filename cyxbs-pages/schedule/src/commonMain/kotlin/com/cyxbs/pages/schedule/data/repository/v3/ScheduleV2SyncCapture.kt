@@ -112,11 +112,11 @@ class ScheduleV2RequestPlanner {
         ),
         occurrenceOverrides = OccurrenceOverrideSyncRequest(
           confirmed = occurrenceOverrides.mapNotNull { state ->
-            state.remoteSnapshot?.let {
+            state.remoteVersion()?.let { version ->
               ConfirmedOccurrenceOverride(
                 state.identity.scheduleId,
                 state.identity.occurrenceDate,
-                it.version.toULong(),
+                version.toULong(),
               )
             }
           },
@@ -147,8 +147,8 @@ class ScheduleV2RequestPlanner {
     }
     require(
       categories.all { it.pending != null } &&
-        schedules.all { it.pending != null } &&
-        occurrenceOverrides.all { it.pending != null },
+          schedules.all { it.pending != null } &&
+          occurrenceOverrides.all { it.pending != null },
     ) { "daily mutation capture only accepts states with pending" }
 
     val pending = capturePending(categories, schedules, occurrenceOverrides)
@@ -185,6 +185,7 @@ class ScheduleV2RequestPlanner {
             UploadedPendingKind.UPSERT,
           )
         }
+
         is PendingDelete -> {
           projection.categoryDeletes += CategoryDelete(state.identity.id, pending.localModifiedAt)
           projection.categories += UploadedCategoryPending(
@@ -193,6 +194,7 @@ class ScheduleV2RequestPlanner {
             UploadedPendingKind.DELETE,
           )
         }
+
         null -> Unit
       }
     }
@@ -206,6 +208,7 @@ class ScheduleV2RequestPlanner {
             UploadedPendingKind.UPSERT,
           )
         }
+
         is PendingDelete -> {
           projection.scheduleDeletes += ScheduleDelete(state.identity.id, pending.localModifiedAt)
           projection.schedules += UploadedSchedulePending(
@@ -214,6 +217,7 @@ class ScheduleV2RequestPlanner {
             UploadedPendingKind.DELETE,
           )
         }
+
         null -> Unit
       }
     }
@@ -227,10 +231,14 @@ class ScheduleV2RequestPlanner {
             UploadedPendingKind.UPSERT,
           )
         }
+
         is PendingDelete -> {
           projection.overrideDeletes += OccurrenceOverrideDelete(
             state.identity.scheduleId,
             state.identity.occurrenceDate,
+            requireNotNull(state.remoteSnapshot) {
+              "OccurrenceOverride DELETE requires a live remote snapshot"
+            }.version.toULong(),
             pending.localModifiedAt,
           )
           projection.overrides += UploadedOccurrenceOverridePending(
@@ -239,6 +247,7 @@ class ScheduleV2RequestPlanner {
             UploadedPendingKind.DELETE,
           )
         }
+
         null -> Unit
       }
     }
@@ -263,11 +272,11 @@ class ScheduleV2RequestPlanner {
     remoteSnapshot?.let { wire.copy(version = it.version.toULong()) } ?: wire
   }
 
-  /** OccurrenceOverride 同样只投影 remote version，不在本地状态上执行 rebase。 */
+  /** OccurrenceOverride 从 live/tombstone 统一版本序列投影，不在本地状态上执行 rebase。 */
   private fun OccurrenceOverrideSyncState.projectUpsert(
     pending: PendingUpsert<OccurrenceOverrideIdentity, OccurrenceOverrideResource>,
   ): OccurrenceOverrideInput = pending.resource.toWire().let { wire ->
-    remoteSnapshot?.let { wire.copy(version = it.version.toULong()) } ?: wire
+    remoteVersion()?.let { wire.copy(version = it.toULong()) } ?: wire
   }
 }
 
