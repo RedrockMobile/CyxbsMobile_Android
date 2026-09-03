@@ -385,13 +385,16 @@ class ScheduleLocalCommandReducer(
     revision: Long,
   ): ScheduleLocalCommandResult {
     val identity = CategoryIdentity(category.id.value)
+    val normalizedName = category.name.trim()
     if (categories.any { it.identity == identity }) {
       reject(ScheduleLocalCommandRejectionReason.INVALID_STATE)
     }
-    if (hasDuplicateCategoryName(categories, category.name)) {
+    if (normalizedName.isEmpty() || hasDuplicateCategoryName(categories, normalizedName)) {
       reject(ScheduleLocalCommandRejectionReason.INVALID_STATE)
     }
-    val resource = category.toResource(version = 0, old = null, now = now)
+    // UI、迁移和测试入口最终都经过 reducer；在这里统一保存 canonical 名称，避免绕过 UI 后
+    // Room 暂存首尾空白、再由服务端修正而造成一次无意义的状态跳变。
+    val resource = category.copy(name = normalizedName).toResource(version = 0, old = null, now = now)
     val state = CategorySyncState(
       identity = identity,
       remoteSnapshot = null,
@@ -409,14 +412,15 @@ class ScheduleLocalCommandReducer(
     revision: Long,
   ): ScheduleLocalCommandResult {
     val identity = CategoryIdentity(category.id.value)
+    val normalizedName = category.name.trim()
     val state = categories.firstOrNull { it.identity == identity }
       ?: reject(ScheduleLocalCommandRejectionReason.NOT_FOUND)
     val effective = state.effectiveResource()
       ?: reject(ScheduleLocalCommandRejectionReason.NOT_FOUND)
-    if (hasDuplicateCategoryName(categories, category.name, excluding = identity)) {
+    if (normalizedName.isEmpty() || hasDuplicateCategoryName(categories, normalizedName, excluding = identity)) {
       reject(ScheduleLocalCommandRejectionReason.INVALID_STATE)
     }
-    val resource = category.toResource(effective.version, effective, now)
+    val resource = category.copy(name = normalizedName).toResource(effective.version, effective, now)
     if (resource == effective) return ScheduleLocalCommandResult.NoOp
     val updated = state.replacePending(PendingUpsert(resource, revision))
     return applied(categories.replace(identity) { updated }, schedules, adjustments)

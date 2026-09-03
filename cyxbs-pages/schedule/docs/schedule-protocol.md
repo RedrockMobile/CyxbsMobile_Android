@@ -173,7 +173,7 @@ Schedule 使用客户端 UUID 是为了让旧清单和旧事务可重复迁移�
 - `REJECTED`：该项没有落库，携带稳定 `reason` 和可安全展示的 `info`；其他项仍可成功。
 - `DELETED`：客户端尝试更新一个已确定在服务端不存在的资源，客户端应清除对应远端快照和 pending。
 
-分类创建遇到同 owner 的同名分类时不新增数据，返回已有分类的 canonical resource；客户端把本地引用合并到该远端 ID。分类更新产生同名冲突时返回 `REJECTED / DUPLICATE_CATEGORY_NAME`。
+分类名称保存前只去除首尾空白，保留用户输入的大小写、中文和标点。判重时忽略大小写及首尾空白，但不折叠全角/半角或其他不同标点。分类创建遇到同 owner 的同名分类时不新增数据，返回已有分类的 canonical resource；客户端把本地引用合并到该远端 ID。分类更新产生同名冲突时返回 `REJECTED / DUPLICATE_CATEGORY_NAME`。
 
 单次调整创建遇到同一个 `scheduleId + originalOccurrenceDate` 时不新增第二条，服务端按字段时间戳合并并返回已有调整的自增 ID。
 
@@ -218,7 +218,7 @@ Schedule 使用客户端 UUID 是为了让旧清单和旧事务可重复迁移�
 - 删除日程级联删除其单次调整；关闭重复规则也删除该日程的全部单次调整。
 - 分类仍被日程或单次调整引用时返回 `CATEGORY_IN_USE`；客户端删除入口也要先拦截。
 - `/schedule/all` 只使用 token 对应 owner，不接受账号参数，并在同一数据库事务中清空三张表。
-- Schedule 标题和分类名称 trim 后不能为空；同 owner 分类名称不能重复。
+- Schedule 标题和分类名称 trim 后不能为空；同 owner 分类名称按忽略大小写和首尾空白的规则不能重复。
 - timing 支持 `TIMED`、`DEADLINE`、单日 `ALL_DAY` 和迁移兼容的 `UNSCHEDULED`。
 - 新 UI 不创建 `UNSCHEDULED`；该类型不能重复、提醒或关联课表。
 - recurrence 支持 `DAILY`、`WEEKLY`、`MONTHLY`、`YEARLY`。

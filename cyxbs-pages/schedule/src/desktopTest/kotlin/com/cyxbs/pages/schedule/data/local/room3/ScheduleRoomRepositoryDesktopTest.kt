@@ -25,8 +25,11 @@ import com.cyxbs.pages.schedule.data.repository.TEST_OCCURRENCE_DATE
 import com.cyxbs.pages.schedule.data.repository.TEST_SCHEDULE_ID
 import com.cyxbs.pages.schedule.data.repository.testAdjustmentResource
 import com.cyxbs.pages.schedule.data.repository.testAdjustmentState
+import com.cyxbs.pages.schedule.data.repository.testCategoryResource
+import com.cyxbs.pages.schedule.data.repository.testCategoryState
 import com.cyxbs.pages.schedule.data.repository.testScheduleResource
 import com.cyxbs.pages.schedule.data.repository.testScheduleState
+import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
@@ -121,6 +124,44 @@ class ScheduleRoomRepositoryDesktopTest {
         SchedulePendingOperation.UPSERT,
         ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).schedules.single().pendingOperation,
       )
+    }
+  }
+
+  /** 连续修改同一分类只覆盖一条 pending 快照，后续同步不得重放中间名称、颜色或顺序。 */
+  @Test
+  fun repeatedCategoryEditsCollapseIntoLatestPending() = runTest {
+    withRepository { repository, gateway, database, _ ->
+      val remote = testCategoryResource(remoteId = 41L, version = 2, name = "原分类")
+      ScheduleRoomStateStore(database).replaceAccountState(
+        accountId = ACCOUNT_ID,
+        categories = listOf(testCategoryState(remote).toRoomEntity(ACCOUNT_ID)),
+        schedules = emptyList(),
+        occurrenceAdjustments = emptyList(),
+      )
+      repository.initialize()
+      gateway.updateResult = {
+        ScheduleCallResult.TransportFailure(null, IllegalStateException("offline"))
+      }
+
+      val renamed = repository.snapshot.value.categories.single().copy(name = "最终名称")
+      repository.execute(ScheduleCommand.UpdateCategory(renamed))
+      val recolored = repository.snapshot.value.categories.single().copy(
+        color = """{"background":"#FFF1F4FF","content":"#FF405080"}""",
+      )
+      repository.execute(ScheduleCommand.UpdateCategory(recolored))
+      val reordered = repository.snapshot.value.categories.single().copy(sortOrder = 7)
+      repository.execute(ScheduleCommand.UpdateCategory(reordered))
+
+      val persisted = ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).categories.single()
+      assertEquals(SchedulePendingOperation.UPSERT, persisted.pendingOperation)
+      assertEquals("最终名称", persisted.pendingSnapshot?.name?.data)
+      assertEquals(recolored.color, persisted.pendingSnapshot?.color?.data)
+      assertEquals(7, persisted.pendingSnapshot?.sortOrder?.data)
+      assertEquals(41L, persisted.pendingSnapshot?.id)
+      assertEquals(2uL, persisted.pendingSnapshot?.version)
+      assertEquals(3, gateway.updateCalls)
+      assertEquals(1, gateway.lastUpdate?.categories?.upserts?.size)
+      assertEquals(CategoryId(remote.identity.id), repository.snapshot.value.categories.single().id)
     }
   }
 
@@ -311,6 +352,8 @@ class ScheduleRoomRepositoryDesktopTest {
   private class FakeGateway : ScheduleRepositoryGateway {
     var syncCalls = 0
     var createCalls = 0
+    var updateCalls = 0
+    var lastUpdate: MutationRequest? = null
     var lastDelete: MutationRequest? = null
     var syncResult: suspend (SyncRequest) -> ScheduleCallResult<SyncResponse> = { request ->
       completed(emptySyncResponse(request))
@@ -338,7 +381,11 @@ class ScheduleRoomRepositoryDesktopTest {
     override suspend fun updateSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleCallResult<MutationResponse> = updateResult(input)
+    ): ScheduleCallResult<MutationResponse> {
+      updateCalls += 1
+      lastUpdate = input
+      return updateResult(input)
+    }
 
     override suspend fun deleteSchedule(
       accountId: String,

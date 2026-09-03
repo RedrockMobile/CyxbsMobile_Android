@@ -119,6 +119,64 @@ class SchedulePlannerApplierTest {
     assertNull(appliedSchedule.pending)
   }
 
+  /** 绕过端上判重的两个分类若被服务端合并为同一 ID，本地只保留一个分类并重写全部日程引用。 */
+  @Test
+  fun duplicateLocalCategoriesConvergeToOneCanonicalCategory() = runTest {
+    val firstCategory = testCategoryResource(name = "Project")
+    val secondCategory = firstCategory.copy(
+      identity = CategoryIdentity("019d0000-0000-7000-8000-000000000011"),
+      name = AtomicField("project", 11),
+    )
+    val firstSchedule = testScheduleResource(categoryLocalId = firstCategory.identity.id)
+    val secondSchedule = testScheduleResource(categoryLocalId = secondCategory.identity.id).copy(
+      identity = ScheduleIdentity("019d0000-0000-7000-8000-000000000002"),
+    )
+    val categoryStates = listOf(
+      testCategoryState(firstCategory, PendingUpsert(firstCategory, 1)),
+      testCategoryState(secondCategory, PendingUpsert(secondCategory, 1)),
+    )
+    val scheduleStates = listOf(
+      testScheduleState(firstSchedule, PendingUpsert(firstSchedule, 1), hasRemote = false),
+      testScheduleState(secondSchedule, PendingUpsert(secondSchedule, 1), hasRemote = false),
+    )
+    val capture = planner.capture(categoryStates, scheduleStates, emptyList())
+    val categoryResults = capture.request.categories.upserts.mapIndexed { index, input ->
+      UpsertResult(
+        MutationResultCode.SUCCESS,
+        resource = input.copy(localId = null, id = 41L, version = (index + 1).toULong()),
+      )
+    }
+    val scheduleResults = capture.request.schedules.upserts.map { input ->
+      UpsertResult(
+        MutationResultCode.SUCCESS,
+        resource = input.copy(
+          version = 1uL,
+          categoryId = input.categoryId.copy(data = 41L),
+          categoryLocalId = null,
+        ),
+      )
+    }
+
+    val result = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(
+        capture,
+        response(capture, categoryUpserts = categoryResults, scheduleUpserts = scheduleResults),
+        categoryStates,
+        scheduleStates,
+        emptyList(),
+      ),
+    )
+
+    val canonicalCategory = result.categories.single()
+    assertEquals(41L, canonicalCategory.remoteSnapshot?.resource?.remoteId)
+    assertNull(canonicalCategory.pending)
+    assertEquals(
+      setOf(canonicalCategory.identity.id),
+      result.schedules.map { it.effectiveResource()?.categoryId?.data }.toSet(),
+    )
+    assertTrue(result.schedules.all { it.pending == null })
+  }
+
   /** 部分成功只清理成功项，拒绝项继续保留等待用户修正。 */
   @Test
   fun partialSuccessClearsOnlyAcceptedPending() = runTest {

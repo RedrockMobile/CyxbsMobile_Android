@@ -44,14 +44,14 @@
 - [x] C07 拖动分类顺序，重启和 Sync 后顺序保持。
 - [x] C08 删除未引用分类，本地和服务端均物理删除。
 - [x] C09 删除仍被日程或单次调整引用的分类时客户端拦截；直连接口返回 `CATEGORY_IN_USE`。
-- [ ] C10 分类名称空白、首尾空格和常用中文符号处理一致。
-- [ ] C11 连续多次改名/换色/排序只保留最终 pending，不生成重复分类。
+- [x] C10 分类名称空白、首尾空格和常用中文符号处理一致。
+- [x] C11 连续多次改名/换色/排序只保留最终 pending，不生成重复分类。
 - [x] C12 网络失败时分类本地立即可见，恢复后 Sync 收敛。
 - [x] C13 固定分类“学习/生活/其他”不提供删除入口，自定义分类提供删除入口。
 - [ ] C14 逐一抽查全部候选配色，背景色/文字色 JSON 在 Room、wire 和远端往返后字段完整。
 - [ ] C15 分类被多个 TODO 与 AFFAIR 引用时，改名、换色和排序不改变引用 ID。
 - [x] C16 创建分类回包的 canonical 远端 ID 正确绑定本地 UUID，后续更新不再携带 `categoryLocalId`。
-- [ ] C17 两个本地分类绕过校验提交同名创建时，均映射到同一 canonical 分类并合并本地引用。
+- [x] C17 两个本地分类绕过校验提交同名创建时，均映射到同一 canonical 分类并合并本地引用。
 - [x] C18 分类更新同时发生名称冲突与颜色变更时整条分类更新拒绝，不产生半更新。
 - [ ] C19 分类被引用数量在新增、解绑、删除日程后即时刷新，删除拦截结果正确。
 
@@ -349,6 +349,9 @@
 - C06：把分类 ID=8 改为青色配色 `background=#FF86DBE9`、`content=#FF005262`、`darkBackground=#BF16505A`，Room 中分类版本为 2，`E2E-SCHEDULE-0903-COLOR` 继续引用该分类。清单时间轴与课表投影均使用新背景色和文字色；点击课表中该日程的可见区间后打开同一日程详情，并显示完整的 9 月 9 日 18:41–19:41 时间段。覆盖安装后的冷启动 Sync 还验证分类 confirmed 请求和响应能够按 ID、版本逐项对应。
 - C12：新建分类 `E2E-CATEGORY-0903-NAME-A` 后，日常 CREATE 收到 SafeLine HTTP 468；分类立即保留在 Room，`pending=PendingUpsert`。覆盖安装并冷启动后，首次 Sync 上传同一 localId 与最终去空格名称，服务端返回 canonical ID=12/version=1；合并后 pending 清零且没有生成重复分类。
 - E04：上述 468 曾把 SafeLine HTML 错误页写入 `ScheduleNetwork`。网关现只生成 `HTTP 状态码 + Content-Type` 摘要，正文不会进入日志；`KtorScheduleGatewayTest.httpFailureLogDoesNotContainResponseBody` 固定 HTML、疑似凭证文本均不能出现在摘要中，聚焦桌面测试与 Android 覆盖安装均通过。
+- C11：`ScheduleRoomRepositoryDesktopTest.repeatedCategoryEditsCollapseIntoLatestPending` 从 version=2 的远端分类连续执行改名、换色和排序，并让三次日常 UPDATE 均模拟连接失败。Room 最终仍只有原分类的一条 `PendingUpsert`，完整快照只含最终三项值和远端 ID/version，没有中间状态或重复分类。
+- C17：`SchedulePlannerApplierTest.duplicateLocalCategoriesConvergeToOneCanonicalCategory` 绕过 UI 判重，同时提交大小写不同的两个本地分类及各自引用日程；服务端式响应把两项都映射到 remote ID=41 后，applier 只保留一个本地分类、清除两条 pending，并把全部 Schedule 引用重写到同一 local identity。
+- C10：分类管理页输入现有名称的小写形式时即时显示“已存在同名分组”，保存按钮不可用且没有本地或网络写入。随后用测试包凭证向已部署的 dev/test 服务提交首尾含空格的小写同名分类，服务端返回现有 canonical 分类 ID=12/version=1/name=`E2E-CATEGORY-0903-NAME-A`，没有新增重复分类；`ScheduleLocalCommandReducerTest` 另覆盖纯空白拒绝，以及中文全角冒号与半角冒号不被误判为同名。
 - C09/C19（部分）：普通日程解绑 ID=7 后，父 Schedule 已变为未分组，9 月 3 日单次调整仍单独引用该分类。修复前管理页即时错误降为“0 项日程”；覆盖安装修复包后恢复为“1 项日程”，点击删除只执行 UI 拦截，没有弹删除确认，也没有产生本地或网络删除命令。服务端 `CATEGORY_IN_USE` 直连兜底及解绑/删除日程后的完整数量变化仍待后续验证。
 - R03/R04/R05/R20：运行 `RecurrenceEngineTest`、`RecurrenceEditModelTest` 与 `ScheduleEditNoOpTest` 聚焦测试通过。断言覆盖月重复 31 日在二月/四月等无效日期跳过、2 月 29 日只在闰年生成、全天/时间点/时间段周重复均保留 timing 类型并生成互异的稳定 occurrence identity，以及周选择集合从周一/周三/周五替换为周二/周四后只生成新集合、无旧实例残留。
 - C02/T24/S04/S05/S16：客户端 `SchedulePlannerApplierTest`、`ScheduleDailyMutationBridgeTest` 与后端 `TestScheduleMutationResolvesNewCategoryLocalID`、`TestScheduleMutationRejectsOnlyDependentResource` 聚焦测试通过。同请求先用瞬时 `categoryLocalId` 解析服务端分类 ID，临时 ID 不进入存储；分类失败仅拒绝依赖日程，其他日程继续成功；客户端逐位置应用结果并只保留拒绝项 pending。

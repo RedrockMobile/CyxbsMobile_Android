@@ -144,14 +144,14 @@ class ScheduleLocalCommandReducerTest {
     assertIs<PendingDelete<*, *>>(result.occurrenceAdjustments.single().pending)
   }
 
-  /** 分类名称在去除首尾空白后重复时，本地直接拒绝。 */
+  /** 分类名称在去除首尾空白、忽略大小写后重复时，本地直接拒绝。 */
   @Test
   fun duplicateCategoryNameIsRejected() = runTest {
-    val remote = testCategoryResource(remoteId = 41L, version = 1, name = "学习")
+    val remote = testCategoryResource(remoteId = 41L, version = 1, name = "Project")
     val duplicate = ScheduleCategory(
       id = CategoryId("019d0000-0000-7000-8000-000000000012"),
       revision = 0,
-      name = " 学习 ",
+      name = " project ",
       color = null,
       sortOrder = 1,
     )
@@ -169,6 +169,103 @@ class ScheduleLocalCommandReducerTest {
       ScheduleLocalCommandRejectionReason.INVALID_STATE,
       assertIs<ScheduleLocalCommandResult.Rejected>(result).reason,
     )
+  }
+
+  /** 空白名称无论用于创建还是更新都不能形成本地分类。 */
+  @Test
+  fun blankCategoryNameIsRejected() = runTest {
+    val blank = ScheduleCategory(
+      id = CategoryId("019d0000-0000-7000-8000-000000000012"),
+      revision = 0,
+      name = " \t\n ",
+      color = null,
+      sortOrder = 0,
+    )
+
+    val result = reducer.reduce(
+      categories = emptyList(),
+      schedules = emptyList(),
+      occurrenceAdjustments = emptyList(),
+      command = ScheduleCommand.CreateCategory(blank),
+      nowMillis = 100,
+      localRevision = 1,
+    )
+
+    assertEquals(
+      ScheduleLocalCommandRejectionReason.INVALID_STATE,
+      assertIs<ScheduleLocalCommandResult.Rejected>(result).reason,
+    )
+
+    val remote = testCategoryResource(remoteId = 41L, version = 1, name = "原分类")
+    val updateResult = reducer.reduce(
+      categories = listOf(CategorySyncState(remote.identity, CategoryRemoteSnapshot(remote))),
+      schedules = emptyList(),
+      occurrenceAdjustments = emptyList(),
+      command = ScheduleCommand.UpdateCategory(
+        ScheduleCategory(
+          id = CategoryId(remote.identity.id),
+          revision = 1,
+          name = "  ",
+          color = null,
+          sortOrder = 0,
+        ),
+      ),
+      nowMillis = 100,
+      localRevision = 1,
+    )
+    assertEquals(
+      ScheduleLocalCommandRejectionReason.INVALID_STATE,
+      assertIs<ScheduleLocalCommandResult.Rejected>(updateResult).reason,
+    )
+  }
+
+  /** 绕过 UI 创建时也只保存去除首尾空白后的 canonical 名称。 */
+  @Test
+  fun categoryNameIsTrimmedBeforePendingIsPersisted() = runTest {
+    val category = ScheduleCategory(
+      id = CategoryId("019d0000-0000-7000-8000-000000000012"),
+      revision = 0,
+      name = " 计划：学习 ",
+      color = null,
+      sortOrder = 0,
+    )
+
+    val result = assertIs<ScheduleLocalCommandResult.Applied>(
+      reducer.reduce(
+        categories = emptyList(),
+        schedules = emptyList(),
+        occurrenceAdjustments = emptyList(),
+        command = ScheduleCommand.CreateCategory(category),
+        nowMillis = 100,
+        localRevision = 1,
+      ),
+    )
+
+    assertEquals("计划：学习", result.categories.single().effectiveResource()?.name?.data)
+  }
+
+  /** 全角与半角标点是用户名称内容，不做近似折叠；只有真实同名才被拒绝。 */
+  @Test
+  fun categoryNameKeepsPunctuationDifference() = runTest {
+    val remote = testCategoryResource(remoteId = 41L, version = 1, name = "计划：学习")
+    val distinct = ScheduleCategory(
+      id = CategoryId("019d0000-0000-7000-8000-000000000012"),
+      revision = 0,
+      name = "计划:学习",
+      color = null,
+      sortOrder = 1,
+    )
+
+    val result = reducer.reduce(
+      categories = listOf(CategorySyncState(remote.identity, CategoryRemoteSnapshot(remote))),
+      schedules = emptyList(),
+      occurrenceAdjustments = emptyList(),
+      command = ScheduleCommand.CreateCategory(distinct),
+      nowMillis = 100,
+      localRevision = 1,
+    )
+
+    assertIs<ScheduleLocalCommandResult.Applied>(result)
   }
 
   /** 构造与测试同步资源语义一致的未安排清单。 */
