@@ -13,7 +13,7 @@ import kotlin.time.Instant
  */
 internal const val SCHEDULE_DETAIL_LOG_TAG = "ScheduleDetail"
 
-/** 输出完整 Sync 中客户端已持有的 identity 与待提交日程。 */
+/** 输出完整 Sync 中客户端已持有的 identity、待提交日程和单次调整。 */
 internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, "REQUEST SYNC")
   logItems(
@@ -28,9 +28,21 @@ internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
     label = "REQUEST SYNC delete",
     items = schedules.deletes.map { "id=${it.id}" },
   )
+  logItems(
+    label = "REQUEST SYNC adjustment confirmed",
+    items = occurrenceAdjustments.confirmed.map { "id=${it.id}, version=${it.version}" },
+  )
+  logItems(
+    label = "REQUEST SYNC adjustment upsert",
+    items = occurrenceAdjustments.upserts.map { it.diagnosticSummary() },
+  )
+  logItems(
+    label = "REQUEST SYNC adjustment delete",
+    items = occurrenceAdjustments.deletes.map { "id=${it.id}" },
+  )
 }
 
-/** 输出日常请求中实际新增或修改的完整日程，以及删除 identity。 */
+/** 输出日常请求中实际新增或修改的日程和单次调整，以及删除 identity。 */
 internal fun MutationRequest.logScheduleRequest(operation: String, timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, operation)
   logItems(
@@ -40,6 +52,14 @@ internal fun MutationRequest.logScheduleRequest(operation: String, timeZone: Tim
   logItems(
     label = "$operation delete",
     items = schedules.deletes.map { "id=${it.id}" },
+  )
+  logItems(
+    label = "$operation adjustment upsert",
+    items = occurrenceAdjustments.upserts.map { it.diagnosticSummary() },
+  )
+  logItems(
+    label = "$operation adjustment delete",
+    items = occurrenceAdjustments.deletes.map { "id=${it.id}" },
   )
 }
 
@@ -71,6 +91,30 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
         "resource=${result.resource?.diagnosticSummary(timeZone)}"
     },
   )
+  logItems(
+    label = "RESPONSE SYNC adjustment confirmedResult",
+    items = occurrenceAdjustments.confirmedResults.map {
+      "id=${it.id}, result=${it.result}, resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
+  logItems(
+    label = "RESPONSE SYNC adjustment discoveredResult",
+    items = occurrenceAdjustments.discoveredResults.map { it.diagnosticSummary() },
+  )
+  logItems(
+    label = "RESPONSE SYNC adjustment upsertResult",
+    items = occurrenceAdjustments.upsertResults.map {
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
+  logItems(
+    label = "RESPONSE SYNC adjustment deleteResult",
+    items = occurrenceAdjustments.deleteResults.map {
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
 }
 
 /** 输出日常逐资源结果和服务端合并后的 canonical 日程。 */
@@ -90,6 +134,20 @@ internal fun MutationResponse.logScheduleResponse(timeZone: TimeZone) {
         "resource=${it.resource?.diagnosticSummary(timeZone)}"
     },
   )
+  logItems(
+    label = "RESPONSE MUTATION adjustment upsertResult",
+    items = occurrenceAdjustments.upsertResults.map {
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
+  logItems(
+    label = "RESPONSE MUTATION adjustment deleteResult",
+    items = occurrenceAdjustments.deleteResults.map {
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
 }
 
 /** 将 wire 日程压缩为标题、日期时间与周期，不包含描述等额外用户内容。 */
@@ -97,6 +155,20 @@ internal fun ScheduleInput.diagnosticSummary(timeZone: TimeZone): String =
   "id=$id, version=$version, title=${title.data.singleLine()}, " +
     "timing=${timing.data.diagnosticSummary(timeZone)}, " +
     "recurrence=${recurrence.data.diagnosticSummary(timeZone)}"
+
+/**
+ * 将单次调整压缩为可安全记录的结构摘要。
+ *
+ * 日志只记录资源 identity、原始日期槽、版本、状态和各字段 Patch 模式；不记录标题、描述、
+ * 分类值、提醒值等用户输入，既能定位合并路径，也不会把业务内容或凭证写入日志。
+ */
+private fun OccurrenceAdjustmentInput.diagnosticSummary(): String =
+  "localId=$localId, id=$id, scheduleId=$scheduleId, " +
+    "originalDate=${originalOccurrenceDate.localDateTime(TimeZone.UTC).date}, version=$version, " +
+    "status=${status.data}, patches=" +
+    "date:${date.data.mode},time:${time.data.mode},title:${title.data.mode}," +
+    "description:${description.data.mode},category:${categoryId.data.mode}," +
+    "reminder:${reminder.data.mode}"
 
 /** 将 wire 时间联合值转换为设备时区下可读的日期时间。 */
 private fun TimingInput.diagnosticSummary(timeZone: TimeZone): String = when (kind) {
