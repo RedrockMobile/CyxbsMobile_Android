@@ -209,7 +209,7 @@
 - [x] S09 结构畸形响应、结果数量或位置不匹配时整次 fail-closed，不把结果写给错误资源。
 - [ ] S10 失败记录卡片包含操作时间、资源摘要和安全原因；点击打开对应编辑页。
 - [ ] S11 失败记录不保存或展示 token、完整 payload、数据库错误或服务端堆栈。
-- [ ] S12 同一资源连续失败更新为最新源数据和失败原因，不堆积过时副本。
+- [x] S12 同一资源连续失败更新为最新源数据和失败原因，不堆积过时副本。
 - [x] S13 CREATE/UPDATE/DELETE/SYNC 均返回 HTTP 200 + data/status/info；业务拒绝不使用 HTTP 400。
 - [x] S14 请求中的 confirmed/upserts/deletes 与响应 confirmedResults/upsertResults/deleteResults 按位置一一对应。
 - [ ] S15 `discoveredResults` 只下发客户端未声明的远端资源，不与 confirmedResults 重复。
@@ -376,6 +376,7 @@
 - U20：`SchedulePlannerApplierTest.alreadyDeletedResultCompletesLocalDelete` 固定服务端已不存在时 DELETE 仍按 `SUCCESS` 收敛；`ScheduleRoomRepositoryDesktopTest.deletingConfirmedScheduleAfterRejectedUpdateClearsLocalFailureState` 再从有远端版本且更新被拒绝的状态出发，验证幂等删除成功后 Schedule、pending 与关联失败记录同时从 Room/业务快照清除。
 - U21：扩充 `SchedulePlannerApplierTest.acceptedRequestDoesNotClearNewerLocalChange`。revision=4 的旧请求返回成功时，revision=5 的本地修改仍作为 effective pending；下一轮 capture 只上传最终值 `U`，并以刚确认的远端 version=4 为基线，不重放已被后续编辑覆盖的 `R`。
 - R30：修复完成态与内容 Patch 未完全正交的问题。`ScheduleEditNoOpTest.restoreOccurrenceAdjustmentPreservesIndependentCompletionState` 验证已完成实例还原单次时间/标题等内容时只清空 Patch、继续保持 COMPLETED；随后取消完成会物理删除已无业务含义的 adjustment，因此旧 Patch 不会复活。ACTIVE 修改和 CANCELLED 删除的还原仍直接物理删除资源。
+- S12：新增 `SettingsScheduleFailureRecordStoreDesktopTest.repeatedFailureReplacesPreviousRecordForSameSchedule`，使用内存 Properties 走真实 JSON 分块持久化。同一 Schedule 连续失败后只保留一条记录，失败时间、reason 和可编辑源日程均替换为最新值；重新创建 Store 后读取结果仍一致，不依赖进程内 StateFlow 缓存。
 
 ### 14.3 修复批次规则
 
