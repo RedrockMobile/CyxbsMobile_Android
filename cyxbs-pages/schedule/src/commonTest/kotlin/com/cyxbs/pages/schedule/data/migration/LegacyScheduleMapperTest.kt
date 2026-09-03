@@ -20,24 +20,18 @@ import kotlin.time.Instant
 /** 旧数据迁移的纯映射回归测试，不访问网络、Room、Settings 或系统日历。 */
 class LegacyScheduleMapperTest {
 
-  /** 确定性 UUID 必须在重试时稳定，并带正确的 v7 version 与 RFC variant。 */
+  /** 迁移 UUID 必须在重试时稳定、隔离不同旧资源，并带正确的 v5 version 与 RFC variant。 */
   @Test
-  fun deterministicUuid_isStableUuidV7AndSeparatesResources() {
-    val first = LegacyScheduleMapper.deterministicUuidV7(1_700_000_000_000L, "20210000|todo|1")
-    val retry = LegacyScheduleMapper.deterministicUuidV7(1_700_000_000_000L, "20210000|todo|1")
-    val anotherResource = LegacyScheduleMapper.deterministicUuidV7(
-      1_700_000_000_000L,
-      "20210000|todo|2",
-    )
-    val anotherTimestamp = LegacyScheduleMapper.deterministicUuidV7(
-      1_700_000_000_001L,
-      "20210000|todo|1",
-    )
+  fun deterministicUuid_isStableUuidV5AndSeparatesResources() {
+    val first = LegacyScheduleMapper.deterministicScheduleUuid("20210000|todo|1")
+    val retry = LegacyScheduleMapper.deterministicScheduleUuid("20210000|todo|1")
+    val anotherResource = LegacyScheduleMapper.deterministicScheduleUuid("20210000|todo|2")
+    val anotherSource = LegacyScheduleMapper.deterministicScheduleUuid("20210000|affair|1")
 
     assertEquals(first, retry)
     assertNotEquals(first, anotherResource)
-    assertNotEquals(first, anotherTimestamp)
-    assertEquals('7', first[14])
+    assertNotEquals(first, anotherSource)
+    assertEquals('5', first[14])
     assertTrue(first[19] in "89ab")
   }
 

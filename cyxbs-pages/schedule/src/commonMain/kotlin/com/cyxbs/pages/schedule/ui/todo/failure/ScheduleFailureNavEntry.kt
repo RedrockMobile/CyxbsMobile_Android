@@ -48,11 +48,13 @@ import com.cyxbs.components.view.ui.Window
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureOperation
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecord
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
-import com.cyxbs.pages.schedule.data.remote.v3.ScheduleInput
-import com.cyxbs.pages.schedule.data.remote.v3.TimingKind
-import com.cyxbs.pages.schedule.data.repository.v3.ScheduleV2SnapshotProjector
+import com.cyxbs.pages.schedule.data.remote.ScheduleInput
+import com.cyxbs.pages.schedule.data.remote.TimingKind
+import com.cyxbs.pages.schedule.data.repository.ScheduleSnapshotProjector
+import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog
-import com.cyxbs.pages.schedule.ui.edit.EditScope
+import com.cyxbs.pages.schedule.ui.model.occurrenceByIdentity
+import com.cyxbs.pages.schedule.ui.todo.main.toDomainOccurrence
 import com.cyxbs.pages.schedule.viewmodel.ScheduleMainViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.datetime.TimeZone
@@ -97,11 +99,30 @@ private fun ScheduleFailurePage(
     accountId?.let(ScheduleFailureRecords::observe) ?: MutableStateFlow(emptyList())
   }
   val records by recordsFlow.collectAsState()
+  val repositorySnapshot by viewModel.snapshot.collectAsState()
   val timeZone = remember { TimeZone.currentSystemDefault() }
-  val projector = remember { ScheduleV2SnapshotProjector() }
+  val projector = remember { ScheduleSnapshotProjector() }
   var editingRecord by remember { mutableStateOf<ScheduleFailureRecord?>(null) }
-  val editableSchedule = remember(editingRecord, timeZone) {
-    editingRecord?.let { projector.projectFailureSource(it.sourceSchedule, timeZone) }
+  val editableSchedule = remember(editingRecord, repositorySnapshot.schedules, timeZone) {
+    editingRecord?.let { record ->
+      repositorySnapshot.schedules.firstOrNull { it.id.value == record.scheduleId }
+        ?: projector.projectFailureSource(record.sourceSchedule, timeZone)
+    }
+  }
+  val editableRecurrenceId = remember(editingRecord, timeZone) {
+    editingRecord?.singleOccurrenceDateOrNull()?.let { occurrenceDate ->
+      projector.projectFailureRecurrenceId(
+        input = editingRecord!!.sourceSchedule,
+        originalOccurrenceDate = occurrenceDate,
+        timeZone = timeZone,
+      )
+    }
+  }
+  val editableOccurrence = remember(repositorySnapshot, editableSchedule, editableRecurrenceId) {
+    val schedule = editableSchedule
+    val recurrenceId = editableRecurrenceId
+    if (schedule == null || recurrenceId == null) null
+    else repositorySnapshot.occurrenceByIdentity(schedule.id, recurrenceId)
   }
 
   LaunchedEffect(Unit) {
@@ -143,9 +164,16 @@ private fun ScheduleFailurePage(
               record = record,
               timeZone = timeZone,
               onClick = {
-                val projected = projector.projectFailureSource(record.sourceSchedule, timeZone)
-                if (projected == null) toast("该记录暂时无法打开，请保留记录并反馈")
-                else editingRecord = record
+                when (repositorySnapshot.status) {
+                  ScheduleRepositoryStatus.Loading -> toast("日程数据正在加载，请稍后重试")
+                  is ScheduleRepositoryStatus.Corrupted ->
+                    toast("本地日程数据异常，请前往清单设置清空后重试")
+                  else -> {
+                    val projected = projector.projectFailureSource(record.sourceSchedule, timeZone)
+                    if (projected == null) toast("该记录暂时无法打开，请保留记录并反馈")
+                    else editingRecord = record
+                  }
+                }
               },
             )
           }
@@ -156,30 +184,35 @@ private fun ScheduleFailurePage(
 
   editingRecord?.let { record ->
     val schedule = editableSchedule
-    if (schedule != null) {
+    val recurrenceId = editableRecurrenceId
+    val occurrence = editableOccurrence
+    // 已明确记录了 occurrence identity 时必须成功解析该实例；不能静默退化为编辑整个父系列。
+    if (schedule != null && (recurrenceId == null || occurrence != null)) {
       Window(dismissOnBackPress = null) {
         Box(modifier = Modifier.fillMaxSize()) {
           EditScheduleDialog(
             show = true,
             editSchedule = schedule,
+            editOccurrence = occurrence?.toDomainOccurrence(),
+            recurrenceId = recurrenceId,
             categoryRepository = viewModel.repository,
             showCourseRelation = true,
             onDismiss = { editingRecord = null },
-            onConfirm = { state, _, newCategory ->
+            onConfirm = { state, scope, newCategory ->
               viewModel.saveSchedule(
                 state = state,
-                scope = EditScope.ALL,
-                recurrenceId = null,
+                scope = scope,
+                recurrenceId = recurrenceId,
                 newCategory = newCategory,
               )
               editingRecord = null
             },
-            onDelete = {
-              viewModel.deleteScheduleScoped(schedule.id, EditScope.ALL, null)
+            onDelete = { scope ->
+              viewModel.deleteScheduleScoped(schedule.id, scope, recurrenceId)
               editingRecord = null
             },
             onToggleCompleted = { completed ->
-              viewModel.completeSchedule(schedule.id, null, completed)
+              viewModel.completeSchedule(schedule.id, recurrenceId, completed)
             },
           )
         }
@@ -192,6 +225,16 @@ private fun ScheduleFailurePage(
     }
   }
 }
+
+/**
+ * 只有失败记录指向唯一单次调整时才返回它的 UTC 日期槽。
+ *
+ * 结构级失败可能同时包含多个实例，此时不能擅自选择其中一个，失败页仍回退到父系列并让用户自行处理。
+ */
+private fun ScheduleFailureRecord.singleOccurrenceDateOrNull(): Long? =
+  sourceRequest.occurrenceAdjustments.upserts.map { it.originalOccurrenceDate }
+    .distinct()
+    .singleOrNull()
 
 /** 与清单页保持相同安全区、返回图标和分隔线，只把标题改为失败记录。 */
 @Composable

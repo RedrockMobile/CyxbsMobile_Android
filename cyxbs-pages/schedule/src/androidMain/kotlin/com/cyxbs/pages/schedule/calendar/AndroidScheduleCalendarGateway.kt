@@ -63,7 +63,7 @@ data class AndroidManagedCalendarSnapshotEvent(
   val canonicalFields: CanonicalCalendarFields,
   val providerFingerprint: String,
   /** 已严格验证并聚合到 series master 的 Provider occurrence rows；不作为第二个顶层 managed event 暴露。 */
-  val occurrenceExceptions: List<AndroidManagedCalendarSnapshotOccurrenceException> = emptyList(),
+  val occurrenceAdjustments: List<AndroidManagedCalendarSnapshotOccurrenceException> = emptyList(),
 )
 
 /** fresh snapshot 中一个拥有精确 master relation 的原生 occurrence exception。 */
@@ -688,7 +688,7 @@ class AndroidScheduleCalendarGateway private constructor(
     val snapshotMaster = legacySnapshot.events.singleOrNull {
       it.projectionId == projection.id && it.platformEventRef == eventRef
     } ?: return false
-    val existingExceptions = snapshotMaster.occurrenceExceptions
+    val existingExceptions = snapshotMaster.occurrenceAdjustments
 
     val eventUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId)
     val operations = arrayListOf(
@@ -765,7 +765,7 @@ class AndroidScheduleCalendarGateway private constructor(
     if (snapshot.calendarIdentifier != expectedCalendarIdentifier) return null
     return snapshot.events.singleOrNull {
       it.projectionId == projection.id && it.platformEventRef == masterEventRef
-    }?.occurrenceExceptions
+    }?.occurrenceAdjustments
   }
 
   /** 创建 master 的 batch 中，所有 exception insert 都通过 operation 0 的 back-reference 精确绑定主事件。 */

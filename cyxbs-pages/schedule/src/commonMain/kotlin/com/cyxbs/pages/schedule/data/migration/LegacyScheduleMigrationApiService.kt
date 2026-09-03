@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
  * 迁移期读取旧事务与旧清单的 Ktorfit 接口。
  *
  * 只保留上线迁移实际需要的只读接口；请求携带初始化时冻结的 [AccountSession]，切号后由 TokenPlugin 在发包前
- * fail-closed。旧写接口不会被 Schedule v2 调用。
+ * fail-closed。旧写接口不会被 Schedule 调用。
  */
 internal interface LegacyScheduleMigrationApiService {
 

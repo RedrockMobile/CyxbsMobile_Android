@@ -1,7 +1,7 @@
 package com.cyxbs.pages.schedule.viewmodel
 
 import com.cyxbs.components.base.ui.BaseViewModel
-import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.domain.model.*
 import com.cyxbs.pages.schedule.domain.repository.*
 import com.cyxbs.pages.schedule.ui.edit.*

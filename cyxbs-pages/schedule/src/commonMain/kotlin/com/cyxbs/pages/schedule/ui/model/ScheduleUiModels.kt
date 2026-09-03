@@ -84,12 +84,12 @@ data class ScheduleUiOccurrence(
   val timing: ScheduleTiming,
   val reminder: ScheduleReminder?,
   val status: OccurrenceStatus,
-  val isOverridden: Boolean,
+  val isAdjusted: Boolean,
 )
 
 /** 将领域展开实例无损映射为 UI 模型，保留四态 timing、状态及稳定 recurrence identity。 */
 fun ScheduleOccurrence.toUiModel(): ScheduleUiOccurrence = ScheduleUiOccurrence(
-  scheduleId, recurrenceId, title, description, categoryId, timing, reminder, status, isOverridden,
+  scheduleId, recurrenceId, title, description, categoryId, timing, reminder, status, isAdjusted,
 )
 
 /**
@@ -115,7 +115,7 @@ fun ScheduleUiOccurrence.isExpired(now: Instant, viewerTimeZone: TimeZone): Bool
  * 仅在调用方给定的半开可见本地窗口内展开快照，并返回不含 DTO 的实例 UI 模型。
  *
  * 未排期日程没有有界时间，默认不返回；Feed 若需把它们排到末尾，必须显式传入 [includeUnscheduled]。
- * 其余日程统一交给业务 `RecurrenceEngine`，由它合并移动、取消和完成例外。调用方必须明确日/周窗口
+ * 其余日程统一交给业务 `RecurrenceEngine`，由它合并移动、取消和完成等单次调整。调用方必须明确日/周窗口
  * 边界，避免无界展开。
  */
 fun ScheduleSnapshot.occurrencesInRange(
@@ -132,7 +132,47 @@ fun ScheduleSnapshot.occurrencesInRange(
     ))
   } else {
     com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine.expandInRange(
-      schedule, exceptions.filter { it.scheduleId == schedule.id }, startInclusive, endExclusive,
+      schedule, occurrenceAdjustments.filter { it.scheduleId == schedule.id }, startInclusive, endExclusive,
     )
   }
 }.map(ScheduleOccurrence::toUiModel)
+
+/**
+ * 按系列与稳定 recurrence identity 从当前快照解析一个实例。
+ *
+ * 详情页只能持有 identity，不能长期保存点击瞬间的 [ScheduleUiOccurrence]：单次调整保存、还原或远端合并后，
+ * 同一 identity 的标题、时间与完成态都可能变化。每次快照更新后重新调用本方法，才能让仍打开的详情展示
+ * canonical 最新状态；被取消或已删除的实例返回 `null`，调用方应关闭详情。
+ */
+internal fun ScheduleSnapshot.occurrenceByIdentity(
+  scheduleId: ScheduleId,
+  recurrenceId: RecurrenceId?,
+): ScheduleUiOccurrence? {
+  val schedule = schedules.firstOrNull { it.id == scheduleId } ?: return null
+  val occurrence = if (recurrenceId == null) {
+    if (schedule.recurrence != null) return null
+    ScheduleOccurrence(
+      scheduleId = schedule.id,
+      recurrenceId = null,
+      timing = schedule.timing,
+      title = schedule.title,
+      description = schedule.description,
+      categoryId = schedule.categoryId,
+      reminder = schedule.reminder,
+      status = if (schedule.todoState == ScheduleTodoState.COMPLETED) {
+        OccurrenceStatus.COMPLETED
+      } else {
+        OccurrenceStatus.ACTIVE
+      },
+      isAdjusted = false,
+    )
+  } else {
+    if (schedule.recurrence == null) return null
+    com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine.resolveOccurrenceByIdentity(
+      schedule = schedule,
+      occurrenceAdjustments = occurrenceAdjustments.filter { it.scheduleId == scheduleId },
+      recurrenceId = recurrenceId,
+    ) ?: return null
+  }
+  return occurrence.toUiModel()
+}

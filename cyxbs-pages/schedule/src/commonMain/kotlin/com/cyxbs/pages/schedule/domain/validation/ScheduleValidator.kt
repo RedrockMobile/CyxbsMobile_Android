@@ -2,25 +2,25 @@ package com.cyxbs.pages.schedule.domain.validation
 
 import com.cyxbs.pages.schedule.domain.model.FieldPatch
 import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
+import com.cyxbs.pages.schedule.domain.model.OccurrenceTime
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import kotlinx.datetime.TimeZone
 
-/** Schedule v2 纯校验器返回的稳定、机器可读问题；[code] 可供 UI 映射文案。 */
+/** Schedule 纯校验器返回的稳定、机器可读问题；[code] 可供 UI 映射文案。 */
 data class ScheduleValidationIssue(val field: String, val message: String)
 
 /**
- * Schedule v2 领域对象的纯校验与规范化边界。
+ * Schedule 领域对象的纯校验与规范化边界。
  *
  * 数据构造器刻意保持适合传输与反序列化，不把每条规则塞进 `init`；创建和映射边界应调用此处，从而
  * 一次收集全部问题，而不是遇到首个异常就停止，也避免 DTO/Record 层复制领域规则。
@@ -28,11 +28,8 @@ data class ScheduleValidationIssue(val field: String, val message: String)
 object ScheduleValidator {
   /**
    * 校验完整日程及其嵌套时间、重复规则和提醒，返回全部问题而非只返回首项。
-   *
-   * [pushSupported] 只表示当前消费边界能够安全保留或忽略 PUSH；常规仓库仍使用默认 `false`。系统日历
-   * 投影会传 `true`，因为它明确过滤 PUSH 而不是尝试投递，不能让无关渠道阻止 DEVICE reminder 导出。
    */
-  fun validate(schedule: Schedule, pushSupported: Boolean = false): List<ScheduleValidationIssue> = buildList {
+  fun validate(schedule: Schedule): List<ScheduleValidationIssue> = buildList {
     if (schedule.revision < 0) issue("revision", "must be non-negative")
     if (schedule.title.isBlank()) issue("title", "must not be blank")
     if (schedule.updatedAt < schedule.createdAt) issue("updatedAt", "must not precede createdAt")
@@ -42,7 +39,7 @@ object ScheduleValidator {
     if (schedule.timing == ScheduleTiming.Unscheduled && schedule.recurrence != null) {
       issue("recurrence", "unscheduled schedules cannot have recurrence")
     }
-    addAll(validateReminder(schedule.reminder, schedule.timing, pushSupported))
+    addAll(validateReminder(schedule.reminder, schedule.timing))
     when (schedule.kind) {
       ScheduleKind.TODO -> {
         if (schedule.todoState == null) issue("todoState", "a TODO schedule must belong to todo")
@@ -105,19 +102,14 @@ object ScheduleValidator {
   /**
    * 校验单个提醒及其时间语义。
    *
-   * 偏移量只能非负，因为模型表达“提前多少分钟”；未排期事项没有可计算锚点；后端明确声明能力前拒绝
-   * PUSH，避免本地看似保存成功但永远无法投递。
+   * 偏移量只能非负，因为模型表达“提前多少分钟”；未排期事项没有可计算锚点。
    */
   fun validateReminder(
     reminder: ScheduleReminder?,
     timing: ScheduleTiming,
-    pushSupported: Boolean = false,
   ): List<ScheduleValidationIssue> = buildList {
     reminder?.let {
       if (it.offsetMinutes < 0) issue("reminder.offsetMinutes", "must be non-negative")
-      if (it.channel == ReminderChannel.PUSH && !pushSupported) {
-        issue("reminder.channel", "PUSH is not supported")
-      }
     }
     if (timing == ScheduleTiming.Unscheduled && reminder != null) {
       issue("reminder", "unscheduled items cannot have reminders")
@@ -145,23 +137,32 @@ object ScheduleValidator {
   }
 
   /**
-   * 校验 occurrence 例外的 revision、身份、时间戳及可选覆盖。
+   * 校验 occurrence 单次调整的 revision、身份、时间戳及可选字段补丁。
    *
    * 状态与 patch 相互正交：移动后的实例仍可完成或取消，恢复 ACTIVE 也不应丢弃既有编辑投影。
    */
-  fun validate(exception: ScheduleOccurrenceException): List<ScheduleValidationIssue> = buildList {
-    if (exception.revision < 0) issue("revision", "must be non-negative")
-    if (exception.updatedAt < exception.createdAt) issue("updatedAt", "must not precede createdAt")
-    addAll(validate(exception.recurrenceId))
-    exception.patch?.let { addAll(validate(it)) }
+  fun validate(adjustment: ScheduleOccurrenceAdjustment): List<ScheduleValidationIssue> = buildList {
+    if (adjustment.revision < 0) issue("revision", "must be non-negative")
+    if (adjustment.updatedAt < adjustment.createdAt) issue("updatedAt", "must not precede createdAt")
+    addAll(validate(adjustment.recurrenceId))
+    adjustment.patch?.let { addAll(validate(it)) }
   }
 
-  /** 校验 occurrence 三态编辑；timing 与 title 不允许清空，timing 替换始终按完整联合原子校验。 */
+  /** 校验 occurrence 三态编辑；日期、时间与标题不允许清空，日期和时间保持独立原子。 */
   fun validate(patch: OccurrencePatch): List<ScheduleValidationIssue> = buildList {
-    when (val timing = patch.timing) {
-      FieldPatch.Clear -> issue("patch.timing", "must not be cleared")
+    when (patch.date) {
+      FieldPatch.Clear -> issue("patch.date", "must not be cleared")
       FieldPatch.Inherit -> Unit
-      is FieldPatch.Replace -> addAll(validate(timing.value).map { it.copy(field = "patch.${it.field}") })
+      is FieldPatch.Replace -> Unit
+    }
+    when (val time = patch.time) {
+      FieldPatch.Clear -> issue("patch.time", "must not be cleared")
+      FieldPatch.Inherit -> Unit
+      is FieldPatch.Replace -> when (val value = time.value) {
+        is OccurrenceTime.TimeRange -> validateTimeZone(value.timeZoneId, "patch.time.timeZoneId")?.let(::add)
+        is OccurrenceTime.TimePoint -> validateTimeZone(value.timeZoneId, "patch.time.timeZoneId")?.let(::add)
+        OccurrenceTime.AllDay -> Unit
+      }
     }
     when (val title = patch.title) {
       FieldPatch.Clear -> issue("patch.title", "must not be cleared")
@@ -174,7 +175,6 @@ object ScheduleValidator {
     if (patch.reminder is FieldPatch.Replace) {
       val reminder = patch.reminder.value
       if (reminder.offsetMinutes < 0) issue("patch.reminder.offsetMinutes", "must be non-negative")
-      if (reminder.channel == ReminderChannel.PUSH) issue("patch.reminder.channel", "PUSH is not supported")
     }
   }
 

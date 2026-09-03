@@ -2,13 +2,10 @@ package com.cyxbs.pages.schedule.domain.repository
 
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
-import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
-import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
-import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -22,7 +19,8 @@ fun interface ScheduleAccountProvider {
 /** 仓库对调用方公开的已确认状态；具体实现可来自本地持久化或经验证的远端完整图。 */
 data class ScheduleSnapshot(
   val schedules: List<Schedule> = emptyList(),
-  val exceptions: List<ScheduleOccurrenceException> = emptyList(),
+  /** 当前仍由父系列规则命中的单次调整；休眠项只保存在同步状态中，不进入 UI 快照。 */
+  val occurrenceAdjustments: List<ScheduleOccurrenceAdjustment> = emptyList(),
   val categories: List<ScheduleCategory> = emptyList(),
   val status: ScheduleRepositoryStatus = ScheduleRepositoryStatus.Loading,
   /** 生成此快照的账号；`null` 只用于尚未初始化的进程初始态。 */
@@ -42,8 +40,8 @@ sealed interface ScheduleRepositoryStatus {
   /**
    * 当前已确认状态可读且最近同步未失败。
    *
-   * [pendingCount] 表示本地尚未被远端确认的操作数；[hasPendingDeletes] 只表示其中存在等待提交的 DELETE，不能解释为
-   * 本地或远端保存了 tombstone 资源。
+   * [pendingCount] 表示本地尚未被远端确认的操作数；[hasPendingDeletes] 只表示其中存在等待提交的 DELETE。
+   * 当前协议使用物理删除，该值不能用来推断服务端仍保存已删除资源。
    */
   data class Ready(val pendingCount: Int, val hasPendingDeletes: Boolean) : ScheduleRepositoryStatus
 
@@ -66,29 +64,29 @@ sealed interface ScheduleCommand {
   data class Update(val schedule: Schedule) : ScheduleCommand
   /** 按稳定 identity 删除整条日程。 */
   data class Delete(val scheduleId: ScheduleId) : ScheduleCommand
-  /** 设置非重复日程完成状态；重复日程必须改写单次例外。 */
+  /** 设置非重复日程完成状态；重复日程必须改写对应的单次调整。 */
   data class CompleteNonRepeating(val scheduleId: ScheduleId, val completed: Boolean) : ScheduleCommand
-  /** 新增或替换由 recurrence identity 唯一定位的单次例外。 */
-  data class UpsertOccurrenceException(val exception: ScheduleOccurrenceException) : ScheduleCommand
-  /** 删除单次例外，使该次发生恢复继承系列。 */
-  data class DeleteOccurrenceException(val scheduleId: ScheduleId, val recurrenceId: RecurrenceId) : ScheduleCommand
+  /** 新增或更新由 recurrence identity 唯一定位的单次调整。 */
+  data class UpsertOccurrenceAdjustment(val adjustment: ScheduleOccurrenceAdjustment) : ScheduleCommand
+  /** 物理删除单次调整，使该次发生重新继承系列。 */
+  data class DeleteOccurrenceAdjustment(val scheduleId: ScheduleId, val recurrenceId: RecurrenceId) : ScheduleCommand
   /**
    * 从 [recurrenceId] 起拆出 [followingSchedule]，并把原系列替换为 [previousSchedule]。
    *
-   * 两条完整日程由领域拆分器提前生成；仓库负责把它们与边界后的 occurrence 例外作为同一原子批次保存，
-   * 禁止先截断旧系列、再异步创建新系列而暴露中间状态。
+   * 两条完整日程由领域拆分器提前生成；仓库负责在同一次本地事务中保存它们并迁移边界后的单次调整，
+   * 避免本地先暴露被截断但尚未创建后续系列的中间状态。
    */
   data class SplitSeries(
     val previousSchedule: Schedule,
     val followingSchedule: Schedule,
     val recurrenceId: RecurrenceId,
-    /** 新系列引用但当前尚不存在的惰性默认分类；仓库会把它并入同一原子批次。 */
+    /** 新系列引用但当前尚不存在的惰性默认分类；仓库会把它并入同一次本地事务和远端请求。 */
     val newCategory: ScheduleCategory? = null,
   ) : ScheduleCommand
   /**
    * 从 [recurrenceId] 起删除后半系列，并把原系列替换为已截断的 [previousSchedule]。
    *
-   * 仓库必须把系列 PATCH 与边界后的 occurrence 例外 DELETE 放入同一原子批次。
+   * 仓库必须在同一次本地事务中更新系列并删除边界后的单次调整。
    */
   data class DeleteThisAndFollowing(
     val previousSchedule: Schedule,
@@ -113,6 +111,16 @@ sealed interface ScheduleCommand {
   data class SaveScheduleWithNewCategory(
     val category: ScheduleCategory,
     val schedule: Schedule,
+  ) : ScheduleCommand
+  /**
+   * 在单次调整首次引用惰性默认分类时，将分类 CREATE 与单次调整 UPSERT 一起保存。
+   *
+   * [adjustment] 的分类补丁必须指向 [category]；两个资源共享一次 localRevision，服务端会先处理分类并通过
+   * 请求内临时 localId 建立引用，避免单次调整被 `CATEGORY_NOT_FOUND` 拒绝。
+   */
+  data class SaveOccurrenceWithNewCategory(
+    val category: ScheduleCategory,
+    val adjustment: ScheduleOccurrenceAdjustment,
   ) : ScheduleCommand
   /**
    * 删除未被日程引用的分类。
@@ -144,7 +152,7 @@ sealed interface ScheduleRemoteError {
   /**
    * 服务端返回 HTTP 200 + REJECTED 时的稳定业务拒绝事实。
    *
-   * [reason] 与最终 wire `ResultReason` 同构；具体资源 current/tombstone 等合并事实由 typed response data 表达。
+   * [reason] 与 wire `ResultReason` 同构；具体资源的服务端当前值或删除结果由 typed response data 表达。
    */
   data class MutationRejected(
     val reason: ScheduleMutationBusinessRejectionReason,
@@ -158,17 +166,17 @@ sealed interface ScheduleRemoteError {
 }
 
 /**
- * 后端 Schedule v2 `ResultReason` 的封闭稳定集合。
+ * 后端日程接口 `ResultReason` 的封闭稳定集合。
  *
  * 枚举名与 typed wire 枚举逐项同构；未知值必须在 codec 边界拒绝，不能映射成泛化的业务原因。
  */
 enum class ScheduleMutationBusinessRejectionReason {
   INVALID_REQUEST,
-  RESOURCE_NOT_FOUND,
-  RESOURCE_DELETED,
   CATEGORY_NOT_FOUND,
   RESOURCE_CHANGED,
-  FINAL_GRAPH_INVALID,
+  DUPLICATE_CATEGORY_NAME,
+  CATEGORY_IN_USE,
+  SCHEDULE_NOT_FOUND,
   UNSUPPORTED_RECURRENCE,
 }
 
@@ -225,7 +233,7 @@ enum class ScheduleRepositoryMutationMode {
 fun ScheduleRepositoryMutationMode.canSubmitScheduleMutation(): Boolean =
   this == ScheduleRepositoryMutationMode.LOCAL_FIRST
 
-/** Schedule v2 的稳定仓库边界，供主页面、Feed 与课表等消费者共享。 */
+/** Schedule 的稳定仓库边界，供主页面、Feed 与课表等消费者共享。 */
 interface ScheduleRepository {
   val snapshot: StateFlow<ScheduleSnapshot>
 

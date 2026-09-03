@@ -11,7 +11,7 @@ import com.cyxbs.pages.course.view.item.impl.CourseScheduleItem
 import com.cyxbs.pages.course.view.item.impl.PlatformScheduleItemFactory
 import com.cyxbs.pages.course.view.item.impl.ScheduleCourseDecorationItem
 import com.cyxbs.pages.course.view.item.impl.ScheduleItemWhatTime
-import com.cyxbs.pages.schedule.api.IScheduleService2
+import com.cyxbs.pages.schedule.api.IScheduleOccurrenceService
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceKind
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceTiming
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceView
@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.stateIn
 abstract class SchedulePageDecoration<Item : CourseItem>(
   protected val courseFrame: AbstractCourseFrame,
   coroutineScope: CoroutineScope,
-  private val scheduleService: IScheduleService2 = IScheduleService2::class.impl(),
+  private val scheduleService: IScheduleOccurrenceService = IScheduleOccurrenceService::class.impl(),
 ) : CoursePageDecoration<Item>() {
 
   /** 当前课表学期的半开日期范围及允许投射到课表的 occurrence。 */

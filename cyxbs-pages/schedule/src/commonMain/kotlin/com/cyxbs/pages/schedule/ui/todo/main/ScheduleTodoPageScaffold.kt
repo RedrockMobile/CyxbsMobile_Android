@@ -57,7 +57,7 @@ import cyxbsmobile.cyxbs_pages.schedule.generated.resources.schedule_ic_todo_emp
 import org.jetbrains.compose.resources.painterResource
 
 /**
- * 顶部分类筛选直接展示 Schedule v2 当前账号的真实 Category。
+ * 顶部分类筛选直接展示 Schedule 当前账号的真实 Category。
  *
  * null 表示聚合入口“全部”；其余项使用 Category identity 过滤，重命名分类不会丢失当前选择。
  * 横向滚动承接任意数量的自定义分类，不再假设固定存在“学习、生活、其他”。
@@ -159,7 +159,7 @@ internal fun ScheduleUiOccurrence.toDomainOccurrence(): ScheduleOccurrence =
     categoryId = categoryId,
     reminder = reminder,
     status = status,
-    isOverridden = isOverridden,
+    isAdjusted = isAdjusted,
   )
 
 /** 顶部栏保留 Figma 的返回、标题和批量管理结构，但颜色完全来自应用主题。 */

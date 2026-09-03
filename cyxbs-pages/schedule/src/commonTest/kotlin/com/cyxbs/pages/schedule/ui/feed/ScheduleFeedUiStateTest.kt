@@ -1,8 +1,6 @@
 package com.cyxbs.pages.schedule.ui.feed
 
 import com.cyxbs.components.config.time.MinuteTimeDate
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
-import com.cyxbs.pages.schedule.domain.model.ReminderId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
@@ -95,7 +93,7 @@ class ScheduleFeedUiStateTest {
               suffix = "030",
               title = "带提醒事项",
               due = MinuteTimeDate(2026, 8, 21, 10, 0),
-              reminder = ScheduleReminder(ReminderId("r1"), 10, ReminderChannel.DEVICE),
+              reminder = ScheduleReminder(10),
             ),
           ),
         ),

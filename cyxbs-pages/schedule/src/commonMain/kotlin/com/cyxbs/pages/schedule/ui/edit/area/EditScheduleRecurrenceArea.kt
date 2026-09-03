@@ -39,7 +39,7 @@ import com.cyxbs.components.view.calendar.month.CalendarMonthCompose
 import com.cyxbs.components.view.calendar.state.rememberCalendarState
 import com.cyxbs.components.view.wheel.WheelSelectCompose
 import com.cyxbs.pages.schedule.domain.model.Schedule
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.ui.edit.RecurrenceDraft
 import com.cyxbs.pages.schedule.ui.edit.RepeatEndOption
 import com.cyxbs.pages.schedule.ui.edit.RepeatFreqOption
@@ -72,8 +72,8 @@ internal fun EditScheduleRecurrenceArea(
   firstMonday: Date?,
   /** 已保存的父系列；新建日程为 null，此时不存在可还原的单次调整。 */
   schedule: Schedule?,
-  occurrenceExceptions: List<ScheduleOccurrenceException>,
-  onRestoreOccurrenceAdjustment: (ScheduleOccurrenceException) -> Unit,
+  occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
+  onRestoreOccurrenceAdjustment: (ScheduleOccurrenceAdjustment) -> Unit,
   onChange: (RecurrenceDraft) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -261,7 +261,7 @@ internal fun EditScheduleRecurrenceArea(
     schedule?.takeIf { draft.isRepeating && it.recurrence != null }?.let { parent ->
       OccurrenceAdjustmentList(
         schedule = parent,
-        exceptions = occurrenceExceptions,
+        occurrenceAdjustments = occurrenceAdjustments,
         onRestore = onRestoreOccurrenceAdjustment,
       )
     }

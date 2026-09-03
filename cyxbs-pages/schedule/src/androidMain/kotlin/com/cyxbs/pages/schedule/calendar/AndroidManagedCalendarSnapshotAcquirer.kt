@@ -226,7 +226,7 @@ internal class AndroidManagedCalendarSnapshotAcquirer internal constructor(
             reminderMinutes = master.canonicalFields.deviceReminderMinutes,
             nativeOccurrenceExceptions = nativeExceptions.map { it.projection },
           ),
-          occurrenceExceptions = nativeExceptions,
+          occurrenceAdjustments = nativeExceptions,
         )
       }
     }
@@ -277,7 +277,7 @@ internal class AndroidManagedCalendarSnapshotAcquirer internal constructor(
     val customUri = row.customAppUri ?: return null
     val projectionId = CalendarProjectionUriCodec.decodeOrNull(customUri) ?: run {
       if (row.customAppPackage == platform.packageName &&
-        isRequestedManagedV2Candidate(customUri, scope, requestedScheduleIds)
+        isRequestedManagedScheduleCandidate(customUri, scope, requestedScheduleIds)
       ) {
         throw ManagedCalendarRebuildRequiredException(
           "Managed event uses noncanonical CUSTOM_APP_URI: ${row.eventId}",
@@ -440,7 +440,7 @@ internal class AndroidManagedCalendarSnapshotAcquirer internal constructor(
    * 非必要 percent-escape 与重复参数因此都无法绕过 fail-closed。完整读取对当前 scope 的任意 scheduleId 参数负责，
    * 增量读取只对请求集合负责，避免一个无关 Schedule 的损坏行阻断窄对账。
    */
-  private fun isRequestedManagedV2Candidate(
+  private fun isRequestedManagedScheduleCandidate(
     customUri: String,
     scope: CalendarExportScope,
     requestedScheduleIds: List<ScheduleId>?,

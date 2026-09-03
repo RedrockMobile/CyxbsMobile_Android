@@ -29,7 +29,7 @@ import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.Schedule
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
 import com.cyxbs.pages.schedule.ui.edit.formatClock
@@ -39,21 +39,21 @@ import org.jetbrains.compose.resources.painterResource
 /**
  * 重复设置中的单次调整列表。
  *
- * 只展示会改变系列内容或可见性的 exception：单次修改显示“原时间 → 当前时间”，单次删除显示
+ * 只展示会改变系列内容或可见性的单次调整：单次修改显示“原时间 → 当前时间”，单次删除显示
  * “原时间 → 已删除”。完成态本身不属于调整，不单独出现在这里；右侧删除按钮用于删除调整并恢复系列继承。
  */
 @Composable
 internal fun OccurrenceAdjustmentList(
   schedule: Schedule,
-  exceptions: List<ScheduleOccurrenceException>,
-  onRestore: (ScheduleOccurrenceException) -> Unit,
+  occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
+  onRestore: (ScheduleOccurrenceAdjustment) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  val adjustments = remember(schedule.id, exceptions) {
-    exceptions
-      .filter { exception ->
-        exception.scheduleId == schedule.id &&
-          (exception.status == OccurrenceStatus.CANCELLED || exception.patch.hasContentChanges())
+  val adjustments = remember(schedule.id, occurrenceAdjustments) {
+    occurrenceAdjustments
+      .filter { adjustment ->
+        adjustment.scheduleId == schedule.id &&
+          (adjustment.status == OccurrenceStatus.CANCELLED || adjustment.patch.hasContentChanges())
       }
       .sortedBy { it.recurrenceId.originalDateTime }
   }
@@ -82,9 +82,9 @@ internal fun OccurrenceAdjustmentList(
       )
     }
     if (!expanded) return@Column
-    adjustments.forEachIndexed { index, exception ->
-      val summary = remember(schedule, exception) {
-        buildOccurrenceAdjustmentSummary(schedule, exception)
+    adjustments.forEachIndexed { index, adjustment ->
+      val summary = remember(schedule, adjustment) {
+        buildOccurrenceAdjustmentSummary(schedule, adjustment)
       }
       Row(
         modifier = Modifier.fillMaxWidth().height(32.dp),
@@ -99,7 +99,7 @@ internal fun OccurrenceAdjustmentList(
           modifier = Modifier.weight(1F),
         )
         IconButton(
-          onClick = { onRestore(exception) },
+          onClick = { onRestore(adjustment) },
           modifier = Modifier.size(28.dp),
         ) {
           Icon(
@@ -120,23 +120,27 @@ internal fun OccurrenceAdjustmentList(
 /** 单行摘要优先表达时间变化，并用简短后缀提示同一次发生中并存的内容修改。 */
 private fun buildOccurrenceAdjustmentSummary(
   schedule: Schedule,
-  exception: ScheduleOccurrenceException,
+  adjustment: ScheduleOccurrenceAdjustment,
 ): String {
-  // 由引擎按当前系列锚点还原“未应用例外”的发生时间；整个系列移动过时不能直接照抄 recurrenceId。
+  // 由引擎按当前系列锚点还原“未应用单次调整”的发生时间；整个系列移动过时不能直接照抄 recurrenceId。
   val originalTiming = RecurrenceEngine.resolveOccurrenceByIdentity(
     schedule = schedule,
-    exceptions = emptyList(),
-    recurrenceId = exception.recurrenceId,
-  )?.timing ?: schedule.timing.at(exception.recurrenceId)
+    occurrenceAdjustments = emptyList(),
+    recurrenceId = adjustment.recurrenceId,
+  )?.timing ?: schedule.timing.at(adjustment.recurrenceId)
   val originalLabel = originalTiming.toAdjustmentTimeLabel()
-  if (exception.status == OccurrenceStatus.CANCELLED) {
+  if (adjustment.status == OccurrenceStatus.CANCELLED) {
     return "$originalLabel → 已删除"
   }
 
-  val patch = exception.patch
-  val currentTiming = when (val timingPatch = patch?.timing) {
-    is FieldPatch.Replace -> timingPatch.value
-    else -> null
+  val patch = adjustment.patch
+  val hasTimingChanges = patch != null && (
+    patch.date !is FieldPatch.Inherit || patch.time !is FieldPatch.Inherit
+    )
+  val currentTiming = if (hasTimingChanges) {
+    RecurrenceEngine.resolveOccurrenceByIdentity(schedule, listOf(adjustment), adjustment.recurrenceId)?.timing
+  } else {
+    null
   }
   val hasOtherChanges = patch.hasNonTimingChanges()
   return when {
@@ -157,7 +161,7 @@ private fun ScheduleTiming.at(recurrenceId: RecurrenceId): ScheduleTiming = when
   ScheduleTiming.Unscheduled -> ScheduleTiming.Unscheduled
 }
 
-/** 将四种时间语义格式化为足以区分例外的紧凑日期时间。 */
+/** 将四种时间语义格式化为足以区分单次调整的紧凑日期时间。 */
 private fun ScheduleTiming.toAdjustmentTimeLabel(): String = when (this) {
   is ScheduleTiming.Timed -> {
     val end = start.plusMinutes(durationMinutes)

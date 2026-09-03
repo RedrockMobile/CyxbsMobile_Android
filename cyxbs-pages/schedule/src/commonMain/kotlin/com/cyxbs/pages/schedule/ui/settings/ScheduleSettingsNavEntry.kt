@@ -43,8 +43,8 @@ import com.cyxbs.components.navigation.NAV_SCHEDULE_SETTINGS
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.components.view.ui.ChooseDialogCompose
-import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2ApiService
-import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.data.remote.ScheduleApiService
+import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.ui.todo.main.saveScheduleTodoPinnedIds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -77,7 +77,7 @@ class ScheduleSettingsNavEntry : AppNavEntry<ScheduleSettingsNavArgument>() {
 private fun ScheduleSettingsPage(onBack: () -> Unit) {
   val colors = LocalAppColors.current
   val accountService = remember { IAccountService::class.impl() }
-  val api = remember { ScheduleV2ApiService::class.impl() }
+  val api = remember { ScheduleApiService::class.impl() }
   val repository = remember { ScheduleRepositoryProvider.repository }
   val coroutineScope = rememberCoroutineScope()
   val showClearConfirmation = remember { mutableStateOf(false) }

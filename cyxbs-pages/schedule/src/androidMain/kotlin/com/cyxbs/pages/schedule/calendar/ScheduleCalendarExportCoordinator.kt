@@ -151,11 +151,11 @@ internal class ScheduleCalendarExportCoordinator(
       snapshot.schedules.filter { it.id in scheduleIds }
     }
     val selectedIds = selectedSchedules.mapTo(mutableSetOf()) { it.id }
-    val selectedExceptions = snapshot.exceptions.filter { exception ->
-      exception.scheduleId in selectedIds
+    val selectedAdjustments = snapshot.occurrenceAdjustments.filter { adjustment ->
+      adjustment.scheduleId in selectedIds
     }
     val projection = ScheduleCalendarProjectionFactory.project(
-      source = ScheduleCalendarSource(selectedSchedules, selectedExceptions),
+      source = ScheduleCalendarSource(selectedSchedules, selectedAdjustments),
       scope = exportScope,
     )
     ensureAuthorized()

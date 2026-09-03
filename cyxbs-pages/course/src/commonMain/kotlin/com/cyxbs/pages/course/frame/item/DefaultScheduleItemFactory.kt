@@ -18,7 +18,7 @@ import com.cyxbs.pages.course.view.item.impl.PlatformScheduleAllDayItem
 import com.cyxbs.pages.course.view.item.impl.PlatformScheduleCourseItem
 import com.cyxbs.pages.course.view.item.impl.PlatformScheduleItemFactory
 import com.cyxbs.pages.course.view.item.impl.ScheduleAllDayItem
-import com.cyxbs.pages.schedule.api.IScheduleService2
+import com.cyxbs.pages.schedule.api.IScheduleOccurrenceService
 
 /**
  * 自适应课表的 Schedule Item 平台配置。
@@ -36,7 +36,7 @@ object DefaultScheduleItemFactory : PlatformScheduleItemFactory {
 
 private class DefaultScheduleCourseItem(
   private val item: CourseScheduleItem,
-  private val scheduleService: IScheduleService2 = IScheduleService2::class.impl(),
+  private val scheduleService: IScheduleOccurrenceService = IScheduleOccurrenceService::class.impl(),
 ) : PlatformScheduleCourseItem {
 
   init {
@@ -88,7 +88,7 @@ private class DefaultScheduleCourseItem(
 
 private class DefaultScheduleAllDayItem(
   private val item: ScheduleAllDayItem,
-  private val scheduleService: IScheduleService2 = IScheduleService2::class.impl(),
+  private val scheduleService: IScheduleOccurrenceService = IScheduleOccurrenceService::class.impl(),
 ) : PlatformScheduleAllDayItem {
 
   @Composable

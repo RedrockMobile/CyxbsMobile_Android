@@ -321,7 +321,7 @@ internal class IosScheduleCalendarExportRuntime(
     }
     val initialSnapshot = readExportableSnapshot(expectedGeneration) ?: return
     val projection = ScheduleCalendarProjectionFactory.project(
-      ScheduleCalendarSource(initialSnapshot.schedules, initialSnapshot.exceptions),
+      ScheduleCalendarSource(initialSnapshot.schedules, initialSnapshot.occurrenceAdjustments),
       IosScheduleCalendarExportSettings.scopeForAccount(accountId),
     )
     ensureCurrent(expectedGeneration)

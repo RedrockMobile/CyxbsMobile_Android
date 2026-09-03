@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0bdd787b9d43d8ed5a6bc09492bc3dc6",
+    "identityHash": "ea0e12465e9efe337e387fa6e859e76d",
     "entities": [
       {
-        "tableName": "schedule_v2_account_metadata",
+        "tableName": "schedule_account_metadata",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `local_revision_counter` INTEGER NOT NULL, PRIMARY KEY(`account_id`))",
         "fields": [
           {
@@ -29,7 +29,7 @@
         }
       },
       {
-        "tableName": "schedule_v2_category_state",
+        "tableName": "schedule_category_state",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `category_id` TEXT NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, PRIMARY KEY(`account_id`, `category_id`))",
         "fields": [
           {
@@ -79,19 +79,19 @@
         },
         "indices": [
           {
-            "name": "index_schedule_v2_category_state_account_id_pending_operation",
+            "name": "index_schedule_category_state_account_id_pending_operation",
             "unique": false,
             "columnNames": [
               "account_id",
               "pending_operation"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_category_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_category_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
           }
         ]
       },
       {
-        "tableName": "schedule_v2_schedule_state",
+        "tableName": "schedule_state",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `schedule_id` TEXT NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, PRIMARY KEY(`account_id`, `schedule_id`))",
         "fields": [
           {
@@ -141,24 +141,30 @@
         },
         "indices": [
           {
-            "name": "index_schedule_v2_schedule_state_account_id_pending_operation",
+            "name": "index_schedule_state_account_id_pending_operation",
             "unique": false,
             "columnNames": [
               "account_id",
               "pending_operation"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_schedule_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
           }
         ]
       },
       {
-        "tableName": "schedule_v2_occurrence_override_state",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `schedule_id` TEXT NOT NULL, `occurrence_date` INTEGER NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, PRIMARY KEY(`account_id`, `schedule_id`, `occurrence_date`))",
+        "tableName": "schedule_occurrence_adjustment_state",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_id` TEXT NOT NULL, `local_id` TEXT NOT NULL, `schedule_id` TEXT NOT NULL, `original_occurrence_date` INTEGER NOT NULL, `remote_snapshot_json` TEXT, `pending_operation` TEXT, `pending_snapshot_json` TEXT, `pending_local_modified_at` INTEGER, `local_revision` INTEGER, PRIMARY KEY(`account_id`, `local_id`))",
         "fields": [
           {
             "fieldPath": "accountId",
             "columnName": "account_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localId",
+            "columnName": "local_id",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -169,8 +175,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "occurrenceDate",
-            "columnName": "occurrence_date",
+            "fieldPath": "originalOccurrenceDate",
+            "columnName": "original_occurrence_date",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -204,27 +210,37 @@
           "autoGenerate": false,
           "columnNames": [
             "account_id",
-            "schedule_id",
-            "occurrence_date"
+            "local_id"
           ]
         },
         "indices": [
           {
-            "name": "index_schedule_v2_occurrence_override_state_account_id_pending_operation",
+            "name": "index_schedule_occurrence_adjustment_state_account_id_pending_operation",
             "unique": false,
             "columnNames": [
               "account_id",
               "pending_operation"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_v2_occurrence_override_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_schedule_occurrence_adjustment_state_account_id_pending_operation` ON `${TABLE_NAME}` (`account_id`, `pending_operation`)"
+          },
+          {
+            "name": "index_schedule_occurrence_adjustment_state_account_id_schedule_id_original_occurrence_date",
+            "unique": true,
+            "columnNames": [
+              "account_id",
+              "schedule_id",
+              "original_occurrence_date"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_schedule_occurrence_adjustment_state_account_id_schedule_id_original_occurrence_date` ON `${TABLE_NAME}` (`account_id`, `schedule_id`, `original_occurrence_date`)"
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0bdd787b9d43d8ed5a6bc09492bc3dc6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ea0e12465e9efe337e387fa6e859e76d')"
     ]
   }
 }

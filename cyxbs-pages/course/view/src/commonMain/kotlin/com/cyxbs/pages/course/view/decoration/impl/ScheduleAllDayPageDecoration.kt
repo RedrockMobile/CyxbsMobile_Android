@@ -91,7 +91,7 @@ class ScheduleAllDayPageDecoration(
       val timing = occurrence.timing as? ScheduleOccurrenceTiming.AllDay ?: return@forEach
       repeat(dayCount) { dayIndex ->
         val date = range.startDate.plusDays(dayIndex)
-        if (date < timing.startDate || date >= timing.startDate.plusDays(timing.durationDays)) {
+        if (date != timing.date) {
           return@repeat
         }
         val page = courseFrame.getPage(date) ?: return@repeat

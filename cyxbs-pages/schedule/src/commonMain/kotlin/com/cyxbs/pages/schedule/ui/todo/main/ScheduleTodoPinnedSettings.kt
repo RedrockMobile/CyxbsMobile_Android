@@ -9,7 +9,7 @@ private const val SCHEDULE_TODO_PINNED_IDS_KEY = "schedule_todo_pinned_ids"
 /**
  * 从当前账号 Settings 恢复清单置顶顺序。
  *
- * 置顶是端上展示偏好，不会进入 Schedule v2 请求。旧值损坏时会移除该字段并回到空列表，避免非核心偏好
+ * 置顶是端上展示偏好，不会进入 Schedule 请求。旧值损坏时会移除该字段并回到空列表，避免非核心偏好
  * 阻断首页 Feed 或清单页面启动。
  */
 internal fun loadScheduleTodoPinnedIds(settings: AccountSettings): List<ScheduleId> {

@@ -81,14 +81,14 @@ import com.cyxbs.components.utils.compose.imePaddingTarget
 import com.cyxbs.components.utils.compose.plusDsl
 import com.cyxbs.components.utils.compose.rememberDerivedStateOfStructure
 import com.cyxbs.components.utils.extensions.toast
-import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrence
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
 import com.cyxbs.pages.schedule.domain.recurrence.SeriesSplitter
@@ -289,7 +289,7 @@ fun EditScheduleDialog(
         onUiStateChanged = { contentUiState = it },
         firstMonday = firstMonday,
         categories = categoryCatalog.selectableCategories,
-        occurrenceExceptions = repositorySnapshot.exceptions.filterNot {
+        occurrenceAdjustments = repositorySnapshot.occurrenceAdjustments.filterNot {
           it.recurrenceId in modelState.occurrenceRestoreIds
         },
         showCourseRelation = showCourseRelation,
@@ -306,8 +306,8 @@ fun EditScheduleDialog(
         onSave = { doSave() },
         onCancel = { requestDismiss() },
         onDelete = { doDelete() },
-        onRestoreOccurrenceAdjustment = { exception ->
-          modelState.stageOccurrenceRestore(exception.recurrenceId)
+        onRestoreOccurrenceAdjustment = { adjustment ->
+          modelState.stageOccurrenceRestore(adjustment.recurrenceId)
         },
         onToggleCompleted = onToggleCompleted,
         onEditModeChanged = onEditModeChanged,
@@ -345,7 +345,7 @@ fun EditScheduleDialog(
             val deletesLast = scope == EditScope.THIS_ONLY && editSchedule != null && recurrenceId != null &&
               RecurrenceEngine.isOnlyRemainingOccurrence(
                 editSchedule,
-                repositorySnapshot.exceptions.filter { it.scheduleId == editSchedule.id },
+                repositorySnapshot.occurrenceAdjustments.filter { it.scheduleId == editSchedule.id },
                 recurrenceId,
               )
             deletingLastOccurrence = deletesLast
@@ -466,14 +466,14 @@ private fun ScheduleContent(
   onUiStateChanged: (ScheduleUi) -> Unit,
   firstMonday: Date?,
   categories: List<ScheduleCategory>,
-  occurrenceExceptions: List<ScheduleOccurrenceException>,
+  occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
   showCourseRelation: Boolean,
   reminderAuthorized: Boolean,
   onRequestReminderAuthorization: (resetOnFailure: Boolean) -> Unit,
   onSave: () -> Unit,
   onCancel: () -> Unit,
   onDelete: () -> Unit,
-  onRestoreOccurrenceAdjustment: (ScheduleOccurrenceException) -> Unit,
+  onRestoreOccurrenceAdjustment: (ScheduleOccurrenceAdjustment) -> Unit,
   onToggleCompleted: ((Boolean) -> Unit)?,
   onEditModeChanged: (Boolean) -> Unit,
 ) {
@@ -611,7 +611,7 @@ private fun ScheduleContent(
       anchorDate = modelState.recurrenceAnchorDate,
       firstMonday = firstMonday,
       schedule = modelState.origin,
-      occurrenceExceptions = occurrenceExceptions,
+      occurrenceAdjustments = occurrenceAdjustments,
       onRestoreOccurrenceAdjustment = onRestoreOccurrenceAdjustment,
       onChange = { modelState.recurrence = it },
       modifier = Modifier.fillMaxWidth(),

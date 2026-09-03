@@ -11,7 +11,7 @@ import com.cyxbs.pages.course.view.item.extension.LocalCourseItemBottomSheetDial
 import com.cyxbs.pages.course.view.item.impl.CourseCreateItem
 import com.cyxbs.pages.course.view.item.impl.PlatformCourseCreateItem
 import com.cyxbs.pages.course.view.item.impl.PlatformCourseCreateItemFactory
-import com.cyxbs.pages.schedule.api.IScheduleService2
+import com.cyxbs.pages.schedule.api.IScheduleOccurrenceService
 
 /**
  * 完整课表中的事务创建 Item 配置。
@@ -26,7 +26,7 @@ object DefaultCourseCreateItemFactory : PlatformCourseCreateItemFactory {
 
 private class DefaultCourseCreateItem(
   item: CourseCreateItem,
-  scheduleService: IScheduleService2 = IScheduleService2::class.impl(),
+  scheduleService: IScheduleOccurrenceService = IScheduleOccurrenceService::class.impl(),
 ) : PlatformCourseCreateItem {
 
   private val bottomSheetExtension = DefaultCreateBottomSheetExtension(item, scheduleService)
@@ -53,7 +53,7 @@ private class DefaultCourseCreateItem(
  */
 private class DefaultCreateBottomSheetExtension(
   private val item: CourseCreateItem,
-  private val scheduleService: IScheduleService2,
+  private val scheduleService: IScheduleOccurrenceService,
 ) : CourseItemBottomSheetDialogExtension {
 
   override val itemState: CourseItemState

@@ -15,5 +15,6 @@ data class ScheduleOccurrence(
   val categoryId: CategoryId?,
   val reminder: ScheduleReminder?,
   val status: OccurrenceStatus,
-  val isOverridden: Boolean,
+  /** 是否应用了独立于父系列的单次调整。 */
+  val isAdjusted: Boolean,
 )

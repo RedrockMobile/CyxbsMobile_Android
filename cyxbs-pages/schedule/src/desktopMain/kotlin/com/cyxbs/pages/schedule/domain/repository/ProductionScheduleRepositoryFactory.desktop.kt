@@ -4,11 +4,11 @@ import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.pages.schedule.data.local.room3.DesktopScheduleRoomDatabaseOwner
 import com.cyxbs.pages.schedule.data.local.room3.DesktopScheduleRoomDatabaseResources
-import com.cyxbs.pages.schedule.data.local.room3.KtorScheduleV2RepositoryGateway
+import com.cyxbs.pages.schedule.data.local.room3.KtorScheduleRepositoryGateway
 import com.cyxbs.pages.schedule.data.local.room3.RoomScheduleRepositoryFactory
-import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RepositoryGateway
-import com.cyxbs.pages.schedule.data.remote.v3.KtorScheduleV2Gateway
-import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2ApiService
+import com.cyxbs.pages.schedule.data.local.room3.ScheduleRepositoryGateway
+import com.cyxbs.pages.schedule.data.remote.KtorScheduleGateway
+import com.cyxbs.pages.schedule.data.remote.ScheduleApiService
 import kotlin.time.Clock
 
 /**
@@ -25,7 +25,7 @@ actual fun createProductionScheduleRepositoryFactory(
 )
 
 /**
- * 从固定 Desktop 数据库资源组装最终 Room v2 repository。
+ * 从固定 Desktop 数据库资源组装最终 Room repository。
  *
  * [gatewayFactory] 每次接收调用方传入的 exact [AccountSession]；测试可用它验证账号绑定和初始化的一次 Sync，
  * 生产默认值从 KtProvider 获取 Ktorfit API，不增加 Schedule 私有网络栈、队列或 receipt。
@@ -33,8 +33,8 @@ actual fun createProductionScheduleRepositoryFactory(
 internal fun createDesktopRoomScheduleRepositoryFactory(
   resources: DesktopScheduleRoomDatabaseResources,
   clock: Clock,
-  gatewayFactory: (AccountSession) -> ScheduleV2RepositoryGateway = { session ->
-    KtorScheduleV2RepositoryGateway(KtorScheduleV2Gateway(ScheduleV2ApiService::class.impl(), session))
+  gatewayFactory: (AccountSession) -> ScheduleRepositoryGateway = { session ->
+    KtorScheduleRepositoryGateway(KtorScheduleGateway(ScheduleApiService::class.impl(), session))
   },
 ): ScheduleRepositoryFactory = RoomScheduleRepositoryFactory(
   database = resources.database,

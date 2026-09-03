@@ -12,8 +12,8 @@ enum class RepeatFreqOption { NONE, DAILY, WEEKLY, MONTHLY, YEARLY }
 enum class RepeatEndOption { NEVER, COUNT, UNTIL }
 
 /**
- * 面向表单控件的重复规则草稿，字段限定为 Schedule v2 支持的 RFC 5545 子集。
- * 单实例例外刻意不进入本模型：规则编辑只描述系列，移动、完成与取消由 occurrence exception 单独保存。
+ * 面向表单控件的重复规则草稿，字段限定为 Schedule 支持的 RFC 5545 子集。
+ * 单次调整刻意不进入本模型：规则编辑只描述系列，移动、完成与取消由 occurrence adjustment 单独保存。
  */
 data class RecurrenceDraft(
   val freq: RepeatFreqOption = RepeatFreqOption.NONE,

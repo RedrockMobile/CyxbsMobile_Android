@@ -5,15 +5,15 @@ import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.account.api.AccountState
 import com.cyxbs.pages.schedule.data.local.room3.RoomScheduleRepositoryFactory
 import com.cyxbs.pages.schedule.data.local.room3.ScheduleRoomDatabase
-import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RepositoryGateway
-import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RoomStateStore
+import com.cyxbs.pages.schedule.data.local.room3.ScheduleRepositoryGateway
+import com.cyxbs.pages.schedule.data.local.room3.ScheduleRoomStateStore
 import com.cyxbs.pages.schedule.data.local.room3.bundledScheduleRoomDriver
 import com.cyxbs.pages.schedule.data.local.room3.closeScheduleRoomDatabase
-import com.cyxbs.pages.schedule.data.remote.v3.MutationRequest
-import com.cyxbs.pages.schedule.data.remote.v3.MutationResponse
-import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2CallResult
-import com.cyxbs.pages.schedule.data.remote.v3.SyncRequest
-import com.cyxbs.pages.schedule.data.remote.v3.SyncResponse
+import com.cyxbs.pages.schedule.data.remote.MutationRequest
+import com.cyxbs.pages.schedule.data.remote.MutationResponse
+import com.cyxbs.pages.schedule.data.remote.ScheduleCallResult
+import com.cyxbs.pages.schedule.data.remote.SyncRequest
+import com.cyxbs.pages.schedule.data.remote.SyncResponse
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import java.nio.file.Files
@@ -25,7 +25,7 @@ import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
 
-/** Android Schedule v2 production factory 的纯 host 组装测试。 */
+/** Android Schedule production factory 的纯 host 组装测试。 */
 class ProductionScheduleRepositoryFactoryAndroidTest {
   /**
    * seam 必须把 exact session、同一数据库与调用方墙钟交给 Room factory。
@@ -80,7 +80,7 @@ class ProductionScheduleRepositoryFactoryAndroidTest {
         ),
       )
 
-      val category = ScheduleV2RoomStateStore(database)
+      val category = ScheduleRoomStateStore(database)
         .readAccountState(ACCOUNT_ID)
         .categories
         .single()
@@ -108,16 +108,16 @@ class ProductionScheduleRepositoryFactoryAndroidTest {
   }
 
   /** Sync 与 daily 都返回可恢复的传输失败，用来验证 pending 不因离线丢失。 */
-  private class NoNetworkGateway : ScheduleV2RepositoryGateway {
+  private class NoNetworkGateway : ScheduleRepositoryGateway {
     var syncCalls: Int = 0
       private set
 
     var dailyCalls: Int = 0
       private set
 
-    private fun failedDailyCall(): ScheduleV2CallResult<MutationResponse> {
+    private fun failedDailyCall(): ScheduleCallResult<MutationResponse> {
       dailyCalls += 1
-      return ScheduleV2CallResult.TransportFailure(
+      return ScheduleCallResult.TransportFailure(
         status = null,
         cause = IllegalStateException("offline in production factory daily test"),
       )
@@ -126,9 +126,9 @@ class ProductionScheduleRepositoryFactoryAndroidTest {
     override suspend fun sync(
       accountId: String,
       request: SyncRequest,
-    ): ScheduleV2CallResult<SyncResponse> {
+    ): ScheduleCallResult<SyncResponse> {
       syncCalls += 1
-      return ScheduleV2CallResult.TransportFailure(
+      return ScheduleCallResult.TransportFailure(
         status = null,
         cause = IllegalStateException("offline in production factory seam test"),
       )
@@ -137,17 +137,17 @@ class ProductionScheduleRepositoryFactoryAndroidTest {
     override suspend fun createSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleV2CallResult<MutationResponse> = failedDailyCall()
+    ): ScheduleCallResult<MutationResponse> = failedDailyCall()
 
     override suspend fun updateSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleV2CallResult<MutationResponse> = failedDailyCall()
+    ): ScheduleCallResult<MutationResponse> = failedDailyCall()
 
     override suspend fun deleteSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleV2CallResult<MutationResponse> = failedDailyCall()
+    ): ScheduleCallResult<MutationResponse> = failedDailyCall()
   }
 
   private companion object {

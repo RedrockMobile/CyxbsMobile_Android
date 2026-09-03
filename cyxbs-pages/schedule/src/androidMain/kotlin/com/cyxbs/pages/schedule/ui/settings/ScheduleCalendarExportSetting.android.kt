@@ -26,7 +26,7 @@ import com.cyxbs.pages.schedule.calendar.ScheduleCalendarExportController
 import com.cyxbs.pages.schedule.calendar.ScheduleCalendarExportCoordinator
 import com.cyxbs.pages.schedule.calendar.ScheduleCalendarExportCoordinatorProvider
 import com.cyxbs.pages.schedule.calendar.ScheduleCalendarExportSettings
-import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.ui.dialog.ScheduleConfirmDialog
 
 private enum class CalendarPermissionPurpose { ENABLE, DELETE }

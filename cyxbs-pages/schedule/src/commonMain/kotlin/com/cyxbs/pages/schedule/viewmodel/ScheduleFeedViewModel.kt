@@ -3,12 +3,12 @@ package com.cyxbs.pages.schedule.viewmodel
 import com.cyxbs.components.base.ui.BaseViewModel
 import com.cyxbs.components.config.sp.accountSettings
 import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
-import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
@@ -27,7 +27,7 @@ import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 /**
- * Feed 卡片的状态与命令持有者，与主页面、课表观察同一个 Schedule v2 快照。
+ * Feed 卡片的状态与命令持有者，与主页面、课表观察同一个 Schedule 快照。
  * 复用邮子清单的有限窗口投影并最多展示三项，保证重复实例、临期与超期口径在两个入口一致。
  */
 class ScheduleFeedViewModel(
@@ -112,12 +112,12 @@ class ScheduleFeedViewModel(
     if (recurrenceId == null) repository.execute(ScheduleCommand.CompleteNonRepeating(id, true))
     else {
       val now = clock.now()
-      val existing = repository.snapshot.value.exceptions.firstOrNull {
+      val existing = repository.snapshot.value.occurrenceAdjustments.firstOrNull {
         it.scheduleId == id && it.recurrenceId == recurrenceId
       }
-      repository.execute(ScheduleCommand.UpsertOccurrenceException(
+      repository.execute(ScheduleCommand.UpsertOccurrenceAdjustment(
         existing?.copy(status = OccurrenceStatus.COMPLETED, updatedAt = now)
-          ?: ScheduleOccurrenceException(
+          ?: ScheduleOccurrenceAdjustment(
             id, recurrenceId, 0, OccurrenceStatus.COMPLETED, null, now, now,
           )
       ))

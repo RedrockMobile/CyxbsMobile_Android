@@ -60,6 +60,7 @@ import com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog
 import com.cyxbs.pages.schedule.ui.edit.EditScope
 import com.cyxbs.pages.schedule.ui.main.isScheduleMainEditorEnabled
 import com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence
+import com.cyxbs.pages.schedule.ui.model.occurrenceByIdentity
 import com.cyxbs.pages.schedule.ui.model.occurrencesInRange
 import com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument
 import com.cyxbs.pages.schedule.ui.timeline.HourHeight
@@ -116,14 +117,16 @@ fun ScheduleTodoPage(
 
   var showCreateEditor by remember { mutableStateOf(false) }
   var editingIdentity by remember { mutableStateOf<Pair<ScheduleId, RecurrenceId?>?>(null) }
-  var timelineEditingOccurrence by remember { mutableStateOf<ScheduleUiOccurrence?>(null) }
+  var timelineEditingIdentity by remember {
+    mutableStateOf<Pair<ScheduleId, RecurrenceId?>?>(null)
+  }
   var selectedCategoryId by remember(currentAccountSettings.stuNum) {
     mutableStateOf<CategoryId?>(null)
   }
   var viewMode by remember(currentAccountSettings.stuNum) {
     mutableStateOf(loadScheduleTodoViewMode(currentAccountSettings))
   }
-  // 置顶只保存在当前账号 Settings，不进入 Schedule v2 协议；切号后 remember 会加载对应账号的数据。
+  // 置顶只保存在当前账号 Settings，不进入 Schedule 协议；切号后 remember 会加载对应账号的数据。
   var pinnedIds by remember(currentAccountSettings.stuNum) {
     mutableStateOf(loadScheduleTodoPinnedIds(currentAccountSettings))
   }
@@ -157,7 +160,7 @@ fun ScheduleTodoPage(
     if (!editorEnabled) {
       showCreateEditor = false
       editingIdentity = null
-      timelineEditingOccurrence = null
+      timelineEditingIdentity = null
       viewModel.exitManageMode()
     }
   }
@@ -196,15 +199,22 @@ fun ScheduleTodoPage(
     // 条目被删除或同步结果使其不再可见时关闭编辑器，避免同 identity 将来重建后意外重新弹出。
     if (editingIdentity != null && editingItem == null) editingIdentity = null
   }
-  val timelineEditingSchedule = remember(snapshot.schedules, timelineEditingOccurrence) {
-    timelineEditingOccurrence?.let { occurrence ->
-      snapshot.schedules.firstOrNull { it.id == occurrence.scheduleId }
+  val timelineEditingOccurrence = remember(snapshot, timelineEditingIdentity) {
+    timelineEditingIdentity?.let { identity ->
+      snapshot.occurrenceByIdentity(identity.first, identity.second)
     }
   }
-  LaunchedEffect(timelineEditingOccurrence, timelineEditingSchedule) {
-    // 同步删除了所点系列时及时关闭时间轴编辑器，避免保留已失效的 occurrence 快照。
-    if (timelineEditingOccurrence != null && timelineEditingSchedule == null) {
-      timelineEditingOccurrence = null
+  val timelineEditingSchedule = remember(snapshot.schedules, timelineEditingIdentity) {
+    timelineEditingIdentity?.let { identity ->
+      snapshot.schedules.firstOrNull { it.id == identity.first }
+    }
+  }
+  LaunchedEffect(timelineEditingIdentity, timelineEditingOccurrence, timelineEditingSchedule) {
+    // 删除系列或取消所点实例后及时关闭；普通更新则由 identity 重新解析，保持详情内容实时刷新。
+    if (timelineEditingIdentity != null &&
+      (timelineEditingOccurrence == null || timelineEditingSchedule == null)
+    ) {
+      timelineEditingIdentity = null
     }
   }
   val filteredPending = remember(projection.pending, selectedCategoryId) {
@@ -413,7 +423,7 @@ fun ScheduleTodoPage(
                 },
                 onOpen = {
                   showCreateEditor = false
-                  timelineEditingOccurrence = null
+                  timelineEditingIdentity = null
                   editingIdentity = item.schedule.id to item.occurrence.recurrenceId
                 },
                 onComplete = {
@@ -468,7 +478,7 @@ fun ScheduleTodoPage(
                 },
                 onOpen = {
                   showCreateEditor = false
-                  timelineEditingOccurrence = null
+                  timelineEditingIdentity = null
                   editingIdentity = item.schedule.id to item.occurrence.recurrenceId
                 },
                 onComplete = {
@@ -511,7 +521,7 @@ fun ScheduleTodoPage(
               if (!editorEnabled) return@ScheduleTimelinePane
               showCreateEditor = false
               editingIdentity = null
-              timelineEditingOccurrence = occurrence
+              timelineEditingIdentity = occurrence.scheduleId to occurrence.recurrenceId
             },
           )
         }
@@ -527,7 +537,7 @@ fun ScheduleTodoPage(
           .size(50.dp),
         onClick = {
           editingIdentity = null
-          timelineEditingOccurrence = null
+          timelineEditingIdentity = null
           showCreateEditor = true
         },
         backgroundColor = ScheduleTodoAccentColor,
@@ -640,7 +650,7 @@ fun ScheduleTodoPage(
             recurrenceId = timelineOccurrence.recurrenceId,
             categoryRepository = viewModel.repository,
             showCourseRelation = true,
-            onDismiss = { timelineEditingOccurrence = null },
+            onDismiss = { timelineEditingIdentity = null },
             onConfirm = { state, scope, newCategory ->
               viewModel.saveSchedule(
                 state,
@@ -655,7 +665,7 @@ fun ScheduleTodoPage(
                 scope,
                 timelineOccurrence.recurrenceId,
               )
-              timelineEditingOccurrence = null
+              timelineEditingIdentity = null
             },
             onToggleCompleted = timelineSchedule.todoState?.let {
               { completed ->

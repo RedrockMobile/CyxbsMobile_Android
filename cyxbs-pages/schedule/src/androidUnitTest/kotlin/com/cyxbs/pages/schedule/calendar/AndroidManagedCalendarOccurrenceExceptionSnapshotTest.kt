@@ -30,7 +30,7 @@ class AndroidManagedCalendarOccurrenceExceptionSnapshotTest {
     val snapshot = AndroidManagedCalendarSnapshotAcquirer(fake, ACCOUNT).acquire(SCOPE)
     val present = assertIs<AndroidManagedCalendarSnapshot.Present>(snapshot)
     val event = present.events.single()
-    val native = event.occurrenceExceptions.single()
+    val native = event.occurrenceAdjustments.single()
 
     assertEquals(AndroidManagedCalendarIdentifierCodec.encode(77L, HOST_INCARNATION), present.calendarIdentifier)
     assertEquals(MASTER_ID, event.projectionId)

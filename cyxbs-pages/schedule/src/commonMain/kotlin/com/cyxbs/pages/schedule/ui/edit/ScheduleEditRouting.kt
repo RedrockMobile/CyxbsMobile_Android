@@ -38,7 +38,7 @@ suspend fun ScheduleRepository.applyScheduleEdit(
   val scheduleId = state.origin?.id ?: return created
   // 单次调整属于同一编辑会话，但不与 scope 混为一个 occurrence patch；表单保存成功后再逐条恢复继承。
   state.occurrenceRestoreIds.forEach { id ->
-    restoreOccurrenceAdjustment(scheduleId, id, clock)
+    restoreOccurrenceAdjustment(scheduleId, id)
   }
   return null
 }
@@ -133,34 +133,41 @@ private suspend fun ScheduleRepository.applyScheduleFieldEdit(
       }
     }
     EditScope.THIS_ONLY -> {
-      // 关联关系属于整个系列；“仅本次”只约束标题、时间等 occurrence 字段，不能生成单次关联例外。
+      // 关联关系属于整个系列；“仅本次”只约束标题、时间等 occurrence 字段，不能生成单次关联调整。
       if (state.isSeriesRelationChanged) execute(ScheduleCommand.Update(relationEdited))
-      // RRULE 只属于系列；仅修改 recurrence 后选择 THIS_ONLY 按 no-op 处理，不创建空 occurrence exception。
+      // RRULE 只属于系列；仅修改 recurrence 后选择 THIS_ONLY 按 no-op 处理，不创建空的单次调整。
       if (!state.isOccurrenceFieldsChanged) return null
       require(!(state.isOccurrenceTimingChanged && edited.timing == ScheduleTiming.Unscheduled)) {
         "THIS_ONLY occurrence timing cannot become unscheduled"
       }
       requireNotNull(recurrenceId).let { id ->
-        val existing = snapshot.value.exceptions.firstOrNull {
+        val existing = snapshot.value.occurrenceAdjustments.firstOrNull {
           it.scheduleId == origin.id && it.recurrenceId == id
         }
-        val occurrence = state.toOccurrencePatch(origin, id, now, existing?.patch)
+        val occurrence = state.toOccurrencePatch(
+          origin = origin,
+          recurrenceId = id,
+          now = now,
+          existingPatch = existing?.patch,
+          status = existing?.status ?: state.initialOccurrence?.status ?: OccurrenceStatus.ACTIVE,
+        )
         if (occurrence.patch == OccurrencePatch()) {
-          if (existing?.status == OccurrenceStatus.ACTIVE) {
-            execute(ScheduleCommand.DeleteOccurrenceException(origin.id, id))
-          } else if (existing != null) {
-            // 清除全部字段覆盖时仍保留完成/取消状态；状态与 patch 是相互正交的业务事实。
-            execute(ScheduleCommand.UpsertOccurrenceException(existing.copy(patch = null, updatedAt = now)))
+          // 空覆盖仍通过 UPSERT 保存状态；恢复调整不再等价为资源 DELETE。
+          existing?.let {
+            execute(ScheduleCommand.UpsertOccurrenceAdjustment(it.copy(patch = null, updatedAt = now)))
           }
           return@let
         }
-        // 再次编辑单实例视为恢复为 ACTIVE；沿用既有例外的 revision/createdAt，避免把同步资源误当成新记录。
-        execute(ScheduleCommand.UpsertOccurrenceException(
-          occurrence.copy(
-            revision = existing?.revision ?: 0,
-            createdAt = existing?.createdAt ?: now,
-          )
-        ))
+        // 内容调整与完成态相互正交；沿用既有单次调整的状态、revision/createdAt，避免编辑标题或时间时
+        // 意外取消完成，也避免把同步资源误当成新记录。
+        val savedOccurrence = occurrence.copy(
+          revision = existing?.revision ?: 0,
+          createdAt = existing?.createdAt ?: now,
+        )
+        execute(
+          newCategory?.let { ScheduleCommand.SaveOccurrenceWithNewCategory(it, savedOccurrence) }
+            ?: ScheduleCommand.UpsertOccurrenceAdjustment(savedOccurrence),
+        )
       }
     }
     EditScope.THIS_AND_FOLLOWING -> {
@@ -182,7 +189,7 @@ private suspend fun ScheduleRepository.applyScheduleFieldEdit(
       }
       val split = SeriesSplitter.split(
         schedule = origin,
-        exceptions = snapshot.value.exceptions.filter { it.scheduleId == origin.id },
+        occurrenceAdjustments = snapshot.value.occurrenceAdjustments.filter { it.scheduleId == origin.id },
         boundary = boundary,
         followingId = idGenerators.scheduleId(),
       )
@@ -192,7 +199,7 @@ private suspend fun ScheduleRepository.applyScheduleFieldEdit(
         updatedAt = now,
       )
       val following = split.followingSchedule.copy(
-        // 新系列把当前 occurrence 的有效内容提升为系列值；边界自身的旧 exception 随后会被移除。
+        // 新系列把当前 occurrence 的有效内容提升为系列值；边界自身的旧单次调整随后会被移除。
         title = edited.title,
         description = edited.description,
         categoryId = edited.categoryId,
@@ -219,8 +226,8 @@ private suspend fun ScheduleRepository.applyScheduleFieldEdit(
 /**
  * 切换某次日程的完成态。
  *
- * 非重复日程直接更新系列完成态；重复日程使用稳定 [recurrenceId] 写 occurrence 例外，并保留已有例外中的
- * 内容覆盖、revision 与创建时间。该操作会立即写入本地优先仓库，不经过编辑表单的范围选择。
+ * 非重复日程直接更新系列完成态；重复日程使用稳定 [recurrenceId] 写单次调整，并保留已有调整中的
+ * 内容字段、revision 与创建时间。该操作会立即写入本地优先仓库，不经过编辑表单的范围选择。
  */
 suspend fun ScheduleRepository.applyScheduleCompletion(
   scheduleId: ScheduleId,
@@ -233,15 +240,15 @@ suspend fun ScheduleRepository.applyScheduleCompletion(
     return
   }
   val now = clock.now()
-  val existing = snapshot.value.exceptions.firstOrNull {
+  val existing = snapshot.value.occurrenceAdjustments.firstOrNull {
     it.scheduleId == scheduleId && it.recurrenceId == recurrenceId
   }
   execute(
-    ScheduleCommand.UpsertOccurrenceException(
+    ScheduleCommand.UpsertOccurrenceAdjustment(
       existing?.copy(
         status = if (completed) OccurrenceStatus.COMPLETED else OccurrenceStatus.ACTIVE,
         updatedAt = now,
-      ) ?: ScheduleOccurrenceException(
+      ) ?: ScheduleOccurrenceAdjustment(
         scheduleId = scheduleId,
         recurrenceId = recurrenceId,
         revision = 0,
@@ -255,12 +262,12 @@ suspend fun ScheduleRepository.applyScheduleCompletion(
 }
 
 /**
- * 按范围删除日程：单实例写入 CANCELLED 例外，“本次及以后”按原始实例锚点截断，全部则删除系列。
+ * 按范围删除日程：单实例写入 CANCELLED 单次调整，“本次及以后”按原始实例锚点截断，全部则删除系列。
  *
  * @param recurrenceId 单实例和后续范围的稳定锚点；对应范围下为空会立即失败。
- * @param clock 创建或更新单实例墓碑时使用，确保删除能参与后续同步。
+ * @param clock 创建或更新单次调整时使用，确保删除状态能参与后续同步。
  *
- * 该函数会挂起并写仓库；普通单实例删除不会物理删除系列，也不会丢失已有例外的 revision。若有限系列
+ * 该函数会挂起并写仓库；普通单实例删除不会物理删除系列，也不会丢失已有调整的 revision。若有限系列
  * 只剩当前实例，则删除当前实例等价于删除父系列，避免留下没有任何可见 occurrence 的空资源。
  */
 suspend fun ScheduleRepository.applyScheduleDelete(
@@ -276,18 +283,18 @@ suspend fun ScheduleRepository.applyScheduleDelete(
       val currentSnapshot = snapshot.value
       val schedule = currentSnapshot.schedules.firstOrNull { it.id == scheduleId }
         ?: return
-      val scheduleExceptions = currentSnapshot.exceptions.filter { it.scheduleId == scheduleId }
-      if (RecurrenceEngine.isOnlyRemainingOccurrence(schedule, scheduleExceptions, id)) {
+      val scheduleAdjustments = currentSnapshot.occurrenceAdjustments.filter { it.scheduleId == scheduleId }
+      if (RecurrenceEngine.isOnlyRemainingOccurrence(schedule, scheduleAdjustments, id)) {
         execute(ScheduleCommand.Delete(scheduleId))
         return
       }
       val now = clock.now()
-      val existing = scheduleExceptions.firstOrNull {
+      val existing = scheduleAdjustments.firstOrNull {
         it.scheduleId == scheduleId && it.recurrenceId == id
       }
-      execute(ScheduleCommand.UpsertOccurrenceException(
-        existing?.copy(status = OccurrenceStatus.CANCELLED, updatedAt = now)
-          ?: ScheduleOccurrenceException(
+      execute(ScheduleCommand.UpsertOccurrenceAdjustment(
+        existing?.copy(status = OccurrenceStatus.CANCELLED, patch = null, updatedAt = now)
+          ?: ScheduleOccurrenceAdjustment(
             scheduleId, id, 0, OccurrenceStatus.CANCELLED, null, now, now,
           )
       ))
@@ -309,28 +316,19 @@ suspend fun ScheduleRepository.applyScheduleDelete(
 }
 
 /**
- * 删除某次发生的单次调整，使其重新继承重复系列。
+ * 还原某次发生的单次调整，使其重新继承重复系列。
  *
- * 单次删除和普通单次修改都可以直接删除 exception；已完成实例还承载完成态，因此只清空 [OccurrencePatch]，
- * 避免用户还原时间或内容时把“已完成”一并撤销。没有调整内容的正常/完成实例不会产生任何命令。
+ * 还原会物理删除该单次调整，实例随后完全继承父系列；这也会一起移除 CANCELLED/COMPLETED 等单次状态。
+ * 没有对应调整时不会产生命令。
  */
 suspend fun ScheduleRepository.restoreOccurrenceAdjustment(
   scheduleId: ScheduleId,
   recurrenceId: RecurrenceId,
-  clock: Clock,
 ) {
-  val existing = snapshot.value.exceptions.firstOrNull {
+  val existing = snapshot.value.occurrenceAdjustments.firstOrNull {
     it.scheduleId == scheduleId && it.recurrenceId == recurrenceId
   } ?: return
-  if (existing.status != OccurrenceStatus.CANCELLED && existing.patch == null) return
-
-  if (existing.status == OccurrenceStatus.COMPLETED) {
-    execute(ScheduleCommand.UpsertOccurrenceException(
-      existing.copy(patch = null, updatedAt = clock.now()),
-    ))
-  } else {
-    execute(ScheduleCommand.DeleteOccurrenceException(scheduleId, recurrenceId))
-  }
+  execute(ScheduleCommand.DeleteOccurrenceAdjustment(existing.scheduleId, existing.recurrenceId))
 }
 
 /**
@@ -371,8 +369,8 @@ private fun ScheduleTiming.effectiveStart() = when (this) {
 /**
  * 把实例编辑结果压缩成 sparse patch，并保留 [recurrenceId] 作为不可变的 occurrence identity。
  *
- * 未触碰字段保留 existing patch；实际改动字段保存本次 occurrence 的显式结果。timing 使用完整联合原子替换，
- * 实例标识仍指向原始展开锚点，从而保证深链、完成状态和后续同步仍能定位同一次 occurrence。
+ * 未触碰字段保留 existing patch；实际改动字段保存本次 occurrence 的显式结果。日期与时间形态分别写入，
+ * 实例标识仍指向原始展开锚点，从而保证整系列改日期或时间时不会覆盖另一维的单次调整。
  * 当前 UI 没有“恢复继承”动作，因此改成与 parent 相同的非空值也保存 Replace；可清空字段的空值保存 Clear。
  */
 private fun EditScheduleModelState.toOccurrencePatch(
@@ -380,7 +378,8 @@ private fun EditScheduleModelState.toOccurrencePatch(
   recurrenceId: RecurrenceId,
   now: Instant,
   existingPatch: OccurrencePatch?,
-): ScheduleOccurrenceException {
+  status: OccurrenceStatus,
+): ScheduleOccurrenceAdjustment {
   val edited = toDraft()
   /**
    * 未实际触碰的字段原样保留 [existingPatch]，即使其当前投影恰与 parent 相等；否则编辑另一字段会意外
@@ -394,9 +393,19 @@ private fun EditScheduleModelState.toOccurrencePatch(
   ): FieldPatch<T> = if (changed) build() else existing
 
   val existing = existingPatch ?: OccurrencePatch()
+  val initialTiming = requireNotNull(initialOccurrence).timing
   val patch = OccurrencePatch(
-    timing = preserveOrBuild(isOccurrenceTimingChanged, existing.timing) {
-      FieldPatch.Replace(edited.timing)
+    date = preserveOrBuild(
+      isOccurrenceTimingChanged && initialTiming.occurrenceDate() != edited.timing.occurrenceDate(),
+      existing.date,
+    ) {
+      FieldPatch.Replace(edited.timing.occurrenceDate())
+    },
+    time = preserveOrBuild(
+      isOccurrenceTimingChanged && initialTiming.occurrenceTime() != edited.timing.occurrenceTime(),
+      existing.time,
+    ) {
+      FieldPatch.Replace(edited.timing.occurrenceTime())
     },
     title = preserveOrBuild(isOccurrenceTitleChanged, existing.title) {
       FieldPatch.Replace(edited.title)
@@ -414,5 +423,21 @@ private fun EditScheduleModelState.toOccurrencePatch(
       edited.reminder?.let { FieldPatch.Replace(it) } ?: FieldPatch.Clear
     },
   )
-  return ScheduleOccurrenceException(origin.id, recurrenceId, 0, OccurrenceStatus.ACTIVE, patch, now, now)
+  return ScheduleOccurrenceAdjustment(origin.id, recurrenceId, 0, status, patch, now, now)
+}
+
+/** 重复 occurrence 的四种有效 timing 都必须有一个明确日期。 */
+private fun ScheduleTiming.occurrenceDate() = when (this) {
+  is ScheduleTiming.Timed -> start.date
+  is ScheduleTiming.Deadline -> due.date
+  is ScheduleTiming.AllDay -> date
+  ScheduleTiming.Unscheduled -> error("recurring occurrence cannot be unscheduled")
+}
+
+/** 将完整 timing 拆成不携带日期的单次时间形态，供 date/time 两个原子分别比较与提交。 */
+private fun ScheduleTiming.occurrenceTime(): OccurrenceTime = when (this) {
+  is ScheduleTiming.Timed -> OccurrenceTime.TimeRange(start.minuteOfDay, durationMinutes, timeZoneId)
+  is ScheduleTiming.Deadline -> OccurrenceTime.TimePoint(due.minuteOfDay, timeZoneId)
+  is ScheduleTiming.AllDay -> OccurrenceTime.AllDay
+  ScheduleTiming.Unscheduled -> error("recurring occurrence cannot be unscheduled")
 }

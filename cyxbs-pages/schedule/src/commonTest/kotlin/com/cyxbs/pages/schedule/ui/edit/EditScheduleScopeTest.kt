@@ -7,7 +7,7 @@ import com.cyxbs.components.config.time.MinuteTimeDate
 import kotlin.test.*
 import kotlin.time.Instant
 
-/** Scope and draft tests stay DTO-free after the v2 edit migration. */
+/** 编辑范围与草稿必须保持为纯领域模型，不能依赖网络 DTO。 */
 class EditScheduleScopeTest {
   @Test fun scopes_are_stable() = assertEquals(
     listOf(EditScope.THIS_ONLY, EditScope.THIS_AND_FOLLOWING, EditScope.ALL), EditScope.entries,

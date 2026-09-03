@@ -9,15 +9,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 
-private val UUID_V7_CANONICAL = Regex(
-  "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+private val SCHEDULE_UUID_CANONICAL = Regex(
+  "^[0-9a-f]{8}-[0-9a-f]{4}-[57][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
 )
 
 /**
- * 日程在导航层与领域层共用的 UUIDv7 标识。
+ * 日程在导航层、领域层和服务端共用的稳定 UUID 标识。
  *
- * 构造时只接受小写、带连字符且版本位与变体位正确的规范 UUIDv7，避免同一标识因文本形式不同而在
- * 导航参数、持久化键和同步命令之间产生歧义。
+ * 普通新增使用 UUID v7；旧清单和旧事务迁移使用输入稳定的 UUID v5。两者都只接受小写规范文本，
+ * 避免同一标识因大小写或连字符形式不同而在导航、Room 和同步协议之间产生歧义。
  */
 @Serializable
 @JvmInline
@@ -28,22 +28,22 @@ value class ScheduleId private constructor(val value: String) {
     /**
      * 从字符串创建日程标识。
      *
-     * @param value 待校验的 UUIDv7 文本；必须是规范小写形式。
+     * @param value 待校验的 UUID v5 或 v7 文本；必须是规范小写形式。
      * @return 与输入文本对应的 [ScheduleId]。
-     * @throws IllegalArgumentException 输入不符合规范 UUIDv7 时抛出。
+     * @throws IllegalArgumentException 输入不符合规范 UUID v5/v7 时抛出。
      */
     operator fun invoke(value: String): ScheduleId {
-      require(UUID_V7_CANONICAL.matches(value)) { "ScheduleId must be a canonical UUIDv7" }
+      require(SCHEDULE_UUID_CANONICAL.matches(value)) { "ScheduleId must be a canonical UUIDv5 or UUIDv7" }
       return ScheduleId(value)
     }
 
     /**
-     * 尝试解析规范 UUIDv7 文本，适合处理深链或其他不可信输入。
+     * 尝试解析规范 UUID v5/v7 文本，适合处理深链或其他不可信输入。
      *
      * @return 解析成功时返回标识，否则返回 `null`，不会抛出格式异常。
      */
     fun parseOrNull(value: String): ScheduleId? =
-      if (UUID_V7_CANONICAL.matches(value)) ScheduleId(value) else null
+      if (SCHEDULE_UUID_CANONICAL.matches(value)) ScheduleId(value) else null
   }
 }
 
@@ -64,7 +64,7 @@ data class RecurrenceId(
  * 日程主页面的导航契约。
  *
  * [scheduleId] 为空时仅打开主页面；非空时定位指定日程，[recurrenceId] 可进一步定位重复系列中的一次发生。
- * 该契约有意不兼容旧版 `Long` 标识和仅含日期的深链：调用方必须传递与仓库命令一致的 UUIDv7 及完整
+ * 该契约有意不兼容旧版 `Long` 标识和仅含日期的深链：调用方必须传递与仓库命令一致的 UUID 及完整
  * 重复身份，避免 DST、跨时区或同日多次发生时误操作其他实例。
  *
  * @param scheduleId 要定位的日程；为 `null` 时仅进入主页面。

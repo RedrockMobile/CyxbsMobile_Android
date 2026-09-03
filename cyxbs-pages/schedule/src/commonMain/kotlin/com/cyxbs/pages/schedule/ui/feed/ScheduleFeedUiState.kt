@@ -16,7 +16,7 @@ import kotlin.time.Instant
  * 邮子清单 feed 卡片的展示状态。
  *
  * 将「加载中 / 空 / 有数据」三种视图切换收敛成单一状态，由 [com.cyxbs.pages.schedule.viewmodel.ScheduleFeedViewModel]
- * 直接观察 Schedule v2 共享快照并映射；commonMain UI 仅按状态被动渲染，不再依赖旧 ScheduleService 桥接。
+ * 直接观察 Schedule 共享快照并映射；commonMain UI 仅按状态被动渲染，不再依赖旧 ScheduleService 桥接。
  */
 sealed interface ScheduleFeedUiState {
 
@@ -63,7 +63,7 @@ data class ScheduleFeedItemUi(
 )
 
 /**
- * 将 Schedule v2 快照投影为主页 Feed 状态。
+ * 将 Schedule 快照投影为主页 Feed 状态。
  *
  * 横条数量基于完整未完成集合计算，卡片才截取前三项；因此第四项之后的临期或超期事项也不会漏报。
  */

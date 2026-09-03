@@ -131,15 +131,15 @@ internal fun sortScheduleTodoPending(
 /**
  * 返回完成状态实际落库的时间，用于限制已完成列表的展示窗口。
  *
- * 非重复事项完成时会推进日程本身的 [Schedule.updatedAt]；重复实例则由 occurrence exception 记录
- * 完成状态，因此优先使用匹配 exception 的更新时间。找不到匹配行时回退到系列更新时间并保持可展示。
+ * 非重复事项完成时会推进日程本身的 [Schedule.updatedAt]；重复实例则由单次调整记录完成状态，
+ * 因此优先使用匹配调整的更新时间。找不到匹配行时回退到系列更新时间并保持可展示。
  */
 private fun ScheduleTodoItemUi.completedAt(snapshot: ScheduleSnapshot): Instant {
   val recurrenceId = occurrence.recurrenceId ?: return schedule.updatedAt
-  return snapshot.exceptions.firstOrNull { exception ->
-    exception.scheduleId == schedule.id &&
-      exception.recurrenceId == recurrenceId &&
-      exception.status == OccurrenceStatus.COMPLETED
+  return snapshot.occurrenceAdjustments.firstOrNull { adjustment ->
+    adjustment.scheduleId == schedule.id &&
+      adjustment.recurrenceId == recurrenceId &&
+      adjustment.status == OccurrenceStatus.COMPLETED
   }?.updatedAt ?: schedule.updatedAt
 }
 
@@ -164,14 +164,14 @@ private fun Schedule.todoOccurrence(
       } else {
         OccurrenceStatus.ACTIVE
       },
-      isOverridden = false,
+      isAdjusted = false,
     ).toUiModel()
   }
 
   val occurrences = runCatching {
     RecurrenceEngine.expandInRange(
       schedule = this,
-      exceptions = snapshot.exceptions.filter { it.scheduleId == id },
+      occurrenceAdjustments = snapshot.occurrenceAdjustments.filter { it.scheduleId == id },
       rangeStartInclusive = startInclusive,
       rangeEndExclusive = endExclusive,
     ).map(ScheduleOccurrence::toUiModel)

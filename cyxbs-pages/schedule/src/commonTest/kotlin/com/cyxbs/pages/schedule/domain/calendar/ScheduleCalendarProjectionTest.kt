@@ -4,16 +4,15 @@ import com.cyxbs.pages.schedule.domain.model.FieldPatch
 import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
 import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.OccurrenceTime
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
-import com.cyxbs.pages.schedule.domain.model.ReminderId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.components.config.time.Date
@@ -88,7 +87,7 @@ class ScheduleCalendarProjectionTest {
       timing = ScheduleTiming.Timed(
         MinuteTimeDate(2026, 11, 1, 9, 0), 90, "America/New_York",
       ),
-      reminder = reminder("device-10", 10, ReminderChannel.DEVICE),
+      reminder = reminder(10),
     )
     val event = project(schedule).events.single()
     assertEquals(
@@ -196,8 +195,8 @@ class ScheduleCalendarProjectionTest {
       recurrenceId,
       OccurrenceStatus.ACTIVE,
       OccurrencePatch(
-        timing = FieldPatch.Replace(
-          ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 13, 13, 0), 60, "Asia/Shanghai"),
+        time = FieldPatch.Replace(
+          OccurrenceTime.TimeRange(13 * 60, 60, "Asia/Shanghai"),
         ),
         title = FieldPatch.Replace("移动后的标题"),
       ),
@@ -382,7 +381,7 @@ class ScheduleCalendarProjectionTest {
         ScheduleCalendarSource(listOf(value, value), emptyList()), scope,
       )
     }
-    val orphan = ScheduleOccurrenceException(
+    val orphan = ScheduleOccurrenceAdjustment(
       ScheduleId("018f0f7c-6000-7000-8000-000000000099"),
       RecurrenceId(MinuteTimeDate(2026, 7, 12, 9, 0), "Asia/Shanghai", false),
       0, OccurrenceStatus.CANCELLED, null, now, now,
@@ -411,7 +410,7 @@ class ScheduleCalendarProjectionTest {
         RecurrenceFrequency.WEEKLY,
         byWeekDays = linkedSetOf(IsoWeekDay.FRIDAY, IsoWeekDay.MONDAY),
       ),
-      reminder = reminder("sooner", 5, ReminderChannel.DEVICE),
+      reminder = reminder(5),
     )
     val reordered = first.copy(
       recurrence = first.recurrence?.copy(
@@ -474,7 +473,7 @@ class ScheduleCalendarProjectionTest {
     recurrenceId: RecurrenceId,
     status: OccurrenceStatus,
     patch: OccurrencePatch? = null,
-  ) = ScheduleOccurrenceException(
+  ) = ScheduleOccurrenceAdjustment(
     scheduleId = schedule.id,
     recurrenceId = recurrenceId,
     revision = 0,
@@ -484,7 +483,5 @@ class ScheduleCalendarProjectionTest {
     updatedAt = now,
   )
 
-  private fun reminder(id: String, minutes: Int, channel: ReminderChannel) = ScheduleReminder(
-    ReminderId(id), minutes, channel,
-  )
+  private fun reminder(minutes: Int) = ScheduleReminder(minutes)
 }

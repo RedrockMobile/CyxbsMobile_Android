@@ -13,8 +13,6 @@ import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
-import com.cyxbs.pages.schedule.domain.model.ReminderId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
@@ -134,7 +132,7 @@ private class InMemorySchedulePreviewRepository(initialSnapshot: ScheduleSnapsho
       )
       is ScheduleCommand.Delete -> current.copy(
         schedules = current.schedules.filterNot { it.id == command.scheduleId },
-        exceptions = current.exceptions.filterNot { it.scheduleId == command.scheduleId },
+        occurrenceAdjustments = current.occurrenceAdjustments.filterNot { it.scheduleId == command.scheduleId },
       )
       is ScheduleCommand.CompleteNonRepeating -> current.copy(
         schedules = current.schedules.map { schedule ->
@@ -145,14 +143,14 @@ private class InMemorySchedulePreviewRepository(initialSnapshot: ScheduleSnapsho
           )
         },
       )
-      is ScheduleCommand.UpsertOccurrenceException -> current.copy(
-        exceptions = current.exceptions.replaceBy(
-          { it.scheduleId == command.exception.scheduleId && it.recurrenceId == command.exception.recurrenceId },
-          command.exception,
+      is ScheduleCommand.UpsertOccurrenceAdjustment -> current.copy(
+        occurrenceAdjustments = current.occurrenceAdjustments.replaceBy(
+          { it.scheduleId == command.adjustment.scheduleId && it.recurrenceId == command.adjustment.recurrenceId },
+          command.adjustment,
         ),
       )
-      is ScheduleCommand.DeleteOccurrenceException -> current.copy(
-        exceptions = current.exceptions.filterNot {
+      is ScheduleCommand.DeleteOccurrenceAdjustment -> current.copy(
+        occurrenceAdjustments = current.occurrenceAdjustments.filterNot {
           it.scheduleId == command.scheduleId && it.recurrenceId == command.recurrenceId
         },
       )
@@ -171,6 +169,16 @@ private class InMemorySchedulePreviewRepository(initialSnapshot: ScheduleSnapsho
         categories = current.categories.replaceBy({ it.id == command.category.id }, command.category),
         schedules = current.schedules.replaceBy({ it.id == command.schedule.id }, command.schedule),
       )
+      is ScheduleCommand.SaveOccurrenceWithNewCategory -> current.copy(
+        categories = current.categories.replaceBy({ it.id == command.category.id }, command.category),
+        occurrenceAdjustments = current.occurrenceAdjustments.replaceBy(
+          {
+            it.scheduleId == command.adjustment.scheduleId &&
+              it.recurrenceId == command.adjustment.recurrenceId
+          },
+          command.adjustment,
+        ),
+      )
       is ScheduleCommand.DeleteCategory -> current.copy(
         categories = current.categories.filterNot { it.id == command.categoryId },
         schedules = current.schedules.map { schedule ->
@@ -183,9 +191,9 @@ private class InMemorySchedulePreviewRepository(initialSnapshot: ScheduleSnapsho
           { it.id == command.previousSchedule.id },
           command.previousSchedule,
         ),
-        exceptions = current.exceptions.filterNot { exception ->
-          exception.scheduleId == command.previousSchedule.id &&
-            exception.recurrenceId.originalDateTime.date >= command.recurrenceId.originalDateTime.date
+        occurrenceAdjustments = current.occurrenceAdjustments.filterNot { adjustment ->
+          adjustment.scheduleId == command.previousSchedule.id &&
+            adjustment.recurrenceId.originalDateTime.date >= command.recurrenceId.originalDateTime.date
         },
       )
       ScheduleCommand.RequestSync -> current
@@ -200,8 +208,8 @@ private class InMemorySchedulePreviewRepository(initialSnapshot: ScheduleSnapsho
 /**
  * 在预览快照中原子应用“此次及以后”拆分。
  *
- * 边界 occurrence 的有效字段已经提升到新系列，因此边界自身的旧例外不再保留；更晚的例外仍使用原始
- * recurrence identity，只把所属日程切换为新系列。该行为与正式 Room reducer 一致，但不模拟版本和上传批次。
+ * 边界 occurrence 的有效字段已经提升到新系列，因此边界自身的旧调整不再保留；更晚的调整仍使用原始
+ * recurrence identity，只把所属日程切换为新系列。该行为与正式 Room reducer 一致，但不模拟版本和上传状态。
  */
 private fun ScheduleSnapshot.applyPreviewSeriesSplit(
   command: ScheduleCommand.SplitSeries,
@@ -214,13 +222,13 @@ private fun ScheduleSnapshot.applyPreviewSeriesSplit(
     schedules = schedules
       .replaceBy({ it.id == command.previousSchedule.id }, command.previousSchedule)
       .replaceBy({ it.id == command.followingSchedule.id }, command.followingSchedule),
-    exceptions = exceptions.mapNotNull { exception ->
-      if (exception.scheduleId != command.previousSchedule.id) {
-        exception
+    occurrenceAdjustments = occurrenceAdjustments.mapNotNull { adjustment ->
+      if (adjustment.scheduleId != command.previousSchedule.id) {
+        adjustment
       } else when {
-        exception.recurrenceId.originalDateTime.date < boundaryDate -> exception
-        exception.recurrenceId.originalDateTime.date == boundaryDate -> null
-        else -> exception.copy(scheduleId = command.followingSchedule.id)
+        adjustment.recurrenceId.originalDateTime.date < boundaryDate -> adjustment
+        adjustment.recurrenceId.originalDateTime.date == boundaryDate -> null
+        else -> adjustment.copy(scheduleId = command.followingSchedule.id)
       }
     },
   )
@@ -333,11 +341,7 @@ private fun createSchedulePreviewSnapshot(): ScheduleSnapshot {
         description = "一天后到期，用于观察临期样式",
         categoryId = studyCategory.id,
         timing = ScheduleTiming.Deadline(dueSoonDue, SHANGHAI_TIME_ZONE),
-        reminder = ScheduleReminder(
-          id = ReminderId("desktop-todo-due-soon-reminder"),
-          offsetMinutes = 30,
-          channel = ReminderChannel.DEVICE,
-        ),
+        reminder = ScheduleReminder(offsetMinutes = 30),
       ),
       todo(
         suffix = "004",
@@ -429,7 +433,7 @@ private fun createSchedulePreviewSnapshot(): ScheduleSnapshot {
         updatedAt = now - 2.days,
       ),
     ) + colorPreviewSchedules,
-    exceptions = emptyList(),
+    occurrenceAdjustments = emptyList(),
     categories = colorPreviewCategories,
     status = ScheduleRepositoryStatus.Ready(pendingCount = 0, hasPendingDeletes = false),
     accountId = PREVIEW_ACCOUNT_ID,

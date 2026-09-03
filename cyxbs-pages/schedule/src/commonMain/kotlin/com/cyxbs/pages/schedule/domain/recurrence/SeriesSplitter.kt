@@ -6,24 +6,24 @@ import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 
-/** “此次及后续”拆分结果：两个有效系列，以及按原始 occurrence identity 分区的例外。 */
+/** “此次及后续”拆分结果：两个有效系列，以及按原始 occurrence identity 分区的单次调整。 */
 data class SeriesSplitResult(
   val previousSchedule: Schedule,
   val followingSchedule: Schedule,
-  val previousExceptions: List<ScheduleOccurrenceException>,
-  val followingExceptions: List<ScheduleOccurrenceException>,
+  val previousAdjustments: List<ScheduleOccurrenceAdjustment>,
+  val followingAdjustments: List<ScheduleOccurrenceAdjustment>,
 )
 
 /**
  * 在已有 [RecurrenceId] 边界拆分重复系列的纯领域操作。
  *
- * 旧系列在边界前终止，新系列从相同原始墙上时刻开始，因此 occurrence identity 保持稳定。例外按原始
- * 身份分区；迁入新系列的例外只更换 schedule ID，不重写 recurrence ID，防止 DST 或移动覆盖导致丢失。
+ * 旧系列在边界前终止，新系列从相同原始墙上时刻开始，因此 occurrence identity 保持稳定。单次调整按原始
+ * 身份分区；迁入新系列的调整只更换 schedule ID，不重写 recurrence ID，防止 DST 或移动字段覆盖导致丢失。
  *
- * 该纯 API 会验证例外单体、scheduleId、完整 RRULE identity 生成性，以及替换 timing 的类型/时区兼容性。
+ * 该纯 API 会验证单次调整、scheduleId 和完整 RRULE identity 生成性；单次日期、时间形态覆盖保持原值。
  * 分类引用需要 envelope 中的 categoryIds 才能判定，不能在这里伪造集合，仍由 Repository/Store 完整边界负责。
  */
 object SeriesSplitter {
@@ -57,17 +57,17 @@ object SeriesSplitter {
    */
   fun split(
     schedule: Schedule,
-    exceptions: List<ScheduleOccurrenceException>,
+    occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
     boundary: RecurrenceId,
     followingId: ScheduleId,
   ): SeriesSplitResult {
     require(schedule.recurrence != null) { "only recurring schedules can be split" }
     require(followingId != schedule.id) { "following series requires a new ScheduleId" }
-    require(exceptions.map { it.recurrenceId }.distinct().size == exceptions.size) {
-      "duplicate exception recurrenceId"
+    require(occurrenceAdjustments.map { it.recurrenceId }.distinct().size == occurrenceAdjustments.size) {
+      "duplicate occurrence adjustment recurrenceId"
     }
-    // 必须在分区及改写 scheduleId 前验证原始输入，防止 forged identity 或不兼容 timing 被迁入新系列。
-    exceptions.forEach { RecurrenceEngine.requireStructurallyCompatibleException(schedule, it) }
+    // 必须在分区及改写 scheduleId 前验证原始输入，防止 forged identity 被迁入新系列。
+    occurrenceAdjustments.forEach { RecurrenceEngine.requireStructurallyCompatibleAdjustment(schedule, it) }
     // identity 查询与窗口可见性解耦：拆分必须按原规则序号找前驱，不能受时长、移动 patch 或半开窗口影响。
     val boundaryPosition = RecurrenceEngine.requireGeneratedIdentity(schedule, boundary)
     require(boundaryPosition.occurrenceIndex > 0) { "split boundary must follow the first occurrence" }
@@ -96,14 +96,14 @@ object SeriesSplitter {
       recurrenceAnchorDate = boundary.originalDateTime.date,
     )
 
-    val (before, after) = exceptions.partition {
+    val (before, after) = occurrenceAdjustments.partition {
       it.recurrenceId.originalDateTime < boundary.originalDateTime
     }
     return SeriesSplitResult(
       previousSchedule = previousSchedule,
       followingSchedule = followingSchedule,
-      previousExceptions = before,
-      followingExceptions = after.map { it.copy(scheduleId = followingId) },
+      previousAdjustments = before,
+      followingAdjustments = after.map { it.copy(scheduleId = followingId) },
     )
   }
 

@@ -3,20 +3,18 @@ package com.cyxbs.pages.schedule.domain
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.FieldPatch
 import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
-import com.cyxbs.pages.schedule.domain.model.MutationId
 import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.OccurrenceTime
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
-import com.cyxbs.pages.schedule.domain.model.ReminderId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.validation.ScheduleValidator
@@ -56,7 +54,7 @@ class ScheduleDomainTest {
         byMonths = setOf(0, 13),
         end = RecurrenceEnd.Count(0),
       ),
-      reminder = ScheduleReminder(ReminderId("single"), -1, ReminderChannel.PUSH),
+      reminder = ScheduleReminder(-1),
       todoState = ScheduleTodoState.COMPLETED,
     )
 
@@ -68,7 +66,6 @@ class ScheduleDomainTest {
     assertTrue("recurrence.byMonths" in fields)
     assertTrue("recurrence.end.count" in fields)
     assertTrue("reminder.offsetMinutes" in fields)
-    assertTrue("reminder.channel" in fields)
     assertTrue("todoState" in fields)
   }
 
@@ -107,7 +104,7 @@ class ScheduleDomainTest {
       todoState = null,
       linkedToCourse = true,
     )
-    val exception = ScheduleOccurrenceException(
+    val exception = ScheduleOccurrenceAdjustment(
       scheduleId = parent.id,
       recurrenceId = RecurrenceId(MinuteTimeDate(2026, 7, 12, 9, 0), "Asia/Shanghai", false),
       revision = 0,
@@ -155,7 +152,7 @@ class ScheduleDomainTest {
     })
     assertTrue(
       ScheduleValidator.validate(
-        unscheduled.copy(reminder = ScheduleReminder(ReminderId("invalid"), 0, ReminderChannel.DEVICE)),
+        unscheduled.copy(reminder = ScheduleReminder(0)),
       ).any { it.field == "reminder" },
     )
   }
@@ -185,13 +182,14 @@ class ScheduleDomainTest {
   }
 
   @Test
-  fun strictIdsRejectNonCanonicalOrNonV7Values() {
-    val canonical = "018f8e2a-7b4c-7abc-8def-0123456789ab"
-    assertEquals(canonical, ScheduleId(canonical).value)
-    assertEquals(canonical, MutationId(canonical).value)
+  fun scheduleIdAcceptsCanonicalV5AndV7Only() {
+    val uuidV7 = "018f8e2a-7b4c-7abc-8def-0123456789ab"
+    val uuidV5 = "31c4aef8-73fa-5c01-8e8e-0123456789ab"
+    assertEquals(uuidV7, ScheduleId(uuidV7).value)
+    assertEquals(uuidV5, ScheduleId(uuidV5).value)
     assertFailsWith<IllegalArgumentException> { ScheduleId("018F8E2A-7B4C-7ABC-8DEF-0123456789AB") }
     assertFailsWith<IllegalArgumentException> { ScheduleId("018f8e2a-7b4c-4abc-8def-0123456789ab") }
-    assertFailsWith<IllegalArgumentException> { MutationId("018f8e2a-7b4c-7abc-cdef-0123456789ab") }
+    assertFailsWith<IllegalArgumentException> { ScheduleId("018f8e2a-7b4c-7abc-cdef-0123456789ab") }
   }
 
   @Test
@@ -201,7 +199,7 @@ class ScheduleDomainTest {
     assertTrue(ScheduleValidator.validate(allDay).isEmpty())
     assertTrue(ScheduleValidator.validate(timed).isEmpty())
 
-    val exception = ScheduleOccurrenceException(
+    val exception = ScheduleOccurrenceAdjustment(
       scheduleId = validId,
       recurrenceId = timed,
       revision = 1,
@@ -215,9 +213,8 @@ class ScheduleDomainTest {
       ScheduleValidator.validate(
         exception.copy(
           patch = OccurrencePatch(
-            timing = FieldPatch.Replace(
-              ScheduleTiming.AllDay(Date(2026, 7, 12)),
-            ),
+            date = FieldPatch.Replace(Date(2026, 7, 12)),
+            time = FieldPatch.Replace(OccurrenceTime.AllDay),
             title = FieldPatch.Replace("改期后完成"),
           ),
         )
@@ -229,13 +226,15 @@ class ScheduleDomainTest {
   fun occurrencePatchRejectsClearTitleAndTimingAndBlankReplacement() {
     val issues = ScheduleValidator.validate(
       OccurrencePatch(
-        timing = FieldPatch.Clear,
+        date = FieldPatch.Clear,
+        time = FieldPatch.Clear,
         title = FieldPatch.Clear,
         description = FieldPatch.Replace("   "),
       )
     )
 
-    assertTrue(issues.any { it.field == "patch.timing" })
+    assertTrue(issues.any { it.field == "patch.date" })
+    assertTrue(issues.any { it.field == "patch.time" })
     assertTrue(issues.any { it.field == "patch.title" })
     assertTrue(issues.any { it.field == "patch.description" })
   }
@@ -244,14 +243,13 @@ class ScheduleDomainTest {
   fun occurrencePatchValidatesAtomicTimingReplacement() {
     val issues = ScheduleValidator.validate(
       OccurrencePatch(
-        timing = FieldPatch.Replace(
-          ScheduleTiming.Timed(MinuteTimeDate(2026, 7, 12, 10, 0), 0, "Not/AZone")
-        )
+        time = FieldPatch.Replace(
+          OccurrenceTime.TimeRange(10 * 60, 60, "Not/AZone")
+        ),
       )
     )
 
-    assertTrue(issues.any { it.field == "patch.timing.durationMinutes" })
-    assertTrue(issues.any { it.field == "patch.timing.timeZoneId" })
+    assertTrue(issues.any { it.field == "patch.time.timeZoneId" })
   }
 
   @Test
@@ -268,7 +266,7 @@ class ScheduleDomainTest {
     assertTrue(
       ScheduleValidator.validate(
         OccurrencePatch(
-          reminder = FieldPatch.Replace(ScheduleReminder(ReminderId("replacement"), 0, ReminderChannel.DEVICE)),
+          reminder = FieldPatch.Replace(ScheduleReminder(0)),
         )
       ).isEmpty()
     )

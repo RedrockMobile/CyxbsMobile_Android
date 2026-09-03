@@ -2,10 +2,10 @@ package com.cyxbs.pages.schedule.domain.recurrence
 
 import com.cyxbs.components.config.time.Date
 import com.cyxbs.components.config.time.MinuteTimeDate
-import com.cyxbs.components.config.time.toLocalDateTime
 import com.cyxbs.pages.schedule.domain.model.FieldPatch
 import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.OccurrenceTime
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
@@ -13,18 +13,16 @@ import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrence
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.validation.ScheduleValidator
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 
 /**
- * 纯函数、窗口有界的 Schedule v2 重复规则展开器与例外应用器。
+ * 纯函数、窗口有界的 Schedule 重复规则展开器与单次调整应用器。
  *
  * 展开始终在分钟精度的本地墙上时间空间进行，使系列跨越 DST 后仍保持用户设定的时分；只有掌握
  * IANA 时区的消费方才能转换为瞬时。本引擎不使用 RDATE/EXDATE：取消、完成和移动都由带稳定身份的
- * occurrence 例外表达，避免平台日历对子集支持不同而改变领域语义。
+ * occurrence 单次调整表达，避免平台日历对子集支持不同而改变领域语义。
  */
 object RecurrenceEngine {
   private const val MAX_PERIODS = 100_000
@@ -37,48 +35,48 @@ object RecurrenceEngine {
    * 恰好接在窗口边界的实例不会重复；所有比较均留在 [MinuteTimeDate]/[Date] 的本地墙上时间空间。
    * 每个例外仍必须指向原规则真实生成的 identity。identity 只描述原始规则开始时间，而 effective
    * timing 才描述应用 patch 后的显示与占用时间，所以移动实例不会重写 recurrenceId。该 API 可直接接收
-   * 尚未经过 Repository 的例外，因此会在展开前校验例外单体、完整 identity 生成性，以及替换 timing 与父系列
-   * 的类型和时区兼容性；分类引用存在性仍由持有完整 envelope 的 Repository/Store 边界负责。
+   * 尚未经过 Repository 的例外，因此会在展开前校验例外单体和完整 identity 生成性；分类引用存在性仍由
+   * 持有完整 envelope 的 Repository/Store 边界负责。单次日期和时间形态允许独立覆盖，不要求与父系列同类型。
    */
   fun expandInRange(
     schedule: Schedule,
-    exceptions: List<ScheduleOccurrenceException>,
+    occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
     rangeStartInclusive: MinuteTimeDate,
     rangeEndExclusive: MinuteTimeDate,
   ): List<ScheduleOccurrence> {
     require(rangeEndExclusive > rangeStartInclusive) { "range must be non-empty and ordered" }
     require(ScheduleValidator.validate(schedule).isEmpty()) { "schedule is invalid" }
-    require(exceptions.map { it.recurrenceId }.distinct().size == exceptions.size) {
-      "duplicate exception recurrenceId"
+    require(occurrenceAdjustments.map { it.recurrenceId }.distinct().size == occurrenceAdjustments.size) {
+      "duplicate occurrence adjustment recurrenceId"
     }
 
     val recurrence = schedule.recurrence
     if (recurrence == null) {
-      require(exceptions.isEmpty()) { "non-recurring schedule cannot have occurrence exceptions" }
+      require(occurrenceAdjustments.isEmpty()) { "non-recurring schedule cannot have occurrence adjustments" }
       return singleOccurrence(schedule, rangeStartInclusive, rangeEndExclusive)
     }
     require(schedule.timing != ScheduleTiming.Unscheduled) { "unscheduled items cannot recur" }
 
-    val exceptionMap = exceptions.associateBy { it.recurrenceId }
-    // raw 例外不能绕过完整 identity 与 timing 关系约束，否则 identity 和 effective timing 会产生跨时区/跨类型裂缝。
-    exceptions.forEach { requireStructurallyCompatibleException(schedule, it) }
+    val adjustmentMap = occurrenceAdjustments.associateBy { it.recurrenceId }
+    // raw 单次调整不能绕过完整 identity 生成性；effective 日期和时间形态随后分别应用字段覆盖。
+    occurrenceAdjustments.forEach { requireStructurallyCompatibleAdjustment(schedule, it) }
     val validationEnd = maxOf(
       rangeEndExclusive,
-      exceptionMap.keys.maxOfOrNull { it.originalDateTime } ?: rangeEndExclusive,
+      adjustmentMap.keys.maxOfOrNull { it.originalDateTime } ?: rangeEndExclusive,
     )
     val identityAnchor = identityAnchor(schedule)
-    val actualOffsetMinutes = wallMinuteDelta(identityAnchor, effectiveStart(schedule.timing))
+    val actualOffsetDays = identityAnchor.date.daysUntil(effectiveStart(schedule.timing).date)
     val generated = generatedStarts(
       identityAnchor,
       recurrence,
-      if (actualOffsetMinutes < 0) validationEnd.plusMinutes(-actualOffsetMinutes) else validationEnd,
+      if (actualOffsetDays < 0) validationEnd.plusDays(-actualOffsetDays) else validationEnd,
     )
 
     return generated.mapNotNull { originalStart ->
       val id = recurrenceId(schedule.timing, originalStart)
-      val exception = exceptionMap[id]
-      if (exception?.status == OccurrenceStatus.CANCELLED) return@mapNotNull null
-      occurrence(schedule, id, originalStart, exception)
+      val adjustment = adjustmentMap[id]
+      if (adjustment?.status == OccurrenceStatus.CANCELLED) return@mapNotNull null
+      occurrence(schedule, id, originalStart, adjustment)
         .takeIf { overlapsRange(it.timing, rangeStartInclusive, rangeEndExclusive) }
     }.sortedBy { effectiveStart(it.timing) }
   }
@@ -91,20 +89,20 @@ object RecurrenceEngine {
    */
   internal fun resolveOccurrenceByIdentity(
     schedule: Schedule,
-    exceptions: List<ScheduleOccurrenceException>,
+    occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
     recurrenceId: RecurrenceId,
   ): ScheduleOccurrence? {
     require(ScheduleValidator.validate(schedule).isEmpty()) { "schedule is invalid" }
     require(schedule.recurrence != null) { "identity requires recurring schedule" }
     require(schedule.timing != ScheduleTiming.Unscheduled) { "unscheduled items cannot recur" }
-    require(exceptions.map { it.recurrenceId }.distinct().size == exceptions.size) {
-      "duplicate exception recurrenceId"
+    require(occurrenceAdjustments.map { it.recurrenceId }.distinct().size == occurrenceAdjustments.size) {
+      "duplicate occurrence adjustment recurrenceId"
     }
-    exceptions.forEach { requireStructurallyCompatibleException(schedule, it) }
+    occurrenceAdjustments.forEach { requireStructurallyCompatibleAdjustment(schedule, it) }
     val position = requireGeneratedIdentity(schedule, recurrenceId)
-    val exception = exceptions.firstOrNull { it.recurrenceId == recurrenceId }
-    return if (exception?.status == OccurrenceStatus.CANCELLED) null
-    else occurrence(schedule, recurrenceId, position.originalStart, exception)
+    val adjustment = occurrenceAdjustments.firstOrNull { it.recurrenceId == recurrenceId }
+    return if (adjustment?.status == OccurrenceStatus.CANCELLED) null
+    else occurrence(schedule, recurrenceId, position.originalStart, adjustment)
   }
 
   /**
@@ -116,20 +114,20 @@ object RecurrenceEngine {
    */
   internal fun isOnlyRemainingOccurrence(
     schedule: Schedule,
-    exceptions: List<ScheduleOccurrenceException>,
+    occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
     targetId: RecurrenceId,
   ): Boolean {
     require(ScheduleValidator.validate(schedule).isEmpty()) { "schedule is invalid" }
     val recurrence = requireNotNull(schedule.recurrence) { "identity requires recurring schedule" }
     if (recurrence.end == RecurrenceEnd.Never) return false
     require(schedule.timing != ScheduleTiming.Unscheduled) { "unscheduled items cannot recur" }
-    require(exceptions.map { it.recurrenceId }.distinct().size == exceptions.size) {
-      "duplicate exception recurrenceId"
+    require(occurrenceAdjustments.map { it.recurrenceId }.distinct().size == occurrenceAdjustments.size) {
+      "duplicate occurrence adjustment recurrenceId"
     }
-    exceptions.forEach { requireStructurallyCompatibleException(schedule, it) }
+    occurrenceAdjustments.forEach { requireStructurallyCompatibleAdjustment(schedule, it) }
     requireGeneratedIdentity(schedule, targetId)
 
-    val cancelledIds = exceptions.asSequence()
+    val cancelledIds = occurrenceAdjustments.asSequence()
       .filter { it.status == OccurrenceStatus.CANCELLED }
       .mapTo(mutableSetOf()) { it.recurrenceId }
     var remainingId: RecurrenceId? = null
@@ -170,35 +168,44 @@ object RecurrenceEngine {
   }
 
   /**
-   * 校验无需分类集合即可判定的 raw 例外关系约束。
+   * 判断稳定 [recurrenceDate] 当前是否仍由父系列规则生成。
+   *
+   * 该查询只比较原始规则日期，不应用单次日期/时间覆盖。规则暂时不再包含该日期时，持久化层仍保留单次调整，
+   * 但投影层应把它休眠；未来规则重新包含该日期后会自然恢复，不需要墓碑或额外复活状态。
+   */
+  internal fun containsRecurrenceDate(schedule: Schedule, recurrenceDate: Date): Boolean {
+    require(ScheduleValidator.validate(schedule).isEmpty()) { "schedule is invalid" }
+    val recurrence = requireNotNull(schedule.recurrence) { "identity requires recurring schedule" }
+    require(schedule.timing != ScheduleTiming.Unscheduled) { "unscheduled items cannot recur" }
+    val target = MinuteTimeDate(recurrenceDate, identityAnchor(schedule).time)
+    return generatedStarts(identityAnchor(schedule), recurrence, target)
+      .any { it.date == recurrenceDate }
+  }
+
+  /**
+   * 校验无需分类集合即可判定的 raw 单次调整关系约束。
    *
    * 这里刻意不依赖 validation 包中的关系校验器，避免 recurrence 与 validation 形成循环依赖；Repository/Store
    * 仍必须使用完整边界补充分类引用校验。
    */
-  internal fun requireStructurallyCompatibleException(
+  internal fun requireStructurallyCompatibleAdjustment(
     schedule: Schedule,
-    exception: ScheduleOccurrenceException,
+    adjustment: ScheduleOccurrenceAdjustment,
   ) {
-    require(exception.scheduleId == schedule.id) { "exception belongs to another schedule" }
-    require(ScheduleValidator.validate(exception).isEmpty()) { "exception is invalid" }
-    require(exception.status != OccurrenceStatus.COMPLETED || schedule.todoState != null) {
+    require(adjustment.scheduleId == schedule.id) { "adjustment belongs to another schedule" }
+    require(ScheduleValidator.validate(adjustment).isEmpty()) { "adjustment is invalid" }
+    require(adjustment.status != OccurrenceStatus.COMPLETED || schedule.todoState != null) {
       "an occurrence can be completed only when its parent belongs to todo"
     }
-    require(exception.recurrenceId.allDay == (schedule.timing is ScheduleTiming.AllDay)) {
+    require(adjustment.recurrenceId.allDay == (schedule.timing is ScheduleTiming.AllDay)) {
       "recurrence identity kind does not match parent timing"
     }
     val parentZone = schedule.timing.zoneOrNull()
-    require(exception.recurrenceId.timeZoneId == parentZone) {
+    require(adjustment.recurrenceId.timeZoneId == parentZone) {
       "recurrence identity timezone does not match parent"
     }
-    if (exception.patch?.timing is FieldPatch.Replace) {
-      val replacement = exception.patch.timing.value
-      require(replacement != ScheduleTiming.Unscheduled) { "occurrence timing cannot become unscheduled" }
-      require(replacement::class == schedule.timing::class) { "occurrence timing kind must match parent" }
-      require(replacement.zoneOrNull() == parentZone) { "occurrence timing timezone must match parent" }
-    }
     // 生成性必须按原规则完整证明，不能只比较 identity 外观或当前查询窗口。
-    requireGeneratedIdentity(schedule, exception.recurrenceId)
+    requireGeneratedIdentity(schedule, adjustment.recurrenceId)
   }
 
   /** Timed/Deadline 使用 IANA 时区参与身份，AllDay/Unscheduled 没有时区。 */
@@ -235,7 +242,7 @@ object RecurrenceEngine {
       } else {
         OccurrenceStatus.ACTIVE
       },
-      isOverridden = false,
+      isAdjusted = false,
     )
     return listOfNotNull(
       occurrence.takeIf { overlapsRange(it.timing, rangeStartInclusive, rangeEndExclusive) },
@@ -247,19 +254,15 @@ object RecurrenceEngine {
     schedule: Schedule,
     id: RecurrenceId,
     originalStart: MinuteTimeDate,
-    exception: ScheduleOccurrenceException?,
+    adjustment: ScheduleOccurrenceAdjustment?,
   ): ScheduleOccurrence {
-    val patch = exception?.patch
-    val actualStart = originalStart.plusMinutes(
-      wallMinuteDelta(identityAnchor(schedule), effectiveStart(schedule.timing)),
-    )
-    val inheritedTiming = when (val source = schedule.timing) {
-      is ScheduleTiming.Timed -> source.copy(start = actualStart)
-      is ScheduleTiming.Deadline -> source.copy(due = actualStart)
-      is ScheduleTiming.AllDay -> source.copy(date = actualStart.date)
-      ScheduleTiming.Unscheduled -> error("unscheduled recurrence was rejected")
-    }
-    val timing = patch?.timing?.resolve(inheritedTiming, clear = null) ?: inheritedTiming
+    val patch = adjustment?.patch
+    val seriesDateOffset = identityAnchor(schedule).date.daysUntil(effectiveStart(schedule.timing).date)
+    val inheritedDate = originalStart.date.plusDays(seriesDateOffset)
+    val date = patch?.date?.resolve(inheritedDate, clear = null) ?: inheritedDate
+    val inheritedTime = schedule.timing.toOccurrenceTime()
+    val time = patch?.time?.resolve(inheritedTime, clear = null) ?: inheritedTime
+    val timing = time.toTiming(date)
     return ScheduleOccurrence(
       scheduleId = schedule.id,
       recurrenceId = id,
@@ -269,8 +272,8 @@ object RecurrenceEngine {
       categoryId = if (patch == null) schedule.categoryId else patch.categoryId.resolve(schedule.categoryId, clear = null),
       // Clear 的结果本身就是 null，不能再用 Elvis 回退成父日程提醒；只有没有 patch 时才继承。
       reminder = if (patch == null) schedule.reminder else patch.reminder.resolve(schedule.reminder, clear = null),
-      status = exception?.status ?: OccurrenceStatus.ACTIVE,
-      isOverridden = exception != null,
+      status = adjustment?.status ?: OccurrenceStatus.ACTIVE,
+      isAdjusted = adjustment != null,
     )
   }
 
@@ -279,6 +282,28 @@ object RecurrenceEngine {
     FieldPatch.Inherit -> inherited
     FieldPatch.Clear -> clear
     is FieldPatch.Replace -> value
+  }
+
+  /** 将父系列当前时间形态转成不携带日期的单次继承值。 */
+  private fun ScheduleTiming.toOccurrenceTime(): OccurrenceTime = when (this) {
+    is ScheduleTiming.Timed -> OccurrenceTime.TimeRange(start.minuteOfDay, durationMinutes, timeZoneId)
+    is ScheduleTiming.Deadline -> OccurrenceTime.TimePoint(due.minuteOfDay, timeZoneId)
+    is ScheduleTiming.AllDay -> OccurrenceTime.AllDay
+    ScheduleTiming.Unscheduled -> error("unscheduled recurrence was rejected")
+  }
+
+  /** 用最终日期物化单次时间形态；单次 TimeRange/TimePoint 自带时区，可跨父系列 kind 修改继续保留。 */
+  private fun OccurrenceTime.toTiming(date: Date): ScheduleTiming = when (this) {
+    is OccurrenceTime.TimeRange -> ScheduleTiming.Timed(
+      start = MinuteTimeDate(date, startMinuteOfDay / 60, startMinuteOfDay % 60),
+      durationMinutes = durationMinutes,
+      timeZoneId = timeZoneId,
+    )
+    is OccurrenceTime.TimePoint -> ScheduleTiming.Deadline(
+      due = MinuteTimeDate(date, minuteOfDay / 60, minuteOfDay % 60),
+      timeZoneId = timeZoneId,
+    )
+    OccurrenceTime.AllDay -> ScheduleTiming.AllDay(date)
   }
 
   /**
@@ -441,8 +466,4 @@ object RecurrenceEngine {
     return MinuteTimeDate(schedule.recurrenceAnchorDate ?: timingStart.date, timingStart.time)
   }
 
-  /** 在 UTC 中把两个墙上时间当作无时区分钟计算差值，避免 DST 改变用户输入的日期/时分偏移。 */
-  private fun wallMinuteDelta(from: MinuteTimeDate, to: MinuteTimeDate): Int =
-    (to.toLocalDateTime().toInstant(TimeZone.UTC) -
-      from.toLocalDateTime().toInstant(TimeZone.UTC)).inWholeMinutes.toInt()
 }

@@ -4,7 +4,7 @@ import com.cyxbs.components.config.time.Date
 import com.cyxbs.pages.schedule.domain.model.*
 import kotlin.test.*
 
-/** V2 RRULE editor contract tests. */
+/** RRULE editor contract tests. */
 class RecurrenceEditModelTest {
   private val anchor = Date(2026, 7, 6)
 
@@ -63,7 +63,7 @@ class RecurrenceEditModelTest {
     )
   }
 
-  @Test fun round_trip_keeps_v2_fields() {
+  @Test fun roundTripKeepsAllSupportedFields() {
     val rule = RecurrenceRule(
       RecurrenceFrequency.WEEKLY, 2, setOf(IsoWeekDay.MONDAY, IsoWeekDay.WEDNESDAY),
       end = RecurrenceEnd.Count(5),

@@ -77,6 +77,6 @@ class ScheduleTimeUtilsTest {
     timing = timing,
     reminder = null,
     status = OccurrenceStatus.ACTIVE,
-    isOverridden = false,
+    isAdjusted = false,
   )
 }

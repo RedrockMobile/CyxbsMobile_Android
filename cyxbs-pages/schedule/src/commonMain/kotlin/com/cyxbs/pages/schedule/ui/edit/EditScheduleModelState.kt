@@ -194,7 +194,7 @@ class EditScheduleModelState(
   internal val isOccurrenceReminderChanged: Boolean get() = remindMinutes != initialReminderMinutes
 
   /**
-   * 仅判断 occurrence 可覆盖字段是否变化；RRULE 是系列属性，不应让 THIS_ONLY 生成无意义 exception。
+   * 仅判断 occurrence 可调整字段是否变化；RRULE 是系列属性，不应让 THIS_ONLY 生成无意义的单次调整。
    */
   internal val isOccurrenceFieldsChanged: Boolean get() =
     isOccurrenceTitleChanged || isOccurrenceDescriptionChanged || isOccurrenceCategoryChanged ||
@@ -243,11 +243,7 @@ class EditScheduleModelState(
     effectiveTiming == ScheduleTiming.Unscheduled -> null
     remindMinutes < 0 -> null
     initialReminderMinutes == remindMinutes -> initialReminder
-    else -> ScheduleReminder(
-      ReminderId(initialReminder?.id?.value ?: "draft-reminder"),
-      remindMinutes,
-      ReminderChannel.DEVICE,
-    )
+    else -> ScheduleReminder(remindMinutes)
   }
 
   /**

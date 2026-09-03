@@ -4,17 +4,17 @@ import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.account.api.AccountState
 import com.cyxbs.pages.schedule.data.local.room3.DesktopScheduleRoomDatabaseResources
 import com.cyxbs.pages.schedule.data.local.room3.RoomScheduleRepositoryFactory
-import com.cyxbs.pages.schedule.data.local.room3.ScheduleV2RepositoryGateway
+import com.cyxbs.pages.schedule.data.local.room3.ScheduleRepositoryGateway
 import com.cyxbs.pages.schedule.data.local.room3.closeScheduleRoomDatabase
 import com.cyxbs.components.utils.network.ApiWrapper
-import com.cyxbs.pages.schedule.data.remote.v3.CategorySyncResponse
-import com.cyxbs.pages.schedule.data.remote.v3.MutationRequest
-import com.cyxbs.pages.schedule.data.remote.v3.MutationResponse
-import com.cyxbs.pages.schedule.data.remote.v3.OccurrenceOverrideSyncResponse
-import com.cyxbs.pages.schedule.data.remote.v3.ScheduleSyncResponse
-import com.cyxbs.pages.schedule.data.remote.v3.ScheduleV2CallResult
-import com.cyxbs.pages.schedule.data.remote.v3.SyncRequest
-import com.cyxbs.pages.schedule.data.remote.v3.SyncResponse
+import com.cyxbs.pages.schedule.data.remote.CategorySyncResponse
+import com.cyxbs.pages.schedule.data.remote.MutationRequest
+import com.cyxbs.pages.schedule.data.remote.MutationResponse
+import com.cyxbs.pages.schedule.data.remote.OccurrenceAdjustmentSyncResponse
+import com.cyxbs.pages.schedule.data.remote.ScheduleSyncResponse
+import com.cyxbs.pages.schedule.data.remote.ScheduleCallResult
+import com.cyxbs.pages.schedule.data.remote.SyncRequest
+import com.cyxbs.pages.schedule.data.remote.SyncResponse
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Comparator
@@ -25,7 +25,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertSame
 import kotlin.time.Clock
 
-/** Desktop 生产组装只验证最终 Room v2、exact session 与初始化一次 Sync。 */
+/** Desktop 生产组装只验证最终 Room、exact session 与初始化一次 Sync。 */
 class ProductionScheduleRepositoryFactoryDesktopTest {
   @Test
   fun productionSeamBindsExactSessionAndInitializeSyncsOnce() = runTest {
@@ -55,7 +55,7 @@ class ProductionScheduleRepositoryFactoryDesktopTest {
   private suspend fun withTemporaryProductionResources(
     block: suspend (DesktopScheduleRoomDatabaseResources) -> Unit,
   ) {
-    val root = Files.createTempDirectory("schedule-desktop-v2-factory-")
+    val root = Files.createTempDirectory("schedule-desktop-factory-")
     val resources = DesktopScheduleRoomDatabaseResources(
       databasePath = root.resolve(DATABASE_FILE_NAME).toString(),
     )
@@ -72,42 +72,42 @@ class ProductionScheduleRepositoryFactoryDesktopTest {
     var receivedSession: AccountSession? = null
     val gateway = RecordingGateway()
 
-    fun create(session: AccountSession): ScheduleV2RepositoryGateway {
+    fun create(session: AccountSession): ScheduleRepositoryGateway {
       receivedSession = session
       return gateway
     }
   }
 
   /** 初始化只允许一次 Sync；日常接口若被误触发会立即让测试失败。 */
-  private class RecordingGateway : ScheduleV2RepositoryGateway {
+  private class RecordingGateway : ScheduleRepositoryGateway {
     var syncCalls = 0
     var syncedAccountId: String? = null
 
     override suspend fun sync(
       accountId: String,
       request: SyncRequest,
-    ): ScheduleV2CallResult<SyncResponse> {
+    ): ScheduleCallResult<SyncResponse> {
       syncCalls += 1
       syncedAccountId = accountId
-      return ScheduleV2CallResult.Completed(
-        ApiWrapper(emptySyncResponse(request.syncRequestId), 10000, "ok"),
+      return ScheduleCallResult.Completed(
+        ApiWrapper(emptySyncResponse(), 10000, "ok"),
       )
     }
 
     override suspend fun createSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleV2CallResult<MutationResponse> = error("initialize must not call daily create")
+    ): ScheduleCallResult<MutationResponse> = error("initialize must not call daily create")
 
     override suspend fun updateSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleV2CallResult<MutationResponse> = error("initialize must not call daily update")
+    ): ScheduleCallResult<MutationResponse> = error("initialize must not call daily update")
 
     override suspend fun deleteSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleV2CallResult<MutationResponse> = error("initialize must not call daily delete")
+    ): ScheduleCallResult<MutationResponse> = error("initialize must not call daily delete")
   }
 
   /** 删除临时目录、数据库主文件以及 Room 可能生成的 WAL/SHM。 */
@@ -126,9 +126,8 @@ class ProductionScheduleRepositoryFactoryDesktopTest {
 }
 
 /** 为嵌套 gateway fake 提供不携带任何资源的合法同步响应。 */
-private fun emptySyncResponse(requestId: String) = SyncResponse(
-  syncRequestId = requestId,
+private fun emptySyncResponse() = SyncResponse(
   categories = CategorySyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
   schedules = ScheduleSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
-  occurrenceOverrides = OccurrenceOverrideSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
+  occurrenceAdjustments = OccurrenceAdjustmentSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
 )

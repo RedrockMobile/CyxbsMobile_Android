@@ -26,7 +26,7 @@ import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.pages.schedule.calendar.ScheduleCalendarExportController
-import com.cyxbs.pages.schedule.data.repository.v2.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.ui.dialog.ScheduleConfirmDialog
 
 private val CalendarReminderPermissions = arrayOf(

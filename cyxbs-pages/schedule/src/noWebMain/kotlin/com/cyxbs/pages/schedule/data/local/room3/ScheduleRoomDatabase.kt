@@ -8,7 +8,7 @@ import androidx.room3.ColumnTypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 
 /**
- * Schedule v2 的 Room3 业务数据库。
+ * Schedule 的 Room3 业务数据库。
  *
  * 当前客户端尚未发布，因此以 version 1 固定当前无 batch 的双快照 schema，不保留开发期间的历史版本或迁移。
  * 各平台 builder 在 schema 不匹配且没有迁移时直接清库重建；远端保有完整数据，本地临时日程也允许丢弃。
@@ -16,19 +16,19 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
  */
 @Database(
   entities = [
-    ScheduleV2AccountMetadataEntity::class,
-    ScheduleV2CategoryStateEntity::class,
-    ScheduleV2ScheduleStateEntity::class,
-    ScheduleV2OccurrenceOverrideStateEntity::class,
+    ScheduleAccountMetadataEntity::class,
+    ScheduleCategoryStateEntity::class,
+    ScheduleStateEntity::class,
+    ScheduleOccurrenceAdjustmentStateEntity::class,
   ],
   version = 1,
   exportSchema = true,
 )
-@ColumnTypeConverters(ScheduleV2RoomConverters::class)
+@ColumnTypeConverters(ScheduleRoomConverters::class)
 @ConstructedBy(ScheduleRoomDatabaseConstructor::class)
 abstract class ScheduleRoomDatabase : RoomDatabase() {
   /** 返回新协议的 remote/pending 双快照 DAO；业务合并与网络接线在 repository 层实现。 */
-  abstract fun scheduleV2Dao(): ScheduleV2RoomDao
+  abstract fun scheduleDao(): ScheduleRoomDao
 }
 
 /** Room3 KSP 生成的业务数据库构造器声明，不能手写 actual 实现。 */

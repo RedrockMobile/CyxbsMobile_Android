@@ -5,7 +5,7 @@ import com.cyxbs.components.config.time.MinuteTimeDate
 import kotlin.time.Instant
 
 /**
- * Schedule v2 的完整领域对象。
+ * Schedule 的完整领域对象。
  *
  * 它表达已通过领域校验的业务事实；网络 DTO、持久化 Record 与编辑草稿必须保持独立，避免协议缺省值、
  * 存储兼容字段或未完成输入渗入领域规则。[revision] 用于远端快照合并，不等同于本地编辑次数。
@@ -28,8 +28,9 @@ data class Schedule(
   /** 用户是否要求把该日程投射到课表；最终可见性仍需结合 [kind] 与完成态判断。 */
   val linkedToCourse: Boolean = false,
   /**
-   * 重复系列最初的逻辑日期锚点；修改整个系列的实际日期时保持不变，用于继续识别既有 occurrence。
-   * 新建且尚未经过仓库投影时可为 null，此时以当前 [timing] 日期作为初始锚点。
+   * 当前重复规则的逻辑日期锚点；修改整个系列日期时它随新规则更新。
+   * 单次调整的稳定身份由其 `originalOccurrenceDate` 单独保存，因此不依赖这里保留旧日期；新建且尚未经过
+   * 仓库投影时可为 null，此时以当前 [timing] 日期作为初始锚点。
    */
   val recurrenceAnchorDate: Date? = null,
 )
@@ -47,7 +48,7 @@ enum class ScheduleKind {
 }
 
 /**
- * Schedule v2 支持的四种互斥时间语义。
+ * Schedule 支持的四种互斥时间语义。
  *
  * 本地墙上时间与 IANA 时区分开保存，而不是过早转换为 [Instant]；这样重复日程跨越 DST 时仍保持用户
  * 设定的当地时刻。全天日程则只使用日期，避免把“一天”错误固定为 24 小时。
@@ -92,18 +93,8 @@ enum class ScheduleTodoState {
  * [offsetMinutes] 表示提前分钟数，零表示准时提醒；可接受范围由领域校验器统一约束。
  */
 data class ScheduleReminder(
-  val id: ReminderId,
   val offsetMinutes: Int,
-  val channel: ReminderChannel,
 )
-
-/** 提醒请求的投递渠道；调用方使用 [PUSH] 前必须检查当前平台和账号能力。 */
-enum class ReminderChannel {
-  /** 仅由当前设备本地调度。 */
-  DEVICE,
-  /** 请求服务端推送；并非所有部署都支持。 */
-  PUSH,
-}
 
 /** 用户自定义日程分类；[color] 是可选课表配色 JSON，领域层保持不透明，由 UI 边界负责校验与解析。 */
 data class ScheduleCategory(
@@ -165,7 +156,7 @@ typealias RecurrenceId = com.cyxbs.pages.schedule.api.RecurrenceId
  *
  * [recurrenceId] 始终指向规则原始生成的实例；即使 [patch] 移动了显示时间，也不能改变身份。
  */
-data class ScheduleOccurrenceException(
+data class ScheduleOccurrenceAdjustment(
   val scheduleId: ScheduleId,
   val recurrenceId: RecurrenceId,
   val revision: Long,
@@ -201,13 +192,49 @@ sealed interface FieldPatch<out T> {
 }
 
 /**
+ * 单次 occurrence 的时间形态覆盖，不携带日期。
+ *
+ * 日期由 [OccurrencePatch.date] 独立控制；未覆盖时间时继续继承父系列。这样整系列改日期、改时间与单次
+ * 自定义日期/时间可以分别合并，不会因完整 [ScheduleTiming] 替换而互相覆盖。显式替换的 Timed/Deadline
+ * 保存 IANA 时区，使父系列改成全天后，既有单次时间覆盖仍能独立物化。
+ */
+sealed interface OccurrenceTime {
+  /** 某个日内分钟开始的时间段；[durationMinutes] 可跨越自然日。 */
+  data class TimeRange(
+    val startMinuteOfDay: Int,
+    val durationMinutes: Int,
+    val timeZoneId: String,
+  ) : OccurrenceTime {
+    init {
+      require(startMinuteOfDay in 0 until 24 * 60) { "startMinuteOfDay is out of range" }
+      require(durationMinutes > 0) { "durationMinutes must be positive" }
+    }
+  }
+
+  /** 某个日内分钟的时间点。 */
+  data class TimePoint(
+    val minuteOfDay: Int,
+    val timeZoneId: String,
+  ) : OccurrenceTime {
+    init {
+      require(minuteOfDay in 0 until 24 * 60) { "minuteOfDay is out of range" }
+    }
+  }
+
+  /** 全天 occurrence；日期仍由继承结果或 [OccurrencePatch.date] 决定。 */
+  data object AllDay : OccurrenceTime
+}
+
+/**
  * 某次发生的稀疏覆盖，每个字段均显式保留继承、清空和替换三态。
  *
- * [timing] 以完整 [ScheduleTiming] 原子替换，禁止拆成开始、时长与时区后产生半状态；时间和标题不允许
- * [FieldPatch.Clear]。描述与分类允许显式清空；提醒用 Clear 表示取消，Replace 表示设置单个提醒。
+ * [date] 与 [time] 分别是字段级原子：整系列改日期时不会覆盖单次时间，整系列改时间时也
+ * 不会挪动显式指定日期的单次。日期、时间和标题不允许 [FieldPatch.Clear]；描述与分类允许显式清空，
+ * 提醒用 Clear 表示取消，Replace 表示设置单个提醒。
  */
 data class OccurrencePatch(
-  val timing: FieldPatch<ScheduleTiming> = FieldPatch.Inherit,
+  val date: FieldPatch<Date> = FieldPatch.Inherit,
+  val time: FieldPatch<OccurrenceTime> = FieldPatch.Inherit,
   val title: FieldPatch<String> = FieldPatch.Inherit,
   val description: FieldPatch<String> = FieldPatch.Inherit,
   val categoryId: FieldPatch<CategoryId> = FieldPatch.Inherit,

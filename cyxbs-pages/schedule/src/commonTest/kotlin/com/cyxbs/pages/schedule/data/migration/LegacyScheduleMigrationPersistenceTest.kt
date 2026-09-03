@@ -52,7 +52,7 @@ class LegacyScheduleMigrationPersistenceTest {
   fun existingCategoryWithSameName_isReused() = runTest {
     val item = migrationItem(todoId = 2, categoryName = "学习")
     val existingCategory = ScheduleCategory(
-      id = CategoryId(LegacyScheduleMapper.deterministicUuidV7(1, "existing-category")),
+      id = CategoryId(LegacyScheduleMapper.deterministicScheduleUuid("existing-category")),
       revision = 7,
       name = " 学习 ",
       color = """{"background":"custom"}""",
@@ -183,9 +183,9 @@ class LegacyScheduleMigrationPersistenceTest {
   /** 已有置顶顺序优先，迁移项按旧接口顺序追加，跨两侧的重复 ID 只保留第一次。 */
   @Test
   fun migratedPinsAppendWithoutOverwritingExistingOrder() {
-    val first = ScheduleId(LegacyScheduleMapper.deterministicUuidV7(1, "pin-1"))
-    val second = ScheduleId(LegacyScheduleMapper.deterministicUuidV7(2, "pin-2"))
-    val third = ScheduleId(LegacyScheduleMapper.deterministicUuidV7(3, "pin-3"))
+    val first = ScheduleId(LegacyScheduleMapper.deterministicScheduleUuid("pin-1"))
+    val second = ScheduleId(LegacyScheduleMapper.deterministicScheduleUuid("pin-2"))
+    val third = ScheduleId(LegacyScheduleMapper.deterministicScheduleUuid("pin-3"))
 
     assertEquals(
       listOf(first, second, third),

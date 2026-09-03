@@ -7,8 +7,6 @@ import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
-import com.cyxbs.pages.schedule.domain.model.ReminderId
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
@@ -16,6 +14,7 @@ import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import kotlinx.datetime.TimeZone
+import okio.ByteString.Companion.toByteString
 import okio.ByteString.Companion.encodeUtf8
 import kotlin.time.Instant
 
@@ -27,7 +26,7 @@ internal data class LegacyScheduleMigrationItem(
 )
 
 /**
- * 将已成功解码的旧事务与旧清单转换成 Schedule v2 领域对象。
+ * 将已成功解码的旧事务与旧清单转换成 Schedule 领域对象。
  *
  * 映射器不访问网络、Room 或 Settings；调用方提供账号、学期锚点和当前时间，便于迁移重试时保持边界清楚。
  * 单条非法旧记录会被跳过，不会让其他有效记录无法迁移。
@@ -118,10 +117,7 @@ internal object LegacyScheduleMapper {
     }
     val timestamp = normalizeLegacyTimestamp(todo.lastModifyTime, nowEpochMillis)
     val id = ScheduleId(
-      deterministicUuidV7(
-        timestamp,
-        "$accountId|todo|${todo.todoId}",
-      )
+      deterministicScheduleUuid("$accountId|todo|${todo.todoId}")
     )
     val isRepeating = mapped.recurrence != null
     val schedule = Schedule(
@@ -133,7 +129,7 @@ internal object LegacyScheduleMapper {
       timing = mapped.timing,
       recurrence = mapped.recurrence,
       reminder = mapped.reminderOffset?.let { offset ->
-        ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE)
+        ScheduleReminder(offset)
       },
       todoState = if (todo.isDone == 1 && !isRepeating) {
         ScheduleTodoState.COMPLETED
@@ -166,8 +162,7 @@ internal object LegacyScheduleMapper {
   ): LegacyScheduleMigrationItem {
     val timestamp = start.date.toEpochMillis()
     val id = ScheduleId(
-      deterministicUuidV7(
-        timestamp,
+      deterministicScheduleUuid(
         "$accountId|affair|${transaction.remoteId}|${time.day}|${time.beginLesson}|" +
           "${time.period}|$identitySuffix",
       )
@@ -182,7 +177,7 @@ internal object LegacyScheduleMapper {
         timing = ScheduleTiming.Timed(start, durationMinutes, timeZoneId),
         recurrence = recurrence,
         reminder = transaction.time.takeIf { it > 0 }?.let { offset ->
-          ScheduleReminder(ReminderId("${id.value}:legacy-reminder"), offset, ReminderChannel.DEVICE)
+          ScheduleReminder(offset)
         },
         todoState = null,
         createdAt = Instant.fromEpochMilliseconds(timestamp),
@@ -237,7 +232,7 @@ internal object LegacyScheduleMapper {
   }
 
   /**
-   * 当前远端合同不接受月/年重复或非法选择器时，只保留旧服务已经算出的下一次通知。
+   * 旧重复选择器非法或无法由当前规则无损表达时，只保留旧服务已经算出的下一次通知。
    *
    * 优先使用 notify 而不是系列 end，避免把“重复结束日期”误当成下一次待办；没有 notify 时才退回 end。
    */
@@ -278,7 +273,7 @@ internal object LegacyScheduleMapper {
     )
   }
 
-  /** 将旧重复选择器精确映射为 Schedule v2 规则；非法或无法无损表达的选择器不做猜测。 */
+  /** 将旧重复选择器精确映射为 Schedule 规则；非法或无法无损表达的选择器不做猜测。 */
   private fun createRecurrenceRule(remindMode: LegacyTodoRemindModeDto): RecurrenceRule? =
     when (remindMode.repeatMode) {
       LegacyTodoRemindModeDto.DAILY -> RecurrenceRule(RecurrenceFrequency.DAILY)
@@ -404,20 +399,18 @@ internal object LegacyScheduleMapper {
   }
 
   /**
-   * 生成由旧 identity 决定的 UUIDv7。
+   * 由旧资源特征生成标准 UUIDv5。
    *
-   * 前 48 位保留旧记录时间，剩余位来自 SHA-256；显式覆盖 version/variant 后，同一账号同一旧资源在重试、
-   * 重装和多设备迁移时得到相同 ID。
+   * [identity] 必须包含账号、旧资源类型与旧主键。相同输入在重试、重装和多设备迁移时得到同一个
+   * Schedule ID，从而利用服务端主键自然去重；摘要不可反推出这些业务特征。
    */
-  internal fun deterministicUuidV7(timestampMillis: Long, identity: String): String {
-    val bytes = ByteArray(16)
-    val timestamp = timestampMillis.coerceAtLeast(0) and 0x0000_FFFF_FFFF_FFFFL
-    repeat(6) { index ->
-      bytes[index] = (timestamp ushr ((5 - index) * 8)).toByte()
-    }
-    val digest = identity.encodeUtf8().sha256().toByteArray()
-    digest.copyInto(bytes, destinationOffset = 6, startIndex = 0, endIndex = 10)
-    bytes[6] = ((bytes[6].toInt() and 0x0F) or 0x70).toByte()
+  internal fun deterministicScheduleUuid(identity: String): String {
+    require(identity.isNotBlank()) { "legacy schedule identity must not be blank" }
+    val digest = (UUID_NAMESPACE_DNS +
+      "com.cyxbs.schedule.migration|$identity".encodeUtf8().toByteArray())
+      .let { it.toByteString().sha1().toByteArray() }
+    val bytes = digest.copyOf(16)
+    bytes[6] = ((bytes[6].toInt() and 0x0F) or 0x50).toByte()
     bytes[8] = ((bytes[8].toInt() and 0x3F) or 0x80).toByte()
     val hex = CharArray(32)
     bytes.forEachIndexed { index, byte ->
@@ -445,6 +438,11 @@ internal object LegacyScheduleMapper {
   private val LEGACY_DATE_TIME_REGEX =
     Regex("""(\d{4})年(\d{1,2})月(\d{1,2})日(\d{1,2}):(\d{1,2})""")
   private val LEGACY_MONTH_DAY_REGEX = Regex("""(\d{1,2})\.(\d{1,2})""")
+  /** RFC 9562 预定义 DNS namespace：UUIDv5 的固定命名空间，不承载业务状态。 */
+  private val UUID_NAMESPACE_DNS = byteArrayOf(
+    0x6B, 0xA7.toByte(), 0xB8.toByte(), 0x10, 0x9D.toByte(), 0xAD.toByte(), 0x11, 0xD1.toByte(),
+    0x80.toByte(), 0xB4.toByte(), 0x00, 0xC0.toByte(), 0x4F, 0xD4.toByte(), 0x30, 0xC8.toByte(),
+  )
   private val LEGACY_START_MINUTES = intArrayOf(
     8 * 60,
     8 * 60 + 55,

@@ -6,12 +6,11 @@ import com.cyxbs.pages.schedule.domain.model.FieldPatch
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
-import com.cyxbs.pages.schedule.domain.model.ReminderChannel
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
-import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceException
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
@@ -122,17 +121,17 @@ enum class ScheduleCalendarProjectionCapability {
 }
 
 /**
- * 把 Schedule v2 事实映射为外部日历目标投影。
+ * 把 Schedule 事实映射为外部日历目标投影。
  *
- * 本工厂不访问账号、Clock、默认时区或平台 API。包含 exception 的重复系列只有在最终消费者显式声明原生例外
+ * 本工厂不访问账号、Clock、默认时区或平台 API。包含单次调整的重复系列只有在最终消费者显式声明原生例外
  * capability 时才生成子计划；默认继续整体标记为 unsupported，绝不让尚未升级的 Android/iOS 消费者误判 Update。
  */
 object ScheduleCalendarProjectionFactory {
   /**
    * 生成指定 [scope] 下的规范投影。
    *
-   * 非重复完成项和未排期项不产生事件；无例外的重复系列保留为单个 RRULE master。只有 DEVICE reminder
-   * 会映射到系统提醒，零分钟提醒有效。[capabilities] 默认为空，以兼容所有尚未完整支持原生例外的消费者。
+   * 非重复完成项和未排期项不产生事件；无单次调整的重复系列保留为单个 RRULE master。当前唯一提醒
+   * 会映射到系统提醒，零分钟提醒有效。[capabilities] 默认为空，以兼容尚未完整支持原生例外的消费者。
    */
   fun project(
     source: ScheduleCalendarSource,
@@ -142,30 +141,30 @@ object ScheduleCalendarProjectionFactory {
     val duplicateScheduleIds = source.schedules.groupingBy { it.id }.eachCount().filterValues { it > 1 }.keys
     require(duplicateScheduleIds.isEmpty()) { "Calendar source contains duplicate schedule IDs: $duplicateScheduleIds" }
     val scheduleIds = source.schedules.mapTo(mutableSetOf()) { it.id }
-    require(source.exceptions.all { it.scheduleId in scheduleIds }) {
-      "Calendar source contains orphan occurrence exceptions"
+    require(source.occurrenceAdjustments.all { it.scheduleId in scheduleIds }) {
+      "Calendar source contains orphan occurrence adjustments"
     }
-    val exceptionsBySchedule = source.exceptions.groupBy { it.scheduleId }
+    val adjustmentsBySchedule = source.occurrenceAdjustments.groupBy { it.scheduleId }
     val unsupported = mutableListOf<UnsupportedCalendarProjection>()
     val events = source.schedules.sortedBy { it.id.value }.mapNotNull { schedule ->
-      val validationIssues = ScheduleValidator.validate(schedule, pushSupported = true)
+      val validationIssues = ScheduleValidator.validate(schedule)
       require(validationIssues.isEmpty()) {
         "Calendar source contains invalid schedule ${schedule.id}: $validationIssues"
       }
-      val exceptions = exceptionsBySchedule[schedule.id].orEmpty()
-      require(schedule.recurrence != null || exceptions.isEmpty()) {
-        "Non-recurring schedule ${schedule.id} cannot own occurrence exceptions"
+      val adjustments = adjustmentsBySchedule[schedule.id].orEmpty()
+      require(schedule.recurrence != null || adjustments.isEmpty()) {
+        "Non-recurring schedule ${schedule.id} cannot own occurrence adjustments"
       }
-      require(exceptions.map { it.recurrenceId }.distinct().size == exceptions.size) {
-        "Calendar source contains duplicate occurrence exception identities"
+      require(adjustments.map { it.recurrenceId }.distinct().size == adjustments.size) {
+        "Calendar source contains duplicate occurrence adjustment identities"
       }
-      exceptions.forEach { exception ->
-        val exceptionIssues = ScheduleValidator.validate(exception)
-        require(exceptionIssues.isEmpty()) {
-          "Calendar source contains invalid occurrence exception: $exceptionIssues"
+      adjustments.forEach { adjustment ->
+        val adjustmentIssues = ScheduleValidator.validate(adjustment)
+        require(adjustmentIssues.isEmpty()) {
+          "Calendar source contains invalid occurrence adjustment: $adjustmentIssues"
         }
       }
-      if (exceptions.isNotEmpty() &&
+      if (adjustments.isNotEmpty() &&
         ScheduleCalendarProjectionCapability.NATIVE_OCCURRENCE_EXCEPTIONS !in capabilities
       ) {
         // 默认门禁必须在生成聚合 fingerprint 前终止；旧消费者只认识 master 字段，不能安全接收 exception-only Update。
@@ -175,7 +174,7 @@ object ScheduleCalendarProjectionFactory {
         )
         return@mapNotNull null
       }
-      if (exceptions.isNotEmpty() && schedule.timing is ScheduleTiming.Deadline) {
+      if (adjustments.isNotEmpty() && schedule.timing is ScheduleTiming.Deadline) {
         // Deadline 的稳定顶层身份仍是 kind=deadline，而 Android 原生例外链当前只接受 kind=series 的 master。
         // 在 identity 合同统一前必须明确 Unsupported，不能生成后续 planner/gateway 必然拒绝的半合法子计划。
         unsupported += UnsupportedCalendarProjection(
@@ -192,7 +191,7 @@ object ScheduleCalendarProjectionFactory {
         return@mapNotNull null
       }
       val nativeExceptions = runCatching {
-        exceptions.map { projectOccurrenceException(schedule, it, scope) }
+        adjustments.map { projectOccurrenceException(schedule, it, scope) }
           .sortedBy { it.externalUri }
       }.getOrElse {
         unsupported += UnsupportedCalendarProjection(
@@ -246,7 +245,7 @@ object ScheduleCalendarProjectionFactory {
    */
   private fun projectOccurrenceException(
     schedule: Schedule,
-    exception: ScheduleOccurrenceException,
+    exception: ScheduleOccurrenceAdjustment,
     scope: CalendarExportScope,
   ): CalendarOccurrenceExceptionProjection {
     val patch = exception.patch
@@ -259,7 +258,7 @@ object ScheduleCalendarProjectionFactory {
     val materialized = requireNotNull(
       RecurrenceEngine.resolveOccurrenceByIdentity(
         schedule = schedule,
-        exceptions = listOf(exception.copy(status = OccurrenceStatus.ACTIVE)),
+        occurrenceAdjustments = listOf(exception.copy(status = OccurrenceStatus.ACTIVE)),
         recurrenceId = exception.recurrenceId,
       ),
     )
@@ -297,14 +296,15 @@ object ScheduleCalendarProjectionFactory {
     )
   }
 
-  /** 分类只影响应用内语义；其他四个 patch 字段才需要创建 Android Provider exception。 */
+  /** 分类只影响应用内语义；日期、时间、标题、描述或提醒变化才需要创建系统日历 exception。 */
   private fun com.cyxbs.pages.schedule.domain.model.OccurrencePatch.hasCalendarVisibleChange(): Boolean =
-    timing != FieldPatch.Inherit || title != FieldPatch.Inherit ||
+    date != FieldPatch.Inherit || time != FieldPatch.Inherit ||
+      title != FieldPatch.Inherit ||
         description != FieldPatch.Inherit || reminder != FieldPatch.Inherit
 
-  /** 仅 DEVICE reminder 进入系统日历；空提醒不产生 Provider reminder row。 */
+  /** 当前唯一提醒进入系统日历；空提醒不产生 Provider reminder row。 */
   private fun ScheduleReminder?.deviceReminderMinutes(): List<Int> =
-    if (this?.channel == ReminderChannel.DEVICE) listOf(offsetMinutes) else emptyList()
+    this?.let { listOf(offsetMinutes) }.orEmpty()
 
   /** 将四态领域时间收窄为可导出的三态；Unscheduled 已由调用方过滤。 */
   private fun ScheduleTiming.toCalendarTiming(): CalendarTiming = when (this) {
@@ -316,7 +316,7 @@ object ScheduleCalendarProjectionFactory {
   }
 
   /**
-   * 编码 Schedule v2 支持的受限 RFC 5545 RRULE，并固定集合字段顺序。
+   * 编码 Schedule 支持的受限 RFC 5545 RRULE，并固定集合字段顺序。
    *
    * UNTIL 保留本地墙上时间形式，平台 adapter 写入时必须结合 Schedule 的 IANA 时区处理，不能按设备默认
    * 时区解释。这里不接受 RDATE、EXDATE、BYSETPOS 等领域模型外字段。
@@ -363,7 +363,7 @@ object ScheduleCalendarProjectionFactory {
 /**
  * Android Provider 回读 RRULE 的受限语义规范化器。
  *
- * 仅接受 Schedule v2 能生成的字段集合，忽略字段顺序并恢复固定顺序；重复字段、未知字段、非法值或
+ * 仅接受 Schedule 能生成的字段集合，忽略字段顺序并恢复固定顺序；重复字段、未知字段、非法值或
  * DTSTART/UNTIL value type 不匹配均返回 null。这样可兼容 Provider 的等价重排，同时不会把无法理解的规则
  * 错判为 NoOp 后覆盖或认领。
  */

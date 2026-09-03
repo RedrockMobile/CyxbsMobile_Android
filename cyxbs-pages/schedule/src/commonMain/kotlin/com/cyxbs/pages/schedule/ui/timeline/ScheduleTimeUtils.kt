@@ -6,7 +6,7 @@ import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence
 
 /**
- * 编辑框日期时间文本的解析结果，仅作为 UI 输入过渡格式；Schedule v2 持久化始终使用四态 [ScheduleTiming]，
+ * 编辑框日期时间文本的解析结果，仅作为 UI 输入过渡格式；Schedule 持久化始终使用四态 [ScheduleTiming]，
  * 不会保存该字符串或 minuteOfDay 表示。
  */
 data class ScheduleDateTime(val date: Date, val minuteOfDay: Int?)

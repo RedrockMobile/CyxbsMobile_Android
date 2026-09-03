@@ -4,7 +4,7 @@ import com.cyxbs.components.config.sp.AccountSettings
 
 private const val SCHEDULE_TODO_VIEW_MODE_KEY = "schedule_todo_view_mode"
 
-/** 清单页下半区的本地展示方式；该偏好按账号隔离，不进入 Schedule v2 协议。 */
+/** 清单页下半区的本地展示方式；该偏好按账号隔离，不进入 Schedule 协议。 */
 internal enum class ScheduleTodoViewMode {
   LIST,
   TIMELINE,
