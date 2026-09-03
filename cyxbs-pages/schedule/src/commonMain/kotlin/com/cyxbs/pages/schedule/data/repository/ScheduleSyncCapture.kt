@@ -119,11 +119,17 @@ class ScheduleRequestPlanner {
     )
   }
 
-  /** 捕获一次本地命令产生的非空 pending 集合。 */
+  /**
+   * 捕获一次本地命令产生的非空 pending 集合。
+   *
+   * [categories] 只包含本次需要上传的分类；[categoryReferences] 是当前账户的完整分类快照，仅用于把日程中的
+   * 客户端分类 ID 解析成远端 ID，不会因此把无 pending 的分类加入请求。
+   */
   fun captureMutation(
     categories: List<CategorySyncState>,
     schedules: List<ScheduleSyncState>,
     occurrenceAdjustments: List<OccurrenceAdjustmentSyncState>,
+    categoryReferences: List<CategorySyncState> = categories,
   ): ScheduleMutationCapture {
     require(categories.isNotEmpty() || schedules.isNotEmpty() || occurrenceAdjustments.isNotEmpty()) {
       "daily mutation capture requires pending resources"
@@ -133,7 +139,12 @@ class ScheduleRequestPlanner {
         schedules.all { it.pending != null } &&
         occurrenceAdjustments.all { it.pending != null },
     ) { "daily mutation capture only accepts states with pending" }
-    val pending = capturePending(categories, schedules, occurrenceAdjustments)
+    val pending = capturePending(
+      categories = categories,
+      schedules = schedules,
+      occurrenceAdjustments = occurrenceAdjustments,
+      categoryReferences = categoryReferences,
+    )
     return ScheduleMutationCapture(
       request = MutationRequest(
         categories = CategoryMutationRequest(pending.categoryUpserts, pending.categoryDeletes),
@@ -154,9 +165,11 @@ class ScheduleRequestPlanner {
     categories: List<CategorySyncState>,
     schedules: List<ScheduleSyncState>,
     occurrenceAdjustments: List<OccurrenceAdjustmentSyncState>,
+    categoryReferences: List<CategorySyncState> = categories,
   ): PendingProjection {
     val projection = PendingProjection()
-    val categoryByLocalId = categories.mapNotNull { state ->
+    // 日常请求只上传本次命令涉及的 categories，但日程可以引用任意已落库分类，解析引用必须使用完整分类快照。
+    val categoryByLocalId = categoryReferences.mapNotNull { state ->
       state.effectiveResource()?.let { state.identity.id to it }
     }.toMap()
 

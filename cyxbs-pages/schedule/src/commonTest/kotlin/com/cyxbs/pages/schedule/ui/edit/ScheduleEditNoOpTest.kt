@@ -13,6 +13,8 @@ import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitAllDaySelection
 import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitDateSelection
 import com.cyxbs.pages.schedule.ui.edit.area.adjustScheduleTimeInterval
 import com.cyxbs.pages.schedule.ui.edit.area.applyExplicitTimeModeSelection
+import com.cyxbs.pages.schedule.ui.edit.area.ScheduleTimeEditMode
+import com.cyxbs.pages.schedule.ui.edit.area.shouldApplyScheduleTimeModeSelection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.runTest
@@ -634,6 +636,30 @@ class ScheduleEditNoOpTest {
     val deadlineState = EditScheduleModelState(parentSchedule().copy(timing = deadline, recurrence = null))
     deadlineState.applyExplicitTimeModeSelection(interval = true, startMinuteOfDay = 9 * 60, endMinuteOfDay = 10 * 60)
     assertTrue(deadlineState.toDraft().timing is ScheduleTiming.Timed)
+  }
+
+  /** 无日期草稿虽默认高亮时间段，首次点击同一按钮仍必须把它转换为可保存的时间段。 */
+  @Test
+  fun unscheduledDraftAppliesPreselectedIntervalMode() {
+    assertTrue(
+      shouldApplyScheduleTimeModeSelection(
+        timing = ScheduleTiming.Unscheduled,
+        currentMode = ScheduleTimeEditMode.INTERVAL,
+        selectedMode = ScheduleTimeEditMode.INTERVAL,
+      )
+    )
+  }
+
+  /** 已有时间段重复点击当前模式不会重置用户已经设置的起止时间。 */
+  @Test
+  fun scheduledDraftIgnoresRepeatedCurrentMode() {
+    assertTrue(
+      !shouldApplyScheduleTimeModeSelection(
+        timing = parentSchedule().timing,
+        currentMode = ScheduleTimeEditMode.INTERVAL,
+        selectedMode = ScheduleTimeEditMode.INTERVAL,
+      )
+    )
   }
 
   @Test

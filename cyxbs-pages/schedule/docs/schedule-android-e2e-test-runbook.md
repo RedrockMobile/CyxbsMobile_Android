@@ -28,7 +28,7 @@
 - [x] E04 检查日志不输出 token、Authorization、Cookie、完整请求体或用户敏感描述。
 - [x] E05 首次 Sync 成功，`confirmedResults/discoveredResults/upsertResults/deleteResults` 与请求位置对应。
 - [ ] E06 代码审查账号 repository、AccountSession tag、迁移设置和系统日历所有权均按账号隔离。
-- [ ] E07 验证 `cyxbs://schedule`、`schedule/settings`、`schedule/category`、`schedule/failures` 冷启动和热启动路由。
+- [x] E07 验证 `cyxbs://schedule`、`schedule/settings`、`schedule/category`、`schedule/failures` 冷启动和热启动路由。
 - [ ] E08 重复投递同一 Schedule deeplink 能再次定位目标，不在导航栈堆叠重复页面。
 - [x] E09 记录本轮统一测试前缀，并确认最终可按远端 ID 精确清理而不误删其他数据。
 - [x] E10 确认当前测试包、客户端 commit 和后端部署 commit 与记录一致。
@@ -42,28 +42,28 @@
 - [ ] C05 分类更新为同名时服务端返回 `REJECTED / DUPLICATE_CATEGORY_NAME`，其他资源仍可成功。
 - [ ] C06 修改配色 JSON 后，清单时间轴和课表投影使用新背景色/文字色。
 - [ ] C07 拖动分类顺序，重启和 Sync 后顺序保持。
-- [ ] C08 删除未引用分类，本地和服务端均物理删除。
+- [x] C08 删除未引用分类，本地和服务端均物理删除。
 - [ ] C09 删除仍被日程或单次调整引用的分类时客户端拦截；直连接口返回 `CATEGORY_IN_USE`。
 - [ ] C10 分类名称空白、首尾空格和常用中文符号处理一致。
 - [ ] C11 连续多次改名/换色/排序只保留最终 pending，不生成重复分类。
 - [ ] C12 网络失败时分类本地立即可见，恢复后 Sync 收敛。
-- [ ] C13 固定分类“学习/生活/其他”不提供删除入口，自定义分类提供删除入口。
+- [x] C13 固定分类“学习/生活/其他”不提供删除入口，自定义分类提供删除入口。
 - [ ] C14 逐一抽查全部候选配色，背景色/文字色 JSON 在 Room、wire 和远端往返后字段完整。
 - [ ] C15 分类被多个 TODO 与 AFFAIR 引用时，改名、换色和排序不改变引用 ID。
-- [ ] C16 创建分类回包的 canonical 远端 ID 正确绑定本地 UUID，后续更新不再携带 `categoryLocalId`。
+- [x] C16 创建分类回包的 canonical 远端 ID 正确绑定本地 UUID，后续更新不再携带 `categoryLocalId`。
 - [ ] C17 两个本地分类绕过校验提交同名创建时，均映射到同一 canonical 分类并合并本地引用。
 - [ ] C18 分类更新同时发生名称冲突与颜色变更时整条分类更新拒绝，不产生半更新。
 - [ ] C19 分类被引用数量在新增、解绑、删除日程后即时刷新，删除拦截结果正确。
 
 ## 4. 清单日程创建矩阵
 
-- [ ] T01 创建时间点日程，日期和分钟准确。
-- [ ] T02 创建时间段日程，开始/结束和最短 30 分钟约束准确。
-- [ ] T03 创建单日全天日程，不显示伪造的 00:00 时间段。
+- [x] T01 创建时间点日程，日期和分钟准确。
+- [x] T02 创建时间段日程，开始/结束和最短 30 分钟约束准确。
+- [x] T03 创建单日全天日程，不显示伪造的 00:00 时间段。
 - [ ] T04 创建准时提醒，wire 中为 `minutesBefore=0`。
 - [ ] T05 创建提前 10 分钟提醒，列表、详情和 wire 文案一致。
 - [ ] T06 创建关联课表的时间点、时间段和全天日程，课表点击均打开同一 Schedule ID。
-- [ ] T07 新建 UI 不提供无日期日程；旧 `UNSCHEDULED` 能正常展示。
+- [x] T07 新建 UI 不提供无日期日程；旧 `UNSCHEDULED` 能正常展示。
 - [ ] T08 `UNSCHEDULED` 点击提醒或关联课表时只提示先设置时间，不产生更新。
 - [ ] T09 空标题和纯空格标题无法保存；绕过客户端时服务端逐项拒绝。
 - [ ] T10 未填写内容点击外部或下拉直接放弃，不弹未保存确认。
@@ -128,8 +128,8 @@
 - [ ] U03 `UNSCHEDULED` 显示“未设置日期/时间”，选择日期可变全天，选择钟点可变时间点/时间段。
 - [ ] U04 提醒按“不提醒 → 准时 → 提前 10 分钟 → 不提醒”往返。
 - [ ] U05 开关课表关联后投影新增/移除，清单本体不丢失。
-- [ ] U06 改为“未分组”上传 `categoryId.data=null` 并正常发起更新。
-- [ ] U07 打开但不修改直接保存或返回，不发 UPDATE、不增加本地 revision。
+- [x] U06 改为“未分组”上传 `categoryId.data=null` 并正常发起更新。
+- [x] U07 打开但不修改直接保存或返回，不发 UPDATE、不增加本地 revision。
 - [ ] U08 完成普通清单后从未完成区移除，七天内在已完成区显示，超过七天隐藏。
 - [ ] U09 已完成普通清单继续编辑时不意外恢复完成态。
 - [ ] U10 删除日程出现二次确认；确认后本地和远端物理删除，重复删除仍视为成功。
@@ -300,13 +300,15 @@
 - 客户端分支/commit：`guoxiangrui/feature/schedule` / `c0f34cf86`。
 - 后端分支/commit：`dev/test` / `94df708e5e4e`，已推送并由 dev/test CI 部署。
 - 应用、版本、后端 host、账号脱敏摘要：`com.mredrock.cyxbs.test` / `6.10.6-alpha (94)` / dev/test / `2020****88`。
-- 初始状态：当前正式库 1 个分类、1 条 `UNSCHEDULED` 日程、0 个单次调整；首次修复前 pending=2，成功 Sync 后 pending=0。旧 `schedule-room3.db` 只含开发期 `schedule_v2_*` 表且已不再读取，新 `schedule.db` 表名均无 V2。
+- 初始状态：当前正式库 1 个分类、1 条 `UNSCHEDULED` 日程、0 个单次调整；首次修复前 pending=2，成功 Sync 后 pending=0。旧开发数据库已经停用，当前 `schedule.db` 的文件名、表名和代码符号均不再携带版本代号。
 - 自动化基线：客户端 desktopTest、Android host test、Android/iOS 编译通过；后端 Schedule 聚焦测试通过。
 
 | ID | 用例 | 状态 | 现象与证据 | 根因 | 修复提交 |
 |---|---|---|---|---|---|
 | SCHED-E2E-001 | E02/E05/S25 | 已修复 | 覆盖安装后正式清单页误报只读，旧库存在但新结构无法初始化 | 未上线期间重写 Room schema 却继续使用 version=1，Room 不会触发 destructive migration，而是直接 identity 校验失败 | `c0f34cf86` |
 | SCHED-E2E-002 | E05/S14 | 已修复 | 服务端成功创建分类与日程，但客户端未落库成功并保留 pending | 无失败项时仍提前构建全部失败快照，且分类解析器写死为 `{ null }`，带分类日程必然抛错 | `c0f34cf86` |
+| SCHED-E2E-003 | T02/T03 | 已修复待提交 | 无日期草稿进入时间设置后默认高亮“时间段”，再次点击却仍无法保存 | UI 预选了时间段模式，但领域状态仍为 `UNSCHEDULED`；同模式点击被直接忽略，没有把默认时分写入草稿 | 本轮待提交 |
+| SCHED-E2E-004 | C16/U01/U06 | 已修复待提交 | 日程改到已同步分类后，本地保存为 pending，构造 UPDATE 时崩溃；重启后的 Sync 才能补传 | 日常请求只把本次有 pending 的分类交给序列化器，因而无法把无 pending 分类的本地 UUID 解析为远端 ID | 本轮待提交 |
 
 ### 14.2 修复批次规则
 

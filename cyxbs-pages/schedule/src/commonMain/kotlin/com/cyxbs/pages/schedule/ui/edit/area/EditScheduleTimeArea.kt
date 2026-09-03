@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.view.wheel.WheelSelectCompose
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
+import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleModelState
 import com.cyxbs.pages.schedule.ui.edit.ToggleChip
 import com.cyxbs.pages.schedule.ui.timeline.formatScheduleDateTime
@@ -129,7 +130,7 @@ internal fun EditScheduleTimeArea(
     // 清单支持全天、时间段与时间点；事务仍固定为时间段，不暴露不合法的时间类型。
     if (supportsTimePoint) {
       ScheduleTimeTypeToggle(mode = timeMode, onChange = { selectedMode ->
-        if (selectedMode != timeMode) {
+        if (shouldApplyScheduleTimeModeSelection(state.effectiveTiming, timeMode, selectedMode)) {
           timeMode = selectedMode
           when (selectedMode) {
             ScheduleTimeEditMode.ALL_DAY -> state.applyExplicitAllDaySelection()
@@ -222,6 +223,18 @@ internal fun EditScheduleTimeArea(
     }
   }
 }
+
+/**
+ * 判断时间类型按钮是否需要真正写回草稿。
+ *
+ * 无日期清单为便于展示会预选“时间段”，但领域状态仍是 [ScheduleTiming.Unscheduled]；此时即使用户
+ * 再次点击同一个按钮也必须执行转换。已经排期且模式未变化时才跳过，避免重复点击重置现有时分。
+ */
+internal fun shouldApplyScheduleTimeModeSelection(
+  timing: ScheduleTiming,
+  currentMode: ScheduleTimeEditMode,
+  selectedMode: ScheduleTimeEditMode,
+): Boolean = timing == ScheduleTiming.Unscheduled || selectedMode != currentMode
 
 /** 将当前日期保留为单日全天，并清除小时语义；全天不扩展为跨日范围。 */
 internal fun EditScheduleModelState.applyExplicitAllDaySelection() {

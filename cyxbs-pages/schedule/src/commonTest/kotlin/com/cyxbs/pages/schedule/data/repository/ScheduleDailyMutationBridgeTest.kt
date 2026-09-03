@@ -8,6 +8,7 @@ import com.cyxbs.pages.schedule.data.remote.ResultReason
 import com.cyxbs.pages.schedule.data.remote.UpsertResult
 import com.cyxbs.pages.schedule.domain.sync.AtomicField
 import com.cyxbs.pages.schedule.domain.sync.CategoryIdentity
+import com.cyxbs.pages.schedule.domain.sync.CategoryRemoteSnapshot
 import com.cyxbs.pages.schedule.domain.sync.CategoryResource
 import com.cyxbs.pages.schedule.domain.sync.CategorySyncState
 import com.cyxbs.pages.schedule.domain.sync.PendingDelete
@@ -25,6 +26,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 /** 日常请求只验证一次本地命令产生的逐资源变更，不引入额外批次模型。 */
 class ScheduleDailyMutationBridgeTest {
@@ -61,6 +63,34 @@ class ScheduleDailyMutationBridgeTest {
     assertEquals(ScheduleDailyMutationMethod.UPDATE, captured.method)
     assertEquals(listOf(CATEGORY_ID), captured.request.categories.upserts.map { it.localId })
     assertEquals(listOf(SCHEDULE_ID), captured.request.schedules.upserts.map { it.id })
+  }
+
+  /** 修改到一个已同步分类时，只解析其远端 ID，不把无 pending 的分类重复上传。 */
+  @Test
+  fun updateCanReferenceSyncedCategoryWithoutUploadingCategory() {
+    val category = categoryState(revision = 1).let { state ->
+      val pending = assertIs<PendingUpsert<CategoryIdentity, CategoryResource>>(state.pending)
+      val remote = pending.resource.copy(remoteId = 41L, version = 1)
+      CategorySyncState(remote.identity, CategoryRemoteSnapshot(remote), null)
+    }
+    val remoteSchedule = scheduleResource(version = 1, title = "remote")
+    val schedule = ScheduleSyncState(
+      identity = remoteSchedule.identity,
+      remoteSnapshot = ScheduleRemoteSnapshot(remoteSchedule.copy(categoryId = AtomicField(null, 1))),
+      pending = PendingUpsert(
+        remoteSchedule.copy(categoryId = AtomicField(CATEGORY_ID, 2)),
+        localRevision = 2,
+      ),
+    )
+
+    val captured = assertIs<ScheduleDailyMutationCapture.Ready>(
+      bridge.capture(2, listOf(category), listOf(schedule), emptyList()),
+    )
+
+    assertEquals(ScheduleDailyMutationMethod.UPDATE, captured.method)
+    assertEquals(emptyList(), captured.request.categories.upserts)
+    assertEquals(41L, captured.request.schedules.upserts.single().categoryId.data)
+    assertNull(captured.request.schedules.upserts.single().categoryLocalId)
   }
 
   @Test

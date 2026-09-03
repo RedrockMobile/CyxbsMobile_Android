@@ -75,6 +75,7 @@ class ScheduleDailyMutationBridge(
       categories = selectedCategories,
       schedules = selectedSchedules,
       occurrenceAdjustments = selectedAdjustments,
+      categoryReferences = categories,
     )
     return ScheduleDailyMutationCapture.Ready(
       method = selectMethod(selectedCategories, selectedSchedules, selectedAdjustments),
