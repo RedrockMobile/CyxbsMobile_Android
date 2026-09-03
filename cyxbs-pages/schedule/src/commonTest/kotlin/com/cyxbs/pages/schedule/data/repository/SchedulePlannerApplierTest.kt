@@ -17,8 +17,21 @@ import com.cyxbs.pages.schedule.domain.sync.CategoryIdentity
 import com.cyxbs.pages.schedule.domain.sync.CategoryRemoteSnapshot
 import com.cyxbs.pages.schedule.domain.sync.CategorySyncState
 import com.cyxbs.pages.schedule.domain.sync.FieldPatch
+import com.cyxbs.pages.schedule.domain.sync.OccurrenceAdjustmentIdentity
+import com.cyxbs.pages.schedule.domain.sync.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.sync.OccurrenceTimeInput
+import com.cyxbs.pages.schedule.domain.sync.OccurrenceTimeKind
 import com.cyxbs.pages.schedule.domain.sync.PendingDelete
 import com.cyxbs.pages.schedule.domain.sync.PendingUpsert
+import com.cyxbs.pages.schedule.domain.sync.RecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.sync.RecurrenceInput
+import com.cyxbs.pages.schedule.domain.sync.ReminderInput
+import com.cyxbs.pages.schedule.domain.sync.ScheduleIdentity
+import com.cyxbs.pages.schedule.domain.sync.ScheduleKind
+import com.cyxbs.pages.schedule.domain.sync.TimingInput
+import com.cyxbs.pages.schedule.domain.sync.TimingKind
+import com.cyxbs.pages.schedule.domain.sync.TodoState
+import com.cyxbs.pages.schedule.domain.sync.Weekday
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -227,6 +240,148 @@ class SchedulePlannerApplierTest {
     assertNull(category.pending)
     assertNull(schedule.pending)
     assertNull(adjustment.pending)
+  }
+
+  /**
+   * 空库冷启动必须完整恢复所有已支持的日程形态和字段。
+   *
+   * 该用例刻意同时覆盖分类引用、四种 timing、周/月/年重复字段、准时提醒、完成态、
+   * 课表关联和单次调整 Patch，防止恢复链路只保留资源 ID/version 而静默丢失业务字段。
+   */
+  @Test
+  fun discoveredResourcesRestoreCompleteScheduleSemantics() = runTest {
+    val category = testCategoryResource(remoteId = 41L, version = 2).copy(
+      color = AtomicField("{\"lightBackground\":\"#EFEFEF\"}", 12),
+      sortOrder = AtomicField(3, 13),
+    )
+    val schedules = listOf(
+      testScheduleResource(
+        version = 3,
+        categoryLocalId = category.identity.id,
+        timing = TimingInput(TimingKind.TIMED, startAt = 1_777_651_200_000L, endAt = 1_777_656_600_000L),
+      ).copy(
+        identity = ScheduleIdentity("019d0000-0000-7000-8000-000000000001"),
+        kind = ScheduleKind.AFFAIR,
+        title = AtomicField("时间段事务", 20),
+        description = AtomicField("需要在课表中展示", 21),
+        recurrence = AtomicField(
+          RecurrenceInput(
+            frequency = RecurrenceFrequency.WEEKLY,
+            interval = 2,
+            anchorDate = 1_777_593_600_000L,
+            untilDate = 1_779_926_400_000L,
+            weekdays = setOf(Weekday.MO, Weekday.FR),
+          ),
+          22,
+        ),
+        reminder = AtomicField(ReminderInput(0), 23),
+        todoState = AtomicField(null, 24),
+        linkedToCourse = AtomicField(true, 25),
+      ),
+      testScheduleResource(
+        version = 4,
+        title = "时间点清单",
+        timing = TimingInput(TimingKind.DEADLINE, dueAt = 1_777_744_800_000L),
+      ).copy(
+        identity = ScheduleIdentity("019d0000-0000-7000-8000-000000000002"),
+        recurrence = AtomicField(
+          RecurrenceInput(
+            frequency = RecurrenceFrequency.MONTHLY,
+            interval = 1,
+            anchorDate = 1_777_680_000_000L,
+            count = 6,
+            monthDays = setOf(3, 18),
+          ),
+          26,
+        ),
+        reminder = AtomicField(ReminderInput(10), 27),
+        todoState = AtomicField(TodoState.COMPLETED, 28),
+      ),
+      testScheduleResource(
+        version = 5,
+        title = "全天清单",
+        timing = TimingInput(TimingKind.ALL_DAY, date = 1_777_766_400_000L),
+      ).copy(
+        identity = ScheduleIdentity("019d0000-0000-7000-8000-000000000003"),
+        recurrence = AtomicField(
+          RecurrenceInput(
+            frequency = RecurrenceFrequency.YEARLY,
+            interval = 1,
+            anchorDate = 1_777_766_400_000L,
+            months = setOf(5),
+            monthDays = setOf(3),
+          ),
+          29,
+        ),
+      ),
+      testScheduleResource(version = 6, title = "旧清单无日期").copy(
+        identity = ScheduleIdentity("019d0000-0000-7000-8000-000000000004"),
+      ),
+    )
+    val adjustment = testAdjustmentResource(remoteId = 71L, version = 7).copy(
+      identity = OccurrenceAdjustmentIdentity(
+        localId = TEST_ADJUSTMENT_LOCAL_ID,
+        scheduleId = schedules.first().identity.id,
+        originalOccurrenceDate = TEST_OCCURRENCE_DATE,
+      ),
+      status = AtomicField(OccurrenceStatus.COMPLETED, 30),
+      date = AtomicField(FieldPatch.Replace(1_777_680_000_000L), 31),
+      time = AtomicField(
+        FieldPatch.Replace(
+          OccurrenceTimeInput(
+            kind = OccurrenceTimeKind.TIME_RANGE,
+            startMinuteOfDay = 18 * 60,
+            durationMinutes = 90,
+          ),
+        ),
+        32,
+      ),
+      title = AtomicField(FieldPatch.Replace("单次改名"), 33),
+      description = AtomicField(FieldPatch.Clear, 34),
+      categoryId = AtomicField(FieldPatch.Clear, 35),
+      reminder = AtomicField(FieldPatch.Replace(ReminderInput(5)), 36),
+    )
+    val capture = planner.capture(emptyList(), emptyList(), emptyList())
+
+    val applied = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(
+        capture = capture,
+        response = response(
+          capture = capture,
+          categoryDiscovered = listOf(category.toWire()),
+          scheduleDiscovered = schedules.map { it.toWire { category } },
+          adjustmentDiscovered = listOf(adjustment.toWire { category }),
+        ),
+        categories = emptyList(),
+        schedules = emptyList(),
+        occurrenceAdjustments = emptyList(),
+      ),
+    )
+
+    val restoredCategory = applied.categories.single().remoteSnapshot!!.resource
+    assertEquals(category.remoteId, restoredCategory.remoteId)
+    assertEquals(category.name, restoredCategory.name)
+    assertEquals(category.color, restoredCategory.color)
+    assertEquals(category.sortOrder, restoredCategory.sortOrder)
+
+    val restoredSchedules = applied.schedules.associateBy { it.identity.id }
+    schedules.forEach { expected ->
+      val actual = restoredSchedules.getValue(expected.identity.id).remoteSnapshot!!.resource
+      assertEquals(
+        expected.copy(
+          categoryId = expected.categoryId.copy(
+            data = expected.categoryId.data?.let { restoredCategory.identity.id },
+          ),
+        ),
+        actual,
+      )
+    }
+
+    val restoredAdjustment = applied.occurrenceAdjustments.single().remoteSnapshot!!.resource
+    assertEquals(adjustment.copy(identity = restoredAdjustment.identity), restoredAdjustment)
+    assertNull(applied.categories.single().pending)
+    assertTrue(applied.schedules.all { it.pending == null })
+    assertNull(applied.occurrenceAdjustments.single().pending)
   }
 
   /** confirmed 的远端删除事实必须同时清掉请求前已有的 pending，不能在下一轮把资源复活。 */

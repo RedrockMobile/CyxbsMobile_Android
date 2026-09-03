@@ -66,6 +66,26 @@ class ScheduleRoomRepositoryDesktopTest {
     }
   }
 
+  /** 首次同步失败只能标记远端不可用；后续显式同步成功必须恢复 Ready，不能写入虚假确认状态。 */
+  @Test
+  fun failedInitialSyncCanRecoverOnLaterSuccessfulSync() = runTest {
+    withRepository { repository, gateway, _, _ ->
+      gateway.syncResult = {
+        ScheduleCallResult.TransportFailure(null, IllegalStateException("offline"))
+      }
+
+      repository.initialize()
+
+      assertIs<ScheduleRepositoryStatus.Unavailable>(repository.snapshot.value.status)
+      gateway.syncResult = { request -> completed(emptySyncResponse(request)) }
+      val result = repository.execute(ScheduleCommand.RequestSync)
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      assertEquals(2, gateway.syncCalls)
+      assertIs<ScheduleRepositoryStatus.Ready>(repository.snapshot.value.status)
+    }
+  }
+
   /** 日常创建先落本地，成功响应再推进 version 并清除 pending。 */
   @Test
   fun createPersistsCanonicalVersionAndClearsPending() = runTest {
@@ -292,6 +312,9 @@ class ScheduleRoomRepositoryDesktopTest {
     var syncCalls = 0
     var createCalls = 0
     var lastDelete: MutationRequest? = null
+    var syncResult: suspend (SyncRequest) -> ScheduleCallResult<SyncResponse> = { request ->
+      completed(emptySyncResponse(request))
+    }
     var createResult: suspend (MutationRequest) -> ScheduleCallResult<MutationResponse> = { request ->
       completed(successResponse(request))
     }
@@ -301,7 +324,7 @@ class ScheduleRoomRepositoryDesktopTest {
 
     override suspend fun sync(accountId: String, request: SyncRequest): ScheduleCallResult<SyncResponse> {
       syncCalls += 1
-      return completed(emptySyncResponse(request))
+      return syncResult(request)
     }
 
     override suspend fun createSchedule(

@@ -198,7 +198,7 @@
 
 ## 9. 同步、部分成功与失败记录
 
-- [ ] S01 空本地首次 Sync 能恢复分类、四种 timing、重复、提醒、完成态、关联和单次调整。
+- [x] S01 空本地首次 Sync 能恢复分类、四种 timing、重复、提醒、完成态、关联和单次调整。
 - [x] S02 confirmed 同版本返回 `CONFIRMED`，版本不同时返回 `CHANGED + resource`，缺失返回 `DELETED`。
 - [x] S03 远端独有数据通过 `discoveredResults` 下发并创建本地 UUID 映射。
 - [x] S04 同一请求中一项 `REJECTED`、其他项成功；客户端先应用成功项，只保留失败项 pending。
@@ -270,11 +270,11 @@
 ## 12. 远端恢复代码链路审查
 
 - [x] N01 空 Room 首次 Sync 将远端分类、Schedule 和 adjustment 通过 discoveredResults 投影到本地。
-- [ ] N02 恢复时间点、时间段、全天、无时间、重复、提醒、完成态、分类、来源、关联和字段 Patch。
+- [x] N02 恢复时间点、时间段、全天、无时间、重复、提醒、完成态、分类、来源、关联和字段 Patch。
 - [ ] N03 Settings 专属状态（置顶、视图模式）不进入服务端资源，也不被远端数据伪造。
 - [x] N04 旧数据 UUID v5 在远端已存在时复用；普通新建 UUID v7 仍保持客户端稳定 identity。
 - [x] N05 服务端物理删除事实阻止 confirmed 旧资源和 stale pending 复活。
-- [ ] N06 首次 Sync 失败不写虚假已同步状态；后续成功 Sync 可完整恢复。
+- [x] N06 首次 Sync 失败不写虚假已同步状态；后续成功 Sync 可完整恢复。
 - [ ] N07 远端恢复后触发当前设备系统日历对账，但 repository 初始化不依赖日历权限。
 - [x] N08 账号切换会先停止旧 session 收集并发布空快照，迟到回包无法写入新账号。
 
@@ -377,6 +377,8 @@
 - U21：扩充 `SchedulePlannerApplierTest.acceptedRequestDoesNotClearNewerLocalChange`。revision=4 的旧请求返回成功时，revision=5 的本地修改仍作为 effective pending；下一轮 capture 只上传最终值 `U`，并以刚确认的远端 version=4 为基线，不重放已被后续编辑覆盖的 `R`。
 - R30：修复完成态与内容 Patch 未完全正交的问题。`ScheduleEditNoOpTest.restoreOccurrenceAdjustmentPreservesIndependentCompletionState` 验证已完成实例还原单次时间/标题等内容时只清空 Patch、继续保持 COMPLETED；随后取消完成会物理删除已无业务含义的 adjustment，因此旧 Patch 不会复活。ACTIVE 修改和 CANCELLED 删除的还原仍直接物理删除资源。
 - S12：新增 `SettingsScheduleFailureRecordStoreDesktopTest.repeatedFailureReplacesPreviousRecordForSameSchedule`，使用内存 Properties 走真实 JSON 分块持久化。同一 Schedule 连续失败后只保留一条记录，失败时间、reason 和可编辑源日程均替换为最新值；重新创建 Store 后读取结果仍一致，不依赖进程内 StateFlow 缓存。
+- N06：`ScheduleRoomRepositoryDesktopTest.failedInitialSyncCanRecoverOnLaterSuccessfulSync` 让初始化阶段返回真实 transport failure，确认快照进入 `Unavailable` 而不是伪造成功；随后同一仓库显式 Sync 成功，调用次数递增且状态恢复为 `Ready`，首次失败没有阻断后续远端恢复。
+- S01/N02：新增 `SchedulePlannerApplierTest.discoveredResourcesRestoreCompleteScheduleSemantics`，从空本地接收远端 discovered 分类、四种 timing、周/月/年重复、准时与提前提醒、完成态、课表关联以及单次调整的状态和全部 FieldPatch；逐字段比对恢复后的 canonical 快照、分类本地映射和 pending 清理结果。
 
 ### 14.3 修复批次规则
 
