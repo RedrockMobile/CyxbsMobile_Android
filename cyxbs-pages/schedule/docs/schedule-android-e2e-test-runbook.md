@@ -22,16 +22,16 @@
 
 ## 2. 环境与安全基线
 
-- [ ] E01 ADB 只连接目标测试设备，设备保持解锁，使用项目配置的覆盖安装脚本。
-- [ ] E02 确认启动的是正式 `cyxbs://schedule` 页面，而不是内部 Preview。
-- [ ] E03 记录脱敏账号、客户端 commit、后端环境和初始本地/远端数量。
-- [ ] E04 检查日志不输出 token、Authorization、Cookie、完整请求体或用户敏感描述。
-- [ ] E05 首次 Sync 成功，`confirmedResults/discoveredResults/upsertResults/deleteResults` 与请求位置对应。
+- [x] E01 ADB 只连接目标测试设备，设备保持解锁，使用项目配置的覆盖安装脚本。
+- [x] E02 确认启动的是正式 `cyxbs://schedule` 页面，而不是内部 Preview。
+- [x] E03 记录脱敏账号、客户端 commit、后端环境和初始本地/远端数量。
+- [x] E04 检查日志不输出 token、Authorization、Cookie、完整请求体或用户敏感描述。
+- [x] E05 首次 Sync 成功，`confirmedResults/discoveredResults/upsertResults/deleteResults` 与请求位置对应。
 - [ ] E06 代码审查账号 repository、AccountSession tag、迁移设置和系统日历所有权均按账号隔离。
 - [ ] E07 验证 `cyxbs://schedule`、`schedule/settings`、`schedule/category`、`schedule/failures` 冷启动和热启动路由。
 - [ ] E08 重复投递同一 Schedule deeplink 能再次定位目标，不在导航栈堆叠重复页面。
-- [ ] E09 记录本轮统一测试前缀，并确认最终可按远端 ID 精确清理而不误删其他数据。
-- [ ] E10 确认当前测试包、客户端 commit 和后端部署 commit 与记录一致。
+- [x] E09 记录本轮统一测试前缀，并确认最终可按远端 ID 精确清理而不误删其他数据。
+- [x] E10 确认当前测试包、客户端 commit 和后端部署 commit 与记录一致。
 
 ## 3. 分类管理
 
@@ -211,7 +211,7 @@
 - [ ] S11 失败记录不保存或展示 token、完整 payload、数据库错误或服务端堆栈。
 - [ ] S12 同一资源连续失败更新为最新源数据和失败原因，不堆积过时副本。
 - [ ] S13 CREATE/UPDATE/DELETE/SYNC 均返回 HTTP 200 + data/status/info；业务拒绝不使用 HTTP 400。
-- [ ] S14 请求中的 confirmed/upserts/deletes 与响应 confirmedResults/upsertResults/deleteResults 按位置一一对应。
+- [x] S14 请求中的 confirmed/upserts/deletes 与响应 confirmedResults/upsertResults/deleteResults 按位置一一对应。
 - [ ] S15 `discoveredResults` 只下发客户端未声明的远端资源，不与 confirmedResults 重复。
 - [ ] S16 分类、Schedule、adjustment 的某一项失败不使同请求其他合法项回滚；依赖失败仅传播到引用项。
 - [ ] S17 分类同名创建返回合并后的 canonical 资源；同名更新返回 `DUPLICATE_CATEGORY_NAME`。
@@ -280,32 +280,33 @@
 
 ## 13. 自动化与代码链路回归
 
-- [ ] Q01 客户端 `:cyxbs-pages:schedule:desktopTest` 全部通过。
-- [ ] Q02 客户端 Android、iOS、Desktop 相关 source set 编译通过。
+- [x] Q01 客户端 `:cyxbs-pages:schedule:desktopTest` 全部通过。
+- [x] Q02 客户端 Android、iOS、Desktop 相关 source set 编译通过。
 - [ ] Q03 课表 overlap、PageDecoration 和 Schedule service 聚焦测试通过。
-- [ ] Q04 后端 `schedule`、`schedulewire`、`dao` 和 Schedule service 聚焦测试通过。
-- [ ] Q05 客户端和后端 `git diff --check` 通过，旧业务命名和废弃协议字段扫描为空。
+- [x] Q04 后端 `schedule`、`schedulewire`、`dao` 和 Schedule service 聚焦测试通过。
+- [x] Q05 客户端和后端 `git diff --check` 通过，旧业务命名和废弃协议字段扫描为空。
 - [ ] Q06 最终清理测试数据，确认 pending 和失败记录无测试残留。
-- [ ] Q07 客户端本地 reducer、capture、response applier、snapshot projector 和 Room repository 全量测试通过。
-- [ ] Q08 客户端 Schedule wire、领域 mapper、重复引擎、迁移、日历 projection 聚焦测试通过。
+- [x] Q07 客户端本地 reducer、capture、response applier、snapshot projector 和 Room repository 全量测试通过。
+- [x] Q08 客户端 Schedule wire、领域 mapper、重复引擎、迁移、日历 projection 聚焦测试通过。
 - [ ] Q09 Android test debug 覆盖安装成功，正式清单入口与课表入口均可运行。
-- [ ] Q10 后端 decode、领域合并、DAO、handler、mutation/sync、部分成功和安全错误测试通过。
-- [ ] Q11 客户端/后端源码中业务命名不再含 V2；允许历史测试变量或第三方资源中的非业务文本。
+- [x] Q10 后端 decode、领域合并、DAO、handler、mutation/sync、部分成功和安全错误测试通过。
+- [x] Q11 客户端/后端源码中业务命名不再含 V2；允许历史测试变量或第三方资源中的非业务文本。
 - [ ] Q12 检查账号隔离、服务端 owner 校验、adjustment.ownerId 和跨账号资源拒绝链路。
 
 ## 14. 问题记录与修复批次
 
 ### 14.1 本轮基线
 
-- 客户端分支/commit：待部署前填写。
-- 后端分支/commit：待 push 后填写。
-- 应用、版本、后端 host、账号脱敏摘要：待覆盖安装后填写。
-- 本地/远端初始分类、日程、单次调整、pending、失败记录数量：待首次 Sync 后填写。
-- 自动化基线：待双端审阅和测试后填写。
+- 客户端分支/commit：`guoxiangrui/feature/schedule` / `c0f34cf86`。
+- 后端分支/commit：`dev/test` / `94df708e5e4e`，已推送并由 dev/test CI 部署。
+- 应用、版本、后端 host、账号脱敏摘要：`com.mredrock.cyxbs.test` / `6.10.6-alpha (94)` / dev/test / `2020****88`。
+- 初始状态：当前正式库 1 个分类、1 条 `UNSCHEDULED` 日程、0 个单次调整；首次修复前 pending=2，成功 Sync 后 pending=0。旧 `schedule-room3.db` 只含开发期 `schedule_v2_*` 表且已不再读取，新 `schedule.db` 表名均无 V2。
+- 自动化基线：客户端 desktopTest、Android host test、Android/iOS 编译通过；后端 Schedule 聚焦测试通过。
 
 | ID | 用例 | 状态 | 现象与证据 | 根因 | 修复提交 |
 |---|---|---|---|---|---|
-| 待登记 | - | - | - | - | - |
+| SCHED-E2E-001 | E02/E05/S25 | 已修复 | 覆盖安装后正式清单页误报只读，旧库存在但新结构无法初始化 | 未上线期间重写 Room schema 却继续使用 version=1，Room 不会触发 destructive migration，而是直接 identity 校验失败 | `c0f34cf86` |
+| SCHED-E2E-002 | E05/S14 | 已修复 | 服务端成功创建分类与日程，但客户端未落库成功并保留 pending | 无失败项时仍提前构建全部失败快照，且分类解析器写死为 `{ null }`，带分类日程必然抛错 | `c0f34cf86` |
 
 ### 14.2 修复批次规则
 
