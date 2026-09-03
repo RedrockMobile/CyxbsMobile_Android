@@ -16,6 +16,7 @@ import com.cyxbs.pages.schedule.domain.sync.AtomicField
 import com.cyxbs.pages.schedule.domain.sync.CategoryIdentity
 import com.cyxbs.pages.schedule.domain.sync.CategoryRemoteSnapshot
 import com.cyxbs.pages.schedule.domain.sync.CategorySyncState
+import com.cyxbs.pages.schedule.domain.sync.FieldPatch
 import com.cyxbs.pages.schedule.domain.sync.PendingDelete
 import com.cyxbs.pages.schedule.domain.sync.PendingUpsert
 import kotlinx.coroutines.test.runTest
@@ -180,6 +181,85 @@ class SchedulePlannerApplierTest {
     assertEquals("U", result.effectiveResource()?.name?.data)
   }
 
+  /** 空本地状态必须按依赖顺序接收远端分类、日程和单次调整，并建立新的本地 UUID 映射。 */
+  @Test
+  fun discoveredResourcesRestoreEmptyLocalStateAndReferences() = runTest {
+    val remoteCategory = testCategoryResource(remoteId = 41L, version = 2)
+    val remoteSchedule = testScheduleResource(
+      version = 3,
+      categoryLocalId = remoteCategory.identity.id,
+    )
+    val remoteAdjustment = testAdjustmentResource(remoteId = 71L, version = 4).copy(
+      categoryId = AtomicField(FieldPatch.Replace(remoteCategory.identity.id), 12),
+    )
+    val capture = planner.capture(emptyList(), emptyList(), emptyList())
+
+    val result = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(
+        capture,
+        response(
+          capture,
+          categoryDiscovered = listOf(remoteCategory.toWire()),
+          scheduleDiscovered = listOf(remoteSchedule.toWire { remoteCategory }),
+          adjustmentDiscovered = listOf(remoteAdjustment.toWire { remoteCategory }),
+        ),
+        emptyList(),
+        emptyList(),
+        emptyList(),
+      ),
+    )
+
+    val category = result.categories.single()
+    val schedule = result.schedules.single()
+    val adjustment = result.occurrenceAdjustments.single()
+    assertEquals(41L, category.remoteSnapshot?.resource?.remoteId)
+    assertEquals(category.identity.id, schedule.remoteSnapshot?.resource?.categoryId?.data)
+    assertEquals(
+      FieldPatch.Replace(category.identity.id),
+      adjustment.remoteSnapshot?.resource?.categoryId?.data,
+    )
+    assertEquals(remoteSchedule.identity, schedule.identity)
+    assertEquals(remoteAdjustment.identity.scheduleId, adjustment.identity.scheduleId)
+    assertNull(category.pending)
+    assertNull(schedule.pending)
+    assertNull(adjustment.pending)
+  }
+
+  /** confirmed 的远端删除事实必须同时清掉请求前已有的 pending，不能在下一轮把资源复活。 */
+  @Test
+  fun confirmedDeletedResourceWinsOverCapturedPendingUpdate() = runTest {
+    val remote = testScheduleResource(version = 3, title = "远端旧值")
+    val local = remote.copy(title = AtomicField("本地待提交值", 20))
+    val state = testScheduleState(
+      remote,
+      PendingUpsert(local, localRevision = 4),
+    )
+    val capture = planner.capture(emptyList(), listOf(state), emptyList())
+    val baseResponse = response(
+      capture,
+      scheduleUpserts = listOf(UpsertResult(MutationResultCode.DELETED)),
+    )
+    val deletedResponse = baseResponse.copy(
+      schedules = baseResponse.schedules.copy(
+        confirmedResults = listOf(
+          ConfirmedResult(remote.identity.id, ConfirmedResultCode.DELETED),
+        ),
+      ),
+    )
+
+    val result = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(
+        capture,
+        deletedResponse,
+        emptyList(),
+        listOf(state),
+        emptyList(),
+      ),
+    )
+
+    assertTrue(result.schedules.isEmpty())
+  }
+
   /** 物理删除成功或远端已不存在都移除本地资源。 */
   @Test
   fun physicalDeleteRemovesLocalState() = runTest {
@@ -221,12 +301,15 @@ class SchedulePlannerApplierTest {
     categoryUpserts: List<UpsertResult<CategoryInput>> = emptyList(),
     scheduleUpserts: List<UpsertResult<ScheduleInput>> = emptyList(),
     adjustmentDeletes: List<DeleteResult<Long, OccurrenceAdjustmentInput>> = emptyList(),
+    categoryDiscovered: List<CategoryInput> = emptyList(),
+    scheduleDiscovered: List<ScheduleInput> = emptyList(),
+    adjustmentDiscovered: List<OccurrenceAdjustmentInput> = emptyList(),
   ): SyncResponse = SyncResponse(
     categories = CategorySyncResponse(
       confirmedResults = capture.request.categories.confirmed.map {
         ConfirmedResult(it.id, ConfirmedResultCode.CONFIRMED)
       },
-      discoveredResults = emptyList(),
+      discoveredResults = categoryDiscovered,
       upsertResults = categoryUpserts,
       deleteResults = emptyList(),
     ),
@@ -234,7 +317,7 @@ class SchedulePlannerApplierTest {
       confirmedResults = capture.request.schedules.confirmed.map {
         ConfirmedResult(it.id, ConfirmedResultCode.CONFIRMED)
       },
-      discoveredResults = emptyList(),
+      discoveredResults = scheduleDiscovered,
       upsertResults = scheduleUpserts,
       deleteResults = emptyList(),
     ),
@@ -242,7 +325,7 @@ class SchedulePlannerApplierTest {
       confirmedResults = capture.request.occurrenceAdjustments.confirmed.map {
         ConfirmedResult(it.id, ConfirmedResultCode.CONFIRMED)
       },
-      discoveredResults = emptyList(),
+      discoveredResults = adjustmentDiscovered,
       upsertResults = emptyList(),
       deleteResults = adjustmentDeletes,
     ),

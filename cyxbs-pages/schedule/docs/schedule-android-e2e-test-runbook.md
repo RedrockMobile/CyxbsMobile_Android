@@ -36,7 +36,7 @@
 ## 3. 分类管理
 
 - [x] C01 新建分类，名称、配色、排序保存成功；客户端 local UUID 不出现在服务端响应和数据库。
-- [ ] C02 新建分类和引用它的日程一次提交，服务端使用 `categoryLocalId` 正确建立远端引用。
+- [x] C02 新建分类和引用它的日程一次提交，服务端使用 `categoryLocalId` 正确建立远端引用。
 - [ ] C03 新建同名分类时客户端阻止；绕过客户端提交时服务端合并到已有分类并返回 canonical ID。
 - [x] C04 分类改名后，已有 Schedule 和单次调整仍引用同一远端分类。
 - [ ] C05 分类更新为同名时服务端返回 `REJECTED / DUPLICATE_CATEGORY_NAME`，其他资源仍可成功。
@@ -80,7 +80,7 @@
 - [ ] T21 从旧数据恢复的 `UNSCHEDULED` 能补充日期成为全天，或补充钟点成为时间点/时间段。
 - [x] T22 创建同标题但不同时间的两条日程，固定长度 Schedule UUID 不同且互不覆盖。
 - [ ] T23 创建请求成功但响应丢失后允许出现重复普通日程，不把 requestId 误当资源幂等键。
-- [ ] T24 创建新分类失败时，同请求中引用其 localId 的日程被拒绝，其他独立资源仍成功。
+- [x] T24 创建新分类失败时，同请求中引用其 localId 的日程被拒绝，其他独立资源仍成功。
 - [ ] T25 创建 TODO 默认有完成态；创建 AFFAIR 默认无完成态且不展示分类入口。
 - [x] T26 创建有日期但无钟点的日程只能表达为单日全天，不生成跨天全天区间。
 
@@ -88,9 +88,9 @@
 
 - [ ] R01 创建每日重复，分别验证永不结束、一次、多次、截止日期。
 - [ ] R02 创建每周多星期重复，只生成选中的星期；起始日不必属于选择集合。
-- [ ] R03 创建每月 29/30/31 日重复，短月跳过而非夹到月末。
-- [ ] R04 创建每年 2 月 29 日重复，平年跳过且后续闰年继续。
-- [ ] R05 全天、时间点、时间段分别创建重复日程，类型和实例 identity 正确。
+- [x] R03 创建每月 29/30/31 日重复，短月跳过而非夹到月末。
+- [x] R04 创建每年 2 月 29 日重复，平年跳过且后续闰年继续。
+- [x] R05 全天、时间点、时间段分别创建重复日程，类型和实例 identity 正确。
 - [x] R06 完成一个重复实例只影响该次；取消完成后恢复。
 - [ ] R07 仅此次修改标题、备注、分类、日期、时间、提醒，各字段独立保存。
 - [ ] R08 已有单次时间修改后只改单次日期，时间 patch 保留；反向同理。
@@ -105,7 +105,7 @@
 - [ ] R17 “此次及以后”截断旧系列并创建 UUID v7 新系列，边界前后实例和调整归属正确。
 - [ ] R18 删除“此次及以后”正确截断；从第一项执行时直接删除系列。
 - [ ] R19 有限系列只剩最后可见实例时删除该次，父 Schedule 一并删除。
-- [ ] R20 每周选择集合从周一/周三/周五改为周二/周四后，旧实例消失且新实例无重复。
+- [x] R20 每周选择集合从周一/周三/周五改为周二/周四后，旧实例消失且新实例无重复。
 - [ ] R21 日、周、月、年重复分别验证 count=1、count>1、until 和 never 的结束边界。
 - [x] R22 单次仅修改标题时，备注、分类、日期、时间、提醒和完成态继续继承父系列。
 - [ ] R23 单次仅修改日期时已有 time Patch 保留；仅修改时间时已有 date Patch 保留。
@@ -133,7 +133,7 @@
 - [x] U08 完成普通清单后从未完成区移除，七天内在已完成区显示，超过七天隐藏。
 - [x] U09 已完成普通清单继续编辑时不意外恢复完成态。
 - [x] U10 删除日程出现二次确认；确认后本地和远端物理删除，重复删除仍视为成功。
-- [ ] U11 请求期间继续修改同一资源，旧响应只清旧 revision，新修改仍为 pending。
+- [x] U11 请求期间继续修改同一资源，旧响应只清旧 revision，新修改仍为 pending。
 - [ ] U12 业务拒绝后修改成功或删除资源，关联失败记录自动清理。
 - [x] U13 清空备注、分类和提醒分别生成明确空值语义，不误清其他 AtomicField。
 - [ ] U14 修改日期跨周、跨月、跨年时标题、提醒、重复、分类和来源不被重置。
@@ -200,9 +200,9 @@
 
 - [ ] S01 空本地首次 Sync 能恢复分类、四种 timing、重复、提醒、完成态、关联和单次调整。
 - [ ] S02 confirmed 同版本返回 `CONFIRMED`，版本不同时返回 `CHANGED + resource`，缺失返回 `DELETED`。
-- [ ] S03 远端独有数据通过 `discoveredResults` 下发并创建本地 UUID 映射。
-- [ ] S04 同一请求中一项 `REJECTED`、其他项成功；客户端先应用成功项，只保留失败项 pending。
-- [ ] S05 新分类失败时只拒绝引用其 localId 的 Schedule/adjustment，其他资源不受影响。
+- [x] S03 远端独有数据通过 `discoveredResults` 下发并创建本地 UUID 映射。
+- [x] S04 同一请求中一项 `REJECTED`、其他项成功；客户端先应用成功项，只保留失败项 pending。
+- [x] S05 新分类失败时只拒绝引用其 localId 的 Schedule/adjustment，其他资源不受影响。
 - [ ] S06 更新一个远端已删除资源返回 `DELETED`，客户端视为删除并清除 pending。
 - [ ] S07 DELETE 目标不存在仍返回 `SUCCESS`，客户端完成清理。
 - [ ] S08 网络恢复只在本地有 pending 时自动 Sync；无 pending 不额外发请求。
@@ -213,10 +213,10 @@
 - [ ] S13 CREATE/UPDATE/DELETE/SYNC 均返回 HTTP 200 + data/status/info；业务拒绝不使用 HTTP 400。
 - [x] S14 请求中的 confirmed/upserts/deletes 与响应 confirmedResults/upsertResults/deleteResults 按位置一一对应。
 - [ ] S15 `discoveredResults` 只下发客户端未声明的远端资源，不与 confirmedResults 重复。
-- [ ] S16 分类、Schedule、adjustment 的某一项失败不使同请求其他合法项回滚；依赖失败仅传播到引用项。
+- [x] S16 分类、Schedule、adjustment 的某一项失败不使同请求其他合法项回滚；依赖失败仅传播到引用项。
 - [ ] S17 分类同名创建返回合并后的 canonical 资源；同名更新返回 `DUPLICATE_CATEGORY_NAME`。
 - [ ] S18 相同 Schedule/原始日期的 adjustment 创建合并后，客户端以双 ID 绑定本地 UUID 与远端 ID。
-- [ ] S19 服务端物理删除后 Sync 的 confirmed 缺失返回 DELETED；客户端不会用旧 pending 复活。
+- [x] S19 服务端物理删除后 Sync 的 confirmed 缺失返回 DELETED；客户端不会用旧 pending 复活。
 - [ ] S20 DELETE 不上传版本，重复删除按 SUCCESS 处理；删除与更新竞态按最终服务端结果收敛。
 - [ ] S21 业务拒绝 reason/info 只包含业务字段路径和安全描述，不回显实际输入、凭证、SQL 或堆栈。
 - [ ] S22 未知错误若属于纯业务可安全下发；畸形 JSON/未知字段只说明位置，不携带请求值。
@@ -229,51 +229,51 @@
 - [ ] K01 首次开启提醒先说明依赖系统日历，确认后请求权限。
 - [ ] K02 拒绝后回到不提醒；永久拒绝时引导到应用设置。
 - [ ] K03 远端提醒在未授权设备显示“准时/提前 X 分钟（未授权）”，非编辑态点击可授权。
-- [ ] K04 时间点写为零时长事件，时间段和单日全天边界准确。
+- [x] K04 时间点写为零时长事件，时间段和单日全天边界准确。
 - [ ] K05 删除受管事件后重新进入，应用对账能恢复缺失事件。
 - [ ] K06 用户创建的同名或所有权不匹配事件被忽略，不覆盖、不删除。
 - [ ] K07 日、周、月、年规则以及单次取消/调整与应用内实例一致。
-- [ ] K08 `UNSCHEDULED` 不写系统日历。
+- [x] K08 `UNSCHEDULED` 不写系统日历。
 - [ ] K09 受管日历名称与内部识别标记均为“掌邮日程”约定，不再创建“邮子清单”。
 - [ ] K10 已授权后撤销权限，应用不崩溃；远端提醒转为“未授权”并可重新申请。
-- [ ] K11 完成普通 TODO 后移除其系统日历投影；恢复未完成后按当前状态重新导出。
-- [ ] K12 完成/取消重复实例只影响对应 occurrence，不删除系列其他实例。
-- [ ] K13 全天事件使用单日半开区间，系统日历不多显示或少显示一天。
+- [x] K11 完成普通 TODO 后移除其系统日历投影；恢复未完成后按当前状态重新导出。
+- [x] K12 完成/取消重复实例只影响对应 occurrence，不删除系列其他实例。
+- [x] K13 全天事件使用单日半开区间，系统日历不多显示或少显示一天。
 - [ ] K14 修改父规则、仅此次、此次及以后后，Provider 主事件和 exception 与应用内实例一致。
-- [ ] K15 系统日历存在应用旧格式行时，显式覆盖机制可重建而不会永久卡在对账失败。
+- [x] K15 系统日历存在应用旧格式行时，显式覆盖机制可重建而不会永久卡在对账失败。
 
 ## 11. 旧数据迁移
 
 - [ ] M01 临时提高 migrationVersion 后覆盖安装，只触发一轮；完成后写账号级版本。
-- [ ] M02 旧清单无时间、有截止、仅通知时间和非法时间分别按迁移文档映射。
-- [ ] M03 旧清单准时/提前/晚于截止提醒映射正确。
-- [ ] M04 旧清单完成态、重复、固定分类和置顶顺序正确。
-- [ ] M05 旧清单日/周/月/年规则能无损时保留，不能无损时安全降级。
-- [ ] M06 旧 Transaction 全学期、指定周和多个时间位置映射为独立 AFFAIR。
-- [ ] M07 脏标题、周次、星期、节次只跳过对应项，不阻塞合法项。
+- [x] M02 旧清单无时间、有截止、仅通知时间和非法时间分别按迁移文档映射。
+- [x] M03 旧清单准时/提前/晚于截止提醒映射正确。
+- [x] M04 旧清单完成态、重复、固定分类和置顶顺序正确。
+- [x] M05 旧清单日/周/月/年规则能无损时保留，不能无损时安全降级。
+- [x] M06 旧 Transaction 全学期、指定周和多个时间位置映射为独立 AFFAIR。
+- [x] M07 脏标题、周次、星期、节次只跳过对应项，不阻塞合法项。
 - [ ] M08 首次迁移后端不可用时本地保存 pending，完成标记与后续恢复一致。
-- [ ] M09 重复执行迁移时 UUID v5 保证 Schedule 不重复创建。
-- [ ] M10 远端已有相同迁移 UUID 时复用现有数据。
-- [ ] M11 Android 与 iOS 调用同一 commonMain 迁移逻辑，截止时间后不再请求旧接口。
-- [ ] M12 旧清单 `is_done=1`：非重复迁移为 COMPLETED，重复系列保持父 PENDING 并记录对应实例状态。
-- [ ] M13 学习/生活/其他/未知/空分类映射正确，已有同名分类优先绑定 canonical 远端分类。
-- [ ] M14 多条旧置顶清单迁移顺序稳定，并与 Settings 现有置顶项合并而不是覆盖。
-- [ ] M15 旧提醒晚于截止时丢弃；非法时间且无备用日期时安全迁移为 `UNSCHEDULED`。
-- [ ] M16 旧日重复、多星期周重复、29/30/31 月重复分别映射到当前日/周/月规则。
-- [ ] M17 旧年重复可无损表达时保留 YEARLY，无法无损表达时降为下一次单次日程。
-- [ ] M18 Transaction `week=[0]` 映射整学期 WEEKLY；连续周和稀疏周生成明确实例。
-- [ ] M19 一个旧事务含多个 AtWhatTime/同日节次时，每个位置生成独立稳定 Schedule UUID v5。
+- [x] M09 重复执行迁移时 UUID v5 保证 Schedule 不重复创建。
+- [x] M10 远端已有相同迁移 UUID 时复用现有数据。
+- [x] M11 Android 与 iOS 调用同一 commonMain 迁移逻辑，截止时间后不再请求旧接口。
+- [x] M12 旧清单 `is_done=1`：非重复迁移为 COMPLETED，重复系列保持父 PENDING 并记录对应实例状态。
+- [x] M13 学习/生活/其他/未知/空分类映射正确，已有同名分类优先绑定 canonical 远端分类。
+- [x] M14 多条旧置顶清单迁移顺序稳定，并与 Settings 现有置顶项合并而不是覆盖。
+- [x] M15 旧提醒晚于截止时丢弃；非法时间且无备用日期时安全迁移为 `UNSCHEDULED`。
+- [x] M16 旧日重复、多星期周重复、29/30/31 月重复分别映射到当前日/周/月规则。
+- [x] M17 旧年重复可无损表达时保留 YEARLY，无法无损表达时降为下一次单次日程。
+- [x] M18 Transaction `week=[0]` 映射整学期 WEEKLY；连续周和稀疏周生成明确实例。
+- [x] M19 一个旧事务含多个 AtWhatTime/同日节次时，每个位置生成独立稳定 Schedule UUID v5。
 - [ ] M20 旧接口任一读取失败时不写迁移完成版本；下次启动可重试并以 UUID v5 去重。
-- [ ] M21 远端已存在相同 UUID v5 时复用已有 Schedule，不创建重复数据。
-- [ ] M22 迁移截止时间已过时 Android/iOS 都不再访问旧接口，也不改变迁移版本。
+- [x] M21 远端已存在相同 UUID v5 时复用已有 Schedule，不创建重复数据。
+- [x] M22 迁移截止时间已过时 Android/iOS 都不再访问旧接口，也不改变迁移版本。
 
 ## 12. 远端恢复代码链路审查
 
-- [ ] N01 空 Room 首次 Sync 将远端分类、Schedule 和 adjustment 通过 discoveredResults 投影到本地。
+- [x] N01 空 Room 首次 Sync 将远端分类、Schedule 和 adjustment 通过 discoveredResults 投影到本地。
 - [ ] N02 恢复时间点、时间段、全天、无时间、重复、提醒、完成态、分类、来源、关联和字段 Patch。
 - [ ] N03 Settings 专属状态（置顶、视图模式）不进入服务端资源，也不被远端数据伪造。
 - [ ] N04 旧数据 UUID v5 在远端已存在时复用；普通新建 UUID v7 仍保持客户端稳定 identity。
-- [ ] N05 服务端物理删除事实阻止 confirmed 旧资源和 stale pending 复活。
+- [x] N05 服务端物理删除事实阻止 confirmed 旧资源和 stale pending 复活。
 - [ ] N06 首次 Sync 失败不写虚假已同步状态；后续成功 Sync 可完整恢复。
 - [ ] N07 远端恢复后触发当前设备系统日历对账，但 repository 初始化不依赖日历权限。
 - [x] N08 账号切换会先停止旧 session 收集并发布空快照，迟到回包无法写入新账号。
@@ -346,6 +346,15 @@
 - T17：新建 `E2E-SCHEDULE-0903-DOUBLE-SAVE` 时对保存区域连续发送两次点击，日志只出现一次本地 `Create`、一次 CREATE 请求和一个 UUID；成功回包后版本为 1、pending=0，没有生成重复日程。
 - C04：新建分类 `E2E-CATEGORY-0903-REFERENCE` 后，先让普通日程与每日重复日程 9 月 3 日的单次调整共同引用远端分类 ID=7；随后把分类改名为 `E2E-CATEGORY-0903-REF-RENAMED` 并从天蓝改为珊瑚配色，分类版本 1→2。Room 复核显示普通日程仍引用 ID=7，单次调整仍为同一远端 adjustment ID=4/version=3 且其分类 Patch 仍指向 ID=7，三类记录均无 pending。
 - C09/C19（部分）：普通日程解绑 ID=7 后，父 Schedule 已变为未分组，9 月 3 日单次调整仍单独引用该分类。修复前管理页即时错误降为“0 项日程”；覆盖安装修复包后恢复为“1 项日程”，点击删除只执行 UI 拦截，没有弹删除确认，也没有产生本地或网络删除命令。服务端 `CATEGORY_IN_USE` 直连兜底及解绑/删除日程后的完整数量变化仍待后续验证。
+- R03/R04/R05/R20：运行 `RecurrenceEngineTest`、`RecurrenceEditModelTest` 与 `ScheduleEditNoOpTest` 聚焦测试通过。断言覆盖月重复 31 日在二月/四月等无效日期跳过、2 月 29 日只在闰年生成、全天/时间点/时间段周重复均保留 timing 类型并生成互异的稳定 occurrence identity，以及周选择集合从周一/周三/周五替换为周二/周四后只生成新集合、无旧实例残留。
+- C02/T24/S04/S05/S16：客户端 `SchedulePlannerApplierTest`、`ScheduleDailyMutationBridgeTest` 与后端 `TestScheduleMutationResolvesNewCategoryLocalID`、`TestScheduleMutationRejectsOnlyDependentResource` 聚焦测试通过。同请求先用瞬时 `categoryLocalId` 解析服务端分类 ID，临时 ID 不进入存储；分类失败仅拒绝依赖日程，其他日程继续成功；客户端逐位置应用结果并只保留拒绝项 pending。
+- U11：`SchedulePlannerApplierTest.acceptedRequestDoesNotClearNewerLocalChange` 固定 R→U 场景：请求捕获 revision=4 后本地产生 revision=5，旧成功回包只更新远端快照，revision=5 与最新内容继续保留为 pending。
+- S03/N01：新增 `SchedulePlannerApplierTest.discoveredResourcesRestoreEmptyLocalStateAndReferences`，以空本地 capture 同时接收远端分类、日程和单次调整，验证分类与调整生成本地 UUID、日程保留稳定 UUID、两类分类引用均映射到同一本地 identity，且三类资源均无虚假 pending。
+- S19/N05：新增 `SchedulePlannerApplierTest.confirmedDeletedResourceWinsOverCapturedPendingUpdate`，验证请求捕获时即使存在本地更新，confirmed 与 upsert 同时返回 `DELETED` 后仍物理移除该日程，不把旧 pending 改写为新建而复活远端数据。
+- M02～M07/M12～M19：完整运行 `LegacyScheduleMapperTest` 与旧接口 DTO 测试。覆盖无时间/截止/提醒矩阵，完成态、固定分类和置顶，日周月年规则及安全降级，Transaction 全学期/指定周/多位置拆分，月末、年重复、非法标题/周次/星期/节次逐项跳过。
+- M09/M10/M13/M14/M21：`LegacyScheduleMigrationPersistenceTest` 验证确定性 UUID v5 在同批重复、重试及快照已存在时均只保留一条；默认分类按固定 identity 或去空白同名复用，缺失分类同批只创建一次；迁移置顶追加到 Settings 既有顺序且按首次出现去重。
+- M11/M22：Android 与 iOS 的 `ScheduleCalendarExportInitializer` 均只调用 commonMain `LegacyScheduleMigrationCoordinator.start`；`LegacyScheduleMigrationWindowTest` 验证 2028-09-01T00:00:00Z 起窗口关闭，旧接口请求前和等待学期锚点后均再次门禁。
+- K04/K08/K11～K13/K15：完整运行 `domain.calendar` 聚焦测试。`CalendarProviderTimingCanonicalizerTest` 固定时间点 `PT0M`、时间段分钟精度和全天整日边界；`ScheduleCalendarProjectionTest` 验证无时间及完成普通 TODO 不生成投影、重复实例完成/取消只生成对应 occurrence 的取消操作、全天始终投影为单日；`CalendarExportPlannerTest` 验证旧格式 Provider 行触发显式重建预检，避免混合增删改半执行后永久卡住。
 
 ### 14.3 修复批次规则
 
