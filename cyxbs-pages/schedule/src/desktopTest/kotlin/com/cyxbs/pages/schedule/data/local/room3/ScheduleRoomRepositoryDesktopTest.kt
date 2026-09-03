@@ -2,6 +2,7 @@ package com.cyxbs.pages.schedule.data.local.room3
 
 import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.account.api.AccountState
+import com.cyxbs.components.config.time.Date
 import com.cyxbs.components.utils.network.ApiWrapper
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecord
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecordSink
@@ -15,6 +16,7 @@ import com.cyxbs.pages.schedule.data.remote.MutationResourceResponse
 import com.cyxbs.pages.schedule.data.remote.MutationResponse
 import com.cyxbs.pages.schedule.data.remote.MutationResultCode
 import com.cyxbs.pages.schedule.data.remote.OccurrenceAdjustmentSyncResponse
+import com.cyxbs.pages.schedule.data.remote.RecurrenceFrequency as WireRecurrenceFrequency
 import com.cyxbs.pages.schedule.data.remote.ResultReason
 import com.cyxbs.pages.schedule.data.remote.ScheduleCallResult
 import com.cyxbs.pages.schedule.data.remote.ScheduleSyncResponse
@@ -30,10 +32,13 @@ import com.cyxbs.pages.schedule.data.repository.testCategoryState
 import com.cyxbs.pages.schedule.data.repository.testScheduleResource
 import com.cyxbs.pages.schedule.data.repository.testScheduleState
 import com.cyxbs.pages.schedule.domain.model.CategoryId
+import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency as DomainRecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
+import com.cyxbs.pages.schedule.domain.model.ScheduleReminder
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
@@ -129,6 +134,97 @@ class ScheduleRoomRepositoryDesktopTest {
         SchedulePendingOperation.UPSERT,
         ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).schedules.single().pendingOperation,
       )
+    }
+  }
+
+  /** CREATE 响应丢失后必须以同一 Schedule UUID 重试，成功回包只能确认原记录而不能生成第二条。 */
+  @Test
+  fun responseLossRetriesSameScheduleIdentityWithoutDuplicate() = runTest {
+    withRepository { repository, gateway, database, _ ->
+      repository.initialize()
+      var firstRequestId: String? = null
+      gateway.createResult = { request ->
+        firstRequestId = request.schedules.upserts.single().id
+        ScheduleCallResult.TransportFailure(null, IllegalStateException("response lost"))
+      }
+
+      val initial = repository.execute(ScheduleCommand.Create(schedule("响应丢失后重试")))
+      assertIs<ScheduleSyncResult.Failure>(initial)
+      gateway.syncResult = { request ->
+        assertEquals(firstRequestId, request.schedules.upserts.single().id)
+        completed(emptySyncResponse(request))
+      }
+
+      val retried = repository.execute(ScheduleCommand.RequestSync)
+
+      assertIs<ScheduleSyncResult.Success>(retried)
+      val local = ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).schedules.single()
+      assertEquals(firstRequestId, local.scheduleId)
+      assertEquals(1uL, local.remoteSnapshot?.version)
+      assertEquals(null, local.pendingOperation)
+      assertEquals(1, repository.snapshot.value.schedules.size)
+      assertEquals(ScheduleId(requireNotNull(firstRequestId)), repository.snapshot.value.schedules.single().id)
+    }
+  }
+
+  /** 新分类、重复、提醒和课表关联必须在一次 CREATE 中建立引用并共同收敛。 */
+  @Test
+  fun createTodoWithNewCategoryAndAllOptionsUsesOneRequest() = runTest {
+    withRepository { repository, gateway, database, _ ->
+      repository.initialize()
+      gateway.createResult = { request ->
+        val response = successResponse(request)
+        val input = request.schedules.upserts.single()
+        completed(
+          response.copy(
+            schedules = response.schedules.copy(
+              upsertResults = listOf(
+                UpsertResult(
+                  MutationResultCode.SUCCESS,
+                  resource = input.copy(
+                    categoryId = input.categoryId.copy(data = 41L),
+                    categoryLocalId = null,
+                    version = 1uL,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
+      }
+      val category = ScheduleCategory(
+        id = CategoryId("01a06750-0000-7000-8000-000000000001"),
+        revision = 0,
+        name = "一次创建的分类",
+        color = null,
+        sortOrder = 4,
+      )
+      val value = schedule("一次创建完整清单").copy(
+        categoryId = category.id,
+        timing = ScheduleTiming.AllDay(Date(2026, 9, 3)),
+        recurrence = RecurrenceRule(DomainRecurrenceFrequency.DAILY),
+        reminder = ScheduleReminder(10),
+        linkedToCourse = true,
+      )
+
+      val result = repository.execute(ScheduleCommand.SaveScheduleWithNewCategory(category, value))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      val request = requireNotNull(gateway.lastCreate)
+      assertEquals(1, request.categories.upserts.size)
+      assertEquals(1, request.schedules.upserts.size)
+      val scheduleInput = request.schedules.upserts.single()
+      assertEquals(category.id.value, scheduleInput.categoryLocalId)
+      assertEquals(null, scheduleInput.categoryId.data)
+      assertEquals(10, scheduleInput.reminder.data?.minutesBefore)
+      assertEquals(WireRecurrenceFrequency.DAILY, scheduleInput.recurrence.data?.frequency)
+      assertTrue(scheduleInput.linkedToCourse.data)
+      val snapshot = repository.snapshot.value
+      assertEquals(category.id, snapshot.categories.single().id)
+      assertEquals(category.id, snapshot.schedules.single().categoryId)
+      val persisted = ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID)
+      assertTrue(persisted.categories.single().pendingOperation == null)
+      assertTrue(persisted.schedules.single().pendingOperation == null)
     }
   }
 
@@ -477,6 +573,7 @@ class ScheduleRoomRepositoryDesktopTest {
     var syncCalls = 0
     var createCalls = 0
     var updateCalls = 0
+    var lastCreate: MutationRequest? = null
     var lastUpdate: MutationRequest? = null
     var lastDelete: MutationRequest? = null
     var syncResult: suspend (SyncRequest) -> ScheduleCallResult<SyncResponse> = { request ->
@@ -499,6 +596,7 @@ class ScheduleRoomRepositoryDesktopTest {
       input: MutationRequest,
     ): ScheduleCallResult<MutationResponse> {
       createCalls += 1
+      lastCreate = input
       return createResult(input)
     }
 

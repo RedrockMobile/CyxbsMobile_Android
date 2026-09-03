@@ -75,11 +75,11 @@
 - [x] T16 两条日程允许同标题，UUID 不同且互不覆盖。
 - [x] T17 快速连续点击保存只产生一次命令和一条 Schedule。
 - [ ] T18 创建失败或连接失败后本地仍显示并保留 pending；失败记录可定位到编辑弹窗。
-- [ ] T19 一次创建同时设置新分类、提醒、重复和课表关联，分类先解析后日程引用正确。
+- [x] T19 一次创建同时设置新分类、提醒、重复和课表关联，分类先解析后日程引用正确。
 - [x] T20 只含标题时 UI 要求先选择日期/时间，不主动创建新的 `UNSCHEDULED`。
-- [ ] T21 从旧数据恢复的 `UNSCHEDULED` 能补充日期成为全天，或补充钟点成为时间点/时间段。
+- [x] T21 从旧数据恢复的 `UNSCHEDULED` 能补充日期成为全天，或补充钟点成为时间点/时间段。
 - [x] T22 创建同标题但不同时间的两条日程，固定长度 Schedule UUID 不同且互不覆盖。
-- [ ] T23 创建请求成功但响应丢失后允许出现重复普通日程，不把 requestId 误当资源幂等键。
+- [x] T23 创建请求成功但响应丢失后重试同一 Schedule UUID，服务端合并到同一日程；协议不引入 requestId。
 - [x] T24 创建新分类失败时，同请求中引用其 localId 的日程被拒绝，其他独立资源仍成功。
 - [ ] T25 创建 TODO 默认有完成态；创建 AFFAIR 默认无完成态且不展示分类入口。
 - [x] T26 创建有日期但无钟点的日程只能表达为单日全天，不生成跨天全天区间。
@@ -87,7 +87,7 @@
 ## 5. 重复规则与单次调整
 
 - [x] R01 创建每日重复，分别验证永不结束、一次、多次、截止日期。
-- [ ] R02 创建每周多星期重复，只生成选中的星期；起始日不必属于选择集合。
+- [x] R02 创建每周多星期重复，只生成选中的星期；起始日不必属于选择集合。
 - [x] R03 创建每月 29/30/31 日重复，短月跳过而非夹到月末。
 - [x] R04 创建每年 2 月 29 日重复，平年跳过且后续闰年继续。
 - [x] R05 全天、时间点、时间段分别创建重复日程，类型和实例 identity 正确。
@@ -102,11 +102,11 @@
 - [x] R14 修改整个系列日期/时间后，单次显式 date/time 保持，`originalOccurrenceDate` 不变。
 - [x] R15 修改规则使原始槽暂时消失，单次调整不展示；规则改回后同一调整恢复。
 - [x] R16 关闭重复规则后所有 adjustment 被物理删除；重新开启不会复活旧调整。
-- [ ] R17 “此次及以后”截断旧系列并创建 UUID v7 新系列，边界前后实例和调整归属正确。
+- [x] R17 “此次及以后”截断旧系列并创建 UUID v7 新系列，边界前后实例和调整归属正确。
 - [ ] R18 删除“此次及以后”正确截断；从第一项执行时直接删除系列。
 - [x] R19 有限系列只剩最后可见实例时删除该次，父 Schedule 一并删除。
 - [x] R20 每周选择集合从周一/周三/周五改为周二/周四后，旧实例消失且新实例无重复。
-- [ ] R21 日、周、月、年重复分别验证 count=1、count>1、until 和 never 的结束边界。
+- [x] R21 日、周、月、年重复分别验证 count=1、count>1、until 和 never 的结束边界。
 - [x] R22 单次仅修改标题时，备注、分类、日期、时间、提醒和完成态继续继承父系列。
 - [x] R23 单次仅修改日期时已有 time Patch 保留；仅修改时间时已有 date Patch 保留。
 - [x] R24 单次调整的本地 UUID 不上传服务端；首次创建后绑定服务端 adjustment ID。
@@ -125,7 +125,7 @@
 
 - [x] U01 修改标题、备注、分类，每个 AtomicField 的 `modifiedAt` 只在对应字段变化时更新。
 - [x] U02 时间点、时间段、全天三种 timing 互转，日期保持且多余字段不会残留。
-- [ ] U03 `UNSCHEDULED` 显示“未设置日期/时间”，选择日期可变全天，选择钟点可变时间点/时间段。
+- [x] U03 `UNSCHEDULED` 显示“未设置日期/时间”，选择日期可变全天，选择钟点可变时间点/时间段。
 - [x] U04 提醒按“不提醒 → 准时 → 提前 10 分钟 → 不提醒”往返。
 - [x] U05 开关课表关联后投影新增/移除，清单本体不丢失。
 - [x] U06 改为“未分组”上传 `categoryId.data=null` 并正常发起更新。
@@ -314,6 +314,7 @@
 | SCHED-E2E-007 | R06/U08 | 已修复 | 每日重复日程完成 9 月 3 日实例后，未完成区直接展示 9 月 4 日，但已完成区没有 9 月 3 日，用户无法取消本次完成 | 清单投影对每个系列只保留一张卡片并优先选择 `ACTIVE`；现在未完成区仍只取下一实例，已完成区独立展示七天内真实完成实例 | 本提交 |
 | SCHED-E2E-008 | C09/C19 | 已修复 | 父日程解绑分类后，仍有单次调整引用该分类，但管理页显示“0 项日程”并错误开放删除确认入口 | 管理页只统计父 Schedule 的分类字段，遗漏单次调整的分类 Patch；现在合并两种引用并按 Schedule ID 去重，与仓库删除边界一致 | 本提交 |
 | SCHED-E2E-009 | E04 | 已修复 | 分类 CREATE 遇到 SafeLine HTTP 468 时，`ScheduleNetwork` 把完整 HTML 错误页截取后写入日志 | `ClientRequestException` 为诊断 HTTP 400 读取正文后，对所有 4xx 复用了正文日志；改为只记录状态码和 Content-Type，400 正文只留在类型化失败链路中 | 本提交 |
+| SCHED-E2E-010 | T15 | 修复待部署复验 | dev/test 创建中文和换行日程均成功，标题或备注含 emoji 时却返回 HTTP 500 | 三张表的 `payload_json` 使用受数据库连接字符集约束的 JSON 文本列，四字节 Unicode 在落库阶段失败；已改为保存严格 typed JSON 的 UTF-8 BLOB | 后端 `6a2f26c` |
 
 ### 14.2 真机验收证据
 
@@ -355,6 +356,12 @@
 - C14：`ScheduleRoomRepositoryDesktopTest.everyCategoryColorRoundTripsThroughRepositoryAndWire` 逐项创建 18 套候选配色，断言完整 JSON 原样进入日常请求、服务端式 canonical 响应和 Room 远端快照，且全部 pending 清零。随后使用测试包凭证在 dev/test 一次创建 18 个临时分类，响应逐项返回相同背景色、文字色和深色背景字段，最后 DELETE 物理清理成功 18/18。
 - C15：`ScheduleRoomRepositoryDesktopTest.categoryEditKeepsTodoAndAffairReferencesStable` 让一个 TODO 与一个合法 TIMED AFFAIR 共用 remote category ID=41，分类同时改名、换色、排序后只上传分类资源；两条日程没有产生 pending，领域层仍引用同一 CategoryId，Room wire 快照仍引用远端 ID=41。
 - C19：真机分组管理页中 `E2E-CATEGORY-0903-NAME-A` 初始显示 0 项；创建引用它的全天 TODO 后即时显示 1 项，编辑为未分组后回到 0 项，随后物理删除该 TODO 后仍为 0 项。整个过程管理页重新进入即读取最新仓库快照，没有残留引用或延迟计数；C09 已另验证有引用时的删除拦截。
+- T15（部分）：直接向 dev/test 分别创建 ASCII、中文和换行全天日程，服务端 canonical 响应均原样返回；正式测试包首次 Sync 后，时间轴及详情能完整展示中文标题、中文/英文/数字备注和换行。仅 emoji 请求触发 SCHED-E2E-010，待后端部署后重放包含全部字符的同一用例。
+- T19：`ScheduleRoomRepositoryDesktopTest.createTodoWithNewCategoryAndAllOptionsUsesOneRequest` 同时保存新分类、全天 TODO、每日重复、提前 10 分钟提醒和课表关联，断言一次 CREATE 同时携带两个资源，以瞬时 `categoryLocalId` 建立引用，canonical 响应回填远端分类 ID 后两条 Room pending 均清零。
+- T21/U03：`ScheduleEditNoOpTest.explicitDateSelectionTurnsUnscheduledIntoAllDay`、`unscheduledOccurrenceCanReceiveItsFirstScheduledTime` 与 `explicitTimeModeSelectionBuildsDeadlineAndTimedDomainValues` 断言旧 `UNSCHEDULED` 默认值不会伪造日期；显式选日变为全天，显式选择钟点可分别生成时间点和时间段，并通过 occurrence 编辑链路保存。
+- T23：`ScheduleRoomRepositoryDesktopTest.responseLossRetriesSameScheduleIdentityWithoutDuplicate` 让首次 CREATE 在响应阶段模拟传输失败，随后 Sync 断言仍上传同一 Schedule UUID；成功回包后 Room 与领域快照均只保留一条、version=1 且 pending 清零。另用 dev/test 对同一 UUID 连续发送两次 CREATE，服务端两次返回同一 ID/version，确认不需要 requestId。
+- R02/R21：`RecurrenceEngineTest.dailyWeeklyMonthlyYearlyAndCount` 覆盖起始日为周三、选中周三/周五的多星期规则，以及日、周、月、年四种频率的 `count>1`；`untilIsInclusiveAndNegativeMonthDayResolvesMonthEnd` 固定 until 为包含边界。其余 `count=1`、never 与无效月日边界由同文件的类型矩阵、短月和闰年测试覆盖。
+- R17：`RecurrenceEngineTest.splitTruncatesOldSeriesStartsNewSeriesAndPartitionsExceptions` 从五次日重复的第三次拆分，断言旧系列仅保留边界前两次，新 UUID 系列承接边界及以后两次，边界后的 adjustment 改绑新 Schedule ID，边界前 adjustment 仍归旧系列；伪造边界和首项拆分均拒绝。
 - C09/C19（部分）：普通日程解绑 ID=7 后，父 Schedule 已变为未分组，9 月 3 日单次调整仍单独引用该分类。修复前管理页即时错误降为“0 项日程”；覆盖安装修复包后恢复为“1 项日程”，点击删除只执行 UI 拦截，没有弹删除确认，也没有产生本地或网络删除命令。服务端 `CATEGORY_IN_USE` 直连兜底及解绑/删除日程后的完整数量变化仍待后续验证。
 - R03/R04/R05/R20：运行 `RecurrenceEngineTest`、`RecurrenceEditModelTest` 与 `ScheduleEditNoOpTest` 聚焦测试通过。断言覆盖月重复 31 日在二月/四月等无效日期跳过、2 月 29 日只在闰年生成、全天/时间点/时间段周重复均保留 timing 类型并生成互异的稳定 occurrence identity，以及周选择集合从周一/周三/周五替换为周二/周四后只生成新集合、无旧实例残留。
 - C02/T24/S04/S05/S16：客户端 `SchedulePlannerApplierTest`、`ScheduleDailyMutationBridgeTest` 与后端 `TestScheduleMutationResolvesNewCategoryLocalID`、`TestScheduleMutationRejectsOnlyDependentResource` 聚焦测试通过。同请求先用瞬时 `categoryLocalId` 解析服务端分类 ID，临时 ID 不进入存储；分类失败仅拒绝依赖日程，其他日程继续成功；客户端逐位置应用结果并只保留拒绝项 pending。
