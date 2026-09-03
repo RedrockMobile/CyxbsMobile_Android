@@ -45,7 +45,7 @@ class ScheduleSnapshotProjectorTest {
     assertEquals(ScheduleRepositoryStatus.Ready(2, true), snapshot.status)
   }
 
-  /** 当前仍被 RRULE 命中的单次调整进入 UI；未命中的调整休眠但不会被判为坏数据。 */
+  /** 未被当前 RRULE 命中的单次调整会休眠；规则恢复命中后，同一条调整会重新进入 UI。 */
   @Test
   fun recurrenceMembershipControlsVisibleAdjustments() {
     val parent = recurringParent()
@@ -80,6 +80,24 @@ class ScheduleSnapshotProjectorTest {
 
     assertEquals(1, snapshot.occurrenceAdjustments.size)
     assertEquals(TEST_SCHEDULE_ID, snapshot.occurrenceAdjustments.single().scheduleId.value)
+
+    val restoredSnapshot = assertIs<ScheduleSnapshotProjection.Success>(
+      projector.project(
+        "2020214988",
+        TimeZone.UTC,
+        emptyList(),
+        listOf(testScheduleState(parent)),
+        listOf(testAdjustmentState(active), testAdjustmentState(dormant)),
+      ),
+    ).snapshot
+
+    assertEquals(2, restoredSnapshot.occurrenceAdjustments.size)
+    assertEquals(
+      setOf("2026-05-01", "2026-05-02"),
+      restoredSnapshot.occurrenceAdjustments
+        .map { it.recurrenceId.originalDateTime.date.toString() }
+        .toSet(),
+    )
   }
 
   /** 坏的联合时间数据不能部分发布，整次投影必须失败。 */

@@ -100,8 +100,8 @@
 - [x] R12 已确认 adjustment 更新始终使用相同远端 ID，版本递增；本地 UUID 不变。
 - [x] R13 修改整个系列标题/分类后，单次状态保留且未覆盖字段继承新值。
 - [x] R14 修改整个系列日期/时间后，单次显式 date/time 保持，`originalOccurrenceDate` 不变。
-- [ ] R15 修改规则使原始槽暂时消失，单次调整不展示；规则改回后同一调整恢复。
-- [ ] R16 关闭重复规则后所有 adjustment 被物理删除；重新开启不会复活旧调整。
+- [x] R15 修改规则使原始槽暂时消失，单次调整不展示；规则改回后同一调整恢复。
+- [x] R16 关闭重复规则后所有 adjustment 被物理删除；重新开启不会复活旧调整。
 - [ ] R17 “此次及以后”截断旧系列并创建 UUID v7 新系列，边界前后实例和调整归属正确。
 - [ ] R18 删除“此次及以后”正确截断；从第一项执行时直接删除系列。
 - [x] R19 有限系列只剩最后可见实例时删除该次，父 Schedule 一并删除。
@@ -117,8 +117,8 @@
 - [x] R29 还原后再次仅此次修改，继承父系列当前字段，而不是历史单次字段。
 - [ ] R30 单次完成后再调整时间，随后还原内容 Patch 时完成态保留；取消完成后不复活旧 Patch。
 - [x] R31 整体移动父系列日期时，`originalOccurrenceDate` identity 保持原槽；显式单次 date 仍保持不动。
-- [ ] R32 父规则使原槽休眠时，该调整不出现在“可还原的单次调整”列表；规则恢复后重新生效。
-- [ ] R33 关闭重复规则物理删除该系列全部 adjustment；同一日期重新开启重复不会复活旧调整。
+- [x] R32 父规则使原槽休眠时，该调整不出现在“可还原的单次调整”列表；规则恢复后重新生效。
+- [x] R33 关闭重复规则物理删除该系列全部 adjustment；同一日期重新开启重复不会复活旧调整。
 - [ ] R34 删除整个系列物理删除父 Schedule 与其全部 adjustment，不保留服务端墓碑。
 
 ## 6. 普通修改、完成与删除
@@ -142,7 +142,7 @@
 - [x] U17 在 00:30 和 23:29 边界调整，滚轮不被另一端错误限制且结果不跨日。
 - [ ] U18 TODO ↔ 关联课表、AFFAIR ↔ 关联清单的切换保持来源语义与完成态规则。
 - [x] U19 删除重复系列的“仅此次”确认文案说明可在重复设置中还原；“此次及以后/全部”说明不可恢复。
-- [ ] U20 删除服务端不存在但客户端确认过的资源按已删除处理，并清除本地 pending/失败记录。
+- [x] U20 删除服务端不存在但客户端确认过的资源按已删除处理，并清除本地 pending/失败记录。
 - [ ] U21 同一资源连续修改时只发送最终本地状态；旧回包不得覆盖请求期间的新 revision。
 - [x] U22 修改保存成功后编辑弹窗切回详情态而非直接关闭；创建事务成功后同窗口切为详情。
 
@@ -371,6 +371,9 @@
 - N04：`LegacyScheduleMapperTest.deterministicUuid_isStableUuidV5AndSeparatesResources`、`LegacyScheduleMigrationPersistenceTest` 的已存在/同批重复/远端失败重试用例，以及 `UuidV7GeneratorTest` 在完整桌面测试中通过。旧源 identity 始终映射相同 UUID v5 并由本地/远端快照幂等复用；普通创建使用规范 UUID v7，服务端响应不改写 Schedule identity。
 - Q03：运行 `:cyxbs-pages:course:view:desktopTest` 通过；Schedule 完整 `desktopTest` 同时覆盖课表可见性与投影服务，课表 overlap、PageDecoration 及 Schedule service 的当前聚焦回归均无失败。
 - U12：`ScheduleRoomRepositoryDesktopTest` 新增两条仓库级回归。被业务拒绝的新建在用户修正内容并重试成功后，会移除同一日程的旧失败记录且保留修正后的内容；用户删除该本地日程时，同样立即清除失败记录，并向远端发送不带版本的幂等 DELETE，以收敛“服务端可能已成功但响应丢失”的不确定状态。聚焦测试全部通过。
+- R15/R32：`ScheduleSnapshotProjectorTest.recurrenceMembershipControlsVisibleAdjustments` 依次投影“每周仅周五”和恢复后的每日规则。同一批单次调整中，周六原槽在前者休眠并同时从业务快照及可还原列表数据源消失，规则恢复命中后同一原槽重新出现，期间没有删除或改写 adjustment。
+- R16/R33：`ScheduleRoomRepositoryDesktopTest.disablingAndReenablingRecurrenceDoesNotRestoreDeletedAdjustments` 从已同步父系列和 adjustment 出发，关闭重复后验证服务端成功回包会把子记录从 Room 物理移除；随后给同一日程重新开启原规则，本地快照和 Room 均保持无 adjustment，不会复活旧单次状态或 Patch。
+- U20：`SchedulePlannerApplierTest.alreadyDeletedResultCompletesLocalDelete` 固定服务端已不存在时 DELETE 仍按 `SUCCESS` 收敛；`ScheduleRoomRepositoryDesktopTest.deletingConfirmedScheduleAfterRejectedUpdateClearsLocalFailureState` 再从有远端版本且更新被拒绝的状态出发，验证幂等删除成功后 Schedule、pending 与关联失败记录同时从 Room/业务快照清除。
 
 ### 14.3 修复批次规则
 

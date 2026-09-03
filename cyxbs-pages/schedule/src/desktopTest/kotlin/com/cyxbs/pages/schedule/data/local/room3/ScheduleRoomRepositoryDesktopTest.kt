@@ -21,6 +21,7 @@ import com.cyxbs.pages.schedule.data.remote.ScheduleSyncResponse
 import com.cyxbs.pages.schedule.data.remote.SyncRequest
 import com.cyxbs.pages.schedule.data.remote.SyncResponse
 import com.cyxbs.pages.schedule.data.remote.UpsertResult
+import com.cyxbs.pages.schedule.data.repository.TEST_OCCURRENCE_DATE
 import com.cyxbs.pages.schedule.data.repository.TEST_SCHEDULE_ID
 import com.cyxbs.pages.schedule.data.repository.testAdjustmentResource
 import com.cyxbs.pages.schedule.data.repository.testAdjustmentState
@@ -35,6 +36,11 @@ import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRemoteError
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.domain.repository.ScheduleSyncResult
+import com.cyxbs.pages.schedule.domain.sync.AtomicField
+import com.cyxbs.pages.schedule.domain.sync.RecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.sync.RecurrenceInput
+import com.cyxbs.pages.schedule.domain.sync.TimingInput
+import com.cyxbs.pages.schedule.domain.sync.TimingKind
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.runTest
@@ -155,6 +161,33 @@ class ScheduleRoomRepositoryDesktopTest {
     }
   }
 
+  /** 已确认远端日程即使先更新失败，后续幂等删除成功也必须清除 pending 与旧失败记录。 */
+  @Test
+  fun deletingConfirmedScheduleAfterRejectedUpdateClearsLocalFailureState() = runTest {
+    withRepository { repository, gateway, database, failures ->
+      val remote = testScheduleResource(version = 2, title = "远端日程")
+      ScheduleRoomStateStore(database).replaceAccountState(
+        accountId = ACCOUNT_ID,
+        categories = emptyList(),
+        schedules = listOf(testScheduleState(remote).toRoomEntity(ACCOUNT_ID) { null }),
+        occurrenceAdjustments = emptyList(),
+      )
+      repository.initialize()
+      gateway.updateResult = { request -> rejectedResponse(request) }
+      repository.execute(
+        ScheduleCommand.Update(repository.snapshot.value.schedules.single().copy(title = "被拒绝的修改")),
+      )
+      assertEquals(1, failures.observe(ACCOUNT_ID).value.size)
+
+      val result = repository.execute(ScheduleCommand.Delete(ScheduleId(TEST_SCHEDULE_ID)))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      assertTrue(repository.snapshot.value.schedules.isEmpty())
+      assertTrue(failures.observe(ACCOUNT_ID).value.isEmpty())
+      assertTrue(ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).schedules.isEmpty())
+    }
+  }
+
   /** 删除父日程时，已同步单次调整在同一请求中物理删除。 */
   @Test
   fun deletingScheduleAlsoDeletesRemoteAdjustment() = runTest {
@@ -179,6 +212,48 @@ class ScheduleRoomRepositoryDesktopTest {
       val local = ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID)
       assertTrue(local.schedules.isEmpty())
       assertTrue(local.occurrenceAdjustments.isEmpty())
+    }
+  }
+
+  /** 关闭重复会物理删除全部单次调整；同一日程重新开启相同规则也不能复活旧调整。 */
+  @Test
+  fun disablingAndReenablingRecurrenceDoesNotRestoreDeletedAdjustments() = runTest {
+    withRepository { repository, _, database, _ ->
+      val recurringSchedule = testScheduleResource(
+        version = 2,
+        timing = TimingInput(TimingKind.ALL_DAY, date = TEST_OCCURRENCE_DATE),
+      ).copy(
+        recurrence = AtomicField(
+          RecurrenceInput(RecurrenceFrequency.DAILY, 1, TEST_OCCURRENCE_DATE),
+          10,
+        ),
+      )
+      val adjustment = testAdjustmentResource(remoteId = 71L, version = 2)
+      ScheduleRoomStateStore(database).replaceAccountState(
+        accountId = ACCOUNT_ID,
+        categories = emptyList(),
+        schedules = listOf(testScheduleState(recurringSchedule).toRoomEntity(ACCOUNT_ID) { null }),
+        occurrenceAdjustments = listOf(
+          testAdjustmentState(adjustment).toRoomEntity(ACCOUNT_ID) { null },
+        ),
+      )
+      repository.initialize()
+      val recurrence = requireNotNull(repository.snapshot.value.schedules.single().recurrence)
+
+      val disabled = repository.execute(
+        ScheduleCommand.Update(repository.snapshot.value.schedules.single().copy(recurrence = null)),
+      )
+
+      assertIs<ScheduleSyncResult.Success>(disabled)
+      assertTrue(ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).occurrenceAdjustments.isEmpty())
+
+      val reenabled = repository.execute(
+        ScheduleCommand.Update(repository.snapshot.value.schedules.single().copy(recurrence = recurrence)),
+      )
+
+      assertIs<ScheduleSyncResult.Success>(reenabled)
+      assertTrue(repository.snapshot.value.occurrenceAdjustments.isEmpty())
+      assertTrue(ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).occurrenceAdjustments.isEmpty())
     }
   }
 
@@ -220,6 +295,9 @@ class ScheduleRoomRepositoryDesktopTest {
     var createResult: suspend (MutationRequest) -> ScheduleCallResult<MutationResponse> = { request ->
       completed(successResponse(request))
     }
+    var updateResult: suspend (MutationRequest) -> ScheduleCallResult<MutationResponse> = { request ->
+      completed(successResponse(request))
+    }
 
     override suspend fun sync(accountId: String, request: SyncRequest): ScheduleCallResult<SyncResponse> {
       syncCalls += 1
@@ -237,7 +315,7 @@ class ScheduleRoomRepositoryDesktopTest {
     override suspend fun updateSchedule(
       accountId: String,
       input: MutationRequest,
-    ): ScheduleCallResult<MutationResponse> = completed(successResponse(input))
+    ): ScheduleCallResult<MutationResponse> = updateResult(input)
 
     override suspend fun deleteSchedule(
       accountId: String,
