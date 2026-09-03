@@ -8,6 +8,7 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.JsonConvertException
 import kotlinx.coroutines.CancellationException
 import kotlinx.datetime.TimeZone
@@ -110,8 +111,11 @@ internal class KtorScheduleGateway(
       }
       log(
         NETWORK_LOG_TAG,
-        "$operation HTTP ${invalid.response.status.value} " +
-            "response=${body.toDiagnosticLogText()}",
+        httpFailureLogText(
+          operation = operation,
+          status = invalid.response.status.value,
+          contentType = invalid.response.headers[HttpHeaders.ContentType],
+        ),
       )
       return if (invalid.response.status.value == 400) {
         ScheduleCallResult.RequestInvalid(body)
@@ -165,3 +169,16 @@ internal class KtorScheduleGateway(
  */
 private fun String.toDiagnosticLogText(): String =
   replace('\n', ' ').replace('\r', ' ').take(MAX_DIAGNOSTIC_RESPONSE_CHARS)
+
+/**
+ * 生成非成功 HTTP 响应的安全日志摘要。
+ *
+ * 响应正文可能是网关 HTML、包含实际输入值的错误页，甚至包含上游注入的敏感信息，因此这里刻意不接收
+ * 正文，只保留定位网络链路所需的状态码与响应类型。HTTP 400 的正文仍由调用方保存在 [ScheduleCallResult.RequestInvalid]
+ * 中，用于解析服务端明确下发的业务字段错误，但不会直接写入日志。
+ */
+internal fun httpFailureLogText(
+  operation: String,
+  status: Int,
+  contentType: String?,
+): String = "$operation HTTP $status contentType=${contentType?.substringBefore(';') ?: "unknown"}"

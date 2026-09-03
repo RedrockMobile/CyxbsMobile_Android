@@ -5,12 +5,28 @@ import com.cyxbs.components.account.api.AccountState
 import com.cyxbs.components.utils.network.ApiWrapper
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertSame
 import kotlinx.coroutines.test.runTest
 
 /** Ktorfit 适配层只验证统一外壳和 exact-session 传递，不复制 HTTP 客户端实现测试。 */
 class KtorScheduleGatewayTest {
+
+  @Test
+  fun httpFailureLogDoesNotContainResponseBody() {
+    val untrustedBody = "<html><body>SafeLine blocked credential=secret</body></html>"
+
+    val logText = httpFailureLogText(
+      operation = "CREATE",
+      status = 468,
+      contentType = "text/html; charset=utf-8",
+    )
+
+    assertEquals("CREATE HTTP 468 contentType=text/html", logText)
+    assertFalse(logText.contains(untrustedBody))
+    assertFalse(logText.contains("credential"))
+  }
 
   @Test
   fun handledResponseKeepsTypedRawDataAndExactSession() = runTest {

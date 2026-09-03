@@ -25,7 +25,7 @@
 - [x] E01 ADB 只连接目标测试设备，设备保持解锁，使用项目配置的覆盖安装脚本。
 - [x] E02 确认启动的是正式 `cyxbs://schedule` 页面，而不是内部 Preview。
 - [x] E03 记录脱敏账号、客户端 commit、后端环境和初始本地/远端数量。
-- [x] E04 检查日志不输出 token、Authorization、Cookie、完整请求体或用户敏感描述。
+- [x] E04 检查日志不输出 token、Authorization、Cookie、完整请求体、非业务响应正文或用户敏感描述。
 - [x] E05 首次 Sync 成功，`confirmedResults/discoveredResults/upsertResults/deleteResults` 与请求位置对应。
 - [x] E06 代码审查账号 repository、AccountSession tag、迁移设置和系统日历所有权均按账号隔离。
 - [x] E07 验证 `cyxbs://schedule`、`schedule/settings`、`schedule/category`、`schedule/failures` 冷启动和热启动路由。
@@ -46,7 +46,7 @@
 - [x] C09 删除仍被日程或单次调整引用的分类时客户端拦截；直连接口返回 `CATEGORY_IN_USE`。
 - [ ] C10 分类名称空白、首尾空格和常用中文符号处理一致。
 - [ ] C11 连续多次改名/换色/排序只保留最终 pending，不生成重复分类。
-- [ ] C12 网络失败时分类本地立即可见，恢复后 Sync 收敛。
+- [x] C12 网络失败时分类本地立即可见，恢复后 Sync 收敛。
 - [x] C13 固定分类“学习/生活/其他”不提供删除入口，自定义分类提供删除入口。
 - [ ] C14 逐一抽查全部候选配色，背景色/文字色 JSON 在 Room、wire 和远端往返后字段完整。
 - [ ] C15 分类被多个 TODO 与 AFFAIR 引用时，改名、换色和排序不改变引用 ID。
@@ -313,6 +313,7 @@
 | SCHED-E2E-006 | E06/L06/N08/Q09 | 已修复 | 冷启动正式清单后真实 Sync 已成功且数据可见，但页面持续显示“当前没有可编辑的登录账号”，新增和编辑入口被关闭 | façade 的普通 `mutationMode` getter 依赖 `initializationCompleted`；初始化完成只改变内部布尔值且未产生新快照，Compose 没有重组。现在精确账号 delegate 绑定后立即公开 local-first，真正命令仍在仓库边界等待初始化 | `2300f789b` |
 | SCHED-E2E-007 | R06/U08 | 已修复 | 每日重复日程完成 9 月 3 日实例后，未完成区直接展示 9 月 4 日，但已完成区没有 9 月 3 日，用户无法取消本次完成 | 清单投影对每个系列只保留一张卡片并优先选择 `ACTIVE`；现在未完成区仍只取下一实例，已完成区独立展示七天内真实完成实例 | 本提交 |
 | SCHED-E2E-008 | C09/C19 | 已修复 | 父日程解绑分类后，仍有单次调整引用该分类，但管理页显示“0 项日程”并错误开放删除确认入口 | 管理页只统计父 Schedule 的分类字段，遗漏单次调整的分类 Patch；现在合并两种引用并按 Schedule ID 去重，与仓库删除边界一致 | 本提交 |
+| SCHED-E2E-009 | E04 | 已修复 | 分类 CREATE 遇到 SafeLine HTTP 468 时，`ScheduleNetwork` 把完整 HTML 错误页截取后写入日志 | `ClientRequestException` 为诊断 HTTP 400 读取正文后，对所有 4xx 复用了正文日志；改为只记录状态码和 Content-Type，400 正文只留在类型化失败链路中 | 本提交 |
 
 ### 14.2 真机验收证据
 
@@ -346,6 +347,8 @@
 - T17：新建 `E2E-SCHEDULE-0903-DOUBLE-SAVE` 时对保存区域连续发送两次点击，日志只出现一次本地 `Create`、一次 CREATE 请求和一个 UUID；成功回包后版本为 1、pending=0，没有生成重复日程。
 - C04：新建分类 `E2E-CATEGORY-0903-REFERENCE` 后，先让普通日程与每日重复日程 9 月 3 日的单次调整共同引用远端分类 ID=7；随后把分类改名为 `E2E-CATEGORY-0903-REF-RENAMED` 并从天蓝改为珊瑚配色，分类版本 1→2。Room 复核显示普通日程仍引用 ID=7，单次调整仍为同一远端 adjustment ID=4/version=3 且其分类 Patch 仍指向 ID=7，三类记录均无 pending。
 - C06：把分类 ID=8 改为青色配色 `background=#FF86DBE9`、`content=#FF005262`、`darkBackground=#BF16505A`，Room 中分类版本为 2，`E2E-SCHEDULE-0903-COLOR` 继续引用该分类。清单时间轴与课表投影均使用新背景色和文字色；点击课表中该日程的可见区间后打开同一日程详情，并显示完整的 9 月 9 日 18:41–19:41 时间段。覆盖安装后的冷启动 Sync 还验证分类 confirmed 请求和响应能够按 ID、版本逐项对应。
+- C12：新建分类 `E2E-CATEGORY-0903-NAME-A` 后，日常 CREATE 收到 SafeLine HTTP 468；分类立即保留在 Room，`pending=PendingUpsert`。覆盖安装并冷启动后，首次 Sync 上传同一 localId 与最终去空格名称，服务端返回 canonical ID=12/version=1；合并后 pending 清零且没有生成重复分类。
+- E04：上述 468 曾把 SafeLine HTML 错误页写入 `ScheduleNetwork`。网关现只生成 `HTTP 状态码 + Content-Type` 摘要，正文不会进入日志；`KtorScheduleGatewayTest.httpFailureLogDoesNotContainResponseBody` 固定 HTML、疑似凭证文本均不能出现在摘要中，聚焦桌面测试与 Android 覆盖安装均通过。
 - C09/C19（部分）：普通日程解绑 ID=7 后，父 Schedule 已变为未分组，9 月 3 日单次调整仍单独引用该分类。修复前管理页即时错误降为“0 项日程”；覆盖安装修复包后恢复为“1 项日程”，点击删除只执行 UI 拦截，没有弹删除确认，也没有产生本地或网络删除命令。服务端 `CATEGORY_IN_USE` 直连兜底及解绑/删除日程后的完整数量变化仍待后续验证。
 - R03/R04/R05/R20：运行 `RecurrenceEngineTest`、`RecurrenceEditModelTest` 与 `ScheduleEditNoOpTest` 聚焦测试通过。断言覆盖月重复 31 日在二月/四月等无效日期跳过、2 月 29 日只在闰年生成、全天/时间点/时间段周重复均保留 timing 类型并生成互异的稳定 occurrence identity，以及周选择集合从周一/周三/周五替换为周二/周四后只生成新集合、无旧实例残留。
 - C02/T24/S04/S05/S16：客户端 `SchedulePlannerApplierTest`、`ScheduleDailyMutationBridgeTest` 与后端 `TestScheduleMutationResolvesNewCategoryLocalID`、`TestScheduleMutationRejectsOnlyDependentResource` 聚焦测试通过。同请求先用瞬时 `categoryLocalId` 解析服务端分类 ID，临时 ID 不进入存储；分类失败仅拒绝依赖日程，其他日程继续成功；客户端逐位置应用结果并只保留拒绝项 pending。
