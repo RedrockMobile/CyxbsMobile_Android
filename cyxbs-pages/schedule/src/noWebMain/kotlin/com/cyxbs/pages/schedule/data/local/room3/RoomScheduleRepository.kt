@@ -425,6 +425,7 @@ internal class RoomScheduleRepository(
         operation = ScheduleFailureOperation.SYNC,
         request = capture.request,
         response = response,
+        currentCategories = before.categories,
         currentSchedules = before.schedules,
         adjustmentDeleteScheduleIds = capture.occurrenceAdjustments.adjustmentDeleteScheduleIds(),
         failedAt = nowMillis(),
@@ -480,6 +481,7 @@ internal class RoomScheduleRepository(
         operation = capture.method.toFailureOperation(),
         request = capture.request,
         response = response,
+        currentCategories = before.categories,
         currentSchedules = before.schedules,
         adjustmentDeleteScheduleIds = capture.capture.occurrenceAdjustments.adjustmentDeleteScheduleIds(),
         failedAt = nowMillis(),
@@ -541,6 +543,7 @@ internal class RoomScheduleRepository(
       val records = createScheduleFailureRecords(
         operation = operation,
         request = request,
+        currentCategories = before.categories,
         currentSchedules = before.schedules,
         currentAdjustments = before.occurrenceAdjustments,
         failedAt = nowMillis(),

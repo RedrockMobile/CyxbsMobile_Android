@@ -386,6 +386,17 @@ internal fun ScheduleTodoSyncStatus(
 ) {
   val colors = LocalAppColors.current
   when {
+    status is ScheduleRepositoryStatus.Corrupted -> {
+      Surface(color = MaterialTheme.colors.error.copy(alpha = 0.1f)) {
+        Text(
+          text = "日程数据暂时无法读取。",
+          color = MaterialTheme.colors.error,
+          fontSize = 12.sp,
+          modifier = Modifier.fillMaxWidth().padding(8.dp),
+        )
+      }
+    }
+
     mutationMode == ScheduleRepositoryMutationMode.READ_ONLY -> {
       Surface(color = MaterialTheme.colors.error.copy(alpha = 0.1f)) {
         Text(
@@ -402,17 +413,6 @@ internal fun ScheduleTodoSyncStatus(
         modifier = Modifier.fillMaxWidth(),
         color = colors.positive,
       )
-    }
-
-    status is ScheduleRepositoryStatus.Corrupted -> {
-      Surface(color = MaterialTheme.colors.error.copy(alpha = 0.1f)) {
-        Text(
-          text = "日程数据暂时无法读取。",
-          color = MaterialTheme.colors.error,
-          fontSize = 12.sp,
-          modifier = Modifier.fillMaxWidth().padding(8.dp),
-        )
-      }
     }
 
     else -> Unit

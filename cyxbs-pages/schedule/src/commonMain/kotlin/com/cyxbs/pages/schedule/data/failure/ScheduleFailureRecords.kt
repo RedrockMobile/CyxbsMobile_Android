@@ -14,6 +14,8 @@ import com.cyxbs.pages.schedule.data.remote.SyncRequest
 import com.cyxbs.pages.schedule.data.remote.SyncResponse
 import com.cyxbs.pages.schedule.data.repository.ScheduleDailyMutationMethod
 import com.cyxbs.pages.schedule.data.repository.toWire
+import com.cyxbs.pages.schedule.domain.sync.CategoryResource
+import com.cyxbs.pages.schedule.domain.sync.CategorySyncState
 import com.cyxbs.pages.schedule.domain.sync.OccurrenceAdjustmentSyncState
 import com.cyxbs.pages.schedule.domain.sync.ScheduleSyncState
 import com.russhwolf.settings.Settings
@@ -224,6 +226,7 @@ internal object ScheduleFailureRecords :
 internal fun createScheduleFailureRecords(
   operation: ScheduleFailureOperation,
   request: MutationRequest,
+  currentCategories: List<CategorySyncState>,
   currentSchedules: List<ScheduleSyncState>,
   currentAdjustments: List<OccurrenceAdjustmentSyncState>,
   failedAt: Long,
@@ -234,6 +237,7 @@ internal fun createScheduleFailureRecords(
   return createFailureRecords(
     operation = operation,
     request = request,
+    currentCategories = currentCategories,
     currentSchedules = currentSchedules,
     failedAt = failedAt,
     failures = (request.scheduleIds() + adjustmentDeleteScheduleIds.values)
@@ -247,6 +251,7 @@ internal fun createRejectedScheduleFailureRecords(
   operation: ScheduleFailureOperation,
   request: SyncRequest,
   response: SyncResponse,
+  currentCategories: List<CategorySyncState>,
   currentSchedules: List<ScheduleSyncState>,
   adjustmentDeleteScheduleIds: Map<Long, String>,
   failedAt: Long,
@@ -261,6 +266,7 @@ internal fun createRejectedScheduleFailureRecords(
   adjustmentDeleteResults = response.occurrenceAdjustments.deleteResults.map {
     ResultDetail(it.result, it.reason, it.info)
   },
+  currentCategories = currentCategories,
   currentSchedules = currentSchedules,
   adjustmentDeleteScheduleIds = adjustmentDeleteScheduleIds,
   failedAt = failedAt,
@@ -271,6 +277,7 @@ internal fun createRejectedScheduleFailureRecords(
   operation: ScheduleFailureOperation,
   request: MutationRequest,
   response: MutationResponse,
+  currentCategories: List<CategorySyncState>,
   currentSchedules: List<ScheduleSyncState>,
   adjustmentDeleteScheduleIds: Map<Long, String>,
   failedAt: Long,
@@ -285,6 +292,7 @@ internal fun createRejectedScheduleFailureRecords(
   adjustmentDeleteResults = response.occurrenceAdjustments.deleteResults.map {
     ResultDetail(it.result, it.reason, it.info)
   },
+  currentCategories = currentCategories,
   currentSchedules = currentSchedules,
   adjustmentDeleteScheduleIds = adjustmentDeleteScheduleIds,
   failedAt = failedAt,
@@ -322,6 +330,7 @@ private fun createRejectedScheduleFailureRecords(
   scheduleDeleteResults: List<ResultDetail>,
   adjustmentUpsertResults: List<ResultDetail>,
   adjustmentDeleteResults: List<ResultDetail>,
+  currentCategories: List<CategorySyncState>,
   currentSchedules: List<ScheduleSyncState>,
   adjustmentDeleteScheduleIds: Map<Long, String>,
   failedAt: Long,
@@ -348,6 +357,7 @@ private fun createRejectedScheduleFailureRecords(
   return createFailureRecords(
     operation,
     request,
+    currentCategories,
     currentSchedules,
     failedAt,
     failures,
@@ -358,15 +368,20 @@ private fun createRejectedScheduleFailureRecords(
 private fun createFailureRecords(
   operation: ScheduleFailureOperation,
   request: MutationRequest,
+  currentCategories: List<CategorySyncState>,
   currentSchedules: List<ScheduleSyncState>,
   failedAt: Long,
   failures: Map<String, FailureDetail>,
   adjustmentDeleteScheduleIds: Map<Long, String> = emptyMap(),
 ): List<ScheduleFailureRecord> {
+  if (failures.isEmpty()) return emptyList()
+  val categoryByLocalId: Map<String, CategoryResource> = currentCategories
+    .mapNotNull { it.effectiveResource() ?: it.remoteSnapshot?.resource }
+    .associateBy { it.identity.id }
   val currentById = currentSchedules.mapNotNull { state ->
     // pending DELETE 会隐藏 effectiveResource，仍回退到删除前 remote 供用户恢复编辑。
     (state.effectiveResource() ?: state.remoteSnapshot?.resource)
-      ?.let { state.identity.id to it.toWire { null } }
+      ?.let { state.identity.id to it.toWire(categoryByLocalId::get) }
   }.toMap()
   return failures.mapNotNull { (scheduleId, failure) ->
     val source = request.schedules.upserts.firstOrNull { it.id == scheduleId }

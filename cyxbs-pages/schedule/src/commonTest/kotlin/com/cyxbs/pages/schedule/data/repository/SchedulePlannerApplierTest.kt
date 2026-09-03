@@ -8,6 +8,7 @@ import com.cyxbs.pages.schedule.data.remote.DeleteResult
 import com.cyxbs.pages.schedule.data.remote.MutationResultCode
 import com.cyxbs.pages.schedule.data.remote.OccurrenceAdjustmentInput
 import com.cyxbs.pages.schedule.data.remote.OccurrenceAdjustmentSyncResponse
+import com.cyxbs.pages.schedule.data.remote.ScheduleInput
 import com.cyxbs.pages.schedule.data.remote.ScheduleSyncResponse
 import com.cyxbs.pages.schedule.data.remote.SyncResponse
 import com.cyxbs.pages.schedule.data.remote.UpsertResult
@@ -60,6 +61,48 @@ class SchedulePlannerApplierTest {
     assertEquals(category.identity.id, capture.request.categories.upserts.single().localId)
     assertEquals(category.identity.id, capture.request.schedules.upserts.single().categoryLocalId)
     assertNull(capture.request.schedules.upserts.single().categoryId.data)
+  }
+
+  /** 同请求创建分类和日程成功后，服务端数字分类 ID 必须重新映射回原本的客户端 UUID。 */
+  @Test
+  fun acceptedNewCategoryAndScheduleKeepLocalCategoryReference() = runTest {
+    val category = testCategoryResource()
+    val schedule = testScheduleResource(categoryLocalId = category.identity.id)
+    val categoryState = testCategoryState(category, PendingUpsert(category, 1))
+    val scheduleState = testScheduleState(schedule, PendingUpsert(schedule, 1), hasRemote = false)
+    val capture = planner.capture(listOf(categoryState), listOf(scheduleState), emptyList())
+    val canonicalCategory = capture.request.categories.upserts.single().copy(
+      localId = null,
+      id = 41L,
+      version = 1uL,
+    )
+    val canonicalSchedule = capture.request.schedules.upserts.single().copy(
+      version = 1uL,
+      categoryId = capture.request.schedules.upserts.single().categoryId.copy(data = 41L),
+      categoryLocalId = null,
+    )
+
+    val result = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(
+        capture,
+        response(
+          capture,
+          categoryUpserts = listOf(UpsertResult(MutationResultCode.SUCCESS, resource = canonicalCategory)),
+          scheduleUpserts = listOf(UpsertResult(MutationResultCode.SUCCESS, resource = canonicalSchedule)),
+        ),
+        listOf(categoryState),
+        listOf(scheduleState),
+        emptyList(),
+      ),
+    )
+
+    val appliedCategory = result.categories.single()
+    val appliedSchedule = result.schedules.single()
+    assertEquals(category.identity, appliedCategory.identity)
+    assertEquals(41L, appliedCategory.remoteSnapshot?.resource?.remoteId)
+    assertNull(appliedCategory.pending)
+    assertEquals(category.identity.id, appliedSchedule.remoteSnapshot?.resource?.categoryId?.data)
+    assertNull(appliedSchedule.pending)
   }
 
   /** 部分成功只清理成功项，拒绝项继续保留等待用户修正。 */
@@ -176,6 +219,7 @@ class SchedulePlannerApplierTest {
   private fun response(
     capture: ScheduleSyncCapture,
     categoryUpserts: List<UpsertResult<CategoryInput>> = emptyList(),
+    scheduleUpserts: List<UpsertResult<ScheduleInput>> = emptyList(),
     adjustmentDeletes: List<DeleteResult<Long, OccurrenceAdjustmentInput>> = emptyList(),
   ): SyncResponse = SyncResponse(
     categories = CategorySyncResponse(
@@ -191,7 +235,7 @@ class SchedulePlannerApplierTest {
         ConfirmedResult(it.id, ConfirmedResultCode.CONFIRMED)
       },
       discoveredResults = emptyList(),
-      upsertResults = emptyList(),
+      upsertResults = scheduleUpserts,
       deleteResults = emptyList(),
     ),
     occurrenceAdjustments = OccurrenceAdjustmentSyncResponse(
