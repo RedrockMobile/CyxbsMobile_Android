@@ -6,7 +6,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
 import com.cyxbs.pages.schedule.domain.model.CategoryId
+import com.cyxbs.pages.schedule.domain.model.FieldPatch
+import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
 import com.cyxbs.pages.schedule.domain.repository.ScheduleSyncResult
@@ -98,17 +101,45 @@ internal fun rememberScheduleCategoryCatalog(
   repository: ScheduleRepository = ScheduleRepositoryProvider.repository,
 ): ScheduleCategoryCatalog {
   val snapshot by repository.snapshot.collectAsState()
-  return remember(repository, snapshot.categories, snapshot.schedules) {
+  return remember(
+    repository,
+    snapshot.categories,
+    snapshot.schedules,
+    snapshot.occurrenceAdjustments,
+  ) {
     ScheduleCategoryCatalog(
       actualCategories = snapshot.categories,
       selectableCategories = mergeScheduleCategories(snapshot.categories),
-      usageCountById = snapshot.schedules
-        .mapNotNull { schedule -> schedule.categoryId }
-        .groupingBy { it }
-        .eachCount(),
+      usageCountById = categoryUsageCountById(
+        snapshot.schedules,
+        snapshot.occurrenceAdjustments,
+      ),
       repository = repository,
     )
   }
+}
+
+/**
+ * 按引用分类的不同日程数量生成管理页计数。
+ *
+ * 单次调整可以在父日程未分组时单独选择分类，因此不能只统计 [schedules]。同一日程的父资源和多个单次
+ * 调整即使都引用同一分类，也只显示为一项日程；这既符合页面文案，也与删除分类时的实际引用边界一致。
+ */
+internal fun categoryUsageCountById(
+  schedules: List<Schedule>,
+  occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
+): Map<CategoryId, Int> {
+  val scheduleIdsByCategory = mutableMapOf<CategoryId, MutableSet<String>>()
+  schedules.forEach { schedule ->
+    schedule.categoryId?.let { categoryId ->
+      scheduleIdsByCategory.getOrPut(categoryId, ::mutableSetOf).add(schedule.id.value)
+    }
+  }
+  occurrenceAdjustments.forEach { adjustment ->
+    val categoryId = (adjustment.patch?.categoryId as? FieldPatch.Replace)?.value ?: return@forEach
+    scheduleIdsByCategory.getOrPut(categoryId, ::mutableSetOf).add(adjustment.scheduleId.value)
+  }
+  return scheduleIdsByCategory.mapValues { (_, scheduleIds) -> scheduleIds.size }
 }
 
 /**
