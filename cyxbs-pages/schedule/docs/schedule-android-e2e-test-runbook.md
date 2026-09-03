@@ -93,22 +93,22 @@
 - [x] R05 全天、时间点、时间段分别创建重复日程，类型和实例 identity 正确。
 - [x] R06 完成一个重复实例只影响该次；取消完成后恢复。
 - [ ] R07 仅此次修改标题、备注、分类、日期、时间、提醒，各字段独立保存。
-- [ ] R08 已有单次时间修改后只改单次日期，时间 patch 保留；反向同理。
+- [x] R08 已有单次时间修改后只改单次日期，时间 patch 保留；反向同理。
 - [x] R09 删除仅此次保存 `CANCELLED` 且旧 patch 清空，其他实例不受影响。
 - [x] R10 还原单次调整后物理删除 adjustment，该次完全继承父系列。
 - [ ] R11 同一 Schedule 和原始日期的两个首次创建请求最终合并成一个远端 adjustment ID。
 - [x] R12 已确认 adjustment 更新始终使用相同远端 ID，版本递增；本地 UUID 不变。
-- [ ] R13 修改整个系列标题/分类后，单次状态保留且未覆盖字段继承新值。
-- [ ] R14 修改整个系列日期/时间后，单次显式 date/time 保持，`originalOccurrenceDate` 不变。
+- [x] R13 修改整个系列标题/分类后，单次状态保留且未覆盖字段继承新值。
+- [x] R14 修改整个系列日期/时间后，单次显式 date/time 保持，`originalOccurrenceDate` 不变。
 - [ ] R15 修改规则使原始槽暂时消失，单次调整不展示；规则改回后同一调整恢复。
 - [ ] R16 关闭重复规则后所有 adjustment 被物理删除；重新开启不会复活旧调整。
 - [ ] R17 “此次及以后”截断旧系列并创建 UUID v7 新系列，边界前后实例和调整归属正确。
 - [ ] R18 删除“此次及以后”正确截断；从第一项执行时直接删除系列。
-- [ ] R19 有限系列只剩最后可见实例时删除该次，父 Schedule 一并删除。
+- [x] R19 有限系列只剩最后可见实例时删除该次，父 Schedule 一并删除。
 - [x] R20 每周选择集合从周一/周三/周五改为周二/周四后，旧实例消失且新实例无重复。
 - [ ] R21 日、周、月、年重复分别验证 count=1、count>1、until 和 never 的结束边界。
 - [x] R22 单次仅修改标题时，备注、分类、日期、时间、提醒和完成态继续继承父系列。
-- [ ] R23 单次仅修改日期时已有 time Patch 保留；仅修改时间时已有 date Patch 保留。
+- [x] R23 单次仅修改日期时已有 time Patch 保留；仅修改时间时已有 date Patch 保留。
 - [x] R24 单次调整的本地 UUID 不上传服务端；首次创建后绑定服务端 adjustment ID。
 - [ ] R25 两台逻辑客户端对同一 `scheduleId + originalOccurrenceDate` 首次新增时，服务端字段级合并并返回同一 canonical ID（自动化/直连验证）。
 - [ ] R26 已确认单次调整的并发字段修改按各 AtomicField.modifiedAt 合并，不以整行覆盖。
@@ -116,7 +116,7 @@
 - [x] R28 还原单次调整只在最终确认保存后生效；确认前课表、清单和网络均不变化。
 - [x] R29 还原后再次仅此次修改，继承父系列当前字段，而不是历史单次字段。
 - [ ] R30 单次完成后再调整时间，随后还原内容 Patch 时完成态保留；取消完成后不复活旧 Patch。
-- [ ] R31 整体移动父系列日期时，`originalOccurrenceDate` identity 保持原槽；显式单次 date 仍保持不动。
+- [x] R31 整体移动父系列日期时，`originalOccurrenceDate` identity 保持原槽；显式单次 date 仍保持不动。
 - [ ] R32 父规则使原槽休眠时，该调整不出现在“可还原的单次调整”列表；规则恢复后重新生效。
 - [ ] R33 关闭重复规则物理删除该系列全部 adjustment；同一日期重新开启重复不会复活旧调整。
 - [ ] R34 删除整个系列物理删除父 Schedule 与其全部 adjustment，不保留服务端墓碑。
@@ -136,7 +136,7 @@
 - [x] U11 请求期间继续修改同一资源，旧响应只清旧 revision，新修改仍为 pending。
 - [ ] U12 业务拒绝后修改成功或删除资源，关联失败记录自动清理。
 - [x] U13 清空备注、分类和提醒分别生成明确空值语义，不误清其他 AtomicField。
-- [ ] U14 修改日期跨周、跨月、跨年时标题、提醒、重复、分类和来源不被重置。
+- [x] U14 修改日期跨周、跨月、跨年时标题、提醒、重复、分类和来源不被重置。
 - [x] U15 全天 → 时间点/时间段使用原日期；切回全天只移除钟点语义。
 - [x] U16 调整开始时间不足 30 分钟时只推后结束；调整结束时间时只提前开始。
 - [x] U17 在 00:30 和 23:29 边界调整，滚轮不被另一端错误限制且结果不跨日。
@@ -199,14 +199,14 @@
 ## 9. 同步、部分成功与失败记录
 
 - [ ] S01 空本地首次 Sync 能恢复分类、四种 timing、重复、提醒、完成态、关联和单次调整。
-- [ ] S02 confirmed 同版本返回 `CONFIRMED`，版本不同时返回 `CHANGED + resource`，缺失返回 `DELETED`。
+- [x] S02 confirmed 同版本返回 `CONFIRMED`，版本不同时返回 `CHANGED + resource`，缺失返回 `DELETED`。
 - [x] S03 远端独有数据通过 `discoveredResults` 下发并创建本地 UUID 映射。
 - [x] S04 同一请求中一项 `REJECTED`、其他项成功；客户端先应用成功项，只保留失败项 pending。
 - [x] S05 新分类失败时只拒绝引用其 localId 的 Schedule/adjustment，其他资源不受影响。
-- [ ] S06 更新一个远端已删除资源返回 `DELETED`，客户端视为删除并清除 pending。
+- [x] S06 更新一个远端已删除资源返回 `DELETED`，客户端视为删除并清除 pending。
 - [ ] S07 DELETE 目标不存在仍返回 `SUCCESS`，客户端完成清理。
-- [ ] S08 网络恢复只在本地有 pending 时自动 Sync；无 pending 不额外发请求。
-- [ ] S09 结构畸形响应、结果数量或位置不匹配时整次 fail-closed，不把结果写给错误资源。
+- [x] S08 网络恢复只在本地有 pending 时自动 Sync；无 pending 不额外发请求。
+- [x] S09 结构畸形响应、结果数量或位置不匹配时整次 fail-closed，不把结果写给错误资源。
 - [ ] S10 失败记录卡片包含操作时间、资源摘要和安全原因；点击打开对应编辑页。
 - [ ] S11 失败记录不保存或展示 token、完整 payload、数据库错误或服务端堆栈。
 - [ ] S12 同一资源连续失败更新为最新源数据和失败原因，不堆积过时副本。
@@ -220,7 +220,7 @@
 - [ ] S20 DELETE 不上传版本，重复删除按 SUCCESS 处理；删除与更新竞态按最终服务端结果收敛。
 - [ ] S21 业务拒绝 reason/info 只包含业务字段路径和安全描述，不回显实际输入、凭证、SQL 或堆栈。
 - [ ] S22 未知错误若属于纯业务可安全下发；畸形 JSON/未知字段只说明位置，不携带请求值。
-- [ ] S23 本地 pending 为零时首次进入和网络变化不产生多余 mutation；有 pending 时网络恢复触发 Sync。
+- [x] S23 本地 pending 为零时首次进入和网络变化不产生多余 mutation；有 pending 时网络恢复触发 Sync。
 - [ ] S24 响应中 canonical 资源版本连续增长；字段 modifiedAt 合并后不会倒退。
 - [ ] S25 Room destructive migration 后本地临时状态允许丢弃，首次 Sync 可从远端完整重建。
 
@@ -355,6 +355,9 @@
 - M09/M10/M13/M14/M21：`LegacyScheduleMigrationPersistenceTest` 验证确定性 UUID v5 在同批重复、重试及快照已存在时均只保留一条；默认分类按固定 identity 或去空白同名复用，缺失分类同批只创建一次；迁移置顶追加到 Settings 既有顺序且按首次出现去重。
 - M11/M22：Android 与 iOS 的 `ScheduleCalendarExportInitializer` 均只调用 commonMain `LegacyScheduleMigrationCoordinator.start`；`LegacyScheduleMigrationWindowTest` 验证 2028-09-01T00:00:00Z 起窗口关闭，旧接口请求前和等待学期锚点后均再次门禁。
 - K04/K08/K11～K13/K15：完整运行 `domain.calendar` 聚焦测试。`CalendarProviderTimingCanonicalizerTest` 固定时间点 `PT0M`、时间段分钟精度和全天整日边界；`ScheduleCalendarProjectionTest` 验证无时间及完成普通 TODO 不生成投影、重复实例完成/取消只生成对应 occurrence 的取消操作、全天始终投影为单日；`CalendarExportPlannerTest` 验证旧格式 Provider 行触发显式重建预检，避免混合增删改半执行后永久卡住。
+- S02/S06/S09：`TestScheduleSyncAlignsConfirmedDiscoveredAndMutationResults` 固定服务端 confirmed 的 `CHANGED + resource`、`DELETED` 与 discovered 分流；新增 `confirmedChangedReplacesRemoteSnapshotWithoutPending`、`alreadyDeletedResultCompletesLocalDelete` 和 `mismatchedSuccessfulUpsertIdentityFailsClosed`，验证客户端更新远端快照、删除远端已不存在资源，并在成功资源身份错位时整次拒绝应用。原有数量错位测试继续覆盖结果数组缺项。
+- S08/S23：运行 `ScheduleNetworkRecoverySyncTriggerTest` 聚焦测试通过。断言首次进入会执行一次 Sync；网络变化在没有 pending 时不触发额外请求，而本地存在 pending 时仅在网络重新可用后触发 Sync，不生成多余的日常 mutation。
+- R08/R13/R14/R19/R23/R31/U14：复跑 `ScheduleEditNoOpTest` 与 `ScheduleLocalCommandReducerTest` 聚焦测试通过。断言单次 date/time Patch 相互独立，系列字段更新不覆盖完成态或显式单次时间，`originalOccurrenceDate` 始终保持原槽；有限系列最后实例删除父资源，跨周/月/年改日期也不重置其他字段。
 
 ### 14.3 修复批次规则
 

@@ -260,6 +260,88 @@ class SchedulePlannerApplierTest {
     assertTrue(result.schedules.isEmpty())
   }
 
+  /** confirmed 的版本变化必须替换远端快照，但不能凭空产生本地 pending。 */
+  @Test
+  fun confirmedChangedReplacesRemoteSnapshotWithoutPending() = runTest {
+    val remote = testScheduleResource(version = 3, title = "远端旧值")
+    val state = testScheduleState(remote)
+    val capture = planner.capture(emptyList(), listOf(state), emptyList())
+    val changed = remote.copy(
+      version = 4,
+      title = AtomicField("远端新值", 20),
+    ).toWire { error("本用例没有分类引用") }
+    val baseResponse = response(capture)
+    val changedResponse = baseResponse.copy(
+      schedules = baseResponse.schedules.copy(
+        confirmedResults = listOf(
+          ConfirmedResult(remote.identity.id, ConfirmedResultCode.CHANGED, changed),
+        ),
+      ),
+    )
+
+    val result = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(capture, changedResponse, emptyList(), listOf(state), emptyList()),
+    ).schedules.single()
+
+    assertEquals(4, result.remoteSnapshot?.version)
+    assertEquals("远端新值", result.effectiveResource()?.title?.data)
+    assertNull(result.pending)
+  }
+
+  /** 重复删除返回 DELETED 与 SUCCESS 等价，客户端都必须完成本地物理清理。 */
+  @Test
+  fun alreadyDeletedResultCompletesLocalDelete() = runTest {
+    val remote = testScheduleResource(version = 3)
+    val state = testScheduleState(
+      remote,
+      PendingDelete(remote.identity, localModifiedAt = 100, localRevision = 6),
+    )
+    val capture = planner.capture(emptyList(), listOf(state), emptyList())
+
+    val result = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(
+        capture,
+        response(
+          capture,
+          scheduleDeletes = listOf(DeleteResult(remote.identity.id, MutationResultCode.DELETED)),
+        ),
+        emptyList(),
+        listOf(state),
+        emptyList(),
+      ),
+    )
+
+    assertTrue(result.schedules.isEmpty())
+  }
+
+  /** 成功更新若返回其他日程的资源，必须整次拒绝应用，避免按位置写错本地 identity。 */
+  @Test
+  fun mismatchedSuccessfulUpsertIdentityFailsClosed() = runTest {
+    val remote = testScheduleResource(version = 3)
+    val local = remote.copy(title = AtomicField("本地修改", 20))
+    val state = testScheduleState(remote, PendingUpsert(local, localRevision = 4))
+    val capture = planner.capture(emptyList(), listOf(state), emptyList())
+    val mismatched = capture.request.schedules.upserts.single().copy(
+      id = "019d0000-0000-7000-8000-000000000099",
+      version = 4uL,
+    )
+
+    val result = assertIs<ScheduleApplyResult.Failure>(
+      applier.apply(
+        capture,
+        response(
+          capture,
+          scheduleUpserts = listOf(UpsertResult(MutationResultCode.SUCCESS, resource = mismatched)),
+        ),
+        emptyList(),
+        listOf(state),
+        emptyList(),
+      ),
+    )
+
+    assertEquals(ScheduleApplyFailureReason.RESPONSE_CORRELATION, result.reason)
+  }
+
   /** 物理删除成功或远端已不存在都移除本地资源。 */
   @Test
   fun physicalDeleteRemovesLocalState() = runTest {
@@ -300,6 +382,7 @@ class SchedulePlannerApplierTest {
     capture: ScheduleSyncCapture,
     categoryUpserts: List<UpsertResult<CategoryInput>> = emptyList(),
     scheduleUpserts: List<UpsertResult<ScheduleInput>> = emptyList(),
+    scheduleDeletes: List<DeleteResult<String, ScheduleInput>> = emptyList(),
     adjustmentDeletes: List<DeleteResult<Long, OccurrenceAdjustmentInput>> = emptyList(),
     categoryDiscovered: List<CategoryInput> = emptyList(),
     scheduleDiscovered: List<ScheduleInput> = emptyList(),
@@ -319,7 +402,7 @@ class SchedulePlannerApplierTest {
       },
       discoveredResults = scheduleDiscovered,
       upsertResults = scheduleUpserts,
-      deleteResults = emptyList(),
+      deleteResults = scheduleDeletes,
     ),
     occurrenceAdjustments = OccurrenceAdjustmentSyncResponse(
       confirmedResults = capture.request.occurrenceAdjustments.confirmed.map {
