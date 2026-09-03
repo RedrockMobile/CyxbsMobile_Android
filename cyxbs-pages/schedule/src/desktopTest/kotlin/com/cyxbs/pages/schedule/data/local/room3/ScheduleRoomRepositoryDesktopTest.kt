@@ -22,6 +22,7 @@ import com.cyxbs.pages.schedule.data.remote.ScheduleCallResult
 import com.cyxbs.pages.schedule.data.remote.ScheduleSyncResponse
 import com.cyxbs.pages.schedule.data.remote.SyncRequest
 import com.cyxbs.pages.schedule.data.remote.SyncResponse
+import com.cyxbs.pages.schedule.data.remote.TodoState as WireTodoState
 import com.cyxbs.pages.schedule.data.remote.UpsertResult
 import com.cyxbs.pages.schedule.data.repository.TEST_OCCURRENCE_DATE
 import com.cyxbs.pages.schedule.data.repository.TEST_SCHEDULE_ID
@@ -382,6 +383,46 @@ class ScheduleRoomRepositoryDesktopTest {
           it.remoteSnapshot?.categoryId?.data == 41L && it.pendingOperation == null
         },
       )
+    }
+  }
+
+  /** 事务关联清单后必须保存完成态并发起 UPDATE，不能被旧的 Room 约束拦在网络请求之前。 */
+  @Test
+  fun linkingAffairToTodoPersistsAndUpdatesRemote() = runTest {
+    withRepository { repository, gateway, database, _ ->
+      val affair = testScheduleResource(version = 2).copy(
+        kind = SyncScheduleKind.AFFAIR,
+        timing = AtomicField(
+          TimingInput(
+            kind = TimingKind.TIMED,
+            startAt = TEST_OCCURRENCE_DATE + 10 * 60 * 60 * 1_000,
+            endAt = TEST_OCCURRENCE_DATE + 11 * 60 * 60 * 1_000,
+          ),
+          10,
+        ),
+        todoState = AtomicField(null, 11),
+        linkedToCourse = AtomicField(true, 12),
+      )
+      ScheduleRoomStateStore(database).replaceAccountState(
+        accountId = ACCOUNT_ID,
+        categories = emptyList(),
+        schedules = listOf(testScheduleState(affair).toRoomEntity(ACCOUNT_ID) { null }),
+        occurrenceAdjustments = emptyList(),
+      )
+      repository.initialize()
+
+      val linked = repository.snapshot.value.schedules.single().copy(
+        todoState = ScheduleTodoState.PENDING,
+      )
+      val result = repository.execute(ScheduleCommand.Update(linked))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      assertEquals(1, gateway.updateCalls)
+      assertEquals(WireTodoState.OPEN, gateway.lastUpdate?.schedules?.upserts?.single()?.todoState?.data)
+      assertEquals(ScheduleTodoState.PENDING, repository.snapshot.value.schedules.single().todoState)
+      val persisted = ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).schedules.single()
+      assertEquals(WireTodoState.OPEN, persisted.remoteSnapshot?.todoState?.data)
+      assertEquals(null, persisted.pendingOperation)
     }
   }
 

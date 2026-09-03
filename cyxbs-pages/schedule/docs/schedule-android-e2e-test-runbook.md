@@ -81,7 +81,7 @@
 - [x] T22 创建同标题但不同时间的两条日程，固定长度 Schedule UUID 不同且互不覆盖。
 - [x] T23 创建请求成功但响应丢失后重试同一 Schedule UUID，服务端合并到同一日程；协议不引入 requestId。
 - [x] T24 创建新分类失败时，同请求中引用其 localId 的日程被拒绝，其他独立资源仍成功。
-- [ ] T25 创建 TODO 默认有完成态；创建 AFFAIR 默认无完成态且不展示分类入口。
+- [x] T25 创建 TODO 默认有完成态；创建 AFFAIR 默认无完成态且不展示分类入口。
 - [x] T26 创建有日期但无钟点的日程只能表达为单日全天，不生成跨天全天区间。
 
 ## 5. 重复规则与单次调整
@@ -172,12 +172,12 @@
 ## 8. 课表事务与投影
 
 - [ ] A01 仅当前登录账号自己的主页课表展示日程并允许创建，其他人的课表不展示也不允许创建。
-- [ ] A02 课表空白处创建事务，保存为 `AFFAIR + TIMED + linkedToCourse=true`。
-- [ ] A03 新事务保存后创建弹窗原位切换为已保存详情。
-- [ ] A04 事务默认不显示分类、不属于清单；关联清单后出现完成按钮和默认分类。
-- [ ] A05 事务关联清单后仍保留 AFFAIR 条纹，底色使用分类配色。
-- [ ] A06 事务取消关联清单后去掉完成态与分类显示，但继续留在课表。
-- [ ] A07 TODO 完成后不再投影课表；AFFAIR 关联清单后完成仍保留课表投影。
+- [x] A02 课表空白处创建事务，保存为 `AFFAIR + TIMED + linkedToCourse=true`。
+- [x] A03 新事务保存后创建弹窗原位切换为已保存详情。
+- [x] A04 事务默认不显示分类、不属于清单；关联清单后出现完成按钮和默认分类。
+- [x] A05 事务关联清单后仍保留 AFFAIR 条纹，底色使用分类配色。
+- [x] A06 事务取消关联清单后去掉完成态与分类显示，但继续留在课表。
+- [x] A07 TODO 完成后不再投影课表；AFFAIR 关联清单后完成仍保留课表投影。
 - [ ] A08 Deadline 使用最小高度并切开重叠时间段，点击后置顶展开。
 - [ ] A09 Timed 与课程/其他事务重叠时分栏、点击切换和底部详情正确。
 - [ ] A10 AllDay 位于课程/事务底层、只铺当天列，可点击且不阻断空白长按创建。
@@ -315,6 +315,7 @@
 | SCHED-E2E-008 | C09/C19 | 已修复 | 父日程解绑分类后，仍有单次调整引用该分类，但管理页显示“0 项日程”并错误开放删除确认入口 | 管理页只统计父 Schedule 的分类字段，遗漏单次调整的分类 Patch；现在合并两种引用并按 Schedule ID 去重，与仓库删除边界一致 | 本提交 |
 | SCHED-E2E-009 | E04 | 已修复 | 分类 CREATE 遇到 SafeLine HTTP 468 时，`ScheduleNetwork` 把完整 HTML 错误页截取后写入日志 | `ClientRequestException` 为诊断 HTTP 400 读取正文后，对所有 4xx 复用了正文日志；改为只记录状态码和 Content-Type，400 正文只留在类型化失败链路中 | 本提交 |
 | SCHED-E2E-010 | T15 | 修复待部署复验 | dev/test 创建中文和换行日程均成功，标题或备注含 emoji 时却返回 HTTP 500 | 三张表的 `payload_json` 使用受数据库连接字符集约束的 JSON 文本列，四字节 Unicode 在落库阶段失败；已改为保存严格 typed JSON 的 UTF-8 BLOB | 后端 `6a2f26c` |
+| SCHED-E2E-011 | A04/A06/A07 | 已修复 | 事务在编辑弹窗内切换为“已关联清单”，保存后只有 `LOCAL before Update`，没有本地落库或 UPDATE 请求；关闭后状态还原 | Room JSON 边界遗留旧约束，错误要求 `AFFAIR.todoState == null`；事务关联清单正是通过非空 `todoState` 保存完成态，编码时因此抛错。现只保留“必须关联课表且使用时间段”的事务约束 | 本提交 |
 
 ### 14.2 真机验收证据
 
@@ -360,6 +361,7 @@
 - T19：`ScheduleRoomRepositoryDesktopTest.createTodoWithNewCategoryAndAllOptionsUsesOneRequest` 同时保存新分类、全天 TODO、每日重复、提前 10 分钟提醒和课表关联，断言一次 CREATE 同时携带两个资源，以瞬时 `categoryLocalId` 建立引用，canonical 响应回填远端分类 ID 后两条 Room pending 均清零。
 - T21/U03：`ScheduleEditNoOpTest.explicitDateSelectionTurnsUnscheduledIntoAllDay`、`unscheduledOccurrenceCanReceiveItsFirstScheduledTime` 与 `explicitTimeModeSelectionBuildsDeadlineAndTimedDomainValues` 断言旧 `UNSCHEDULED` 默认值不会伪造日期；显式选日变为全天，显式选择钟点可分别生成时间点和时间段，并通过 occurrence 编辑链路保存。
 - T23：`ScheduleRoomRepositoryDesktopTest.responseLossRetriesSameScheduleIdentityWithoutDuplicate` 让首次 CREATE 在响应阶段模拟传输失败，随后 Sync 断言仍上传同一 Schedule UUID；成功回包后 Room 与领域快照均只保留一条、version=1 且 pending 清零。另用 dev/test 对同一 UUID 连续发送两次 CREATE，服务端两次返回同一 ID/version，确认不需要 requestId。
+- T25/A02～A07：在 9 月 8 日课表空白处普通点击生成 08:00–09:00 临时事务并保存为 `E2E-A02-AFFAIR`，创建弹窗原位切换为详情；初始没有完成按钮和分类。修复 SCHED-E2E-011 后，关联清单会完整经过 Room、UPDATE 和 canonical 回包，关闭重开仍显示完成按钮、默认“未分组”和“已关联清单”，课表项保持 AFFAIR 条纹。取消关联后关闭重开不再显示完成态和分类但课表项仍存在；重新关联并完成后 UPDATE 成功，事务仍保留课表投影。普通 TODO 完成后隐藏课表投影已由 U08 真机链路验证。
 - R02/R21：`RecurrenceEngineTest.dailyWeeklyMonthlyYearlyAndCount` 覆盖起始日为周三、选中周三/周五的多星期规则，以及日、周、月、年四种频率的 `count>1`；`untilIsInclusiveAndNegativeMonthDayResolvesMonthEnd` 固定 until 为包含边界。其余 `count=1`、never 与无效月日边界由同文件的类型矩阵、短月和闰年测试覆盖。
 - R17：`RecurrenceEngineTest.splitTruncatesOldSeriesStartsNewSeriesAndPartitionsExceptions` 从五次日重复的第三次拆分，断言旧系列仅保留边界前两次，新 UUID 系列承接边界及以后两次，边界后的 adjustment 改绑新 Schedule ID，边界前 adjustment 仍归旧系列；伪造边界和首项拆分均拒绝。
 - C09/C19（部分）：普通日程解绑 ID=7 后，父 Schedule 已变为未分组，9 月 3 日单次调整仍单独引用该分类。修复前管理页即时错误降为“0 项日程”；覆盖安装修复包后恢复为“1 项日程”，点击删除只执行 UI 拦截，没有弹删除确认，也没有产生本地或网络删除命令。服务端 `CATEGORY_IN_USE` 直连兜底及解绑/删除日程后的完整数量变化仍待后续验证。

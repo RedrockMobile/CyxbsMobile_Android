@@ -101,7 +101,8 @@ private fun ScheduleInput.validateForRoom() {
     }
 
     ScheduleKind.AFFAIR -> {
-      require(todoState.data == null && linkedToCourse.data)
+      // 原生事务始终属于课表；关联清单后以 todoState 保存完成态，因此这里不能再强制为空。
+      require(linkedToCourse.data)
       require(timing.data.kind == TimingKind.TIMED)
     }
   }
