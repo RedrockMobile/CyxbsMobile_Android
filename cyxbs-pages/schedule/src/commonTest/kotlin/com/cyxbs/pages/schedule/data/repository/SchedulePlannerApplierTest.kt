@@ -477,6 +477,42 @@ class SchedulePlannerApplierTest {
     assertTrue(result.schedules.isEmpty())
   }
 
+  /** 父日程与其单次调整被远端同时删除时，父级联清理不能让后续 adjustment DELETED 失去关联。 */
+  @Test
+  fun confirmedParentAndAdjustmentDeletedInSameSyncAreAppliedTogether() = runTest {
+    val schedule = testScheduleResource(version = 3)
+    val scheduleState = testScheduleState(schedule)
+    val adjustment = testAdjustmentResource(remoteId = 71L, version = 2)
+    val adjustmentState = testAdjustmentState(adjustment)
+    val capture = planner.capture(emptyList(), listOf(scheduleState), listOf(adjustmentState))
+    val baseResponse = response(capture)
+    val deletedResponse = baseResponse.copy(
+      schedules = baseResponse.schedules.copy(
+        confirmedResults = listOf(
+          ConfirmedResult(schedule.identity.id, ConfirmedResultCode.DELETED),
+        ),
+      ),
+      occurrenceAdjustments = baseResponse.occurrenceAdjustments.copy(
+        confirmedResults = listOf(
+          ConfirmedResult(71L, ConfirmedResultCode.DELETED),
+        ),
+      ),
+    )
+
+    val result = assertIs<ScheduleApplyResult.Success>(
+      applier.apply(
+        capture,
+        deletedResponse,
+        emptyList(),
+        listOf(scheduleState),
+        listOf(adjustmentState),
+      ),
+    )
+
+    assertTrue(result.schedules.isEmpty())
+    assertTrue(result.occurrenceAdjustments.isEmpty())
+  }
+
   /** confirmed 的版本变化必须替换远端快照，但不能凭空产生本地 pending。 */
   @Test
   fun confirmedChangedReplacesRemoteSnapshotWithoutPending() = runTest {

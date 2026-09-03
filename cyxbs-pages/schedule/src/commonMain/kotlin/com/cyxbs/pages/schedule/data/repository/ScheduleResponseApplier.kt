@@ -68,9 +68,12 @@ class ScheduleResponseApplier(
   ): ScheduleApplyResult = guardedApply {
     validateSyncShape(capture, response)
     val states = LocalStates(categories, schedules, occurrenceAdjustments)
+    // 父日程的远端删除会在处理 schedule 时级联移除本地单次调整。提前保存 confirmed ID 到本地 identity
+    // 的映射，后续才能把服务端同时返回的 adjustment DELETED 识别为同一次级联删除，而非未知响应。
+    val confirmedAdjustmentIdentities = states.adjustmentIdentitiesByRemoteId()
     applyCategorySync(states, capture, response)
     applyScheduleSync(states, capture, response)
-    applyAdjustmentSync(states, capture, response)
+    applyAdjustmentSync(states, capture, response, confirmedAdjustmentIdentities)
     states.toResult()
   }
 
@@ -364,8 +367,11 @@ class ScheduleResponseApplier(
     states: LocalStates,
     capture: ScheduleSyncCapture,
     response: SyncResponse,
+    confirmedIdentities: Map<Long, OccurrenceAdjustmentIdentity>,
   ) {
-    response.occurrenceAdjustments.confirmedResults.forEach { states.applyAdjustmentConfirmed(it) }
+    response.occurrenceAdjustments.confirmedResults.forEach { result ->
+      states.applyAdjustmentConfirmed(result, confirmedIdentities[result.id])
+    }
     applyAdjustmentUpserts(
       states,
       capture.occurrenceAdjustments,
@@ -442,11 +448,21 @@ class ScheduleResponseApplier(
 
   private suspend fun LocalStates.applyAdjustmentConfirmed(
     result: ConfirmedResult<Long, OccurrenceAdjustmentInput>,
+    capturedIdentity: OccurrenceAdjustmentIdentity?,
   ) {
-    val identity = adjustmentIdentityForRemoteId(result.id)
+    val currentIdentity = adjustmentIdentityForRemoteId(result.id)
+    val identity = currentIdentity ?: capturedIdentity
       ?: abort(ScheduleApplyFailureReason.RESPONSE_CORRELATION, "unknown confirmed occurrence adjustment")
     when (result.result) {
-      ConfirmedResultCode.CONFIRMED -> requireNoResource(result.resource, "confirmed occurrence adjustment")
+      ConfirmedResultCode.CONFIRMED -> {
+        // 只有 DELETED 可以在父日程先被删除后缺少当前状态；CONFIRMED 仍必须能关联到现存本地资源。
+        abortUnless(
+          currentIdentity != null,
+          ScheduleApplyFailureReason.RESPONSE_CORRELATION,
+          "confirmed occurrence adjustment is missing locally",
+        )
+        requireNoResource(result.resource, "confirmed occurrence adjustment")
+      }
       ConfirmedResultCode.CHANGED -> putAdjustment(
         requireNotNull(result.resource) { "changed occurrence adjustment requires resource" },
         identity,
@@ -480,6 +496,12 @@ class ScheduleResponseApplier(
 
     fun adjustmentIdentityForRemoteId(remoteId: Long): OccurrenceAdjustmentIdentity? =
       adjustments.values.firstOrNull { it.remoteSnapshot?.resource?.remoteId == remoteId }?.identity
+
+    /** 在父日程级联删除之前冻结远端 ID 映射，供同一 Sync 的 adjustment DELETED 完成关联。 */
+    fun adjustmentIdentitiesByRemoteId(): Map<Long, OccurrenceAdjustmentIdentity> =
+      adjustments.values.mapNotNull { state ->
+        state.remoteSnapshot?.resource?.remoteId?.let { it to state.identity }
+      }.toMap()
 
     suspend fun putCategory(input: CategoryInput, preferred: CategoryIdentity?, clear: Boolean) {
       val remoteId = requireNotNull(input.id) { "remote category must carry id" }

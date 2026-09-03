@@ -438,6 +438,10 @@ internal class RoomScheduleRepository(
         before.occurrenceAdjustments
       )) {
         is ScheduleApplyResult.Failure -> {
+          log(
+            REPOSITORY_LOG_TAG,
+            "REMOTE responseApplyFailed reason=${applied.reason} detail=${applied.message}",
+          )
           val error = ScheduleRemoteError.InvalidResponse(IllegalArgumentException(applied.message))
           publishUnavailable(before, error)
           ScheduleSyncResult.Failure(error, true)
@@ -496,6 +500,10 @@ internal class RoomScheduleRepository(
         )
       ) {
         is ScheduleApplyResult.Failure -> {
+          log(
+            REPOSITORY_LOG_TAG,
+            "REMOTE responseApplyFailed reason=${applied.reason} detail=${applied.message}",
+          )
           val error = ScheduleRemoteError.InvalidResponse(IllegalArgumentException(applied.message))
           publishUnavailable(before, error)
           ScheduleSyncResult.Failure(error, true)
