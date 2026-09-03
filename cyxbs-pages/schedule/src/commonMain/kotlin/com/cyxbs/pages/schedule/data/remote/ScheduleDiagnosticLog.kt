@@ -9,13 +9,26 @@ import kotlin.time.Instant
 /**
  * Schedule 详细业务日志。
  *
- * 该日志会包含用户填写的标题，仅用于联调增删改查与服务端合并结果；不记录描述、提醒文案、token、header 或完整 JSON。
+ * 该日志会包含用户填写的分类名与日程标题，仅用于联调增删改查与服务端合并结果；不记录描述、提醒文案、
+ * token、header 或完整请求体。分类配色是受控的业务配置 JSON，可以逐字段往返核对。
  */
 internal const val SCHEDULE_DETAIL_LOG_TAG = "ScheduleDetail"
 
-/** 输出完整 Sync 中客户端已持有的 identity、待提交日程和单次调整。 */
+/** 输出完整 Sync 中客户端已持有的 identity，以及三类资源的待提交操作。 */
 internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, "REQUEST SYNC")
+  logItems(
+    label = "REQUEST SYNC category confirmed",
+    items = categories.confirmed.map { "id=${it.id}, version=${it.version}" },
+  )
+  logItems(
+    label = "REQUEST SYNC category upsert",
+    items = categories.upserts.map { it.diagnosticSummary() },
+  )
+  logItems(
+    label = "REQUEST SYNC category delete",
+    items = categories.deletes.map { "id=${it.id}" },
+  )
   logItems(
     label = "REQUEST SYNC confirmed",
     items = schedules.confirmed.map { "id=${it.id}, version=${it.version}" },
@@ -42,9 +55,17 @@ internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
   )
 }
 
-/** 输出日常请求中实际新增或修改的日程和单次调整，以及删除 identity。 */
+/** 输出日常请求中三类资源实际新增、修改及删除的内容。 */
 internal fun MutationRequest.logScheduleRequest(operation: String, timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, operation)
+  logItems(
+    label = "$operation category upsert",
+    items = categories.upserts.map { it.diagnosticSummary() },
+  )
+  logItems(
+    label = "$operation category delete",
+    items = categories.deletes.map { "id=${it.id}" },
+  )
   logItems(
     label = "$operation upsert",
     items = schedules.upserts.map { it.diagnosticSummary(timeZone) },
@@ -66,6 +87,30 @@ internal fun MutationRequest.logScheduleRequest(operation: String, timeZone: Tim
 /** 输出完整 Sync 返回的 inventory 核对、发现资源和 mutation 结果。 */
 internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, "RESPONSE SYNC")
+  logItems(
+    label = "RESPONSE SYNC category confirmedResult",
+    items = categories.confirmedResults.map {
+      "id=${it.id}, result=${it.result}, resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
+  logItems(
+    label = "RESPONSE SYNC category discoveredResult",
+    items = categories.discoveredResults.map { it.diagnosticSummary() },
+  )
+  logItems(
+    label = "RESPONSE SYNC category upsertResult",
+    items = categories.upsertResults.map {
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
+  logItems(
+    label = "RESPONSE SYNC category deleteResult",
+    items = categories.deleteResults.map {
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
   logItems(
     label = "RESPONSE SYNC confirmedResult",
     items = schedules.confirmedResults.map {
@@ -121,6 +166,20 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
 internal fun MutationResponse.logScheduleResponse(timeZone: TimeZone) {
   log(SCHEDULE_DETAIL_LOG_TAG, "RESPONSE MUTATION")
   logItems(
+    label = "RESPONSE MUTATION category upsertResult",
+    items = categories.upsertResults.map {
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
+  logItems(
+    label = "RESPONSE MUTATION category deleteResult",
+    items = categories.deleteResults.map {
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
+        "resource=${it.resource?.diagnosticSummary()}"
+    },
+  )
+  logItems(
     label = "RESPONSE MUTATION upsertResult",
     items = schedules.upsertResults.map {
       "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
@@ -149,6 +208,11 @@ internal fun MutationResponse.logScheduleResponse(timeZone: TimeZone) {
     },
   )
 }
+
+/** 将分类压缩为 identity、名称、排序与受控配色，便于核对本地到远端的完整往返。 */
+private fun CategoryInput.diagnosticSummary(): String =
+  "localId=$localId, id=$id, version=$version, name=${name.data.singleLine()}, " +
+    "sortOrder=${sortOrder.data}, color=${color.data?.singleLine()}"
 
 /** 将 wire 日程压缩为标题、日期时间与周期，不包含描述等额外用户内容。 */
 internal fun ScheduleInput.diagnosticSummary(timeZone: TimeZone): String =

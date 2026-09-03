@@ -40,7 +40,7 @@
 - [x] C03 新建同名分类时客户端阻止；绕过客户端提交时服务端合并到已有分类并返回 canonical ID。
 - [x] C04 分类改名后，已有 Schedule 和单次调整仍引用同一远端分类。
 - [x] C05 分类更新为同名时服务端返回 `REJECTED / DUPLICATE_CATEGORY_NAME`，其他资源仍可成功。
-- [ ] C06 修改配色 JSON 后，清单时间轴和课表投影使用新背景色/文字色。
+- [x] C06 修改配色 JSON 后，清单时间轴和课表投影使用新背景色/文字色。
 - [x] C07 拖动分类顺序，重启和 Sync 后顺序保持。
 - [x] C08 删除未引用分类，本地和服务端均物理删除。
 - [x] C09 删除仍被日程或单次调整引用的分类时客户端拦截；直连接口返回 `CATEGORY_IN_USE`。
@@ -345,6 +345,7 @@
 - T16/T22/T26：连续创建两条同名 `E2E-SCHEDULE-0903-DUPLICATE`，第一条为单日 `ALL_DAY 2026-09-03`，第二条为 `DEADLINE 2026-09-03T16:41`；服务端分别接受两个不同的规范 UUID v7，回包版本均为 1，Room 同时保留两条且 pending=0。全天项的 wire 只有单个日期，没有跨天结束日期字段。
 - T17：新建 `E2E-SCHEDULE-0903-DOUBLE-SAVE` 时对保存区域连续发送两次点击，日志只出现一次本地 `Create`、一次 CREATE 请求和一个 UUID；成功回包后版本为 1、pending=0，没有生成重复日程。
 - C04：新建分类 `E2E-CATEGORY-0903-REFERENCE` 后，先让普通日程与每日重复日程 9 月 3 日的单次调整共同引用远端分类 ID=7；随后把分类改名为 `E2E-CATEGORY-0903-REF-RENAMED` 并从天蓝改为珊瑚配色，分类版本 1→2。Room 复核显示普通日程仍引用 ID=7，单次调整仍为同一远端 adjustment ID=4/version=3 且其分类 Patch 仍指向 ID=7，三类记录均无 pending。
+- C06：把分类 ID=8 改为青色配色 `background=#FF86DBE9`、`content=#FF005262`、`darkBackground=#BF16505A`，Room 中分类版本为 2，`E2E-SCHEDULE-0903-COLOR` 继续引用该分类。清单时间轴与课表投影均使用新背景色和文字色；点击课表中该日程的可见区间后打开同一日程详情，并显示完整的 9 月 9 日 18:41–19:41 时间段。覆盖安装后的冷启动 Sync 还验证分类 confirmed 请求和响应能够按 ID、版本逐项对应。
 - C09/C19（部分）：普通日程解绑 ID=7 后，父 Schedule 已变为未分组，9 月 3 日单次调整仍单独引用该分类。修复前管理页即时错误降为“0 项日程”；覆盖安装修复包后恢复为“1 项日程”，点击删除只执行 UI 拦截，没有弹删除确认，也没有产生本地或网络删除命令。服务端 `CATEGORY_IN_USE` 直连兜底及解绑/删除日程后的完整数量变化仍待后续验证。
 - R03/R04/R05/R20：运行 `RecurrenceEngineTest`、`RecurrenceEditModelTest` 与 `ScheduleEditNoOpTest` 聚焦测试通过。断言覆盖月重复 31 日在二月/四月等无效日期跳过、2 月 29 日只在闰年生成、全天/时间点/时间段周重复均保留 timing 类型并生成互异的稳定 occurrence identity，以及周选择集合从周一/周三/周五替换为周二/周四后只生成新集合、无旧实例残留。
 - C02/T24/S04/S05/S16：客户端 `SchedulePlannerApplierTest`、`ScheduleDailyMutationBridgeTest` 与后端 `TestScheduleMutationResolvesNewCategoryLocalID`、`TestScheduleMutationRejectsOnlyDependentResource` 聚焦测试通过。同请求先用瞬时 `categoryLocalId` 解析服务端分类 ID，临时 ID 不进入存储；分类失败仅拒绝依赖日程，其他日程继续成功；客户端逐位置应用结果并只保留拒绝项 pending。
