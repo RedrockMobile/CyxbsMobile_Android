@@ -31,6 +31,7 @@ import com.cyxbs.pages.schedule.data.repository.testScheduleResource
 import com.cyxbs.pages.schedule.data.repository.testScheduleState
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.Schedule
+import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
@@ -42,8 +43,12 @@ import com.cyxbs.pages.schedule.domain.repository.ScheduleSyncResult
 import com.cyxbs.pages.schedule.domain.sync.AtomicField
 import com.cyxbs.pages.schedule.domain.sync.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.sync.RecurrenceInput
+import com.cyxbs.pages.schedule.domain.sync.ScheduleIdentity
+import com.cyxbs.pages.schedule.domain.sync.ScheduleKind as SyncScheduleKind
 import com.cyxbs.pages.schedule.domain.sync.TimingInput
 import com.cyxbs.pages.schedule.domain.sync.TimingKind
+import com.cyxbs.pages.schedule.ui.category.ScheduleCategoryColorPresets
+import com.cyxbs.pages.schedule.ui.category.encodeScheduleCategoryColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.runTest
@@ -162,6 +167,125 @@ class ScheduleRoomRepositoryDesktopTest {
       assertEquals(3, gateway.updateCalls)
       assertEquals(1, gateway.lastUpdate?.categories?.upserts?.size)
       assertEquals(CategoryId(remote.identity.id), repository.snapshot.value.categories.single().id)
+    }
+  }
+
+  /** 18 套候选配色必须原样经过 command、wire、canonical 响应和 Room，不得丢失深色字段。 */
+  @Test
+  fun everyCategoryColorRoundTripsThroughRepositoryAndWire() = runTest {
+    withRepository { repository, gateway, database, _ ->
+      repository.initialize()
+      val wireColors = mutableListOf<String>()
+      gateway.createResult = { request ->
+        val input = request.categories.upserts.single()
+        wireColors += requireNotNull(input.color.data)
+        val response = successResponse(request)
+        completed(
+          response.copy(
+            categories = response.categories.copy(
+              upsertResults = listOf(
+                UpsertResult(
+                  MutationResultCode.SUCCESS,
+                  resource = input.copy(
+                    localId = null,
+                    id = 100L + gateway.createCalls,
+                    version = 1uL,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
+      }
+
+      ScheduleCategoryColorPresets.forEachIndexed { index, preset ->
+        val result = repository.execute(
+          ScheduleCommand.CreateCategory(
+            ScheduleCategory(
+              id = CategoryId("01a06730-0000-7000-8000-${index.toString().padStart(12, '0')}"),
+              revision = 0,
+              name = "配色-$index",
+              color = preset.value.encodeScheduleCategoryColor(),
+              sortOrder = index,
+            ),
+          ),
+        )
+        assertIs<ScheduleSyncResult.Success>(result)
+      }
+
+      val expected = ScheduleCategoryColorPresets.map { it.value.encodeScheduleCategoryColor() }
+      assertEquals(expected, wireColors)
+      val persisted = ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID).categories
+        .sortedBy { it.remoteSnapshot?.sortOrder?.data }
+      assertEquals(expected, persisted.map { it.remoteSnapshot?.color?.data })
+      assertTrue(persisted.all { it.pendingOperation == null })
+      assertEquals((101L..118L).toList(), persisted.map { it.remoteSnapshot?.id })
+    }
+  }
+
+  /** TODO 与 AFFAIR 共用分类时，编辑分类只能改变分类本身，全部日程引用必须保持同一 identity。 */
+  @Test
+  fun categoryEditKeepsTodoAndAffairReferencesStable() = runTest {
+    withRepository { repository, gateway, database, _ ->
+      val category = testCategoryResource(remoteId = 41L, version = 2, name = "共同分类")
+      val todo = testScheduleResource(
+        version = 1,
+        categoryLocalId = category.identity.id,
+      )
+      val affair = todo.copy(
+        identity = ScheduleIdentity("019d0000-0000-7000-8000-000000000002"),
+        kind = SyncScheduleKind.AFFAIR,
+        timing = AtomicField(
+          TimingInput(
+            kind = TimingKind.TIMED,
+            startAt = TEST_OCCURRENCE_DATE + 10 * 60 * 60 * 1_000,
+            endAt = TEST_OCCURRENCE_DATE + 11 * 60 * 60 * 1_000,
+          ),
+          todo.timing.modifiedAt,
+        ),
+        todoState = AtomicField(null, todo.todoState.modifiedAt),
+        linkedToCourse = AtomicField(true, todo.linkedToCourse.modifiedAt),
+      )
+      ScheduleRoomStateStore(database).replaceAccountState(
+        accountId = ACCOUNT_ID,
+        categories = listOf(testCategoryState(category).toRoomEntity(ACCOUNT_ID)),
+        schedules = listOf(
+          testScheduleState(todo).toRoomEntity(ACCOUNT_ID) { localId ->
+            category.takeIf { it.identity.id == localId }
+          },
+          testScheduleState(affair).toRoomEntity(ACCOUNT_ID) { localId ->
+            category.takeIf { it.identity.id == localId }
+          },
+        ),
+        occurrenceAdjustments = emptyList(),
+      )
+      repository.initialize()
+
+      val edited = repository.snapshot.value.categories.single().copy(
+        name = "更新后的共同分类",
+        color = """{"background":"#FFFFE38A","content":"#FF5B4800","darkBackground":"#BF584C10"}""",
+        sortOrder = 9,
+      )
+      val result = repository.execute(ScheduleCommand.UpdateCategory(edited))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      assertEquals(1, gateway.updateCalls)
+      assertTrue(gateway.lastUpdate?.schedules?.upserts?.isEmpty() == true)
+      val snapshot = repository.snapshot.value
+      assertEquals(CategoryId(category.identity.id), snapshot.categories.single().id)
+      assertEquals("更新后的共同分类", snapshot.categories.single().name)
+      assertEquals(
+        setOf(ScheduleKind.TODO, ScheduleKind.AFFAIR),
+        snapshot.schedules.map { it.kind }.toSet(),
+      )
+      assertTrue(snapshot.schedules.all { it.categoryId == CategoryId(category.identity.id) })
+      val persisted = ScheduleRoomStateStore(database).readAccountState(ACCOUNT_ID)
+      assertEquals(41L, persisted.categories.single().remoteSnapshot?.id)
+      assertTrue(
+        persisted.schedules.all {
+          it.remoteSnapshot?.categoryId?.data == 41L && it.pendingOperation == null
+        },
+      )
     }
   }
 
