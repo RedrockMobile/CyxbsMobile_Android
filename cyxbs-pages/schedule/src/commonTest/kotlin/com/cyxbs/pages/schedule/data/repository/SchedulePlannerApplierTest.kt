@@ -179,6 +179,10 @@ class SchedulePlannerApplierTest {
     assertEquals(4, result.remoteSnapshot?.version)
     assertEquals(5, result.pending?.localRevision)
     assertEquals("U", result.effectiveResource()?.name?.data)
+
+    val retry = planner.capture(listOf(result), emptyList(), emptyList())
+    assertEquals(listOf("U"), retry.request.categories.upserts.map { it.name.data })
+    assertEquals(listOf(4uL), retry.request.categories.upserts.map { it.version })
   }
 
   /** 空本地状态必须按依赖顺序接收远端分类、日程和单次调整，并建立新的本地 UUID 映射。 */

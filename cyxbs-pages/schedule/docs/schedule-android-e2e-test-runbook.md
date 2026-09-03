@@ -115,7 +115,7 @@
 - [ ] R27 删除仅此次后再修改该槽提醒/标题，新的 adjustment 不复活删除前的旧 Patch。
 - [x] R28 还原单次调整只在最终确认保存后生效；确认前课表、清单和网络均不变化。
 - [x] R29 还原后再次仅此次修改，继承父系列当前字段，而不是历史单次字段。
-- [ ] R30 单次完成后再调整时间，随后还原内容 Patch 时完成态保留；取消完成后不复活旧 Patch。
+- [x] R30 单次完成后再调整时间，随后还原内容 Patch 时完成态保留；取消完成后不复活旧 Patch。
 - [x] R31 整体移动父系列日期时，`originalOccurrenceDate` identity 保持原槽；显式单次 date 仍保持不动。
 - [x] R32 父规则使原槽休眠时，该调整不出现在“可还原的单次调整”列表；规则恢复后重新生效。
 - [x] R33 关闭重复规则物理删除该系列全部 adjustment；同一日期重新开启重复不会复活旧调整。
@@ -143,7 +143,7 @@
 - [ ] U18 TODO ↔ 关联课表、AFFAIR ↔ 关联清单的切换保持来源语义与完成态规则。
 - [x] U19 删除重复系列的“仅此次”确认文案说明可在重复设置中还原；“此次及以后/全部”说明不可恢复。
 - [x] U20 删除服务端不存在但客户端确认过的资源按已删除处理，并清除本地 pending/失败记录。
-- [ ] U21 同一资源连续修改时只发送最终本地状态；旧回包不得覆盖请求期间的新 revision。
+- [x] U21 同一资源连续修改时只发送最终本地状态；旧回包不得覆盖请求期间的新 revision。
 - [x] U22 修改保存成功后编辑弹窗切回详情态而非直接关闭；创建事务成功后同窗口切为详情。
 
 ## 7. 清单列表、时间轴与 Feed
@@ -374,6 +374,8 @@
 - R15/R32：`ScheduleSnapshotProjectorTest.recurrenceMembershipControlsVisibleAdjustments` 依次投影“每周仅周五”和恢复后的每日规则。同一批单次调整中，周六原槽在前者休眠并同时从业务快照及可还原列表数据源消失，规则恢复命中后同一原槽重新出现，期间没有删除或改写 adjustment。
 - R16/R33：`ScheduleRoomRepositoryDesktopTest.disablingAndReenablingRecurrenceDoesNotRestoreDeletedAdjustments` 从已同步父系列和 adjustment 出发，关闭重复后验证服务端成功回包会把子记录从 Room 物理移除；随后给同一日程重新开启原规则，本地快照和 Room 均保持无 adjustment，不会复活旧单次状态或 Patch。
 - U20：`SchedulePlannerApplierTest.alreadyDeletedResultCompletesLocalDelete` 固定服务端已不存在时 DELETE 仍按 `SUCCESS` 收敛；`ScheduleRoomRepositoryDesktopTest.deletingConfirmedScheduleAfterRejectedUpdateClearsLocalFailureState` 再从有远端版本且更新被拒绝的状态出发，验证幂等删除成功后 Schedule、pending 与关联失败记录同时从 Room/业务快照清除。
+- U21：扩充 `SchedulePlannerApplierTest.acceptedRequestDoesNotClearNewerLocalChange`。revision=4 的旧请求返回成功时，revision=5 的本地修改仍作为 effective pending；下一轮 capture 只上传最终值 `U`，并以刚确认的远端 version=4 为基线，不重放已被后续编辑覆盖的 `R`。
+- R30：修复完成态与内容 Patch 未完全正交的问题。`ScheduleEditNoOpTest.restoreOccurrenceAdjustmentPreservesIndependentCompletionState` 验证已完成实例还原单次时间/标题等内容时只清空 Patch、继续保持 COMPLETED；随后取消完成会物理删除已无业务含义的 adjustment，因此旧 Patch 不会复活。ACTIVE 修改和 CANCELLED 删除的还原仍直接物理删除资源。
 
 ### 14.3 修复批次规则
 

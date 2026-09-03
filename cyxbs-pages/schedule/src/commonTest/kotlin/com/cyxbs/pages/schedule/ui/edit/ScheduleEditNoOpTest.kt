@@ -870,14 +870,14 @@ class ScheduleEditNoOpTest {
     assertCancelled(parentSchedule())
   }
 
-  /** 还原单次调整会删除整条调整资源，使内容、取消态和完成态都重新继承父系列。 */
+  /** 还原普通修改或删除会移除调整资源；已完成实例只清内容 Patch，必须保留完成态。 */
   @Test
-  fun restoreOccurrenceAdjustmentDeletesAdjustmentResource() = runTest {
+  fun restoreOccurrenceAdjustmentPreservesIndependentCompletionState() = runTest {
     val parent = parentSchedule()
     val id = recurrenceId()
     val patch = OccurrencePatch(title = FieldPatch.Replace("单次标题"))
 
-    OccurrenceStatus.entries.forEach { status ->
+    listOf(OccurrenceStatus.ACTIVE, OccurrenceStatus.CANCELLED).forEach { status ->
       val existing = exception(parent, id, patch).copy(status = status)
       val repository = RecordingRepository(snapshot(parent, existing))
 
@@ -888,6 +888,26 @@ class ScheduleEditNoOpTest {
         repository.commands.single(),
       )
     }
+
+    val completed = exception(parent, id, patch).copy(status = OccurrenceStatus.COMPLETED)
+    val restoreRepository = RecordingRepository(snapshot(parent, completed))
+    restoreRepository.restoreOccurrenceAdjustment(parent.id, id)
+    val restored = assertIs<ScheduleCommand.UpsertOccurrenceAdjustment>(
+      restoreRepository.commands.single(),
+    ).adjustment
+    assertEquals(OccurrenceStatus.COMPLETED, restored.status)
+    assertNull(restored.patch)
+
+    val uncompleteRepository = RecordingRepository(snapshot(parent, restored))
+    uncompleteRepository.applyScheduleCompletion(parent.id, id, completed = false, Clock.System)
+    assertEquals(
+      ScheduleCommand.DeleteOccurrenceAdjustment(parent.id, id),
+      uncompleteRepository.commands.single(),
+    )
+
+    val alreadyActiveRepository = RecordingRepository(snapshot(parent))
+    alreadyActiveRepository.applyScheduleCompletion(parent.id, id, completed = false, Clock.System)
+    assertTrue(alreadyActiveRepository.commands.isEmpty())
   }
 
   /** 没有对应资源时误调用还原必须保持 no-op。 */

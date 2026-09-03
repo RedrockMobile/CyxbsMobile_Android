@@ -243,6 +243,14 @@ suspend fun ScheduleRepository.applyScheduleCompletion(
   val existing = snapshot.value.occurrenceAdjustments.firstOrNull {
     it.scheduleId == scheduleId && it.recurrenceId == recurrenceId
   }
+  if (!completed) {
+    if (existing == null) return
+    if (existing.patch == null) {
+      // ACTIVE 且没有内容覆盖时整条 adjustment 已无业务含义，物理删除还能避免旧 Patch 将来复活。
+      execute(ScheduleCommand.DeleteOccurrenceAdjustment(scheduleId, recurrenceId))
+      return
+    }
+  }
   execute(
     ScheduleCommand.UpsertOccurrenceAdjustment(
       existing?.copy(
@@ -318,8 +326,8 @@ suspend fun ScheduleRepository.applyScheduleDelete(
 /**
  * 还原某次发生的单次调整，使其重新继承重复系列。
  *
- * 还原会物理删除该单次调整，实例随后完全继承父系列；这也会一起移除 CANCELLED/COMPLETED 等单次状态。
- * 没有对应调整时不会产生命令。
+ * 还原只清除内容 Patch。ACTIVE/CANCELLED 在还原后均回到父系列的默认 ACTIVE，因此物理删除整条资源；
+ * COMPLETED 必须继续保留完成态，只把 Patch 改为空。没有对应调整时不会产生命令。
  */
 suspend fun ScheduleRepository.restoreOccurrenceAdjustment(
   scheduleId: ScheduleId,
@@ -328,7 +336,11 @@ suspend fun ScheduleRepository.restoreOccurrenceAdjustment(
   val existing = snapshot.value.occurrenceAdjustments.firstOrNull {
     it.scheduleId == scheduleId && it.recurrenceId == recurrenceId
   } ?: return
-  execute(ScheduleCommand.DeleteOccurrenceAdjustment(existing.scheduleId, existing.recurrenceId))
+  if (existing.status == OccurrenceStatus.COMPLETED) {
+    execute(ScheduleCommand.UpsertOccurrenceAdjustment(existing.copy(patch = null)))
+  } else {
+    execute(ScheduleCommand.DeleteOccurrenceAdjustment(existing.scheduleId, existing.recurrenceId))
+  }
 }
 
 /**
