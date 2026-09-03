@@ -115,6 +115,46 @@ class ScheduleRoomRepositoryDesktopTest {
     }
   }
 
+  /** 被拒绝的新建在用户修正后再次提交成功，必须清除同一日程的旧失败记录。 */
+  @Test
+  fun successfulRetryRemovesRejectedCreateFailure() = runTest {
+    withRepository { repository, gateway, _, failures ->
+      repository.initialize()
+      gateway.createResult = { request -> rejectedResponse(request) }
+      repository.execute(ScheduleCommand.Create(schedule("待修正标题")))
+      assertEquals(1, failures.observe(ACCOUNT_ID).value.size)
+
+      gateway.createResult = { request -> completed(successResponse(request)) }
+      val edited = repository.snapshot.value.schedules.single().copy(title = "已修正标题")
+      val result = repository.execute(ScheduleCommand.Update(edited))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      assertTrue(failures.observe(ACCOUNT_ID).value.isEmpty())
+      assertEquals("已修正标题", repository.snapshot.value.schedules.single().title)
+    }
+  }
+
+  /** 被拒绝的新建在本地删除后必须清除失败记录，并用幂等 DELETE 收敛不确定的远端状态。 */
+  @Test
+  fun deletingRejectedLocalCreateRemovesFailureAndConvergesRemoteState() = runTest {
+    withRepository { repository, gateway, _, failures ->
+      repository.initialize()
+      gateway.createResult = { request -> rejectedResponse(request) }
+      repository.execute(ScheduleCommand.Create(schedule("放弃的本地日程")))
+      assertEquals(1, failures.observe(ACCOUNT_ID).value.size)
+
+      val result = repository.execute(ScheduleCommand.Delete(ScheduleId(TEST_SCHEDULE_ID)))
+
+      assertIs<ScheduleSyncResult.Success>(result)
+      assertTrue(repository.snapshot.value.schedules.isEmpty())
+      assertTrue(failures.observe(ACCOUNT_ID).value.isEmpty())
+      assertEquals(
+        listOf(TEST_SCHEDULE_ID),
+        gateway.lastDelete?.schedules?.deletes?.map { it.id },
+      )
+    }
+  }
+
   /** 删除父日程时，已同步单次调整在同一请求中物理删除。 */
   @Test
   fun deletingScheduleAlsoDeletesRemoteAdjustment() = runTest {

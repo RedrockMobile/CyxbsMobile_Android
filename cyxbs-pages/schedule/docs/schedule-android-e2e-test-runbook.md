@@ -134,7 +134,7 @@
 - [x] U09 已完成普通清单继续编辑时不意外恢复完成态。
 - [x] U10 删除日程出现二次确认；确认后本地和远端物理删除，重复删除仍视为成功。
 - [x] U11 请求期间继续修改同一资源，旧响应只清旧 revision，新修改仍为 pending。
-- [ ] U12 业务拒绝后修改成功或删除资源，关联失败记录自动清理。
+- [x] U12 业务拒绝后修改成功或删除资源，关联失败记录自动清理。
 - [x] U13 清空备注、分类和提醒分别生成明确空值语义，不误清其他 AtomicField。
 - [x] U14 修改日期跨周、跨月、跨年时标题、提醒、重复、分类和来源不被重置。
 - [x] U15 全天 → 时间点/时间段使用原日期；切回全天只移除钟点语义。
@@ -370,6 +370,7 @@
 - K05/K06/K09：在测试设备运行 `persistentAndroidDeviceTest`，15 项全部通过。真实 Provider 测试确认受管 Calendar row 名称/显示名均为“掌邮日程”，使用随机账号、LOCAL 类型、owner 与 ownership token 的严格联合身份；创建、更新、删除及重新创建均只命中该身份，owner、URI、row incarnation 漂移会安全拒绝。结合 `CalendarExportPlannerTest.newProjectionProducesCreate` 与协调器初始全量对账，Provider 中缺失的受管事件会重新计划创建，同名非受管行不会被当作当前账号资源覆盖或删除。
 - N04：`LegacyScheduleMapperTest.deterministicUuid_isStableUuidV5AndSeparatesResources`、`LegacyScheduleMigrationPersistenceTest` 的已存在/同批重复/远端失败重试用例，以及 `UuidV7GeneratorTest` 在完整桌面测试中通过。旧源 identity 始终映射相同 UUID v5 并由本地/远端快照幂等复用；普通创建使用规范 UUID v7，服务端响应不改写 Schedule identity。
 - Q03：运行 `:cyxbs-pages:course:view:desktopTest` 通过；Schedule 完整 `desktopTest` 同时覆盖课表可见性与投影服务，课表 overlap、PageDecoration 及 Schedule service 的当前聚焦回归均无失败。
+- U12：`ScheduleRoomRepositoryDesktopTest` 新增两条仓库级回归。被业务拒绝的新建在用户修正内容并重试成功后，会移除同一日程的旧失败记录且保留修正后的内容；用户删除该本地日程时，同样立即清除失败记录，并向远端发送不带版本的幂等 DELETE，以收敛“服务端可能已成功但响应丢失”的不确定状态。聚焦测试全部通过。
 
 ### 14.3 修复批次规则
 
