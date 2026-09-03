@@ -119,7 +119,7 @@
 - [x] R31 整体移动父系列日期时，`originalOccurrenceDate` identity 保持原槽；显式单次 date 仍保持不动。
 - [x] R32 父规则使原槽休眠时，该调整不出现在“可还原的单次调整”列表；规则恢复后重新生效。
 - [x] R33 关闭重复规则物理删除该系列全部 adjustment；同一日期重新开启重复不会复活旧调整。
-- [ ] R34 删除整个系列物理删除父 Schedule 与其全部 adjustment，不保留服务端墓碑。
+- [x] R34 删除整个系列物理删除父 Schedule 与其全部 adjustment，不保留服务端墓碑。
 
 ## 6. 普通修改、完成与删除
 
@@ -204,11 +204,11 @@
 - [x] S04 同一请求中一项 `REJECTED`、其他项成功；客户端先应用成功项，只保留失败项 pending。
 - [x] S05 新分类失败时只拒绝引用其 localId 的 Schedule/adjustment，其他资源不受影响。
 - [x] S06 更新一个远端已删除资源返回 `DELETED`，客户端视为删除并清除 pending。
-- [ ] S07 DELETE 目标不存在仍返回 `SUCCESS`，客户端完成清理。
+- [x] S07 DELETE 目标不存在仍返回 `SUCCESS`，客户端完成清理。
 - [x] S08 网络恢复只在本地有 pending 时自动 Sync；无 pending 不额外发请求。
 - [x] S09 结构畸形响应、结果数量或位置不匹配时整次 fail-closed，不把结果写给错误资源。
 - [ ] S10 失败记录卡片包含操作时间、资源摘要和安全原因；点击打开对应编辑页。
-- [ ] S11 失败记录不保存或展示 token、完整 payload、数据库错误或服务端堆栈。
+- [x] S11 失败记录不保存或展示 token、原始 HTTP payload、数据库错误或服务端堆栈；只保留该日程可修复的类型化业务字段。
 - [x] S12 同一资源连续失败更新为最新源数据和失败原因，不堆积过时副本。
 - [x] S13 CREATE/UPDATE/DELETE/SYNC 均返回 HTTP 200 + data/status/info；业务拒绝不使用 HTTP 400。
 - [x] S14 请求中的 confirmed/upserts/deletes 与响应 confirmedResults/upsertResults/deleteResults 按位置一一对应。
@@ -218,8 +218,8 @@
 - [x] S18 相同 Schedule/原始日期的 adjustment 创建合并后，客户端以双 ID 绑定本地 UUID 与远端 ID。
 - [x] S19 服务端物理删除后 Sync 的 confirmed 缺失返回 DELETED；客户端不会用旧 pending 复活。
 - [x] S20 DELETE 不上传版本，重复删除按 SUCCESS 处理；删除与更新竞态按最终服务端结果收敛。
-- [ ] S21 业务拒绝 reason/info 只包含业务字段路径和安全描述，不回显实际输入、凭证、SQL 或堆栈。
-- [ ] S22 未知错误若属于纯业务可安全下发；畸形 JSON/未知字段只说明位置，不携带请求值。
+- [x] S21 业务拒绝 reason/info 只包含业务字段路径和安全描述，不回显实际输入、凭证、SQL 或堆栈。
+- [x] S22 未知错误若属于纯业务可安全下发；畸形 JSON/未知字段只说明位置，不携带请求值。
 - [x] S23 本地 pending 为零时首次进入和网络变化不产生多余 mutation；有 pending 时网络恢复触发 Sync。
 - [x] S24 响应中 canonical 资源版本连续增长；字段 modifiedAt 合并后不会倒退。
 - [ ] S25 Room destructive migration 后本地临时状态允许丢弃，首次 Sync 可从远端完整重建。
@@ -251,7 +251,7 @@
 - [x] M05 旧清单日/周/月/年规则能无损时保留，不能无损时安全降级。
 - [x] M06 旧 Transaction 全学期、指定周和多个时间位置映射为独立 AFFAIR。
 - [x] M07 脏标题、周次、星期、节次只跳过对应项，不阻塞合法项。
-- [ ] M08 首次迁移后端不可用时本地保存 pending，完成标记与后续恢复一致。
+- [x] M08 首次迁移后端不可用时本地保存 pending，完成标记与后续恢复一致。
 - [x] M09 重复执行迁移时 UUID v5 保证 Schedule 不重复创建。
 - [x] M10 远端已有相同迁移 UUID 时复用现有数据。
 - [x] M11 Android 与 iOS 调用同一 commonMain 迁移逻辑，截止时间后不再请求旧接口。
@@ -263,7 +263,7 @@
 - [x] M17 旧年重复可无损表达时保留 YEARLY，无法无损表达时降为下一次单次日程。
 - [x] M18 Transaction `week=[0]` 映射整学期 WEEKLY；连续周和稀疏周生成明确实例。
 - [x] M19 一个旧事务含多个 AtWhatTime/同日节次时，每个位置生成独立稳定 Schedule UUID v5。
-- [ ] M20 旧接口任一读取失败时不写迁移完成版本；下次启动可重试并以 UUID v5 去重。
+- [x] M20 旧接口任一读取失败时不写迁移完成版本；下次启动可重试并以 UUID v5 去重。
 - [x] M21 远端已存在相同 UUID v5 时复用已有 Schedule，不创建重复数据。
 - [x] M22 迁移截止时间已过时 Android/iOS 都不再访问旧接口，也不改变迁移版本。
 
@@ -271,7 +271,7 @@
 
 - [x] N01 空 Room 首次 Sync 将远端分类、Schedule 和 adjustment 通过 discoveredResults 投影到本地。
 - [x] N02 恢复时间点、时间段、全天、无时间、重复、提醒、完成态、分类、来源、关联和字段 Patch。
-- [ ] N03 Settings 专属状态（置顶、视图模式）不进入服务端资源，也不被远端数据伪造。
+- [x] N03 Settings 专属状态（置顶、视图模式）不进入服务端资源，也不被远端数据伪造。
 - [x] N04 旧数据 UUID v5 在远端已存在时复用；普通新建 UUID v7 仍保持客户端稳定 identity。
 - [x] N05 服务端物理删除事实阻止 confirmed 旧资源和 stale pending 复活。
 - [x] N06 首次 Sync 失败不写虚假已同步状态；后续成功 Sync 可完整恢复。
@@ -379,6 +379,11 @@
 - S12：新增 `SettingsScheduleFailureRecordStoreDesktopTest.repeatedFailureReplacesPreviousRecordForSameSchedule`，使用内存 Properties 走真实 JSON 分块持久化。同一 Schedule 连续失败后只保留一条记录，失败时间、reason 和可编辑源日程均替换为最新值；重新创建 Store 后读取结果仍一致，不依赖进程内 StateFlow 缓存。
 - N06：`ScheduleRoomRepositoryDesktopTest.failedInitialSyncCanRecoverOnLaterSuccessfulSync` 让初始化阶段返回真实 transport failure，确认快照进入 `Unavailable` 而不是伪造成功；随后同一仓库显式 Sync 成功，调用次数递增且状态恢复为 `Ready`，首次失败没有阻断后续远端恢复。
 - S01/N02：新增 `SchedulePlannerApplierTest.discoveredResourcesRestoreCompleteScheduleSemantics`，从空本地接收远端 discovered 分类、四种 timing、周/月/年重复、准时与提前提醒、完成态、课表关联以及单次调整的状态和全部 FieldPatch；逐字段比对恢复后的 canonical 快照、分类本地映射和 pending 清理结果。
+- S07：dev/test 已实测对同一分类连续 DELETE，两次均返回 `SUCCESS`；客户端 `SchedulePlannerApplierTest.alreadyDeletedResultCompletesLocalDelete` 同时验证远端已不存在时仍物理移除本地状态，不保留待删除资源。
+- N03：代码链路审查确认置顶 ID 与列表/时间轴模式分别只由 `ScheduleTodoPinnedSettings`、`ScheduleTodoViewModeSettings` 读写账号级 AccountSettings；最终 Schedule wire/sync 模型没有这两个字段，远端 discovered/confirmed 响应无法覆盖或伪造端上展示偏好。
+- R34：客户端 `ScheduleRoomRepositoryDesktopTest.deletingScheduleAlsoDeletesRemoteAdjustment` 验证删除请求同时携带父 Schedule ID 和全部已确认 adjustment ID，并在本地物理清空两类行；后端 `ScheduleStore.DeleteSchedule` 在同一事务中先按 owner/schedule 删除全部 adjustment，再物理删除父日程，重复执行仍返回成功且无墓碑表写入。
+- M08/M20：`LegacyScheduleMigrationPersistenceTest.remoteFailureAfterLocalCommit_isAccepted` 验证远端失败时迁移日程仍保留在 local-first 快照等待 pending 重试。协调器仅在两个旧接口均成功、映射结果全部落入当前账号快照后写迁移版本；任一读取抛错会在写版本前退出。`existingScheduleId_isSkippedIdempotently` 与批内重复 ID 用例验证下次启动以确定性 UUID v5 去重。
+- S11/S21/S22：失败记录数据结构只保存单个日程相关的类型化 Schedule/adjustment 业务字段，不接收账号、header、token、原始 HTTP body、SQL 或堆栈；页面也只展示标题、时间摘要、操作、reason/info 与失败时间。后端 `TestPublicScheduleParamInfoDoesNotEchoArbitraryJSONContent` 覆盖未知字段、重复键、畸形 JSON、已知合同约束和空错误，测试凭证不会出现在公开 info；聚焦 Go 测试通过。
 
 ### 14.3 修复批次规则
 

@@ -347,7 +347,7 @@ private fun ScheduleFailureOperation.label(): String = when (this) {
 }
 
 /** 使用失败请求中的绝对毫秒生成简短时间摘要，不依赖当前 Room 是否仍有该资源。 */
-private fun ScheduleInput.timeSummary(timeZone: TimeZone): String = when (timing.data.kind) {
+internal fun ScheduleInput.timeSummary(timeZone: TimeZone): String = when (timing.data.kind) {
   TimingKind.TIMED -> {
     val start = timing.data.startAt?.let { formatFailureTime(it, timeZone) } ?: "?"
     val end = timing.data.endAt?.let { formatFailureTime(it, timeZone) } ?: "?"
@@ -356,8 +356,8 @@ private fun ScheduleInput.timeSummary(timeZone: TimeZone): String = when (timing
 
   TimingKind.DEADLINE -> timing.data.dueAt?.let { formatFailureTime(it, timeZone) } ?: "时间点未知"
   TimingKind.ALL_DAY -> {
-    val start = timing.data.startAt?.let { formatFailureTime(it, TimeZone.UTC) } ?: "?"
-    "$start 全天"
+    val date = timing.data.date?.let { formatFailureTime(it, TimeZone.UTC) } ?: "?"
+    "$date 全天"
   }
 
   TimingKind.UNSCHEDULED -> "未设置时间"
