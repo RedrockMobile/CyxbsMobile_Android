@@ -108,14 +108,19 @@ class AccountSwitchingScheduleRepository internal constructor(
     }
   }
 
-  /** 当前 delegate 的写入模式；未登录或账号切换空窗稳定为只读。 */
+  /**
+   * 当前精确账号 delegate 的写入模式；未登录、账号切换空窗或初始化已失败时为只读。
+   *
+   * delegate 一经绑定即可公开 local-first：真正的命令仍会在 [awaitCurrentBindingInitialization] 等待初始化完成。
+   * 不能用 `initializationCompleted` 控制该普通 getter，否则初始化成功但没有新快照时 Compose 不会重组，页面会
+   * 永久停留在首帧读取到的只读状态。
+   */
   override val mutationMode: ScheduleRepositoryMutationMode
     get() {
       val binding = currentBinding() ?: return ScheduleRepositoryMutationMode.READ_ONLY
       return synchronized(guard) {
         if (
           publication.value.binding === binding &&
-          binding.initializationCompleted &&
           binding.initializationFailure == null
         ) {
           binding.delegate.mutationMode

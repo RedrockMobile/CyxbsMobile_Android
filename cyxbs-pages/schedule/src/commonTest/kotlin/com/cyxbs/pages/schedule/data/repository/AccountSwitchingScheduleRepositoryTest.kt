@@ -121,6 +121,8 @@ class AccountSwitchingScheduleRepositoryTest {
     repository.bindAccounts(sessions)
     runCurrent()
 
+    // 精确账号 delegate 已存在时 UI 可以开放 local-first；真正写入仍必须等待下方初始化门禁。
+    assertEquals(ScheduleRepositoryMutationMode.LOCAL_FIRST, repository.mutationMode)
     val result = async { repository.execute(ScheduleCommand.RequestSync) }
     runCurrent()
 

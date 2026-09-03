@@ -27,7 +27,7 @@
 - [x] E03 记录脱敏账号、客户端 commit、后端环境和初始本地/远端数量。
 - [x] E04 检查日志不输出 token、Authorization、Cookie、完整请求体或用户敏感描述。
 - [x] E05 首次 Sync 成功，`confirmedResults/discoveredResults/upsertResults/deleteResults` 与请求位置对应。
-- [ ] E06 代码审查账号 repository、AccountSession tag、迁移设置和系统日历所有权均按账号隔离。
+- [x] E06 代码审查账号 repository、AccountSession tag、迁移设置和系统日历所有权均按账号隔离。
 - [x] E07 验证 `cyxbs://schedule`、`schedule/settings`、`schedule/category`、`schedule/failures` 冷启动和热启动路由。
 - [ ] E08 重复投递同一 Schedule deeplink 能再次定位目标，不在导航栈堆叠重复页面。
 - [x] E09 记录本轮统一测试前缀，并确认最终可按远端 ID 精确清理而不误删其他数据。
@@ -153,7 +153,7 @@
 - [ ] L03 左滑置顶、删除、恢复图标及按钮范围正常；完成移动有动画。
 - [ ] L04 批量全选已置顶项时按钮显示取消置顶，勾选样式一致。
 - [ ] L05 分类横向列表能滑到自定义分类并正确筛选。
-- [ ] L06 列表和时间轴切换状态持久化；两种视图使用同一 repository 数据。
+- [x] L06 列表和时间轴切换状态持久化；两种视图使用同一 repository 数据。
 - [ ] L07 时间轴使用分类配色；时间点、时间段、全天和提醒信息展示正确。
 - [ ] L08 空未完成、空已完成状态图及高度适配浅色/深色和系统栏。
 - [ ] L09 Feed 卡片左右滑置顶/删除，时间、提醒和课表关联图标与清单页一致。
@@ -276,7 +276,7 @@
 - [ ] N05 服务端物理删除事实阻止 confirmed 旧资源和 stale pending 复活。
 - [ ] N06 首次 Sync 失败不写虚假已同步状态；后续成功 Sync 可完整恢复。
 - [ ] N07 远端恢复后触发当前设备系统日历对账，但 repository 初始化不依赖日历权限。
-- [ ] N08 账号切换会先停止旧 session 收集并发布空快照，迟到回包无法写入新账号。
+- [x] N08 账号切换会先停止旧 session 收集并发布空快照，迟到回包无法写入新账号。
 
 ## 13. 自动化与代码链路回归
 
@@ -288,10 +288,10 @@
 - [ ] Q06 最终清理测试数据，确认 pending 和失败记录无测试残留。
 - [x] Q07 客户端本地 reducer、capture、response applier、snapshot projector 和 Room repository 全量测试通过。
 - [x] Q08 客户端 Schedule wire、领域 mapper、重复引擎、迁移、日历 projection 聚焦测试通过。
-- [ ] Q09 Android test debug 覆盖安装成功，正式清单入口与课表入口均可运行。
+- [x] Q09 Android test debug 覆盖安装成功，正式清单入口与课表入口均可运行。
 - [x] Q10 后端 decode、领域合并、DAO、handler、mutation/sync、部分成功和安全错误测试通过。
 - [x] Q11 客户端/后端源码中业务命名不再含 V2；允许历史测试变量或第三方资源中的非业务文本。
-- [ ] Q12 检查账号隔离、服务端 owner 校验、adjustment.ownerId 和跨账号资源拒绝链路。
+- [x] Q12 检查账号隔离、服务端 owner 校验、adjustment.ownerId 和跨账号资源拒绝链路。
 
 ## 14. 问题记录与修复批次
 
@@ -310,6 +310,7 @@
 | SCHED-E2E-003 | T02/T03 | 已修复 | 无日期草稿进入时间设置后默认高亮“时间段”，再次点击却仍无法保存 | UI 预选了时间段模式，但领域状态仍为 `UNSCHEDULED`；同模式点击被直接忽略，没有把默认时分写入草稿 | `42db235f6` |
 | SCHED-E2E-004 | C16/U01/U06 | 已修复 | 日程改到已同步分类后，本地保存为 pending，构造 UPDATE 时崩溃；重启后的 Sync 才能补传 | 日常请求只把本次有 pending 的分类交给序列化器，因而无法把无 pending 分类的本地 UUID 解析为远端 ID | `42db235f6` |
 | SCHED-E2E-005 | R09/R10/R12/R24 | 已修复 | 单次修改、删除及还原请求实际成功，但原诊断日志把 adjustment 请求和响应都显示为 `EMPTY` | 日志只覆盖 Schedule 列表，遗漏 occurrence adjustment 四组列表；已补只含 identity、版本、状态和 Patch 模式的脱敏摘要 | 本提交 |
+| SCHED-E2E-006 | E06/L06/N08/Q09 | 已修复 | 冷启动正式清单后真实 Sync 已成功且数据可见，但页面持续显示“当前没有可编辑的登录账号”，新增和编辑入口被关闭 | façade 的普通 `mutationMode` getter 依赖 `initializationCompleted`；初始化完成只改变内部布尔值且未产生新快照，Compose 没有重组。现在精确账号 delegate 绑定后立即公开 local-first，真正命令仍在仓库边界等待初始化 | 本提交 |
 
 ### 14.2 真机验收证据
 
@@ -317,6 +318,8 @@
 - T05：从课表投影打开同一日程，把整个系列改为提前 10 分钟；UPDATE 返回 `SUCCESS/version=2`，列表与详情均显示“提前10分钟（提醒）”，系统日历同一 Event ID 的 Reminder 更新为 `minutes=10`。
 - R09/R10/R28：9 月 7 日“仅删除此次”后，服务端 adjustment 变为 `CANCELLED/version=3`，所有内容 Patch 均为 `INHERIT`，本周课表仅剩 9 月 8～13 日六项；重复设置展示“9月7日 13:49 → 已删除”。点击还原但未保存时无网络请求且课表不变，最终确认后发送 adjustment DELETE，服务端返回 `SUCCESS`，本周七项恢复。
 - R12/R22/R24/R29：9 月 7 日首次仅改标题时请求携带本地 UUID、服务端返回自增 ID=2/version=1，其他 Patch 均为 `INHERIT`；再次修改沿用 ID=2 并递增到 version=2。还原后重新修改生成新的本地 UUID 和远端 ID，内容从父系列重新继承，未复活旧标题 Patch。
+- E06/N08/Q12：`AccountSwitchingScheduleRepositoryTest` 覆盖登录、切号、登出、初始化失败和迟到快照/日历事件隔离；Room 四类状态以 `account_id` 为联合主键前缀，Android/iOS 日历设置使用账号级 Settings。后端三张表均保存 `owner_id`，DAO 所有查询、更新和删除都带 owner 条件；服务编排测试固定三类增删改和读取只转发同一个认证 owner。
+- L06/Q09：时间轴模式下覆盖安装并冷启动 `cyxbs://schedule`，页面仍显示“切换到清单列表”且使用原有 Room 数据；安装脚本构建、覆盖安装和正式入口启动均成功。修复后再做一次真正冷启动，错误只读提示未出现。
 
 ### 14.3 修复批次规则
 
