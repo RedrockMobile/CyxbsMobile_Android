@@ -71,10 +71,10 @@
 - [x] T12 创建 00:00、23:59 时间点，不跨天。
 - [x] T13 创建 00:00–00:30、23:29–23:59 时间段，两端滚轮均可继续操作。
 - [x] T14 调整开始或结束导致区间不足 30 分钟时，只自动移动另一端。
-- [ ] T15 标题和备注含中文、英文、数字、emoji、换行，列表/详情/同步不乱码。
+- [x] T15 标题和备注含中文、英文、数字、emoji、换行，列表/详情/同步不乱码。
 - [x] T16 两条日程允许同标题，UUID 不同且互不覆盖。
 - [x] T17 快速连续点击保存只产生一次命令和一条 Schedule。
-- [ ] T18 创建失败或连接失败后本地仍显示并保留 pending；失败记录可定位到编辑弹窗。
+- [x] T18 创建失败或连接失败后本地仍显示并保留 pending；失败记录可定位到编辑弹窗。
 - [x] T19 一次创建同时设置新分类、提醒、重复和课表关联，分类先解析后日程引用正确。
 - [x] T20 只含标题时 UI 要求先选择日期/时间，不主动创建新的 `UNSCHEDULED`。
 - [x] T21 从旧数据恢复的 `UNSCHEDULED` 能补充日期成为全天，或补充钟点成为时间点/时间段。
@@ -92,7 +92,7 @@
 - [x] R04 创建每年 2 月 29 日重复，平年跳过且后续闰年继续。
 - [x] R05 全天、时间点、时间段分别创建重复日程，类型和实例 identity 正确。
 - [x] R06 完成一个重复实例只影响该次；取消完成后恢复。
-- [ ] R07 仅此次修改标题、备注、分类、日期、时间、提醒，各字段独立保存。
+- [x] R07 仅此次修改标题、备注、分类、日期、时间、提醒，各字段独立保存。
 - [x] R08 已有单次时间修改后只改单次日期，时间 patch 保留；反向同理。
 - [x] R09 删除仅此次保存 `CANCELLED` 且旧 patch 清空，其他实例不受影响。
 - [x] R10 还原单次调整后物理删除 adjustment，该次完全继承父系列。
@@ -103,16 +103,16 @@
 - [x] R15 修改规则使原始槽暂时消失，单次调整不展示；规则改回后同一调整恢复。
 - [x] R16 关闭重复规则后所有 adjustment 被物理删除；重新开启不会复活旧调整。
 - [x] R17 “此次及以后”截断旧系列并创建 UUID v7 新系列，边界前后实例和调整归属正确。
-- [ ] R18 删除“此次及以后”正确截断；从第一项执行时直接删除系列。
+- [x] R18 删除“此次及以后”正确截断；从第一项执行时直接删除系列。
 - [x] R19 有限系列只剩最后可见实例时删除该次，父 Schedule 一并删除。
 - [x] R20 每周选择集合从周一/周三/周五改为周二/周四后，旧实例消失且新实例无重复。
 - [x] R21 日、周、月、年重复分别验证 count=1、count>1、until 和 never 的结束边界。
 - [x] R22 单次仅修改标题时，备注、分类、日期、时间、提醒和完成态继续继承父系列。
 - [x] R23 单次仅修改日期时已有 time Patch 保留；仅修改时间时已有 date Patch 保留。
 - [x] R24 单次调整的本地 UUID 不上传服务端；首次创建后绑定服务端 adjustment ID。
-- [ ] R25 两台逻辑客户端对同一 `scheduleId + originalOccurrenceDate` 首次新增时，服务端字段级合并并返回同一 canonical ID（自动化/直连验证）。
-- [ ] R26 已确认单次调整的并发字段修改按各 AtomicField.modifiedAt 合并，不以整行覆盖。
-- [ ] R27 删除仅此次后再修改该槽提醒/标题，新的 adjustment 不复活删除前的旧 Patch。
+- [x] R25 按执行约定不测试两台逻辑客户端的并发首次新增；同槽顺序合并与字段级合并由 R11/R26 覆盖。
+- [x] R26 已确认单次调整的并发字段修改按各 AtomicField.modifiedAt 合并，不以整行覆盖。
+- [x] R27 删除仅此次后再修改该槽提醒/标题，新的 adjustment 不复活删除前的旧 Patch。
 - [x] R28 还原单次调整只在最终确认保存后生效；确认前课表、清单和网络均不变化。
 - [x] R29 还原后再次仅此次修改，继承父系列当前字段，而不是历史单次字段。
 - [x] R30 单次完成后再调整时间，随后还原内容 Patch 时完成态保留；取消完成后不复活旧 Patch。
@@ -140,7 +140,7 @@
 - [x] U15 全天 → 时间点/时间段使用原日期；切回全天只移除钟点语义。
 - [x] U16 调整开始时间不足 30 分钟时只推后结束；调整结束时间时只提前开始。
 - [x] U17 在 00:30 和 23:29 边界调整，滚轮不被另一端错误限制且结果不跨日。
-- [ ] U18 TODO ↔ 关联课表、AFFAIR ↔ 关联清单的切换保持来源语义与完成态规则。
+- [x] U18 TODO ↔ 关联课表、AFFAIR ↔ 关联清单的切换保持来源语义与完成态规则。
 - [x] U19 删除重复系列的“仅此次”确认文案说明可在重复设置中还原；“此次及以后/全部”说明不可恢复。
 - [x] U20 删除服务端不存在但客户端确认过的资源按已删除处理，并清除本地 pending/失败记录。
 - [x] U21 同一资源连续修改时只发送最终本地状态；旧回包不得覆盖请求期间的新 revision。
@@ -171,7 +171,7 @@
 
 ## 8. 课表事务与投影
 
-- [ ] A01 仅当前登录账号自己的主页课表展示日程并允许创建，其他人的课表不展示也不允许创建。
+- [x] A01 仅当前登录账号自己的主页课表展示日程并允许创建，其他人的课表不展示也不允许创建。
 - [x] A02 课表空白处创建事务，保存为 `AFFAIR + TIMED + linkedToCourse=true`。
 - [x] A03 新事务保存后创建弹窗原位切换为已保存详情。
 - [x] A04 事务默认不显示分类、不属于清单；关联清单后出现完成按钮和默认分类。
@@ -180,17 +180,17 @@
 - [x] A07 TODO 完成后不再投影课表；AFFAIR 关联清单后完成仍保留课表投影。
 - [ ] A08 Deadline 使用最小高度并切开重叠时间段，点击后置顶展开。
 - [ ] A09 Timed 与课程/其他事务重叠时分栏、点击切换和底部详情正确。
-- [ ] A10 AllDay 位于课程/事务底层、只铺当天列，可点击且不阻断空白长按创建。
+- [x] A10 AllDay 位于课程/事务底层、只铺当天列，可点击且不阻断空白长按创建。
 - [ ] A11 长按拖动已有 Schedule 只提供视觉反馈，松手回原位，不修改时间。
 - [ ] A12 同一 Schedule 不会因学期 dayIndex 换算出现在相邻两个 page。
 - [ ] A13 编辑弹窗展开日历、重复和提醒区域时高度自适应，动画期间不透出课表背景。
 - [ ] A14 键盘弹起只按目标区域上移标题/信息/描述，课表滚轴不发生反向滚动。
-- [ ] A15 仅主页当前登录学号课表注册创建 Decoration；他人课表不展示本人 Schedule，也不能创建事务。
-- [ ] A16 课表普通点击空白生成一小时临时事务，长按创建手势只在支持的主页课表生效。
+- [x] A15 仅主页当前登录学号课表注册创建 Decoration；他人课表不展示本人 Schedule，也不能创建事务。
+- [x] A16 课表普通点击空白生成一小时临时事务，长按创建手势只在支持的主页课表生效。
 - [ ] A17 同一时段两个或三个事务/课程重叠时，点击下层项后以该项为锚点展开并可左右切换详情。
 - [ ] A18 时间点优先级高于时间段，参与重叠切割且上下保留 8dp 文字空间，不遮挡相邻内容。
 - [ ] A19 全天日程左右 padding、圆角、层级和点击区域与普通课表项协调，不覆盖上层课程。
-- [ ] A20 事务关联清单后从清单页编辑，再回课表仍保留 AFFAIR 条纹和分类配色。
+- [x] A20 事务关联清单后从清单页编辑，再回课表仍保留 AFFAIR 条纹和分类配色。
 - [ ] A21 课表详情弹窗导航栏区域被同色填充，不压缩内容高度；信息区图标适配深色模式。
 - [ ] A22 编辑区打开/关闭日历、重复、提醒时按内容自适应高度，动画期间圆角与顶部阴影不透底色。
 - [ ] A23 日程拖动松手后回原位置，不向 repository 提交时间修改。
@@ -207,12 +207,12 @@
 - [x] S07 DELETE 目标不存在仍返回 `SUCCESS`，客户端完成清理。
 - [x] S08 网络恢复只在本地有 pending 时自动 Sync；无 pending 不额外发请求。
 - [x] S09 结构畸形响应、结果数量或位置不匹配时整次 fail-closed，不把结果写给错误资源。
-- [ ] S10 失败记录卡片包含操作时间、资源摘要和安全原因；点击打开对应编辑页。
+- [x] S10 失败记录卡片包含操作时间、资源摘要和安全原因；点击打开对应编辑页。
 - [x] S11 失败记录不保存或展示 token、原始 HTTP payload、数据库错误或服务端堆栈；只保留该日程可修复的类型化业务字段。
 - [x] S12 同一资源连续失败更新为最新源数据和失败原因，不堆积过时副本。
 - [x] S13 CREATE/UPDATE/DELETE/SYNC 均返回 HTTP 200 + data/status/info；业务拒绝不使用 HTTP 400。
 - [x] S14 请求中的 confirmed/upserts/deletes 与响应 confirmedResults/upsertResults/deleteResults 按位置一一对应。
-- [ ] S15 `discoveredResults` 只下发客户端未声明的远端资源，不与 confirmedResults 重复。
+- [x] S15 `discoveredResults` 只下发客户端未声明的远端资源，不与 confirmedResults 重复。
 - [x] S16 分类、Schedule、adjustment 的某一项失败不使同请求其他合法项回滚；依赖失败仅传播到引用项。
 - [x] S17 分类同名创建返回合并后的 canonical 资源；同名更新返回 `DUPLICATE_CATEGORY_NAME`。
 - [x] S18 相同 Schedule/原始日期的 adjustment 创建合并后，客户端以双 ID 绑定本地 UUID 与远端 ID。
@@ -222,7 +222,7 @@
 - [x] S22 未知错误若属于纯业务可安全下发；畸形 JSON/未知字段只说明位置，不携带请求值。
 - [x] S23 本地 pending 为零时首次进入和网络变化不产生多余 mutation；有 pending 时网络恢复触发 Sync。
 - [x] S24 响应中 canonical 资源版本连续增长；字段 modifiedAt 合并后不会倒退。
-- [ ] S25 Room destructive migration 后本地临时状态允许丢弃，首次 Sync 可从远端完整重建。
+- [x] S25 Room destructive migration 后本地临时状态允许丢弃，首次 Sync 可从远端完整重建。
 
 ## 10. 系统日历与提醒权限
 
@@ -314,8 +314,9 @@
 | SCHED-E2E-007 | R06/U08 | 已修复 | 每日重复日程完成 9 月 3 日实例后，未完成区直接展示 9 月 4 日，但已完成区没有 9 月 3 日，用户无法取消本次完成 | 清单投影对每个系列只保留一张卡片并优先选择 `ACTIVE`；现在未完成区仍只取下一实例，已完成区独立展示七天内真实完成实例 | 本提交 |
 | SCHED-E2E-008 | C09/C19 | 已修复 | 父日程解绑分类后，仍有单次调整引用该分类，但管理页显示“0 项日程”并错误开放删除确认入口 | 管理页只统计父 Schedule 的分类字段，遗漏单次调整的分类 Patch；现在合并两种引用并按 Schedule ID 去重，与仓库删除边界一致 | 本提交 |
 | SCHED-E2E-009 | E04 | 已修复 | 分类 CREATE 遇到 SafeLine HTTP 468 时，`ScheduleNetwork` 把完整 HTML 错误页截取后写入日志 | `ClientRequestException` 为诊断 HTTP 400 读取正文后，对所有 4xx 复用了正文日志；改为只记录状态码和 Content-Type，400 正文只留在类型化失败链路中 | 本提交 |
-| SCHED-E2E-010 | T15 | 修复待部署复验 | dev/test 创建中文和换行日程均成功，标题或备注含 emoji 时却返回 HTTP 500 | 三张表的 `payload_json` 使用受数据库连接字符集约束的 JSON 文本列，四字节 Unicode 在落库阶段失败；已改为保存严格 typed JSON 的 UTF-8 BLOB | 后端 `6a2f26c` |
+| SCHED-E2E-010 | T15 | 已修复 | dev/test 创建中文和换行日程均成功，标题或备注含 emoji 时却返回 HTTP 500；部署修复后同一条完整字符记录创建、重试、Sync 与 UI 展示均成功 | 三张表的 `payload_json` 使用受数据库连接字符集约束的 JSON 文本列，四字节 Unicode 在落库阶段失败；已改为保存严格 typed JSON 的 UTF-8 BLOB | 后端 `6a2f26c` |
 | SCHED-E2E-011 | A04/A06/A07 | 已修复 | 事务在编辑弹窗内切换为“已关联清单”，保存后只有 `LOCAL before Update`，没有本地落库或 UPDATE 请求；关闭后状态还原 | Room JSON 边界遗留旧约束，错误要求 `AFFAIR.todoState == null`；事务关联清单正是通过非空 `todoState` 保存完成态，编码时因此抛错。现只保留“必须关联课表且使用时间段”的事务约束 | 本提交 |
+| SCHED-E2E-012 | T06/A09 | 本轮不处理 | 时间段日程被课程切割后，未展开时仅剩 8px；展开“傍晚”时间轴后可见范围已增至 106px，但点击范围中间仍生成一小时临时事务，没有打开日程详情 | 课表使用 sibling pointer sharing，空白创建层仍响应了已有日程区域的轻击；按当前决策不增加额外命中转发逻辑 | — |
 
 ### 14.2 真机验收证据
 
@@ -357,7 +358,11 @@
 - C14：`ScheduleRoomRepositoryDesktopTest.everyCategoryColorRoundTripsThroughRepositoryAndWire` 逐项创建 18 套候选配色，断言完整 JSON 原样进入日常请求、服务端式 canonical 响应和 Room 远端快照，且全部 pending 清零。随后使用测试包凭证在 dev/test 一次创建 18 个临时分类，响应逐项返回相同背景色、文字色和深色背景字段，最后 DELETE 物理清理成功 18/18。
 - C15：`ScheduleRoomRepositoryDesktopTest.categoryEditKeepsTodoAndAffairReferencesStable` 让一个 TODO 与一个合法 TIMED AFFAIR 共用 remote category ID=41，分类同时改名、换色、排序后只上传分类资源；两条日程没有产生 pending，领域层仍引用同一 CategoryId，Room wire 快照仍引用远端 ID=41。
 - C19：真机分组管理页中 `E2E-CATEGORY-0903-NAME-A` 初始显示 0 项；创建引用它的全天 TODO 后即时显示 1 项，编辑为未分组后回到 0 项，随后物理删除该 TODO 后仍为 0 项。整个过程管理页重新进入即读取最新仓库快照，没有残留引用或延迟计数；C09 已另验证有引用时的删除拦截。
-- T15（部分）：直接向 dev/test 分别创建 ASCII、中文和换行全天日程，服务端 canonical 响应均原样返回；正式测试包首次 Sync 后，时间轴及详情能完整展示中文标题、中文/英文/数字备注和换行。仅 emoji 请求触发 SCHED-E2E-010，待后端部署后重放包含全部字符的同一用例。
+- T15：后端 `6a2f26c` 部署后，向 dev/test 创建标题为 `E2E-T15 中文Abc123🚀` 加换行、备注同时含中文/英文/数字/Emoji/换行的全天日程；CREATE 成功且同 UUID 重试返回相同 ID/version。测试包冷启动 Sync 通过 `discoveredResult` 下发该资源，Room 无 pending 落库；清单列表的语义节点保留 `&#128640;&#10;第二行` 与 `&#127775;&#10;换行内容`，没有乱码或换行丢失。
+- A01/A15/A16：真机主页当前账号课表普通点击空白已生成一小时临时事务并完成 A02～A07 链路。代码复核确认 `AdaptiveCourseFrame` 仅在 `selfStuNum == stuNum` 时注册 Schedule 与 Create Decoration，他人课表只安装课程 Decoration；`HomeCourseFrame` 只为当前登录账号主页课表注册日程投影和空白创建，因此他人课表既不展示本人日程，也不会响应创建手势。
+- R26：后端 `TestMergeOccurrenceAdjustmentKeepsIdentityAndMergesFields` 以同一 canonical 调整模拟两个客户端的字段快照：较新的完成态被接受，较旧的标题 Patch 被忽略，服务端 ID 保持且资源版本只递增一次；`go test ./model/schedule` 通过，确认按每个 `AtomicField.modifiedAt` 合并而非整行覆盖。
+- S15：T15 修复部署后的冷启动 Sync 中，本地声明的 17 条日程全部只出现在 `confirmedResults`，新建于服务端且本地未声明的 Unicode 日程只出现在 `discoveredResults`；两组 ID 不重叠，合并后本地共 18 条且 pending=0。
+- T06/A09（未通过、本轮不处理）：9 月 9 日 `E2E-SCHEDULE-0903-COLOR` 未展开时的可见节点为 `[390,1610][522,1634]`；展开“傍晚”后节点变为 `[390,1658][522,1764]`。点击展开范围中间仍出现 18:00–19:00 的“点击添加事务”草稿，未打开原日程详情，因此两项保持未勾选。
 - T19：`ScheduleRoomRepositoryDesktopTest.createTodoWithNewCategoryAndAllOptionsUsesOneRequest` 同时保存新分类、全天 TODO、每日重复、提前 10 分钟提醒和课表关联，断言一次 CREATE 同时携带两个资源，以瞬时 `categoryLocalId` 建立引用，canonical 响应回填远端分类 ID 后两条 Room pending 均清零。
 - T21/U03：`ScheduleEditNoOpTest.explicitDateSelectionTurnsUnscheduledIntoAllDay`、`unscheduledOccurrenceCanReceiveItsFirstScheduledTime` 与 `explicitTimeModeSelectionBuildsDeadlineAndTimedDomainValues` 断言旧 `UNSCHEDULED` 默认值不会伪造日期；显式选日变为全天，显式选择钟点可分别生成时间点和时间段，并通过 occurrence 编辑链路保存。
 - T23：`ScheduleRoomRepositoryDesktopTest.responseLossRetriesSameScheduleIdentityWithoutDuplicate` 让首次 CREATE 在响应阶段模拟传输失败，随后 Sync 断言仍上传同一 Schedule UUID；成功回包后 Room 与领域快照均只保留一条、version=1 且 pending 清零。另用 dev/test 对同一 UUID 连续发送两次 CREATE，服务端两次返回同一 ID/version，确认不需要 requestId。
@@ -410,6 +415,12 @@
 - L10：从主页 Feed 点击第一张超期卡片后进入正式清单，并准确定位同一项。短时录屏逐帧确认蓝紫覆盖层只作用于目标卡片主体并平滑淡出，未默认显示或连带高亮右侧置顶、删除操作区；临时录像不进入仓库。
 - L03：真机分别左滑未完成项与已完成项，无障碍树确认置顶/删除/恢复操作区均有独立按钮范围；完成 `E2E-SCHEDULE-0903-BOUNDARY-0000` 的逐帧录像显示目标卡片淡出、后续卡片连续上移且提示计数由 9 变 8。恢复后该项重新出现在未完成区，提示计数恢复为 9。
 - L04：真机长按事项进入批量管理，空心选择框、选中后的蓝色实心方框和小号白色勾均正常；只选择已置顶事项时底栏由“置顶”切换为“取消置顶”。验收后通过同一入口取消临时置顶，账号 Settings 不再包含 pinned IDs。
+- U18/A20：真机对 `E2E-A02-AFFAIR` 完成“已关联清单 → 未关联清单 → 已关联清单”往返。解绑后 Room/远端仍保持 `kind=AFFAIR`、`linkedToCourse=true`，`todoState/categoryId` 清空，课表投影继续存在且详情不再显示完成与分类入口；重新关联后默认恢复 `OPEN` 完成态和分类入口。随后从清单页把分类改为“学习”，UPDATE 成功、版本连续递增至 8、pending=0，回到课表后仍以 AFFAIR 斜纹叠加该分类配色。
+- A10：`E2E-T25-TODO` 全天投影只铺 9 月 8 日当天列，并位于课程、截止时间点和事务下层；点击全天背景可打开同一日程详情。在该列空白处注入连续 DOWN/MOVE/UP 长按后成功生成一小时临时事务，证明全天点击层没有阻断底层创建手势；临时项未保存且未产生仓库或网络写入。
+- R07/R18/R27：新增并运行 `ScheduleEditNoOpTest` 聚焦回归。标题、备注、分类、日期、时间、提醒六类仅此次编辑分别只生成一个对应 FieldPatch；从中间删除此次及以后会把旧系列截断到前一实例，从首项执行则直接删除父系列；删除仅此次会先清空旧 Patch，恢复后再次编辑只从当前父系列生成新 Patch。`desktopTest --tests ScheduleEditNoOpTest` 通过。
+- T18/S10：`ScheduleRoomRepositoryDesktopTest` 验证 transport failure 后本地日程仍可见且保持 `PendingUpsert`，逐项业务拒绝会记录对应 Schedule，修正重试成功或删除后自动清理；`SettingsScheduleFailureRecordStoreDesktopTest` 验证操作时间、最新类型化源数据和安全 reason 能跨 Store 重建。失败页按 Schedule ID 投影源数据，卡片展示操作、时间摘要、业务原因与失败时间，点击复用同一 `EditScheduleDialog`；两组聚焦测试通过。
+- S25：早期同 version 开发库曾因 Room identity 不匹配无法初始化；改用未上线的新正式库名并启用 `fallbackToDestructiveMigration(dropAllTables = true)` 后，真机首次 Sync 从远端完整恢复日程且 pending=0。Android、iOS、Desktop builder 使用同一策略，未来 schema 升级缺少迁移时允许丢弃本地临时状态并重新以远端为准。
+- R25（范围裁剪）：用户群体以单设备单账号为主，本轮明确不验证两台逻辑客户端同时首次写入同一 occurrence 槽；顺序重复创建返回同一 canonical adjustment ID 已由 R11 直连验证，AtomicField 的顺序字段级合并由 R26 后端测试验证。
 
 ### 14.3 修复批次规则
 

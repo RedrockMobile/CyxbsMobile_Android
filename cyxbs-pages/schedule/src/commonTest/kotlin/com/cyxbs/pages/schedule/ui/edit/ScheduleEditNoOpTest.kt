@@ -465,6 +465,52 @@ class ScheduleEditNoOpTest {
     )
   }
 
+  /** 仅此次编辑必须只写用户实际改变的原子字段，避免修改一项时把其他实例字段固化成覆盖值。 */
+  @Test
+  fun thisOnlyEditsKeepDateTimeAndContentFieldsIndependent() = runTest {
+    val parent = parentSchedule()
+    val id = recurrenceId()
+
+    suspend fun patchAfter(edit: EditScheduleModelState.() -> Unit): OccurrencePatch {
+      val repository = RecordingRepository(snapshot(parent))
+      val state = EditScheduleModelState(parent, occurrence(parent, id)).apply(edit)
+      repository.applyScheduleEdit(state, EditScope.THIS_ONLY, id, FakeIds, Clock.System)
+      return assertIs<ScheduleCommand.UpsertOccurrenceAdjustment>(repository.commands.single())
+        .adjustment.patch!!
+    }
+
+    assertEquals(
+      OccurrencePatch(title = FieldPatch.Replace("仅此次标题")),
+      patchAfter { title.setTextAndPlaceCursorAtEnd("仅此次标题") },
+    )
+    assertEquals(
+      OccurrencePatch(description = FieldPatch.Replace("仅此次备注")),
+      patchAfter { detail.setTextAndPlaceCursorAtEnd("仅此次备注") },
+    )
+    val category = CategoryId("0197f000-0000-7000-8000-000000000099")
+    assertEquals(
+      OccurrencePatch(categoryId = FieldPatch.Replace(category)),
+      patchAfter { categoryId = category },
+    )
+    assertEquals(
+      OccurrencePatch(reminder = FieldPatch.Replace(ScheduleReminder(30))),
+      patchAfter { remindMinutes = 30 },
+    )
+    assertEquals(
+      OccurrencePatch(date = FieldPatch.Replace(Date(2026, 7, 10))),
+      patchAfter { applyExplicitDateSelection(Date(2026, 7, 10)) },
+    )
+    assertEquals(
+      OccurrencePatch(
+        time = FieldPatch.Replace(OccurrenceTime.TimeRange(11 * 60, 60, "Asia/Shanghai")),
+      ),
+      patchAfter {
+        startTime = "2026年7月8日 11:00"
+        endTime = "2026年7月8日 12:00"
+      },
+    )
+  }
+
   @Test
   fun movedOccurrenceUsesParentAnchorAndKeepsWeeklyUntilWhenOnlyTitleChanges() = runTest {
     val until = Date(2026, 7, 15)
@@ -819,10 +865,57 @@ class ScheduleEditNoOpTest {
     assertEquals(id, following.recurrenceId)
     assertEquals(RecurrenceEnd.Until(Date(2026, 7, 1)), following.previousSchedule.recurrence?.end)
 
+    val first = RecurrenceId(MinuteTimeDate(2026, 7, 1, 9, 0), "Asia/Shanghai", false)
+    val firstRepository = RecordingRepository(snapshot(parent))
+    firstRepository.applyScheduleDelete(
+      parent.id,
+      EditScope.THIS_AND_FOLLOWING,
+      first,
+      Clock.System,
+    )
+    assertEquals(ScheduleCommand.Delete(parent.id), firstRepository.commands.single())
+
     val completed = parent.copy(recurrence = null, todoState = ScheduleTodoState.COMPLETED)
     val allRepository = RecordingRepository(snapshot(completed))
     allRepository.applyScheduleDelete(completed.id, EditScope.ALL, null, Clock.System)
     assertEquals(ScheduleCommand.Delete(completed.id), allRepository.commands.single())
+  }
+
+  /** 删除单次会先清空旧 Patch；该槽恢复后再次编辑只能从系列值生成新 Patch，不能复活删除前内容。 */
+  @Test
+  fun editingRestoredCancelledOccurrenceDoesNotReviveDeletedPatch() = runTest {
+    val parent = parentSchedule()
+    val id = recurrenceId()
+    val deletedPatch = OccurrencePatch(
+      title = FieldPatch.Replace("删除前标题"),
+      description = FieldPatch.Replace("删除前备注"),
+      reminder = FieldPatch.Replace(ScheduleReminder(45)),
+    )
+    val deleteRepository = RecordingRepository(snapshot(parent, exception(parent, id, deletedPatch)))
+
+    deleteRepository.applyScheduleDelete(parent.id, EditScope.THIS_ONLY, id, Clock.System)
+
+    val cancelled = assertIs<ScheduleCommand.UpsertOccurrenceAdjustment>(
+      deleteRepository.commands.single(),
+    ).adjustment
+    assertEquals(OccurrenceStatus.CANCELLED, cancelled.status)
+    assertNull(cancelled.patch)
+
+    // 用户从调整列表还原后，远端会物理删除 CANCELLED adjustment；再次编辑按“无旧 adjustment”处理。
+    val editRepository = RecordingRepository(snapshot(parent))
+    val state = EditScheduleModelState(parent, occurrence(parent, id)).apply {
+      title.setTextAndPlaceCursorAtEnd("恢复后标题")
+    }
+    editRepository.applyScheduleEdit(state, EditScope.THIS_ONLY, id, FakeIds, Clock.System)
+
+    val recreated = assertIs<ScheduleCommand.UpsertOccurrenceAdjustment>(
+      editRepository.commands.single(),
+    ).adjustment
+    assertEquals(OccurrenceStatus.ACTIVE, recreated.status)
+    assertEquals(
+      OccurrencePatch(title = FieldPatch.Replace("恢复后标题")),
+      recreated.patch,
+    )
   }
 
   /** 有限系列逐次删除到只剩最后一次时，最后一次直接删除父系列，不再写一条多余的取消例外。 */
