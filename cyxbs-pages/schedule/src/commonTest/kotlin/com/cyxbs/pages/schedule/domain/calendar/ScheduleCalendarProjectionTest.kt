@@ -1,6 +1,7 @@
 package com.cyxbs.pages.schedule.domain.calendar
 
 import com.cyxbs.pages.schedule.domain.model.FieldPatch
+import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
 import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
 import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
@@ -10,6 +11,7 @@ import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 import com.cyxbs.pages.schedule.domain.model.Schedule
+import com.cyxbs.pages.schedule.domain.model.ScheduleKind
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
@@ -258,9 +260,9 @@ class ScheduleCalendarProjectionTest {
     assertTrue(plan.actions.none { it is CalendarExportAction.Update || it is CalendarExportAction.Delete })
   }
 
-  /** Deadline 仍使用 kind=deadline 顶层身份；在 master identity 统一前，即使显式 capability 也必须 Unsupported。 */
+  /** 重复 Deadline 与其他重复时间形态一样使用 series master，从而允许 Provider 绑定单次例外。 */
   @Test
-  fun recurringDeadlineOccurrenceExceptionRemainsExplicitlyUnsupported() {
+  fun recurringDeadlineOccurrenceExceptionUsesSeriesMaster() {
     val deadline = schedule(
       timing = ScheduleTiming.Deadline(
         MinuteTimeDate(2026, 7, 12, 23, 0),
@@ -280,14 +282,60 @@ class ScheduleCalendarProjectionTest {
       setOf(ScheduleCalendarProjectionCapability.NATIVE_OCCURRENCE_EXCEPTIONS),
     )
 
-    assertTrue(result.events.isEmpty())
-    assertEquals(
-      listOf(UnsupportedCalendarProjection(
-        scheduleId,
-        UnsupportedCalendarProjectionReason.OCCURRENCE_EXCEPTIONS_NOT_SUPPORTED,
-      )),
-      result.unsupported,
+    assertTrue(result.unsupported.isEmpty())
+    val master = result.events.single()
+    assertEquals(CalendarProjectionKind.SERIES_MASTER, master.id.kind)
+    assertTrue(master.timing is CalendarTiming.Deadline)
+    assertEquals(CalendarOccurrenceExceptionOperation.CANCEL, master.nativeOccurrenceExceptions.single().operation)
+  }
+
+  /** 分类只影响应用内列表，不应让系统日历把整个重复系列判为不支持。 */
+  @Test
+  fun categoryOnlyAdjustmentDoesNotCreateNativeException() {
+    val recurring = schedule(recurrence = RecurrenceRule(RecurrenceFrequency.DAILY))
+    val categoryOnly = occurrenceException(
+      recurring,
+      RecurrenceId(MinuteTimeDate(2026, 7, 13, 9, 0), "Asia/Shanghai", false),
+      OccurrenceStatus.ACTIVE,
+      OccurrencePatch(categoryId = FieldPatch.Replace(CategoryId("018f0f7c-6000-7000-8000-000000000003"))),
     )
+
+    val result = ScheduleCalendarProjectionFactory.project(
+      ScheduleCalendarSource(listOf(recurring), listOf(categoryOnly)),
+      scope,
+    )
+
+    assertTrue(result.unsupported.isEmpty())
+    assertTrue(result.events.single().nativeOccurrenceExceptions.isEmpty())
+  }
+
+  /** 事务关联清单后的完成态不应从系统日历消失；若同时改了标题，只写标题例外。 */
+  @Test
+  fun completedAffairOccurrenceKeepsCalendarProjection() {
+    val affair = schedule(
+      recurrence = RecurrenceRule(RecurrenceFrequency.DAILY),
+      kind = ScheduleKind.AFFAIR,
+    )
+    val recurrenceId = RecurrenceId(MinuteTimeDate(2026, 7, 13, 9, 0), "Asia/Shanghai", false)
+    val completionOnly = occurrenceException(affair, recurrenceId, OccurrenceStatus.COMPLETED)
+
+    val unchanged = ScheduleCalendarProjectionFactory.project(
+      ScheduleCalendarSource(listOf(affair), listOf(completionOnly)),
+      scope,
+    )
+    assertTrue(unchanged.unsupported.isEmpty())
+    assertTrue(unchanged.events.single().nativeOccurrenceExceptions.isEmpty())
+
+    val changed = ScheduleCalendarProjectionFactory.project(
+      ScheduleCalendarSource(
+        listOf(affair),
+        listOf(completionOnly.copy(patch = OccurrencePatch(title = FieldPatch.Replace("已完成但仍展示")))),
+      ),
+      scope,
+      setOf(ScheduleCalendarProjectionCapability.NATIVE_OCCURRENCE_EXCEPTIONS),
+    ).events.single().nativeOccurrenceExceptions.single()
+    assertEquals(CalendarOccurrenceExceptionOperation.UPSERT, changed.operation)
+    assertEquals("已完成但仍展示", changed.title)
   }
 
   @Test
@@ -357,7 +405,7 @@ class ScheduleCalendarProjectionTest {
   }
 
   @Test
-  fun ambiguousActiveOrUngeneratedExceptionRemainsUnsupported() {
+  fun activeAdjustmentWithoutCalendarChangeIsIgnored() {
     val recurring = schedule(recurrence = RecurrenceRule(RecurrenceFrequency.WEEKLY))
     val noPatch = occurrenceException(
       recurring,
@@ -369,8 +417,8 @@ class ScheduleCalendarProjectionTest {
       scope,
       setOf(ScheduleCalendarProjectionCapability.NATIVE_OCCURRENCE_EXCEPTIONS),
     )
-    assertTrue(result.events.isEmpty())
-    assertEquals(1, result.unsupported.size)
+    assertTrue(result.unsupported.isEmpty())
+    assertTrue(result.events.single().nativeOccurrenceExceptions.isEmpty())
   }
 
   @Test
@@ -452,7 +500,8 @@ class ScheduleCalendarProjectionTest {
     ),
     recurrence: RecurrenceRule? = null,
     reminder: ScheduleReminder? = null,
-    todoState: ScheduleTodoState = ScheduleTodoState.PENDING,
+    todoState: ScheduleTodoState? = ScheduleTodoState.PENDING,
+    kind: ScheduleKind = ScheduleKind.TODO,
   ) = Schedule(
     id = id,
     revision = 0,
@@ -463,6 +512,8 @@ class ScheduleCalendarProjectionTest {
     recurrence = recurrence,
     reminder = reminder,
     todoState = todoState,
+    kind = kind,
+    linkedToCourse = kind == ScheduleKind.AFFAIR,
     createdAt = now,
     updatedAt = now,
   )

@@ -75,9 +75,9 @@ class AndroidScheduleCalendarOccurrenceExceptionGatewayTest {
     assertEquals(listOf(null, null), prepared.map { it.rDate })
   }
 
-  /** production create append 直接消费该计划；锁定 master-first、ORIGINAL_ID 与 exception reminder back-reference。 */
+  /** production 写入直接消费该计划；锁定原始槽位、原全天标志与 exception 自身提醒。 */
   @Test
-  fun productionProviderInsertPlanKeepsMasterFirstIdentityAndUnsetRecurrenceFields() {
+  fun productionProviderWritePlanKeepsOriginalIdentityAndUnsetRecurrenceFields() {
     val recurrenceId = RecurrenceId(
       MinuteTimeDate(2026, 7, 13, 9, 0), "Asia/Shanghai", false,
     )
@@ -89,27 +89,19 @@ class AndroidScheduleCalendarOccurrenceExceptionGatewayTest {
     )
     val prepared = AndroidOccurrenceExceptionWritePlanner.prepare(master(listOf(exception))).single()
 
-    val insert = AndroidOccurrenceExceptionWritePlanner.prepareCreateProviderInserts(
-      preparedExceptions = listOf(prepared),
-      firstOperationIndex = 1,
-      masterInsertBackReference = 0,
-    ).single()
-
-    assertEquals(1, insert.eventOperationIndex)
-    assertEquals(0, insert.masterOriginalIdBackReference)
-    assertEquals(listOf(1, 1), insert.reminderEventBackReferences)
     assertEquals(
       AndroidOccurrenceExceptionWritePlanner.originalInstanceTimeMillis(recurrenceId),
-      insert.prepared.originalInstanceTimeMillis,
+      prepared.originalInstanceTimeMillis,
     )
-    assertEquals(0, insert.prepared.originalAllDay)
-    assertNull(insert.prepared.recurrenceRule)
-    assertNull(insert.prepared.rDate)
+    assertEquals(0, prepared.originalAllDay)
+    assertEquals(listOf(5, 10), prepared.projection.deviceReminderMinutes)
+    assertNull(prepared.recurrenceRule)
+    assertNull(prepared.rDate)
   }
 
-  /** Deadline master 的稳定身份仍是 kind=deadline；原生例外链在 identity 统一前必须于依赖访问前拒绝。 */
+  /** 重复 Deadline 使用 series master，零时长例外可沿用与 Timed 相同的原生关系。 */
   @Test
-  fun recurringDeadlineExceptionPreflightIsExplicitlyUnsupportedAndWritesNothing() {
+  fun recurringDeadlineExceptionPreflightProducesNativeWrite() {
     val recurrenceId = RecurrenceId(
       MinuteTimeDate(2026, 7, 13, 23, 0), "Asia/Shanghai", false,
     )
@@ -121,18 +113,42 @@ class AndroidScheduleCalendarOccurrenceExceptionGatewayTest {
     val deadlineMaster = master(
       exceptions = listOf(deadlineException),
       timing = CalendarTiming.Deadline(MinuteTimeDate(2026, 7, 12, 23, 0), "Asia/Shanghai"),
-      kind = CalendarProjectionKind.DEADLINE,
+      kind = CalendarProjectionKind.SERIES_MASTER,
     )
     val fake = CountingWriteDependencies()
 
-    assertFailsWith<IllegalArgumentException> {
-      AndroidOccurrenceExceptionWritePlanner.withPreparedWrite(deadlineMaster, fake::write)
-    }
+    AndroidOccurrenceExceptionWritePlanner.withPreparedWrite(deadlineMaster, fake::write)
 
-    assertEquals(0, fake.registryLookups)
-    assertEquals(0, fake.calendarWrites)
-    assertEquals(0, fake.eventWrites)
+    assertEquals(1, fake.registryLookups)
+    assertEquals(1, fake.calendarWrites)
+    assertEquals(2, fake.eventWrites)
     assertEquals(0, fake.reminderWrites)
+  }
+
+  /** 原始槽位身份与当前展示形态彼此独立，单次调整可切换时间类型和当前时区。 */
+  @Test
+  fun exceptionTimingKindAndTimezoneMayDifferFromOriginalSlot() {
+    val recurrenceId = RecurrenceId(
+      MinuteTimeDate(2026, 7, 13, 9, 0), "Asia/Shanghai", false,
+    )
+    val deadline = occurrence(
+      recurrenceId,
+      CalendarTiming.Deadline(MinuteTimeDate(2026, 7, 13, 10, 0), "UTC"),
+      CalendarOccurrenceExceptionOperation.UPSERT,
+    )
+    val allDay = occurrence(
+      recurrenceId.copy(originalDateTime = MinuteTimeDate(2026, 7, 14, 9, 0)),
+      CalendarTiming.AllDay(Date(2026, 7, 15), 1),
+      CalendarOccurrenceExceptionOperation.UPSERT,
+    )
+
+    val prepared = AndroidOccurrenceExceptionWritePlanner.prepare(
+      master(listOf(deadline, allDay).sortedBy { it.externalUri }),
+    )
+
+    assertEquals(listOf(0, 0), prepared.map { it.originalAllDay })
+    assertTrue(prepared.any { it.projection.timing is CalendarTiming.Deadline })
+    assertTrue(prepared.any { it.projection.timing is CalendarTiming.AllDay })
   }
 
   /**
@@ -159,11 +175,6 @@ class AndroidScheduleCalendarOccurrenceExceptionGatewayTest {
       CalendarTiming.Timed(MinuteTimeDate(2026, 7, 13, 10, 0), 0, "Asia/Shanghai"),
       CalendarOccurrenceExceptionOperation.UPSERT,
     )
-    val mismatchedTimeZone = occurrence(
-      recurrenceId,
-      CalendarTiming.Timed(MinuteTimeDate(2026, 7, 13, 10, 0), 60, "UTC"),
-      CalendarOccurrenceExceptionOperation.UPSERT,
-    )
     val invalidReminders = occurrence(
       recurrenceId,
       CalendarTiming.Timed(MinuteTimeDate(2026, 7, 13, 10, 0), 60, "Asia/Shanghai"),
@@ -175,7 +186,6 @@ class AndroidScheduleCalendarOccurrenceExceptionGatewayTest {
       master(listOf(malformedUri)),
       master(listOf(invalidTimeZone)),
       master(listOf(invalidDuration)),
-      master(listOf(mismatchedTimeZone)),
       master(listOf(invalidReminders)),
       canonicalMaster.copy(externalUri = canonicalMaster.externalUri + "&alias=1"),
       canonicalMaster.copy(fingerprint = canonicalMaster.fingerprint + "-stale"),

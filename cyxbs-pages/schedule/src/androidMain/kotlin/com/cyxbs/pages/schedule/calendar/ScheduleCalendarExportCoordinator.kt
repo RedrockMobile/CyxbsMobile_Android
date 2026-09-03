@@ -9,6 +9,7 @@ import com.cyxbs.pages.schedule.domain.calendar.CalendarEventProjection
 import com.cyxbs.pages.schedule.domain.calendar.ManagedCalendarEvent
 import com.cyxbs.pages.schedule.domain.calendar.PlatformCalendarEventRef
 import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarProjectionFactory
+import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarProjectionCapability
 import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarSource
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCalendarChange
@@ -157,6 +158,7 @@ internal class ScheduleCalendarExportCoordinator(
     val projection = ScheduleCalendarProjectionFactory.project(
       source = ScheduleCalendarSource(selectedSchedules, selectedAdjustments),
       scope = exportScope,
+      capabilities = setOf(ScheduleCalendarProjectionCapability.NATIVE_OCCURRENCE_EXCEPTIONS),
     )
     ensureAuthorized()
     val managedEvents = gateway.queryManagedEvents(

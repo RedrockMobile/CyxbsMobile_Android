@@ -64,11 +64,11 @@ data class CalendarEventProjection(
   val recurrenceRule: String?,
   val deviceReminderMinutes: List<Int>,
   val fingerprint: String,
-  /** 仅显式 capability 消费者可接收的 Android 原生 occurrence exception 子计划；顶层身份仍是 series master。 */
+  /** 仅显式 capability 消费者可接收的平台原生 occurrence exception 子计划；顶层身份仍是 series master。 */
   val nativeOccurrenceExceptions: List<CalendarOccurrenceExceptionProjection> = emptyList(),
 )
 
-/** Android 原生例外最终写入 Provider 的语义；完成与取消都以显式取消例外隐藏原始 occurrence。 */
+/** 原生例外最终写入平台日历的语义；TODO 完成与显式取消会隐藏原始 occurrence。 */
 enum class CalendarOccurrenceExceptionOperation {
   UPSERT,
   CANCEL,
@@ -93,7 +93,7 @@ data class CalendarOccurrenceExceptionProjection(
 
 /** 当前 common 投影明确拒绝导出的原因；调用方应展示或记录，而不能悄悄生成有限窗口事件。 */
 enum class UnsupportedCalendarProjectionReason {
-  /** 重复系列包含独立 occurrence 例外，尚未建立可靠的原生 Provider exception 映射。 */
+  /** 重复系列包含独立 occurrence 例外，但当前平台消费者尚未建立可靠的原生映射。 */
   OCCURRENCE_EXCEPTIONS_NOT_SUPPORTED,
 }
 
@@ -164,19 +164,12 @@ object ScheduleCalendarProjectionFactory {
           "Calendar source contains invalid occurrence adjustment: $adjustmentIssues"
         }
       }
-      if (adjustments.isNotEmpty() &&
+      // 分类变更，以及事务进入清单后的完成态，不改变系统日历中的内容，不能因此阻断整个重复系列导出。
+      val calendarAdjustments = adjustments.filter { it.affectsCalendarProjection(schedule) }
+      if (calendarAdjustments.isNotEmpty() &&
         ScheduleCalendarProjectionCapability.NATIVE_OCCURRENCE_EXCEPTIONS !in capabilities
       ) {
         // 默认门禁必须在生成聚合 fingerprint 前终止；旧消费者只认识 master 字段，不能安全接收 exception-only Update。
-        unsupported += UnsupportedCalendarProjection(
-          schedule.id,
-          UnsupportedCalendarProjectionReason.OCCURRENCE_EXCEPTIONS_NOT_SUPPORTED,
-        )
-        return@mapNotNull null
-      }
-      if (adjustments.isNotEmpty() && schedule.timing is ScheduleTiming.Deadline) {
-        // Deadline 的稳定顶层身份仍是 kind=deadline，而 Android 原生例外链当前只接受 kind=series 的 master。
-        // 在 identity 合同统一前必须明确 Unsupported，不能生成后续 planner/gateway 必然拒绝的半合法子计划。
         unsupported += UnsupportedCalendarProjection(
           schedule.id,
           UnsupportedCalendarProjectionReason.OCCURRENCE_EXCEPTIONS_NOT_SUPPORTED,
@@ -191,7 +184,7 @@ object ScheduleCalendarProjectionFactory {
         return@mapNotNull null
       }
       val nativeExceptions = runCatching {
-        adjustments.map { projectOccurrenceException(schedule, it, scope) }
+        calendarAdjustments.map { projectOccurrenceException(schedule, it, scope) }
           .sortedBy { it.externalUri }
       }.getOrElse {
         unsupported += UnsupportedCalendarProjection(
@@ -201,9 +194,9 @@ object ScheduleCalendarProjectionFactory {
         return@mapNotNull null
       }
       val kind = when {
+        schedule.recurrence != null -> CalendarProjectionKind.SERIES_MASTER
         schedule.timing is ScheduleTiming.Deadline -> CalendarProjectionKind.DEADLINE
-        schedule.recurrence == null -> CalendarProjectionKind.SINGLE
-        else -> CalendarProjectionKind.SERIES_MASTER
+        else -> CalendarProjectionKind.SINGLE
       }
       val id = CalendarProjectionId(scope, schedule.id, kind)
       val timing = schedule.timing.toCalendarTiming()
@@ -238,10 +231,10 @@ object ScheduleCalendarProjectionFactory {
   }
 
   /**
-   * 将一个已验证 occurrence 解析为 Android 可写的原生例外目标。
+   * 将一个已验证 occurrence 解析为支持该能力的平台可写原生例外目标。
    *
    * 这里使用精确 recurrence identity 查询证明它确实由 RRULE 生成，不借可见窗口展开有限 singleton。ACTIVE 必须
-   * 至少包含一个会影响外部日历的 patch；无 patch 或仅分类变化无法证明需要 Provider exception，继续 fail closed。
+   * 至少包含一个会影响外部日历的 patch；无 patch 或仅分类变化不需要创建平台 exception。
    */
   private fun projectOccurrenceException(
     schedule: Schedule,
@@ -269,10 +262,14 @@ object ScheduleCalendarProjectionFactory {
       recurrenceId = exception.recurrenceId,
     )
     val externalUri = CalendarProjectionUriCodec.encode(id)
-    val operation = if (exception.status == OccurrenceStatus.ACTIVE) {
-      CalendarOccurrenceExceptionOperation.UPSERT
-    } else {
-      CalendarOccurrenceExceptionOperation.CANCEL
+    val operation = when (exception.status) {
+      OccurrenceStatus.CANCELLED -> CalendarOccurrenceExceptionOperation.CANCEL
+      OccurrenceStatus.COMPLETED -> if (schedule.kind == ScheduleKind.TODO) {
+        CalendarOccurrenceExceptionOperation.CANCEL
+      } else {
+        CalendarOccurrenceExceptionOperation.UPSERT
+      }
+      OccurrenceStatus.ACTIVE -> CalendarOccurrenceExceptionOperation.UPSERT
     }
     val timing = materialized.timing.toCalendarTiming()
     val reminders = materialized.reminder.deviceReminderMinutes()
@@ -301,6 +298,18 @@ object ScheduleCalendarProjectionFactory {
     date != FieldPatch.Inherit || time != FieldPatch.Inherit ||
       title != FieldPatch.Inherit ||
         description != FieldPatch.Inherit || reminder != FieldPatch.Inherit
+
+  /**
+   * 判断单次调整是否真的改变系统日历投影。
+   *
+   * 分类仅属于应用内展示；AFFAIR 即使关联清单并完成，仍应作为事务保留在系统日历。若该次还修改了
+   * 标题、日期、时间、描述或提醒，则继续写入原生例外以保留这些可见修改。
+   */
+  private fun ScheduleOccurrenceAdjustment.affectsCalendarProjection(schedule: Schedule): Boolean = when (status) {
+    OccurrenceStatus.CANCELLED -> true
+    OccurrenceStatus.COMPLETED -> schedule.kind == ScheduleKind.TODO || patch?.hasCalendarVisibleChange() == true
+    OccurrenceStatus.ACTIVE -> patch?.hasCalendarVisibleChange() == true
+  }
 
   /** 当前唯一提醒进入系统日历；空提醒不产生 Provider reminder row。 */
   private fun ScheduleReminder?.deviceReminderMinutes(): List<Int> =

@@ -27,6 +27,9 @@ import com.cyxbs.pages.schedule.domain.time.LocalDateTimeResolution
 import com.cyxbs.pages.schedule.domain.time.ScheduleDstResolver
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 /**
  * Android 受管日历的只读快照结果。
@@ -93,19 +96,6 @@ internal data class AndroidPreparedOccurrenceExceptionWrite(
   val providerStatus: Int,
   val recurrenceRule: String? = null,
   val rDate: String? = null,
-)
-
-/**
- * create batch 中一个 occurrence event 与其 reminder 的实际 operation 索引关系。
- *
- * 该普通值计划由 production append 路径直接消费，使 host test 能证明 master-first、`ORIGINAL_ID` back-reference
- * 与 reminder event back-reference，而无需构造 Context 或访问真实 Calendar Provider。
- */
-internal data class AndroidPreparedOccurrenceExceptionProviderInsert(
-  val prepared: AndroidPreparedOccurrenceExceptionWrite,
-  val eventOperationIndex: Int,
-  val masterOriginalIdBackReference: Int,
-  val reminderEventBackReferences: List<Int>,
 )
 
 /**
@@ -181,16 +171,12 @@ internal object AndroidOccurrenceExceptionWritePlanner {
         operation = exception.operation,
       )) { "Native occurrence exception fingerprint is not canonical" }
       val recurrenceId = requireNotNull(exception.id.recurrenceId)
-      require(recurrenceId.allDay == (exception.timing is CalendarTiming.AllDay)) {
-        "Occurrence identity kind does not match projected timing"
-      }
-      require(master.timing::class == exception.timing::class) {
-        "Occurrence timing kind must match series master"
-      }
+      // recurrenceId 描述的是原始槽位，例外当前展示形态可以被用户改成时间段、时间点或全天。
+      // ORIGINAL_ALL_DAY 必须跟随原始身份，不能拿例外当前的 ALL_DAY 字段覆盖它。
       val masterTimeZoneId = master.timing.timeZoneIdOrNull()
-      require(recurrenceId.timeZoneId == masterTimeZoneId &&
-          exception.timing.timeZoneIdOrNull() == masterTimeZoneId
-      ) { "Occurrence identity and effective timing timezone must match series master" }
+      require(recurrenceId.timeZoneId == masterTimeZoneId) {
+        "Occurrence identity timezone must match series master"
+      }
       AndroidPreparedOccurrenceExceptionWrite(
         projection = exception,
         originalInstanceTimeMillis = originalInstanceTimeMillis(recurrenceId),
@@ -210,36 +196,6 @@ internal object AndroidOccurrenceExceptionWritePlanner {
     master: CalendarEventProjection,
     accessWriteDependencies: (List<AndroidPreparedOccurrenceExceptionWrite>) -> T,
   ): T = accessWriteDependencies(prepare(master))
-
-  /**
-   * 冻结 create batch 的 occurrence operation 索引与 back-reference。
-   *
-   * [firstOperationIndex] 是 master 及其 reminders 已加入后的下一个索引；[masterInsertBackReference] 必须指向更早的
-   * master insert。每个 exception event 后紧跟自己的 reminders，后者只能回指该 exception，不能误绑 master。
-   */
-  fun prepareCreateProviderInserts(
-    preparedExceptions: List<AndroidPreparedOccurrenceExceptionWrite>,
-    firstOperationIndex: Int,
-    masterInsertBackReference: Int,
-  ): List<AndroidPreparedOccurrenceExceptionProviderInsert> {
-    require(firstOperationIndex >= 0 && masterInsertBackReference in 0 until firstOperationIndex) {
-      "Occurrence Provider inserts require an earlier master operation"
-    }
-    var nextOperationIndex = firstOperationIndex
-    return preparedExceptions.map { prepared ->
-      val eventOperationIndex = nextOperationIndex++
-      AndroidPreparedOccurrenceExceptionProviderInsert(
-        prepared = prepared,
-        eventOperationIndex = eventOperationIndex,
-        masterOriginalIdBackReference = masterInsertBackReference,
-        reminderEventBackReferences = List(prepared.projection.deviceReminderMinutes.size) {
-          eventOperationIndex
-        },
-      ).also {
-        nextOperationIndex += it.reminderEventBackReferences.size
-      }
-    }
-  }
 
   /** 构造旧例外删除的完整 fresh-snapshot identity 条件，禁止只凭 eventId 与 URI 删除漂移行。 */
   fun replacementDeleteSelection(
@@ -424,7 +380,8 @@ class AndroidScheduleCalendarGateway private constructor(
   /**
    * 创建新的日历事件。
    *
-   * Provider 的等价 RRULE 重排在下一轮查询时统一规范化；本方法只负责原子写入事件与提醒。
+   * Provider 的等价 RRULE 重排在下一轮查询时统一规范化。master 与自身提醒先写入，再通过平台专用 URI 逐条
+   * 创建 occurrence exception；后一步失败时由下一轮全量对账继续修复，不伪装成单个 Provider 原子事务。
    */
   fun createEvent(
     projection: CalendarEventProjection,
@@ -448,20 +405,15 @@ class AndroidScheduleCalendarGateway private constructor(
         .withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
         .build()
     }
-    appendOccurrenceInsertOperations(
-      operations = operations,
-      preparedExceptions = preparedExceptions,
-      calendarId = calendarId,
-      masterInsertBackReference = 0,
-    )
-    // Events 与 Reminders 属于同一 authority；back-reference 让 Provider 在单个事务中创建完整投影。
     // applyBatch 一旦发出无法被 coroutine cancel 中断；本检查保证撤销后不会再发起新的事件/提醒事务。
     ensureAuthorized()
     val results = context.contentResolver.applyBatch(CalendarContract.AUTHORITY, operations)
     // batch 返回后先复核，避免调用方在撤销后的同一轮继续处理新事件引用。
     ensureAuthorized()
-    results.firstOrNull()?.uri?.let(ContentUris::parseId)?.takeIf { it > 0 }
+    val masterEventId = results.firstOrNull()?.uri?.let(ContentUris::parseId)?.takeIf { it > 0 }
       ?: throw CalendarProviderReadException("Calendar Provider did not return the inserted event ID")
+    insertOccurrenceExceptions(preparedExceptions, masterEventId, ensureAuthorized)
+    masterEventId
   }
 
   /**
@@ -507,13 +459,6 @@ class AndroidScheduleCalendarGateway private constructor(
         .withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
         .build()
     }
-    appendOccurrenceInsertOperations(
-      operations = operations,
-      preparedExceptions = preparedExceptions,
-      calendarId = calendarId,
-      masterInsertBackReference = 0,
-    )
-
     // callback 之前仍比较完整 token，避免已知失效的固定身份被误记为可能执行过 Create。
     if (
       registry.findCurrentManagedCalendarMatching(
@@ -539,8 +484,10 @@ class AndroidScheduleCalendarGateway private constructor(
     ensureAuthorized()
     val results = context.contentResolver.applyBatch(CalendarContract.AUTHORITY, operations)
     ensureAuthorized()
-    return results.firstOrNull()?.uri?.let(ContentUris::parseId)?.takeIf { it > 0 }
+    val masterEventId = results.firstOrNull()?.uri?.let(ContentUris::parseId)?.takeIf { it > 0 }
       ?: throw CalendarProviderReadException("Calendar Provider did not return the inserted event ID")
+    insertOccurrenceExceptions(preparedExceptions, masterEventId, ensureAuthorized)
+    return masterEventId
   }
 
   /**
@@ -635,9 +582,8 @@ class AndroidScheduleCalendarGateway private constructor(
         .withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
         .build()
     }
-    appendOccurrenceReplacementOperations(
+    appendOccurrenceReplacementDeletes(
       operations = operations,
-      preparedExceptions = preparedExceptions,
       existingExceptions = existingExceptions,
       calendarId = calendarId,
       masterEventId = eventId,
@@ -646,6 +592,7 @@ class AndroidScheduleCalendarGateway private constructor(
     ensureAuthorized()
     context.contentResolver.applyBatch(CalendarContract.AUTHORITY, operations)
     ensureAuthorized()
+    insertOccurrenceExceptions(preparedExceptions, eventId, ensureAuthorized)
     return true
   }
 
@@ -707,9 +654,8 @@ class AndroidScheduleCalendarGateway private constructor(
         .withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
         .build()
     }
-    appendOccurrenceReplacementOperations(
+    appendOccurrenceReplacementDeletes(
       operations = operations,
-      preparedExceptions = preparedExceptions,
       existingExceptions = existingExceptions,
       calendarId = calendarId,
       masterEventId = eventId,
@@ -719,6 +665,7 @@ class AndroidScheduleCalendarGateway private constructor(
     context.contentResolver.applyBatch(CalendarContract.AUTHORITY, operations)
     // batch 完成后不能直接向计划循环报告成功，需先确认生命周期仍未撤销。
     ensureAuthorized()
+    insertOccurrenceExceptions(preparedExceptions, eventId, ensureAuthorized)
     return true
   }
 
@@ -768,47 +715,56 @@ class AndroidScheduleCalendarGateway private constructor(
     }?.occurrenceAdjustments
   }
 
-  /** 创建 master 的 batch 中，所有 exception insert 都通过 operation 0 的 back-reference 精确绑定主事件。 */
-  private fun appendOccurrenceInsertOperations(
-    operations: ArrayList<ContentProviderOperation>,
+  /**
+   * 通过 Android 专用 exception URI 写入重复单次调整。
+   *
+   * Provider 只有在处理 `Events.CONTENT_EXCEPTION_URI/{masterId}` 时才会删除原始实例并重算 Instances；向普通
+   * Events URI 写入带 ORIGINAL_ID 的行虽然能够保存字段，但部分厂商 Provider 会同时展开原实例和例外实例。
+   */
+  private fun insertOccurrenceExceptions(
     preparedExceptions: List<AndroidPreparedOccurrenceExceptionWrite>,
-    calendarId: Long,
-    masterInsertBackReference: Int,
+    masterEventId: Long,
+    ensureAuthorized: () -> Unit,
   ) {
-    val providerInserts = AndroidOccurrenceExceptionWritePlanner.prepareCreateProviderInserts(
-      preparedExceptions = preparedExceptions,
-      firstOperationIndex = operations.size,
-      masterInsertBackReference = masterInsertBackReference,
+    val exceptionUri = ContentUris.withAppendedId(
+      CalendarContract.Events.CONTENT_EXCEPTION_URI,
+      masterEventId,
     )
-    providerInserts.forEach { insert ->
-      check(operations.size == insert.eventOperationIndex) {
-        "Occurrence Provider operation order drifted after preflight"
+    preparedExceptions.forEach { prepared ->
+      ensureAuthorized()
+      val eventId = context.contentResolver.insert(
+        exceptionUri,
+        buildOccurrenceExceptionContentValues(prepared),
+      )?.let(ContentUris::parseId)?.takeIf { it > 0 }
+        ?: throw CalendarProviderReadException("Calendar Provider did not return the exception event ID")
+      ensureAuthorized()
+      val reminderOperations = arrayListOf(
+        ContentProviderOperation.newDelete(CalendarContract.Reminders.CONTENT_URI)
+          .withSelection("${CalendarContract.Reminders.EVENT_ID} = ?", arrayOf(eventId.toString()))
+          .build(),
+      )
+      prepared.projection.deviceReminderMinutes.forEach { minutes ->
+        reminderOperations += ContentProviderOperation.newInsert(CalendarContract.Reminders.CONTENT_URI)
+          .withValue(CalendarContract.Reminders.EVENT_ID, eventId)
+          .withValue(CalendarContract.Reminders.MINUTES, minutes)
+          .withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
+          .build()
       }
-      operations += ContentProviderOperation.newInsert(CalendarContract.Events.CONTENT_URI)
-        .withValues(buildOccurrenceExceptionContentValues(insert.prepared, calendarId))
-        .withValueBackReference(
-          CalendarContract.Events.ORIGINAL_ID,
-          insert.masterOriginalIdBackReference,
-        )
-        .build()
-      insert.prepared.projection.deviceReminderMinutes.zip(insert.reminderEventBackReferences)
-        .forEach { (minutes, eventBackReference) ->
-          operations += ContentProviderOperation.newInsert(CalendarContract.Reminders.CONTENT_URI)
-            .withValueBackReference(CalendarContract.Reminders.EVENT_ID, eventBackReference)
-            .withValue(CalendarContract.Reminders.MINUTES, minutes)
-            .withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
-            .build()
-        }
+      // exception URI 会复制 master reminder；这里替换为该次调整自己的最终值。
+      ensureAuthorized()
+      context.contentResolver.applyBatch(CalendarContract.AUTHORITY, reminderOperations)
+      ensureAuthorized()
     }
   }
 
   /**
-   * update 先按 fresh snapshot 的精确 event ref 删除旧 exception，再按 canonical 顺序重建目标；整个替换与 master
-   * update 位于同一 Provider batch，任何 expectedCount 漂移都会整体失败，不能把旧例外静默遗留。
+   * 将 fresh snapshot 中的旧单次调整加入当前 Provider batch 删除。
+   *
+   * 厂商 Provider 对已有 exception 的增量更新并不可靠，因此不保留其 Provider 行 ID。调用方在 batch 完成后通过
+   * 专用 exception URI 重建当前目标集合；应用内单次身份由 recurrence identity 维护，不依赖平台行 ID。
    */
-  private fun appendOccurrenceReplacementOperations(
+  private fun appendOccurrenceReplacementDeletes(
     operations: ArrayList<ContentProviderOperation>,
-    preparedExceptions: List<AndroidPreparedOccurrenceExceptionWrite>,
     existingExceptions: List<AndroidManagedCalendarSnapshotOccurrenceException>,
     calendarId: Long,
     masterEventId: Long,
@@ -816,7 +772,7 @@ class AndroidScheduleCalendarGateway private constructor(
     existingExceptions.forEach { existing ->
       val eventId = AndroidCalendarEventRefCodec.decodeOrNull(existing.platformEventRef)
         ?: throw CalendarProviderReadException("Invalid managed occurrence event reference")
-      val deleteSelection = AndroidOccurrenceExceptionWritePlanner.replacementDeleteSelection(
+      val exactSelection = AndroidOccurrenceExceptionWritePlanner.replacementDeleteSelection(
         existing = existing,
         calendarId = calendarId,
         masterEventId = masterEventId,
@@ -826,30 +782,15 @@ class AndroidScheduleCalendarGateway private constructor(
         .withSelection("${CalendarContract.Reminders.EVENT_ID} = ?", arrayOf(eventId.toString()))
         .build()
       operations += ContentProviderOperation.newDelete(CalendarContract.Events.CONTENT_URI)
-        .withSelection(deleteSelection.selection, deleteSelection.selectionArgs.toTypedArray())
-        .withExpectedCount(deleteSelection.expectedCount)
+        .withSelection(exactSelection.selection, exactSelection.selectionArgs.toTypedArray())
+        .withExpectedCount(exactSelection.expectedCount)
         .build()
-    }
-    preparedExceptions.forEach { prepared ->
-      val eventOperationIndex = operations.size
-      operations += ContentProviderOperation.newInsert(CalendarContract.Events.CONTENT_URI)
-        .withValues(buildOccurrenceExceptionContentValues(prepared, calendarId))
-        .withValue(CalendarContract.Events.ORIGINAL_ID, masterEventId)
-        .build()
-      prepared.projection.deviceReminderMinutes.forEach { minutes ->
-        operations += ContentProviderOperation.newInsert(CalendarContract.Reminders.CONTENT_URI)
-          .withValueBackReference(CalendarContract.Reminders.EVENT_ID, eventOperationIndex)
-          .withValue(CalendarContract.Reminders.MINUTES, minutes)
-          .withValue(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
-          .build()
-      }
     }
   }
 
   /** occurrence row 始终使用 canonical URI、原始实例时间和显式状态，且 RRULE/RDATE 保持 null。 */
   private fun buildOccurrenceExceptionContentValues(
     prepared: AndroidPreparedOccurrenceExceptionWrite,
-    calendarId: Long,
   ): ContentValues {
     check(prepared.recurrenceRule == null && prepared.rDate == null) {
       "Occurrence exception RRULE/RDATE must remain unset"
@@ -865,12 +806,38 @@ class AndroidScheduleCalendarGateway private constructor(
       deviceReminderMinutes = exception.deviceReminderMinutes,
       fingerprint = exception.fingerprint,
     )
-    return buildEventContentValues(synthetic, calendarId).apply {
+    return buildEventContentValues(synthetic, calendarId = null).apply {
+      // exception URI 禁止调用方覆盖 DTEND；Provider 会用 DTSTART + DURATION 生成例外的最终 DTEND。
+      remove(CalendarContract.Events.DTEND)
+      if (exception.operation == CalendarOccurrenceExceptionOperation.CANCEL) {
+        // 取消单次只描述“原槽位被取消”，不提交一个新的展示时间。让 Provider 从 master 复制 DTSTART 与
+        // DURATION 后用 ORIGINAL_INSTANCE_TIME 定位原实例，可兼容部分会忽略同时间取消行的厂商实现。
+        remove(CalendarContract.Events.DTSTART)
+        remove(CalendarContract.Events.DURATION)
+        remove(CalendarContract.Events.ALL_DAY)
+        remove(CalendarContract.Events.EVENT_TIMEZONE)
+        remove(CalendarContract.Events.EVENT_END_TIMEZONE)
+      } else {
+        when (val timing = exception.timing) {
+          is CalendarTiming.Timed -> put(
+            CalendarContract.Events.DURATION,
+            formatDurationMinutes(timing.durationMinutes),
+          )
+          is CalendarTiming.AllDay -> put(
+            CalendarContract.Events.DURATION,
+            "P${timing.durationDays}D",
+          )
+          is CalendarTiming.Deadline -> put(
+            CalendarContract.Events.DURATION,
+            formatDurationMinutes(0),
+          )
+        }
+      }
       put(CalendarContract.Events.ORIGINAL_INSTANCE_TIME, prepared.originalInstanceTimeMillis)
-      put(CalendarContract.Events.ORIGINAL_ALL_DAY, prepared.originalAllDay)
       put(CalendarContract.Events.STATUS, prepared.providerStatus)
-      putNull(CalendarContract.Events.RRULE)
-      putNull(CalendarContract.Events.RDATE)
+      // 即使 null 也不要携带 RRULE；部分 Provider 以字段是否出现来区分“仅此次”和“此次及以后”。
+      remove(CalendarContract.Events.RRULE)
+      remove(CalendarContract.Events.RDATE)
     }
   }
 
@@ -935,6 +902,18 @@ class AndroidScheduleCalendarGateway private constructor(
       put(CalendarContract.Events.CUSTOM_APP_PACKAGE, context.packageName)
       put(CalendarContract.Events.CUSTOM_APP_URI, customAppUri)
       putNull(CalendarContract.Events.RDATE)
+      if (projection.recurrenceRule != null && projection.nativeOccurrenceExceptions.isNotEmpty()) {
+        // 部分厂商 Provider 在已有单次例外被替换后仍会重新展开原槽位。EXDATE 只作为平台展开兜底，业务身份和
+        // 回读仍以原生 exception 行为准；这样既不会把厂商缓存缺陷带回领域模型，也能避免系统日历显示重复项。
+        put(
+          CalendarContract.Events.EXDATE,
+          projection.nativeOccurrenceExceptions.joinToString(",") { exception ->
+            formatProviderExDate(requireNotNull(exception.id.recurrenceId))
+          },
+        )
+      } else {
+        putNull(CalendarContract.Events.EXDATE)
+      }
 
       when (val timing = projection.timing) {
         is CalendarTiming.Timed -> {
@@ -1020,6 +999,22 @@ class AndroidScheduleCalendarGateway private constructor(
 
   /** 按 RFC 5545 输出分钟时长；分钟属于 time 部分，必须使用 `PT...M`。 */
   private fun formatDurationMinutes(minutes: Int): String = "PT${minutes}M"
+
+  /** 将原始 occurrence 槽位输出为 Provider 可识别的 UTC RFC 5545 EXDATE。 */
+  private fun formatProviderExDate(recurrenceId: RecurrenceId): String {
+    val utc = Instant.fromEpochMilliseconds(
+      AndroidOccurrenceExceptionWritePlanner.originalInstanceTimeMillis(recurrenceId),
+    ).toLocalDateTime(TimeZone.UTC)
+    return buildString(16) {
+      append(utc.year.toString().padStart(4, '0'))
+      append(utc.month.number.toString().padStart(2, '0'))
+      append(utc.day.toString().padStart(2, '0'))
+      append('T')
+      append(utc.hour.toString().padStart(2, '0'))
+      append(utc.minute.toString().padStart(2, '0'))
+      append("00Z")
+    }
+  }
 
   /** fixed-row Create 在任何 Events insert 前可稳定分型的阻断原因。 */
   enum class FixedCalendarCreateBlockedReason {

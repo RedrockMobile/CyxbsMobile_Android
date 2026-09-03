@@ -1,12 +1,25 @@
 package com.cyxbs.pages.schedule.calendar
 
+import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.pages.schedule.domain.calendar.CalendarEventProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportScope
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionId
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind
+import com.cyxbs.pages.schedule.domain.calendar.CalendarTiming
 import com.cyxbs.pages.schedule.domain.calendar.ManagedCalendarEvent
 import com.cyxbs.pages.schedule.domain.calendar.PlatformCalendarEventRef
+import com.cyxbs.pages.schedule.domain.model.FieldPatch
+import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
+import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.OccurrenceTime
+import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.model.RecurrenceId
+import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
+import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
+import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
+import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCalendarChange
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCommand
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
@@ -19,6 +32,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Instant
 
 /** 协调器从 Schedule 快照到系统日历写入端口的单向 host 合同测试。 */
 class ScheduleCalendarExportCoordinatorTest {
@@ -53,6 +67,62 @@ class ScheduleCalendarExportCoordinatorTest {
     assertEquals(listOf<Set<ScheduleId>?>(null), gateway.queries)
     assertEquals(listOf(event), gateway.deleted)
     assertEquals(true, authorizationChecks > 0)
+  }
+
+  /** 生产协调器必须显式启用 Provider 单次例外能力，避免重复日程的单次修改被静默判为不支持。 */
+  @Test
+  fun recurringOccurrenceAdjustmentReachesGatewayAsNativeException() = runTest {
+    val accountId = "20260005"
+    val scheduleId = ScheduleId("018f0f7c-6000-7000-8000-000000000005")
+    val now = Instant.parse("2026-09-07T00:00:00Z")
+    val schedule = Schedule(
+      id = scheduleId,
+      revision = 1,
+      title = "重复日程",
+      description = "生产入口回归测试",
+      categoryId = null,
+      timing = ScheduleTiming.Timed(MinuteTimeDate(2026, 9, 7, 14, 0), 60, "Asia/Shanghai"),
+      recurrence = RecurrenceRule(RecurrenceFrequency.DAILY),
+      reminder = null,
+      todoState = ScheduleTodoState.PENDING,
+      createdAt = now,
+      updatedAt = now,
+      linkedToCourse = true,
+    )
+    val adjustment = ScheduleOccurrenceAdjustment(
+      scheduleId = scheduleId,
+      recurrenceId = RecurrenceId(MinuteTimeDate(2026, 9, 8, 14, 0), "Asia/Shanghai", false),
+      revision = 1,
+      status = OccurrenceStatus.ACTIVE,
+      patch = OccurrencePatch(
+        time = FieldPatch.Replace(OccurrenceTime.TimeRange(16 * 60, 60, "Asia/Shanghai")),
+      ),
+      createdAt = now,
+      updatedAt = now,
+    )
+    val gateway = RecordingExportGateway(emptyList())
+    val coordinator = ScheduleCalendarExportCoordinator(
+      context = null,
+      repository = EmptyReadyRepository(accountId, listOf(schedule), listOf(adjustment)),
+      accountId = accountId,
+      exportScope = CalendarExportScope(accountId),
+      coroutineScope = this,
+      ensureAuthorized = {},
+      gateway = gateway,
+    )
+
+    coordinator.start()
+    runCurrent()
+    coordinator.stop()
+    runCurrent()
+
+    val projection = gateway.created.single()
+    assertEquals(CalendarProjectionKind.SERIES_MASTER, projection.id.kind)
+    assertEquals(1, projection.nativeOccurrenceExceptions.size)
+    assertEquals(
+      MinuteTimeDate(2026, 9, 8, 16, 0),
+      (projection.nativeOccurrenceExceptions.single().timing as CalendarTiming.Timed).start,
+    )
   }
 
   /** 托管投射不兼容时只重建一次，并在空日历上重新执行全量查询。 */
@@ -133,9 +203,15 @@ class ScheduleCalendarExportCoordinatorTest {
   }
 
   /** 仅提供 Ready 空快照；任何 mutation 都表示单向导出测试越过了只读仓库边界。 */
-  private class EmptyReadyRepository(accountId: String) : ScheduleRepository {
+  private class EmptyReadyRepository(
+    accountId: String,
+    schedules: List<Schedule> = emptyList(),
+    occurrenceAdjustments: List<ScheduleOccurrenceAdjustment> = emptyList(),
+  ) : ScheduleRepository {
     override val snapshot = MutableStateFlow(
       ScheduleSnapshot(
+        schedules = schedules,
+        occurrenceAdjustments = occurrenceAdjustments,
         status = ScheduleRepositoryStatus.Ready(pendingCount = 0, hasPendingDeletes = false),
         accountId = accountId,
       ),
@@ -153,6 +229,7 @@ class ScheduleCalendarExportCoordinatorTest {
     private val managedEvents: List<ManagedCalendarEvent>,
   ) : ScheduleCalendarExportEventGateway {
     val queries = mutableListOf<Set<ScheduleId>?>()
+    val created = mutableListOf<CalendarEventProjection>()
     val deleted = mutableListOf<ManagedCalendarEvent>()
 
     override fun queryManagedEvents(
@@ -173,7 +250,11 @@ class ScheduleCalendarExportCoordinatorTest {
       projection: CalendarEventProjection,
       scope: CalendarExportScope,
       ensureAuthorized: () -> Unit,
-    ): Long? = error("Empty snapshot must not create Provider events")
+    ): Long {
+      ensureAuthorized()
+      created += projection
+      return created.size.toLong()
+    }
 
     override fun updateEvent(
       projection: CalendarEventProjection,

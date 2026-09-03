@@ -26,8 +26,12 @@ class CalendarProviderTimingCanonicalizerTest {
         start,
         duration = "PT0M",
         recurring = true,
-        kind = CalendarProjectionKind.DEADLINE,
+        kind = CalendarProjectionKind.SERIES_MASTER,
       ),
+    )
+    assertEquals(
+      CalendarTiming.Deadline(MinuteTimeDate(2026, 7, 12, 9, 30), "Asia/Shanghai"),
+      reconstruct(start, dtEnd = start, kind = CalendarProjectionKind.OCCURRENCE_EXCEPTION),
     )
   }
 
@@ -102,7 +106,15 @@ class CalendarProviderTimingCanonicalizerTest {
     ))
     // 相同边界只属于 Deadline，不能被普通时间段误读成零分钟 Timed。
     assertNull(reconstruct(start, dtEnd = start))
-    assertNull(reconstruct(start, duration = "PT0M", recurring = true))
+    assertEquals(
+      CalendarTiming.Deadline(MinuteTimeDate(2026, 7, 12, 9, 30), "Asia/Shanghai"),
+      reconstruct(
+        start,
+        duration = "PT0M",
+        recurring = true,
+        kind = CalendarProjectionKind.SERIES_MASTER,
+      ),
+    )
   }
 
   @Test

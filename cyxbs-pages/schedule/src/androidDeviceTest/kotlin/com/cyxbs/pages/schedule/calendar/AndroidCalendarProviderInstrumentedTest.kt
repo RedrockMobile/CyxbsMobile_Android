@@ -15,6 +15,8 @@ import com.cyxbs.pages.schedule.domain.calendar.AndroidManagedCalendarIdentifier
 import com.cyxbs.pages.schedule.domain.calendar.CalendarCanonicalBaselineMapper
 import com.cyxbs.pages.schedule.domain.calendar.CalendarEventProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportScope
+import com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionOperation
+import com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionFingerprint
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionId
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind
@@ -23,6 +25,7 @@ import com.cyxbs.pages.schedule.domain.calendar.CalendarProviderTimingCanonicali
 import com.cyxbs.pages.schedule.domain.calendar.CalendarRecurrenceCanonicalizer
 import com.cyxbs.pages.schedule.domain.calendar.CalendarTiming
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
+import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import org.junit.After
@@ -205,6 +208,199 @@ class AndroidCalendarProviderInstrumentedTest {
     assertTrue(gateway.deleteEvent(updatedManaged, requiredScope))
     assertFalse(gateway.deleteEvent(updatedManaged, requiredScope))
     assertTrue(gateway.queryManagedEvents(requiredScope).isEmpty())
+  }
+
+  /** 验证重复系列的单次移动与取消会替换 Instances 中的原槽位，并可由严格快照完整回读。 */
+  @Test
+  fun recurringOccurrenceExceptionCreateReplaceAndReadBack() = withTestCalendar {
+    val scheduleId = ScheduleId(nextScheduleId())
+    val originalOccurrence = RecurrenceId(
+      MinuteTimeDate(2026, 9, 7, 14, 0), "Asia/Shanghai", false,
+    )
+    val moved = occurrenceProjection(
+      scheduleId = scheduleId,
+      recurrenceId = originalOccurrence,
+      title = "instrumentation-moved",
+      timing = CalendarTiming.Timed(MinuteTimeDate(2026, 9, 7, 16, 0), 60, "Asia/Shanghai"),
+      operation = CalendarOccurrenceExceptionOperation.UPSERT,
+      reminders = listOf(10),
+    )
+    val master = calendarProjection(
+      scheduleId = scheduleId,
+      title = "instrumentation-exception-master",
+      description = "daily-series",
+      timing = CalendarTiming.Timed(MinuteTimeDate(2026, 9, 5, 14, 0), 60, "Asia/Shanghai"),
+      recurrenceRule = "FREQ=DAILY;COUNT=10",
+      nativeExceptions = listOf(moved),
+    )
+
+    val masterEventId = requireNotNull(gateway.createEvent(master, requiredScope))
+    val created = gateway.queryManagedCalendarSnapshot(requiredScope).requirePresent().events.single()
+    assertEquals(AndroidCalendarEventRefCodec.encode(masterEventId), created.platformEventRef)
+    assertEquals(master.fingerprint, created.providerFingerprint)
+    assertEquals(listOf(moved), created.occurrenceAdjustments.map { it.projection })
+    val originalStartMillis = AndroidOccurrenceExceptionWritePlanner
+      .originalInstanceTimeMillis(originalOccurrence)
+    val movedStartMillis = originalStartMillis + 2 * 60 * MILLIS_PER_MINUTE
+    assertEquals(
+      listOf(movedStartMillis to movedStartMillis + 60 * MILLIS_PER_MINUTE),
+      queryInstances(
+        eventId = masterEventId,
+        beginMillis = originalStartMillis - MILLIS_PER_MINUTE,
+        endMillis = movedStartMillis + 61 * MILLIS_PER_MINUTE,
+      ),
+    )
+
+    val movedAgain = occurrenceProjection(
+      scheduleId = scheduleId,
+      recurrenceId = originalOccurrence,
+      title = "instrumentation-moved-again",
+      timing = CalendarTiming.Timed(MinuteTimeDate(2026, 9, 7, 17, 0), 60, "Asia/Shanghai"),
+      operation = CalendarOccurrenceExceptionOperation.UPSERT,
+      reminders = listOf(5),
+    )
+    assertTrue(
+      gateway.updateEvent(
+        master.withNativeExceptions(listOf(movedAgain)),
+        AndroidCalendarEventRefCodec.encode(masterEventId),
+        requiredScope,
+      ),
+    )
+    val movedAgainStartMillis = originalStartMillis + 3 * 60 * MILLIS_PER_MINUTE
+    val replacedMove = gateway.queryManagedCalendarSnapshot(requiredScope).requirePresent().events.single()
+    assertTrue(
+      created.occurrenceAdjustments.single().platformEventRef !=
+          replacedMove.occurrenceAdjustments.single().platformEventRef,
+    )
+    assertEquals(listOf(movedAgain), replacedMove.occurrenceAdjustments.map { it.projection })
+    assertEquals(
+      listOf(movedAgainStartMillis to movedAgainStartMillis + 60 * MILLIS_PER_MINUTE),
+      queryInstances(
+        eventId = masterEventId,
+        beginMillis = originalStartMillis - MILLIS_PER_MINUTE,
+        endMillis = movedAgainStartMillis + 61 * MILLIS_PER_MINUTE,
+      ),
+    )
+
+    val cancelled = occurrenceProjection(
+      scheduleId = scheduleId,
+      recurrenceId = originalOccurrence,
+      title = master.title,
+      timing = CalendarTiming.Timed(MinuteTimeDate(2026, 9, 7, 14, 0), 60, "Asia/Shanghai"),
+      operation = CalendarOccurrenceExceptionOperation.CANCEL,
+    )
+    val updated = master.withNativeExceptions(listOf(cancelled))
+    assertTrue(
+      gateway.updateEvent(
+        updated,
+        AndroidCalendarEventRefCodec.encode(masterEventId),
+        requiredScope,
+      ),
+    )
+
+    val replaced = gateway.queryManagedCalendarSnapshot(requiredScope).requirePresent().events.single()
+    assertEquals(updated.fingerprint, replaced.providerFingerprint)
+    assertEquals(listOf(cancelled), replaced.occurrenceAdjustments.map { it.projection })
+    assertEquals(
+      emptyList<Pair<Long, Long>>(),
+      queryInstances(
+        eventId = masterEventId,
+        beginMillis = originalStartMillis - MILLIS_PER_MINUTE,
+        endMillis = movedAgainStartMillis + 61 * MILLIS_PER_MINUTE,
+      ),
+    )
+  }
+
+  /** Provider 必须按原始槽位关联例外，同时允许该次当前展示形态切换为时间点或全天。 */
+  @Test
+  fun occurrenceExceptionCanChangeCurrentTimingKind() = withTestCalendar {
+    val scheduleId = ScheduleId(nextScheduleId())
+    val deadlineIdentity = RecurrenceId(
+      MinuteTimeDate(2026, 9, 8, 9, 0), "Asia/Shanghai", false,
+    )
+    val allDayIdentity = RecurrenceId(
+      MinuteTimeDate(2026, 9, 9, 9, 0), "Asia/Shanghai", false,
+    )
+    val deadline = occurrenceProjection(
+      scheduleId = scheduleId,
+      recurrenceId = deadlineIdentity,
+      title = "instrumentation-deadline-exception",
+      timing = CalendarTiming.Deadline(MinuteTimeDate(2026, 9, 8, 16, 0), "Asia/Shanghai"),
+      operation = CalendarOccurrenceExceptionOperation.UPSERT,
+    )
+    val allDay = occurrenceProjection(
+      scheduleId = scheduleId,
+      recurrenceId = allDayIdentity,
+      title = "instrumentation-all-day-exception",
+      timing = CalendarTiming.AllDay(Date(2026, 9, 10), 1),
+      operation = CalendarOccurrenceExceptionOperation.UPSERT,
+    )
+    val master = calendarProjection(
+      scheduleId = scheduleId,
+      title = "instrumentation-timing-kind-series",
+      description = "timing-kind-series",
+      timing = CalendarTiming.Timed(MinuteTimeDate(2026, 9, 7, 9, 0), 60, "Asia/Shanghai"),
+      recurrenceRule = "FREQ=DAILY;COUNT=4",
+      nativeExceptions = listOf(deadline, allDay).sortedBy { it.externalUri },
+    )
+
+    requireNotNull(gateway.createEvent(master, requiredScope))
+
+    val readBack = gateway.queryManagedCalendarSnapshot(requiredScope).requirePresent().events.single()
+    assertEquals(master.fingerprint, readBack.providerFingerprint)
+    assertEquals(master.nativeOccurrenceExceptions, readBack.occurrenceAdjustments.map { it.projection })
+  }
+
+  /** Provider 必须接受日、周、月、年四种受限规则，并可回读重复 Deadline 的零时长单次取消。 */
+  @Test
+  fun supportedRecurrenceRulesAndDeadlineExceptionRoundTrip() = withTestCalendar {
+    val rules = listOf(
+      "FREQ=DAILY;COUNT=3",
+      "FREQ=WEEKLY;BYDAY=MO,WE;COUNT=3",
+      "FREQ=MONTHLY;BYMONTHDAY=7;COUNT=3",
+      "FREQ=YEARLY;BYMONTHDAY=7;BYMONTH=9;COUNT=3",
+    )
+    rules.forEachIndexed { index, rule ->
+      val projection = calendarProjection(
+        title = "instrumentation-rule-$index",
+        description = rule,
+        timing = CalendarTiming.Timed(MinuteTimeDate(2026, 9, 7, 9 + index, 0), 30, "Asia/Shanghai"),
+        recurrenceRule = rule,
+      )
+      requireNotNull(gateway.createEvent(projection, requiredScope))
+    }
+
+    val deadlineScheduleId = ScheduleId(nextScheduleId())
+    val deadlineIdentity = RecurrenceId(
+      MinuteTimeDate(2026, 9, 8, 18, 0), "Asia/Shanghai", false,
+    )
+    val cancelledDeadline = occurrenceProjection(
+      scheduleId = deadlineScheduleId,
+      recurrenceId = deadlineIdentity,
+      title = "instrumentation-deadline-series",
+      timing = CalendarTiming.Deadline(deadlineIdentity.originalDateTime, "Asia/Shanghai"),
+      operation = CalendarOccurrenceExceptionOperation.CANCEL,
+    )
+    val deadlineMaster = calendarProjection(
+      scheduleId = deadlineScheduleId,
+      title = "instrumentation-deadline-series",
+      description = "deadline-series",
+      timing = CalendarTiming.Deadline(MinuteTimeDate(2026, 9, 7, 18, 0), "Asia/Shanghai"),
+      recurrenceRule = "FREQ=DAILY;COUNT=3",
+      nativeExceptions = listOf(cancelledDeadline),
+    )
+    requireNotNull(gateway.createEvent(deadlineMaster, requiredScope))
+
+    val events = gateway.queryManagedCalendarSnapshot(requiredScope).requirePresent().events
+    assertEquals(5, events.size)
+    assertEquals(
+      rules.toSet(),
+      events.mapNotNull { it.canonicalFields.recurrenceRule }
+        .toSet(),
+    )
+    val deadline = events.single { it.projectionId == deadlineMaster.id }
+    assertTrue(deadline.canonicalFields.timing is CalendarTiming.Deadline)
+    assertEquals(listOf(cancelledDeadline), deadline.occurrenceAdjustments.map { it.projection })
   }
 
   /**
@@ -898,18 +1094,19 @@ class AndroidCalendarProviderInstrumentedTest {
    * 已在 common 层 canonicalize，本 helper 仅为真实 Provider 合同构造受控输入。
    */
   private fun calendarProjection(
+    scheduleId: ScheduleId = ScheduleId(nextScheduleId()),
     title: String,
     description: String,
     timing: CalendarTiming,
     recurrenceRule: String? = null,
     reminders: List<Int> = emptyList(),
+    nativeExceptions: List<CalendarOccurrenceExceptionProjection> = emptyList(),
   ): CalendarEventProjection {
-    val scheduleId = ScheduleId(nextScheduleId())
     // 先识别 Deadline，避免测试夹具按时长推断身份而掩盖生产投影的显式优先级。
     val kind = when {
+      recurrenceRule != null -> CalendarProjectionKind.SERIES_MASTER
       timing is CalendarTiming.Deadline -> CalendarProjectionKind.DEADLINE
-      recurrenceRule == null -> CalendarProjectionKind.SINGLE
-      else -> CalendarProjectionKind.SERIES_MASTER
+      else -> CalendarProjectionKind.SINGLE
     }
     val id = CalendarProjectionId(requiredScope, scheduleId, kind)
     val externalUri = CalendarProjectionUriCodec.encode(id)
@@ -928,9 +1125,62 @@ class AndroidCalendarProviderInstrumentedTest {
         timing = timing,
         recurrenceRule = recurrenceRule,
         reminderMinutes = reminders.distinct().sorted(),
+        nativeOccurrenceExceptions = nativeExceptions,
+      ),
+      nativeOccurrenceExceptions = nativeExceptions,
+    )
+  }
+
+  /** 构造属于当前测试 scope 的规范单次例外；本地 recurrence identity 与移动后的有效时间保持分离。 */
+  private fun occurrenceProjection(
+    scheduleId: ScheduleId,
+    recurrenceId: RecurrenceId,
+    title: String,
+    timing: CalendarTiming,
+    operation: CalendarOccurrenceExceptionOperation,
+    reminders: List<Int> = emptyList(),
+  ): CalendarOccurrenceExceptionProjection {
+    val id = CalendarProjectionId(
+      requiredScope,
+      scheduleId,
+      CalendarProjectionKind.OCCURRENCE_EXCEPTION,
+      recurrenceId,
+    )
+    val externalUri = CalendarProjectionUriCodec.encode(id)
+    return CalendarOccurrenceExceptionProjection(
+      id = id,
+      externalUri = externalUri,
+      title = title,
+      description = "occurrence-exception",
+      timing = timing,
+      deviceReminderMinutes = reminders,
+      operation = operation,
+      fingerprint = CalendarProjectionFingerprint.computeOccurrenceException(
+        externalUri,
+        title,
+        "occurrence-exception",
+        timing,
+        reminders,
+        operation,
       ),
     )
   }
+
+  /** 替换同一 master 的原生例外并同步重算聚合 fingerprint。 */
+  private fun CalendarEventProjection.withNativeExceptions(
+    nativeExceptions: List<CalendarOccurrenceExceptionProjection>,
+  ): CalendarEventProjection = copy(
+    nativeOccurrenceExceptions = nativeExceptions,
+    fingerprint = CalendarProjectionFingerprint.compute(
+      externalUri,
+      title,
+      description,
+      timing,
+      recurrenceRule,
+      deviceReminderMinutes,
+      nativeExceptions,
+    ),
+  )
 
 
   /**
@@ -1281,6 +1531,38 @@ class AndroidCalendarProviderInstrumentedTest {
       }
     }.sorted()
   }.orEmpty()
+
+  /**
+   * 读取指定测试 master 在窄时间窗中的实际展开实例。
+   *
+   * 单看 Events 表只能证明 exception 行存在，不能证明 Provider 已用它替换原实例；因此这里直接断言系统日历
+   * App 消费的 Instances 结果，防止同一天同时出现原实例与修改后实例。
+   */
+  private fun queryInstances(
+    eventId: Long,
+    beginMillis: Long,
+    endMillis: Long,
+  ): List<Pair<Long, Long>> {
+    val uriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+    ContentUris.appendId(uriBuilder, beginMillis)
+    ContentUris.appendId(uriBuilder, endMillis)
+    return context.contentResolver.query(
+      uriBuilder.build(),
+      arrayOf(CalendarContract.Instances.BEGIN, CalendarContract.Instances.END),
+      "(${CalendarContract.Instances.EVENT_ID} = ? OR ${CalendarContract.Events.ORIGINAL_ID} = ?) AND " +
+          "(${CalendarContract.Events.STATUS} IS NULL OR ${CalendarContract.Events.STATUS} != ?)",
+      arrayOf(
+        eventId.toString(),
+        eventId.toString(),
+        CalendarContract.Events.STATUS_CANCELED.toString(),
+      ),
+      CalendarContract.Instances.BEGIN,
+    )?.use { cursor ->
+      buildList {
+        while (cursor.moveToNext()) add(cursor.getLong(0) to cursor.getLong(1))
+      }
+    }.orEmpty()
+  }
 
   private val requiredScope: CalendarExportScope
     get() = requireNotNull(scope) { "Test calendar scope has not been initialized" }

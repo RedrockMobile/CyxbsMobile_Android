@@ -22,7 +22,8 @@ internal object CalendarProviderTimingCanonicalizer {
    * 从 Provider 字段重建规范时间。
    *
    * [recurring] 冻结 `单次 = DTEND`、`重复 = DURATION` 的写入形状，避免同时存在或缺失字段时猜测
-   * Provider 意图；[projectionKind] 只允许 canonical URI 明确标记的 Deadline 使用零时长语义。
+   * Provider 意图。非重复 Deadline 由 kind 明确标记；重复 master 与 occurrence exception 则可由唯一合法的
+   * 零时长形状恢复 Deadline，因为领域中的 Timed 不允许零时长。
    */
   fun reconstructOrNull(
     dtStart: Long?,
@@ -98,11 +99,13 @@ internal object CalendarProviderTimingCanonicalizer {
       ((endMillis / MILLIS_PER_MINUTE) - (dtStart / MILLIS_PER_MINUTE)).toNonNegativeIntOrNull()
     } ?: return null
 
-    return if (projectionKind == CalendarProjectionKind.DEADLINE) {
-      if (durationMinutes != 0) null
-      else CalendarTiming.Deadline(localStart.toMinuteTimeDate(), timeZone.id)
+    val deadlineKind = projectionKind == CalendarProjectionKind.DEADLINE ||
+      projectionKind == CalendarProjectionKind.SERIES_MASTER ||
+      projectionKind == CalendarProjectionKind.OCCURRENCE_EXCEPTION
+    return if (durationMinutes == 0) {
+      if (!deadlineKind) null else CalendarTiming.Deadline(localStart.toMinuteTimeDate(), timeZone.id)
     } else {
-      if (durationMinutes == 0) null
+      if (projectionKind == CalendarProjectionKind.DEADLINE) null
       else CalendarTiming.Timed(localStart.toMinuteTimeDate(), durationMinutes, timeZone.id)
     }
   }
