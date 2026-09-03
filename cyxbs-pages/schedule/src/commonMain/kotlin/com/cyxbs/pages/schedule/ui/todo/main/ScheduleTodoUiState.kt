@@ -29,9 +29,8 @@ import kotlin.time.Instant
 /**
  * 邮子清单对共享 Schedule 快照的一次只读投影。
  *
- * 页面按系列最多展示一项：非重复日程直接展示自身；重复系列展示当前窗口中最早的未完成实例，
- * 没有未完成实例时才展示最近完成实例。这样清单不会因为每日重复规则无限铺开，同时完成操作仍保留
- * 精确 recurrence identity。
+ * 非重复日程直接展示自身；重复系列在未完成区只展示下一次实例，已完成区则展示最近七天内真实完成的
+ * 实例。这样不会把未来规则无限铺开，同时用户仍能找到并取消某一次完成。
  */
 internal data class ScheduleTodoProjection(
   val pending: List<ScheduleTodoItemUi>,
@@ -75,31 +74,43 @@ internal fun projectScheduleTodo(
   val windowStart = MinuteTimeDate(today.plusDays(-30), 0, 0)
   val windowEnd = MinuteTimeDate(today.plusYears(1).plusDays(1), 0, 0)
 
-  val items = snapshot.schedules.mapNotNull { schedule ->
+  val pending = mutableListOf<ScheduleTodoItemUi>()
+  val completed = mutableListOf<ScheduleTodoItemUi>()
+  snapshot.schedules.forEach { schedule ->
     // 原生事务只有在 todoState 非空、即显式关联清单后才进入邮子清单。
-    if (schedule.todoState == null) return@mapNotNull null
-    val occurrence = schedule.todoOccurrence(snapshot, windowStart, windowEnd, viewerTimeZone)
-      ?: return@mapNotNull null
-    occurrence.toTodoItem(schedule, now, viewerTimeZone)
+    if (schedule.todoState == null) return@forEach
+    val occurrences = schedule.todoOccurrences(snapshot, windowStart, windowEnd)
+    val nextActive = occurrences
+      .asSequence()
+      .filter { it.status == OccurrenceStatus.ACTIVE }
+      .map(ScheduleOccurrence::toUiModel)
+      .minWithOrNull(
+        compareBy<ScheduleUiOccurrence> { it.sortInstant(viewerTimeZone) == null }
+          .thenBy { it.sortInstant(viewerTimeZone) },
+      )
+    if (nextActive != null) pending += nextActive.toTodoItem(schedule, now, viewerTimeZone)
+
+    occurrences
+      .asSequence()
+      .filter { it.status == OccurrenceStatus.COMPLETED }
+      .map(ScheduleOccurrence::toUiModel)
+      .map { it.toTodoItem(schedule, now, viewerTimeZone) }
+      .filter { it.completedAt(snapshot) >= now - 7.days }
+      .forEach(completed::add)
   }
 
-  val pending = items
-    .filter { it.occurrence.status == OccurrenceStatus.ACTIVE }
+  val sortedPending = pending
     .sortedWith(
       compareBy<ScheduleTodoItemUi> { it.sortInstant(viewerTimeZone) == null }
         .thenBy { it.sortInstant(viewerTimeZone) }
         .thenBy { it.schedule.id.value },
     )
-  val completed = items
-    .filter { item ->
-      item.occurrence.status == OccurrenceStatus.COMPLETED &&
-        item.completedAt(snapshot) >= now - 7.days
-    }
+  val sortedCompleted = completed
     .sortedWith(
       compareByDescending<ScheduleTodoItemUi> { it.sortInstant(viewerTimeZone) }
         .thenBy { it.schedule.id.value },
     )
-  return ScheduleTodoProjection(pending = pending, completed = completed)
+  return ScheduleTodoProjection(pending = sortedPending, completed = sortedCompleted)
 }
 
 /**
@@ -143,15 +154,14 @@ private fun ScheduleTodoItemUi.completedAt(snapshot: ScheduleSnapshot): Instant 
   }?.updatedAt ?: schedule.updatedAt
 }
 
-/** 为一个系列选择清单中唯一可见的实例，避免重复规则生成大量卡片。 */
-private fun Schedule.todoOccurrence(
+/** 展开一个系列的有界实例；调用方只选下一项未完成和七天内已完成，避免未来规则无限进入列表。 */
+private fun Schedule.todoOccurrences(
   snapshot: ScheduleSnapshot,
   startInclusive: MinuteTimeDate,
   endExclusive: MinuteTimeDate,
-  viewerTimeZone: TimeZone,
-): ScheduleUiOccurrence? {
+): List<ScheduleOccurrence> {
   if (recurrence == null) {
-    return ScheduleOccurrence(
+    return listOf(ScheduleOccurrence(
       scheduleId = id,
       recurrenceId = null,
       timing = timing,
@@ -165,27 +175,17 @@ private fun Schedule.todoOccurrence(
         OccurrenceStatus.ACTIVE
       },
       isAdjusted = false,
-    ).toUiModel()
+    ))
   }
 
-  val occurrences = runCatching {
+  return runCatching {
     RecurrenceEngine.expandInRange(
       schedule = this,
       occurrenceAdjustments = snapshot.occurrenceAdjustments.filter { it.scheduleId == id },
       rangeStartInclusive = startInclusive,
       rangeEndExclusive = endExclusive,
-    ).map(ScheduleOccurrence::toUiModel)
-  }.getOrElse { return null }
-
-  return occurrences
-    .filter { it.status == OccurrenceStatus.ACTIVE }
-    .minWithOrNull(
-      compareBy<ScheduleUiOccurrence> { it.sortInstant(viewerTimeZone) == null }
-        .thenBy { it.sortInstant(viewerTimeZone) },
     )
-    ?: occurrences
-      .filter { it.status == OccurrenceStatus.COMPLETED }
-      .maxByOrNull { it.sortInstant(viewerTimeZone) ?: Instant.DISTANT_PAST }
+  }.getOrElse { emptyList() }
 }
 
 /** 把实例的四态 timing 转成卡片文案，并计算临期状态。 */

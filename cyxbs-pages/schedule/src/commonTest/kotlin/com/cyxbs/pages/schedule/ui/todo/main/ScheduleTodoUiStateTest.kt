@@ -1,15 +1,18 @@
 package com.cyxbs.pages.schedule.ui.todo.main
 
 import com.cyxbs.components.config.time.MinuteTimeDate
-import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
 import com.cyxbs.pages.schedule.domain.model.CategoryId
+import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
+import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
 import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.repository.ScheduleSnapshot
 import com.cyxbs.pages.schedule.ui.category.ScheduleDefaultCategories
@@ -214,6 +217,54 @@ class ScheduleTodoUiStateTest {
     assertEquals(1, projection.pending.size)
     assertEquals(recurring.id, projection.pending.single().schedule.id)
     assertTrue(projection.pending.single().occurrence.recurrenceId != null)
+  }
+
+  /** 完成重复实例后仍展示下一项未完成，同时把本次放入已完成区供用户取消完成。 */
+  @Test
+  fun recurringCompletionKeepsNextPendingAndRecentCompleted() {
+    val now = Instant.parse("2026-08-17T13:00:00Z")
+    val recurrenceId = RecurrenceId(
+      originalDateTime = MinuteTimeDate(2026, 8, 17, 12, 0),
+      timeZoneId = "UTC",
+      allDay = false,
+    )
+    val recurring = schedule(
+      suffix = "008",
+      title = "每周例会",
+      timing = ScheduleTiming.Timed(
+        start = recurrenceId.originalDateTime,
+        durationMinutes = 60,
+        timeZoneId = "UTC",
+      ),
+      recurrence = RecurrenceRule(
+        frequency = RecurrenceFrequency.WEEKLY,
+        byWeekDays = setOf(IsoWeekDay.MONDAY),
+        end = RecurrenceEnd.Never,
+      ),
+    )
+    val completed = ScheduleOccurrenceAdjustment(
+      scheduleId = recurring.id,
+      recurrenceId = recurrenceId,
+      revision = 1,
+      status = OccurrenceStatus.COMPLETED,
+      patch = null,
+      createdAt = now - 1.minutes,
+      updatedAt = now - 1.minutes,
+    )
+
+    val projection = projectScheduleTodo(
+      ScheduleSnapshot(
+        schedules = listOf(recurring),
+        occurrenceAdjustments = listOf(completed),
+      ),
+      now,
+      TimeZone.UTC,
+    )
+
+    assertEquals(1, projection.pending.size)
+    assertEquals(1, projection.completed.size)
+    assertEquals(recurrenceId, projection.completed.single().occurrence.recurrenceId)
+    assertTrue(projection.pending.single().occurrence.recurrenceId != recurrenceId)
   }
 
   /** 构造满足领域 identity 的最小测试日程。 */
