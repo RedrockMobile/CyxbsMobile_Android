@@ -94,14 +94,37 @@ fun RecurrenceDraft.endDateAtCount(anchor: Date, count: Int = this.count): Date 
   previewDates(anchor, count.coerceAtLeast(1)).lastOrNull() ?: anchor
 
 /**
+ * 返回当前表单规则在日期窗口内生成的 occurrence 日期，供截止日期日历预览当前日程。
+ *
+ * [endExclusive] 是严格上界；计算到达该日期便停止，不会为了一个月日历无界展开“永不结束”的规则。
+ * 本方法只预览尚未保存的系列规则，不叠加已有单次调整。
+ */
+internal fun RecurrenceDraft.previewDatesInRange(
+  anchor: Date,
+  startInclusive: Date,
+  endExclusive: Date,
+): Set<Date> {
+  if (!isRepeating || startInclusive >= endExclusive) return emptySet()
+  return previewDates(anchor, limit = 100_000, endExclusive = endExclusive)
+    .asSequence()
+    .dropWhile { it < startInclusive }
+    .toSet()
+}
+
+/**
  * 为编辑器摘要做有上限的逐日预览，最多扫描约一百年并受 [limit] 限制，防止异常规则无限循环。
  * 这不是业务重复引擎：Feed、时间轴和课表必须使用 `RecurrenceEngine` 展开，不能依赖此预览保证语义。
  */
-private fun RecurrenceDraft.previewDates(anchor: Date, limit: Int): List<Date> {
+private fun RecurrenceDraft.previewDates(
+  anchor: Date,
+  limit: Int,
+  endExclusive: Date? = null,
+): List<Date> {
   val rule = toRecurrenceRule(anchor) ?: return emptyList()
   val result = ArrayList<Date>()
   var date = anchor
   repeat(36_600) {
+    if (endExclusive != null && date >= endExclusive) return result
     val days = anchor.daysUntil(date).toLong()
     val months = (date.year - anchor.year) * 12 + date.monthNumber - anchor.monthNumber
     val matches = when (rule.frequency) {

@@ -36,9 +36,9 @@ import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -93,6 +93,7 @@ import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.recurrence.RecurrenceEngine
 import com.cyxbs.pages.schedule.domain.recurrence.SeriesSplitter
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepository
+import com.cyxbs.pages.schedule.domain.repository.ScheduleSnapshot
 import com.cyxbs.pages.schedule.ui.category.rememberScheduleCategoryCatalog
 import com.cyxbs.pages.schedule.ui.dialog.ScheduleBottomSheet
 import com.cyxbs.pages.schedule.ui.dialog.ScheduleConfirmDialog
@@ -100,9 +101,9 @@ import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleCalendarArea
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleRecurrenceArea
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleRemindArea
 import com.cyxbs.pages.schedule.ui.edit.area.EditScheduleTimeArea
+import com.cyxbs.pages.schedule.ui.model.ScheduleDraft
 import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoCompletedIndicatorColor
 import com.cyxbs.pages.schedule.ui.todo.main.ScheduleTodoPendingIndicatorColor
-import com.cyxbs.pages.schedule.ui.model.ScheduleDraft
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCalendar
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoCategory
 import com.cyxbs.pages.schedule.widget.rememberIcAddtodoNotice
@@ -289,6 +290,7 @@ fun EditScheduleDialog(
         onUiStateChanged = { contentUiState = it },
         firstMonday = firstMonday,
         categories = categoryCatalog.selectableCategories,
+        repositorySnapshot = repositorySnapshot,
         occurrenceAdjustments = repositorySnapshot.occurrenceAdjustments.filterNot {
           it.recurrenceId in modelState.occurrenceRestoreIds
         },
@@ -466,6 +468,7 @@ private fun ScheduleContent(
   onUiStateChanged: (ScheduleUi) -> Unit,
   firstMonday: Date?,
   categories: List<ScheduleCategory>,
+  repositorySnapshot: ScheduleSnapshot,
   occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
   showCourseRelation: Boolean,
   reminderAuthorized: Boolean,
@@ -602,7 +605,10 @@ private fun ScheduleContent(
     // 备注已包含在上方 IME 目标区域中。
     ScheduleUi.Show, ScheduleUi.Edit.Note -> Unit
     // 日期：下方就地变日历，点某天实时改写开始/结束的日期（周数随之重算）；← 返回
-    ScheduleUi.Edit.Date -> EditScheduleCalendarArea(state = modelState)
+    ScheduleUi.Edit.Date -> EditScheduleCalendarArea(
+      state = modelState,
+      snapshot = repositorySnapshot,
+    )
     // 时间：下方可切换全天、时间段或时间点；全天不展示时分滚轮。
     ScheduleUi.Edit.Time -> EditScheduleTimeArea(state = modelState)
     // 重复：内容较多，外层弹窗会增高；结束条件固定在底部，主体选择区内部滚动。

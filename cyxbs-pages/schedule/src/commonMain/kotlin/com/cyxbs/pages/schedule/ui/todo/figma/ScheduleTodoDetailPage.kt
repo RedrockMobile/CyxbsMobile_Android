@@ -45,6 +45,7 @@ import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
+import com.cyxbs.pages.schedule.domain.repository.ScheduleSnapshot
 import com.cyxbs.pages.schedule.domain.repository.canSubmitScheduleMutation
 import com.cyxbs.pages.schedule.ui.dialog.ScheduleBottomSheet
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleModelState
@@ -101,6 +102,7 @@ internal fun ScheduleTodoDetailRoute(
   ScheduleTodoDetailPage(
     item = item,
     categories = snapshot.categories,
+    snapshot = snapshot,
     editorEnabled = viewModel.mutationMode.canSubmitScheduleMutation(),
     onBack = onBack,
     onSyncToSchedule = {
@@ -126,6 +128,7 @@ internal fun ScheduleTodoDetailRoute(
 internal fun ScheduleTodoDetailPage(
   item: ScheduleTodoItemUi,
   categories: List<ScheduleCategory>,
+  snapshot: ScheduleSnapshot,
   editorEnabled: Boolean,
   onBack: () -> Unit,
   onSyncToSchedule: () -> Unit,
@@ -320,6 +323,7 @@ internal fun ScheduleTodoDetailPage(
   ScheduleTodoDateEditorSheet(
     show = showDateEditor,
     state = state,
+    snapshot = snapshot,
     onCancel = {
       dateEditorSnapshot?.restoreTo(state)
       dateEditorSnapshot = null
@@ -487,6 +491,7 @@ private val ScheduleTodoDeadlineCardShape = GenericShape { size, _ ->
 private fun ScheduleTodoDateEditorSheet(
   show: Boolean,
   state: EditScheduleModelState,
+  snapshot: ScheduleSnapshot,
   onCancel: () -> Unit,
   onConfirm: () -> Unit,
 ) {
@@ -521,7 +526,7 @@ private fun ScheduleTodoDateEditorSheet(
           modifier = Modifier.clickableNoIndicator(onClick = onConfirm),
         )
       }
-      EditScheduleCalendarArea(state = state)
+      EditScheduleCalendarArea(state = state, snapshot = snapshot)
     }
   }
 }

@@ -40,6 +40,7 @@ import com.cyxbs.components.view.calendar.state.rememberCalendarState
 import com.cyxbs.components.view.wheel.WheelSelectCompose
 import com.cyxbs.pages.schedule.domain.model.Schedule
 import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
+import com.cyxbs.pages.schedule.ui.calendar.rememberRecurrenceCalendarMarkedDates
 import com.cyxbs.pages.schedule.ui.edit.RecurrenceDraft
 import com.cyxbs.pages.schedule.ui.edit.RepeatEndOption
 import com.cyxbs.pages.schedule.ui.edit.RepeatFreqOption
@@ -235,6 +236,11 @@ internal fun EditScheduleRecurrenceArea(
           startDate = minOf(untilStartDate, untilDate),
           endDate = maxOf(untilStartDate, untilDate).plusYears(8).lastDate
         )
+        val markedDates = rememberRecurrenceCalendarMarkedDates(
+          draft = draft,
+          anchorDate = anchorDate,
+          calendarState = calendarState,
+        )
         CalendarCompose(
           modifier = Modifier.fillMaxWidth(),
           state = calendarState,
@@ -244,6 +250,7 @@ internal fun EditScheduleRecurrenceArea(
               calendarState.CalendarDateCompose(
                 date = date, show = show,
                 dayFontSize = 14.sp, lunarFontSize = 9.sp, maxCellHeight = 38.dp,
+                hasIndicator = date in markedDates,
               )
             }
           },

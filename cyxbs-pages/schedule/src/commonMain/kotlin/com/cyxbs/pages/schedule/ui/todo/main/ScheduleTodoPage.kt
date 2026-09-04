@@ -54,12 +54,12 @@ import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
+import com.cyxbs.pages.schedule.ui.calendar.rememberScheduleCalendarMarkedDates
 import com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavArgument
 import com.cyxbs.pages.schedule.ui.category.mergeScheduleCategories
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleDialog
 import com.cyxbs.pages.schedule.ui.edit.EditScope
 import com.cyxbs.pages.schedule.ui.main.isScheduleMainEditorEnabled
-import com.cyxbs.pages.schedule.ui.model.ScheduleUiOccurrence
 import com.cyxbs.pages.schedule.ui.model.occurrenceByIdentity
 import com.cyxbs.pages.schedule.ui.model.occurrencesInRange
 import com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument
@@ -240,6 +240,20 @@ fun ScheduleTodoPage(
     timelineSchedulesForDate(timelineVisibleOccurrences, clickDate)
   }
   val timelineScrollState = rememberScrollState()
+  val calendarMarkerSnapshot = remember(snapshot, selectedCategoryId) {
+    if (selectedCategoryId == null) {
+      snapshot
+    } else {
+      val schedules = snapshot.schedules.filter { it.categoryId == selectedCategoryId }
+      val scheduleIds = schedules.mapTo(mutableSetOf()) { it.id }
+      snapshot.copy(
+        schedules = schedules,
+        occurrenceAdjustments = snapshot.occurrenceAdjustments.filter { it.scheduleId in scheduleIds },
+      )
+    }
+  }
+  // 分类筛选后只标记该分类实际可见的日程，避免点击带圆点日期后时间轴却为空。
+  val calendarMarkedDates = rememberScheduleCalendarMarkedDates(calendarMarkerSnapshot, calendarState)
   val density = LocalDensity.current
   LaunchedEffect(Unit) {
     val currentHour = Clock.System.now()
@@ -511,6 +525,7 @@ fun ScheduleTodoPage(
             .background(colors.bottomBg)
             .navigationBarsPadding(),
           state = calendarState,
+          dateHasIndicator = { it in calendarMarkedDates },
         ) {
           ScheduleTimelinePane(
             modifier = Modifier.layout(calendarState.createCalendarContentOffsetMeasurePolicy()),

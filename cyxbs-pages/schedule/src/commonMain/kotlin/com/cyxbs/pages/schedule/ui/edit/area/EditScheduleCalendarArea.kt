@@ -13,6 +13,8 @@ import com.cyxbs.components.view.calendar.CalendarDateCompose
 import com.cyxbs.components.view.calendar.WeekTextCompose
 import com.cyxbs.components.view.calendar.month.CalendarMonthCompose
 import com.cyxbs.components.view.calendar.state.rememberCalendarState
+import com.cyxbs.pages.schedule.domain.repository.ScheduleSnapshot
+import com.cyxbs.pages.schedule.ui.calendar.rememberScheduleCalendarMarkedDates
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleModelState
 import com.cyxbs.pages.schedule.ui.timeline.formatScheduleDateTime
 
@@ -25,11 +27,13 @@ import com.cyxbs.pages.schedule.ui.timeline.formatScheduleDateTime
 @Composable
 internal fun EditScheduleCalendarArea(
   state: EditScheduleModelState,
+  snapshot: ScheduleSnapshot,
 ) {
   val calendarState = rememberCalendarState(
     initialClickDate = state.anchorDate,
     endDate = TodayNoEffect.plusYears(8).lastDate,
   )
+  val markedDates = rememberScheduleCalendarMarkedDates(snapshot, calendarState)
   CalendarCompose(
     modifier = Modifier.fillMaxWidth(),
     state = calendarState,
@@ -42,6 +46,7 @@ internal fun EditScheduleCalendarArea(
         calendarState.CalendarDateCompose(
           date = date, show = show,
           dayFontSize = 14.sp, lunarFontSize = 9.sp, maxCellHeight = 38.dp,
+          hasIndicator = date in markedDates,
         )
       }
     },
