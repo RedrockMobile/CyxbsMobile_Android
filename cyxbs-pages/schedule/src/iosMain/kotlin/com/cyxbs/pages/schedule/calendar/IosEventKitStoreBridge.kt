@@ -364,8 +364,9 @@ internal class IosEventKitStoreBridge(
 
       is IosEventKitWriteTiming.AllDay -> {
         event.allDay = true
-        event.startDate = timing.startDate.toUtcNSDate()
-        event.endDate = timing.endExclusiveDate.toUtcNSDate()
+        event.startDate = timing.startDate.toEventKitAllDayStartNSDate()
+        // EventKit 以设备时区解释全天边界，且 endDate 表示最后一个包含日期；common 层则使用日期半开区间。
+        event.endDate = timing.endExclusiveDate.toEventKitAllDayEndNSDate()
         event.timeZone = null
       }
     }
@@ -386,8 +387,10 @@ internal class IosEventKitStoreBridge(
   /** 将 EKEvent 原始字段无修复地提取给 foundation；桥接层不自行 trim、round 或认领身份。 */
   private fun EKEvent.toStoreSnapshot(): IosEventKitStoreEventSnapshot? {
     val calendarId = calendar?.calendarIdentifier ?: return null
-    val start = startDate?.toRawMoment() ?: return null
-    val end = endDate?.toRawMoment() ?: return null
+    val rawStart = startDate?.toRawMoment() ?: return null
+    val rawEnd = endDate?.toRawMoment() ?: return null
+    val start = if (allDay) rawStart.toCanonicalAllDayStart() ?: return null else rawStart
+    val end = if (allDay) rawEnd.toCanonicalAllDayExclusiveEnd() ?: return null else rawEnd
     val rawRules = recurrenceRules.orEmpty().map { value ->
       val rule = value as? EKRecurrenceRule ?: return null
       // foundation 负责把不可逆规则分型为 UNSUPPORTED_RECURRENCE；bridge 不因无关规则让整个 calendar 扫描失败。
@@ -412,7 +415,8 @@ internal class IosEventKitStoreBridge(
         notes = notes,
         start = start,
         endExclusive = end,
-        timeZoneId = timeZone?.name,
+        // EventKit 会按设备时区表达全天边界，但全天日期本身不携带时区；桥接层已将其规范化为 UTC 日期边界。
+        timeZoneId = if (allDay) null else timeZone?.name,
         allDay = allDay,
         recurrenceRules = rawRules,
         alarms = rawAlarms,
@@ -585,12 +589,63 @@ internal class IosEventKitStoreBridge(
   private fun IosEventKitRawMoment.toNSDate(): NSDate =
     NSDate.dateWithTimeIntervalSince1970(epochSeconds.toDouble() + nanoseconds.toDouble() / NANOS_PER_SECOND)
 
-  private fun com.cyxbs.components.config.time.Date.toUtcNSDate(): NSDate {
-    val instant = LocalDate(year, monthNumber, dayOfMonth).atStartOfDayIn(TimeZone.UTC)
+  /** EventKit 全天事件按设备当前时区接收日期边界，不能把 UTC 午夜直接当作本地日期。 */
+  private fun com.cyxbs.components.config.time.Date.toEventKitAllDayStartNSDate(): NSDate {
+    val instant = LocalDate(year, monthNumber, dayOfMonth).atStartOfDayIn(TimeZone.currentSystemDefault())
     return NSDate.dateWithTimeIntervalSince1970(
       instant.epochSeconds.toDouble() + instant.nanosecondsOfSecond.toDouble() / NANOS_PER_SECOND,
     )
   }
+
+  /** 将 common 全天半开区间的结束日期转换为 EventKit 使用的最后包含日期。 */
+  private fun com.cyxbs.components.config.time.Date.toEventKitAllDayEndNSDate(): NSDate {
+    val exclusiveEndDate = LocalDate(year, monthNumber, dayOfMonth)
+    val inclusiveEndDate = LocalDate.fromEpochDays(exclusiveEndDate.toEpochDays() - 1)
+    val inclusiveEnd = inclusiveEndDate.atStartOfDayIn(TimeZone.currentSystemDefault())
+    return NSDate.dateWithTimeIntervalSince1970(
+      inclusiveEnd.epochSeconds.toDouble() + inclusiveEnd.nanosecondsOfSecond.toDouble() / NANOS_PER_SECOND,
+    )
+  }
+
+  /** 将 EventKit 设备时区午夜转换为 common 使用的 UTC 日期起点。 */
+  private fun IosEventKitRawMoment.toCanonicalAllDayStart(): IosEventKitRawMoment? {
+    val local = toLocalDateTimeOrNull() ?: return null
+    if (!local.isMidnight()) return null
+    return local.date.toUtcRawMoment()
+  }
+
+  /**
+   * 将 EventKit 全天结束边界转换为 common 的 UTC 日期半开边界。
+   *
+   * iOS 26 回读最后包含日的 23:59:59；部分 EventKit 实现也可能直接返回次日 00:00。两种平台形状都只按
+   * 设备时区提取日期，不把时区偏移误判为秒级精度。
+   */
+  private fun IosEventKitRawMoment.toCanonicalAllDayExclusiveEnd(): IosEventKitRawMoment? {
+    val local = toLocalDateTimeOrNull() ?: return null
+    val exclusiveDate = when {
+      local.isMidnight() -> local.date
+      local.hour == 23 && local.minute == 59 && local.second == 59 && local.nanosecond == 0 ->
+        LocalDate.fromEpochDays(local.date.toEpochDays() + 1)
+
+      else -> return null
+    }
+    return exclusiveDate.toUtcRawMoment()
+  }
+
+  /** 按设备时区读取 EventKit 全天边界；异常 epoch 或纳秒值保持失败，不做猜测性修复。 */
+  private fun IosEventKitRawMoment.toLocalDateTimeOrNull(): LocalDateTime? = runCatching {
+    Instant.fromEpochSeconds(epochSeconds, nanoseconds.toLong())
+      .toLocalDateTime(TimeZone.currentSystemDefault())
+  }.getOrNull()
+
+  /** common 全天日期在纯模型层统一以 UTC 午夜表达。 */
+  private fun LocalDate.toUtcRawMoment(): IosEventKitRawMoment {
+    val instant = atStartOfDayIn(TimeZone.UTC)
+    return IosEventKitRawMoment(instant.epochSeconds, instant.nanosecondsOfSecond)
+  }
+
+  private fun LocalDateTime.isMidnight(): Boolean =
+    hour == 0 && minute == 0 && second == 0 && nanosecond == 0
 
   /** foundation 已输出 canonical RRULE；这里仅把受限字段逐项映射为 EventKit 对象。 */
   private fun recurrenceRuleOrNull(

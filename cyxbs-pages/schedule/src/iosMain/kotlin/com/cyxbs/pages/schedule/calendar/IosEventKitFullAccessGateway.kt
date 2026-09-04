@@ -1293,7 +1293,12 @@ class IosEventKitFullAccessGateway private constructor(
 
         // EventKit 不能以单个无界 predicate 扫完历史。若选中 source 中已有日历在两个有限窗口都没有
         // canonical URL，就不能证明它从未承载当前 scope；在需要创建时必须停在歧义，而不能猜测 absent。
-        CalendarOwnership.Unowned -> if (calendar.sourceIdentifier == selectedSource.identifier) {
+        CalendarOwnership.Unowned -> if (
+          calendar.sourceIdentifier == selectedSource.identifier &&
+          calendar.identifier == hinted?.identifier
+        ) {
+          // 首次导出时 source 内通常已有系统/用户日历，它们没有掌邮 canonical URL，必须直接忽略。
+          // 只有偏好明确缓存了该 calendar，有限窗口又无法确认历史身份时才保持 fail-closed。
           hasHistoricallyUnprovableSelectedCalendar = true
         }
 

@@ -218,6 +218,23 @@ class IosEventKitFullAccessGatewayTest {
     assertEquals(0, store.saveCount)
   }
 
+  /** 首次导出必须忽略同一 source 中没有掌邮身份的普通日历，并创建独立的掌邮日历。 */
+  @Test
+  fun unrelatedCalendarInSelectedSourceDoesNotBlockFirstCreation() {
+    val store = authorizedStore().apply { addCalendar(CALENDAR_ID) }
+
+    val result = assertIs<IosEventKitGatewayResult.Upserted>(
+      IosEventKitFullAccessGateway(
+        scope = SCOPE,
+        store = store,
+        scopeRecoveryAnchorEpochSeconds = AUTHORITY_ANCHOR_EPOCH_SECONDS,
+      ).upsert(projection(), IosEventKitIdentifierHints(SOURCE_ID)),
+    )
+
+    assertTrue(result.atomicCalendarAndFirstEvent)
+    assertEquals(1, store.createCalendarCount)
+    assertEquals(1, store.saveCount)
+  }
 
   /** 受限 RRULE 必须经 foundation payload 进入 store，并在 canonical 回读后保持同一 fingerprint。 */
   @Test
