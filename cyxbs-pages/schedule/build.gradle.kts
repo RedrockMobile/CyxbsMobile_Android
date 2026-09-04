@@ -53,6 +53,13 @@ kotlin {
       implementation(libs.ktor.contentNegotiation)
       implementation(libs.ktor.json)
     }
+    // 移动端分享和 Desktop 保存面板由 FileKit dialogs 提供，Web 下载只需 core。
+    noWebMain.dependencies {
+      implementation(libs.filekit.dialogs.compose)
+    }
+    webMain.dependencies {
+      implementation(libs.filekit.core)
+    }
     androidMain.dependencies {
       implementation(libs.bundles.projectBase)
       implementation(libs.bundles.views)

@@ -42,14 +42,20 @@ import com.cyxbs.components.navigation.AppNavEntry
 import com.cyxbs.components.navigation.NAV_SCHEDULE_SETTINGS
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.extensions.toast
+import com.cyxbs.components.utils.extensions.toastLong
 import com.cyxbs.components.view.ui.ChooseDialogCompose
 import com.cyxbs.pages.schedule.data.remote.ScheduleApiService
 import com.cyxbs.pages.schedule.data.repository.ScheduleRepositoryProvider
+import com.cyxbs.pages.schedule.domain.calendar.ScheduleIcsDocument
+import com.cyxbs.pages.schedule.domain.calendar.ScheduleIcsExporter
+import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.ui.todo.main.saveScheduleTodoPinnedIds
+import kotlinx.datetime.TimeZone
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
+import kotlin.time.Clock
 
 /** 邮子清单设置页的无参数导航身份。 */
 @Serializable
@@ -72,7 +78,7 @@ class ScheduleSettingsNavEntry : AppNavEntry<ScheduleSettingsNavArgument>() {
   }
 }
 
-/** 设置页骨架；系统日历项由平台下发，ICS 导出仅预留禁用入口。 */
+/** 设置页骨架；系统日历项由平台下发，ICS 导出使用当前账号已发布的本地快照。 */
 @Composable
 private fun ScheduleSettingsPage(onBack: () -> Unit) {
   val colors = LocalAppColors.current
@@ -84,6 +90,74 @@ private fun ScheduleSettingsPage(onBack: () -> Unit) {
   var clearConfirmationStep by remember { mutableStateOf(1) }
   var isClearing by remember { mutableStateOf(false) }
   var clearResultMessage by remember { mutableStateOf<String?>(null) }
+  var isExportingIcs by remember { mutableStateOf(false) }
+  var pendingIcsDocument by remember { mutableStateOf<ScheduleIcsDocument?>(null) }
+  val icsFileSaveLauncher = rememberScheduleIcsFileSaveLauncher { result ->
+    val document = pendingIcsDocument
+    pendingIcsDocument = null
+    isExportingIcs = false
+    when (result) {
+      is ScheduleIcsFileSaveResult.Saved -> if (document != null) {
+        toastLong(buildString {
+          append("已导出 ${document.scheduleCount} 个日程")
+          if (document.adjustmentCount > 0) append("，含 ${document.adjustmentCount} 条单次调整")
+          if (document.skippedScheduleCount > 0) {
+            append("；另有 ${document.skippedScheduleCount} 个当前不可导出项已跳过")
+          }
+          append("\n${result.displayMessage}")
+        })
+      }
+      ScheduleIcsFileSaveResult.Cancelled -> Unit
+      is ScheduleIcsFileSaveResult.Failed -> toast("ICS 文件保存失败，请重试")
+      ScheduleIcsFileSaveResult.Unsupported -> toast("当前平台暂不支持导出 ICS 文件")
+    }
+  }
+
+  /** 冻结当前账号与仓库快照后生成文件；远端暂不可用不影响导出已经确认的本地数据。 */
+  fun exportCurrentSnapshotToIcs() {
+    if (!icsFileSaveLauncher.isSupported) {
+      toast("当前平台暂不支持导出 ICS 文件")
+      return
+    }
+    val expectedAccountId = accountService.session.value.accountId
+    val snapshot = repository.snapshot.value
+    if (expectedAccountId == null || snapshot.accountId != expectedAccountId) {
+      toast("日程数据尚未准备完成，请稍后重试")
+      return
+    }
+    when (snapshot.status) {
+      ScheduleRepositoryStatus.Loading -> {
+        toast("日程数据正在加载，请稍后重试")
+        return
+      }
+      is ScheduleRepositoryStatus.Corrupted -> {
+        toast("当前日程数据不可用，暂时无法导出")
+        return
+      }
+      is ScheduleRepositoryStatus.Ready,
+      is ScheduleRepositoryStatus.Recovered,
+      is ScheduleRepositoryStatus.Unavailable -> Unit
+    }
+    isExportingIcs = true
+    val now = Clock.System.now()
+    val document = try {
+      ScheduleIcsExporter.export(snapshot, now)
+    } catch (_: Throwable) {
+      isExportingIcs = false
+      toast("ICS 文件生成失败，请重试")
+      return
+    }
+    if (document.scheduleCount == 0) {
+      isExportingIcs = false
+      toast("当前没有可导出的已排期日程")
+      return
+    }
+    pendingIcsDocument = document
+    icsFileSaveLauncher.launch(
+      fileName = ScheduleIcsExporter.suggestedFileName(now, TimeZone.currentSystemDefault()),
+      content = document.content,
+    )
+  }
 
   /** 使用发起操作时冻结的账号会话清空服务端与本地数据；切号后的响应不会误清新账号。 */
   fun clearCurrentAccountSchedules() {
@@ -163,12 +237,15 @@ private fun ScheduleSettingsPage(onBack: () -> Unit) {
       verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
       ScheduleCalendarExportSetting(Modifier.fillMaxWidth())
-      ScheduleSettingSwitchRow(
+      ScheduleSettingActionRow(
         title = "导出 ICS 文件",
-        summary = "暂未开放",
-        checked = false,
-        enabled = false,
-        onCheckedChange = {},
+        summary = when {
+          !icsFileSaveLauncher.isSupported -> "当前平台暂不支持"
+          isExportingIcs -> "正在生成并等待保存…"
+          else -> "导出有日期的日程，包含重复规则、提醒和单次调整"
+        },
+        enabled = icsFileSaveLauncher.isSupported && !isExportingIcs,
+        onClick = ::exportCurrentSnapshotToIcs,
       )
       if (isDebug()) {
         ScheduleSettingActionRow(
