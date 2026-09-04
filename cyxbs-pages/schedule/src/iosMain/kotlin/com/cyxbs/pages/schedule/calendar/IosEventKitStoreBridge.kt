@@ -195,8 +195,8 @@ internal class IosEventKitStoreBridge(
    *
    * EventKit 单个 predicate 最多覆盖四年；窗口由 gateway 围绕目标投影生成并在值对象中校验，禁止再传
    * `distantPast..distantFuture` 被系统静默截断。扫描只读，因此即使 calendar 已变成不可写，也必须继续暴露
-   * canonical 身份给 gateway 阻止重复创建。周期事件可能按 occurrence 返回，按 calendarItemIdentifier 合并并
-   * 保留最早 occurrence，后续 spanFuture 操作才从系列起点覆盖整个系列。
+   * canonical 身份给 gateway 阻止重复创建。周期事件可能按 occurrence 返回；同一 master URI 的展开项需要按
+   * calendarItemIdentifier 合并，但已修改单次的 exception URI 必须单独保留，不能反向遮住 master。
    */
   override fun events(
     calendarIdentifier: String,
@@ -215,7 +215,7 @@ internal class IosEventKitStoreBridge(
       .filter { event ->
         event.URL?.absoluteString?.let(CalendarProjectionUriCodec::decodeOrNull) != null
       }
-      .groupBy { it.calendarItemIdentifier }
+      .groupBy { event -> event.calendarItemIdentifier to event.URL?.absoluteString }
       .values
       .mapNotNull { occurrences ->
         occurrences.minByOrNull {
@@ -330,6 +330,97 @@ internal class IosEventKitStoreBridge(
     event.eventIdentifier?.takeIf { it.isNotBlank() }
       ?.let { identifier -> IosEventKitStoreResult.Success(identifier) }
       ?: IosEventKitStoreResult.Failure(IosEventKitStoreFailure.AMBIGUOUS)
+  }
+
+  /**
+   * 以当前 Schedule 快照重建重复系列，并重放全部单次调整。
+   *
+   * EventKit 对已删除 occurrence 没有稳定的“恢复”入口，因此不能仅对差量执行 save/remove。本方法先删除旧系列，
+   * 再创建新的 master，最后始终按原始 recurrence identity 查找实例并使用 `EKSpanThisEvent` 修改或删除。任一步
+   * 失败都返回 typed failure，调用方不会更新本地例外指纹，下一轮完整对账会继续修复。
+   */
+  override fun replaceRecurringSeries(
+    calendarIdentifier: String,
+    existingEventIdentifier: String,
+    masterPayload: IosEventKitWritePayload,
+    occurrences: List<IosEventKitOccurrenceWrite>,
+  ): IosEventKitStoreResult<String> = accessChecked {
+    if (masterPayload.recurrenceRule == null) {
+      return@accessChecked IosEventKitStoreResult.Failure(IosEventKitStoreFailure.AMBIGUOUS)
+    }
+    val calendar = eventStore.calendarWithIdentifier(calendarIdentifier)
+      ?: return@accessChecked IosEventKitStoreResult.Failure(IosEventKitStoreFailure.NOT_FOUND)
+    if (!calendar.allowsContentModifications) {
+      return@accessChecked IosEventKitStoreResult.Failure(IosEventKitStoreFailure.NOT_FOUND)
+    }
+    val existing = eventStore.eventWithIdentifier(existingEventIdentifier)
+      ?: return@accessChecked IosEventKitStoreResult.Failure(IosEventKitStoreFailure.NOT_FOUND)
+    if (existing.calendar?.calendarIdentifier != calendarIdentifier ||
+      existing.URL?.absoluteString != masterPayload.externalUri
+    ) {
+      return@accessChecked IosEventKitStoreResult.Failure(IosEventKitStoreFailure.AMBIGUOUS)
+    }
+    val removed = removeEventAndCommit(existing, EKSpan.EKSpanFutureEvents)
+    if (removed is IosEventKitStoreResult.Failure) return@accessChecked removed
+
+    val master = EKEvent.eventWithEventStore(eventStore)
+    val configured = configureEvent(master, calendar, masterPayload)
+    if (configured is IosEventKitStoreResult.Failure) return@accessChecked configured
+    val saved = saveEventAndCommit(master, EKSpan.EKSpanFutureEvents)
+    if (saved is IosEventKitStoreResult.Failure) return@accessChecked saved
+    val masterIdentifier = master.eventIdentifier?.takeIf { it.isNotBlank() }
+      ?: return@accessChecked IosEventKitStoreResult.Failure(IosEventKitStoreFailure.AMBIGUOUS)
+
+    for (write in occurrences) {
+      val occurrence = findOriginalOccurrence(calendar, masterPayload.externalUri, write.identity)
+        ?: return@accessChecked IosEventKitStoreResult.Failure(IosEventKitStoreFailure.NOT_FOUND)
+      when (write.operation) {
+        com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionOperation.UPSERT -> {
+          val occurrenceConfigured = configureEvent(occurrence, calendar, write.payload)
+          if (occurrenceConfigured is IosEventKitStoreResult.Failure) return@accessChecked occurrenceConfigured
+          val occurrenceSaved = saveEventAndCommit(occurrence, EKSpan.EKSpanThisEvent)
+          if (occurrenceSaved is IosEventKitStoreResult.Failure) return@accessChecked occurrenceSaved
+        }
+
+        com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionOperation.CANCEL -> {
+          val occurrenceRemoved = removeEventAndCommit(occurrence, EKSpan.EKSpanThisEvent)
+          if (occurrenceRemoved is IosEventKitStoreResult.Failure) return@accessChecked occurrenceRemoved
+        }
+      }
+    }
+    IosEventKitStoreResult.Success(masterIdentifier)
+  }
+
+  /**
+   * 在原始日期附近查找新 master 展开的唯一 occurrence。
+   *
+   * 查询使用 master URI 而不是调整后的 URI；每条调整执行前，目标 occurrence 尚未被当前循环修改。全天身份按
+   * EventKit 使用的设备时区午夜构造，定时身份则使用领域层已冻结的绝对时刻。
+   */
+  private fun findOriginalOccurrence(
+    calendar: EKCalendar,
+    masterUri: String,
+    identity: IosEventKitOccurrenceIdentity,
+  ): EKEvent? {
+    val expected = when (identity) {
+      is IosEventKitOccurrenceIdentity.Timed -> identity.start.toNSDate()
+      is IosEventKitOccurrenceIdentity.AllDay -> identity.date.toEventKitAllDayStartNSDate()
+    }
+    val expectedSeconds = expected.timeIntervalSince1970
+    val predicate = eventStore.predicateForEventsWithStartDate(
+      startDate = NSDate.dateWithTimeIntervalSince1970(expectedSeconds - OCCURRENCE_SCAN_RADIUS_SECONDS),
+      endDate = NSDate.dateWithTimeIntervalSince1970(expectedSeconds + OCCURRENCE_SCAN_RADIUS_SECONDS),
+      calendars = listOf(calendar),
+    )
+    val matches = eventStore.eventsMatchingPredicate(predicate)
+      .mapNotNull { it as? EKEvent }
+      .filter { event ->
+        event.URL?.absoluteString == masterUri &&
+          event.occurrenceDate?.timeIntervalSince1970?.let { occurrenceSeconds ->
+            kotlin.math.abs(occurrenceSeconds - expectedSeconds) < OCCURRENCE_IDENTITY_TOLERANCE_SECONDS
+          } == true
+      }
+    return matches.singleOrNull()
   }
 
   /** 删除目标消失或 commit 结果不确定都返回失败，由 gateway canonical 重查决定后续状态。 */
@@ -815,6 +906,9 @@ internal class IosEventKitStoreBridge(
   }
 
   private companion object {
+    /** 足以覆盖全天时区边界和 DST 跳变，同时不会扫描无关年份。 */
+    const val OCCURRENCE_SCAN_RADIUS_SECONDS = 2.0 * 24.0 * 60.0 * 60.0
+    const val OCCURRENCE_IDENTITY_TOLERANCE_SECONDS = 0.5
     const val IOS_17_MAJOR_VERSION = 17L
     const val NANOS_PER_SECOND = 1_000_000_000.0
     const val UNSUPPORTED_RECURRENCE_SENTINEL = "UNSUPPORTED_EVENTKIT_RECURRENCE"

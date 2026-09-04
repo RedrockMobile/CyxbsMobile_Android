@@ -37,7 +37,9 @@ Android Calendar Provider 的对应关系如下：
 
 例外身份始终使用原始发生时刻；例如每天 14:00 的 9 月 8 日被移到 16:00，例外的显示时间是 16:00，但 `ORIGINAL_INSTANCE_TIME` 仍指向 9 月 8 日 14:00。这样再次修改、取消或还原时都只命中同一次，不会误伤整个系列。
 
-当前 Android 出站协调器已启用并验证上述原生例外映射。iOS EventKit 仍保持 fail-closed：遇到带有效单次调整的系列不会写入不完整副本；其原生例外写入需要在 iOS 适配器中另行实现和真机验证。
+iOS EventKit 使用等价语义：先按当前 Schedule 写入系列 master，再通过 `occurrenceDate` 定位原始实例。单次修改调用 `.thisEvent` 保存，单次删除或完成 TODO 调用 `.thisEvent` 移除；修改整个系列时重建 master 并重放当前全部有效调整。iOS 额外持久化系列调整聚合指纹，只有调整集合或系列本体变化时才重建，避免每次仓库快照都重复改写 EventKit。
+
+当前 Android 与 iOS 出站协调器均已启用原生单次例外映射。iOS 模拟器 EventKit 数据库验证到系列 master 与 detached occurrence：后者的 `orig_item_id` 指向 master，`orig_date` 保持修改前的原始发生时刻，显示时间则使用单次修改后的值。
 
 ## 3. 权限
 

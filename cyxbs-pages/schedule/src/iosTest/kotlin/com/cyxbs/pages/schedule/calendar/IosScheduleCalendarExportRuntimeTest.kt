@@ -12,6 +12,14 @@ import com.cyxbs.pages.schedule.domain.calendar.PlatformCalendarEventRef
 import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarProjectionFactory
 import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarSource
 import com.cyxbs.pages.schedule.domain.model.Schedule
+import com.cyxbs.pages.schedule.domain.model.FieldPatch
+import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
+import com.cyxbs.pages.schedule.domain.model.OccurrencePatch
+import com.cyxbs.pages.schedule.domain.model.OccurrenceStatus
+import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.model.RecurrenceId
+import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
+import com.cyxbs.pages.schedule.domain.model.ScheduleOccurrenceAdjustment
 import com.cyxbs.pages.schedule.domain.model.ScheduleTodoState
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
 import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
@@ -291,6 +299,63 @@ class IosScheduleCalendarExportRuntimeTest {
     runCurrent()
     assertEquals(1, gateway.deleteCount)
     assertEquals(emptyMap(), preferences.value.eventReferences)
+    runtime.stop()
+  }
+
+  /** 单次调整变化才重建系列；移除全部调整也必须重建一次，以恢复 EventKit 中曾被删除的 occurrence。 */
+  @Test
+  fun occurrenceFingerprintRebuildsSeriesOnChangeAndPersistsConfirmedEmptyState() = runTest {
+    val accountId = "runtime-occurrence-reconcile"
+    val account = FakeAccount(backgroundScope, session(accountId))
+    val recurring = schedule().copy(
+      recurrence = RecurrenceRule(
+        frequency = RecurrenceFrequency.WEEKLY,
+        byWeekDays = setOf(IsoWeekDay.SATURDAY),
+      ),
+    )
+    val adjustment = ScheduleOccurrenceAdjustment(
+      scheduleId = recurring.id,
+      recurrenceId = RecurrenceId(
+        originalDateTime = MinuteTimeDate(2026, 8, 8, 9, 30),
+        timeZoneId = "Asia/Shanghai",
+        allDay = false,
+      ),
+      revision = 1,
+      status = OccurrenceStatus.ACTIVE,
+      patch = OccurrencePatch(title = FieldPatch.Replace("只改这一次")),
+      createdAt = kotlin.time.Instant.parse("2026-08-01T00:00:00Z"),
+      updatedAt = kotlin.time.Instant.parse("2026-08-01T00:00:00Z"),
+    )
+    val repository = FakeRepository(accountId).apply {
+      replaceSnapshot(listOf(recurring), listOf(adjustment))
+    }
+    val gateway = LedgerGateway()
+    val preferences = FakePreferences(
+      IosScheduleCalendarExportSettings.Preference(true, "source", null),
+    )
+    val runtime = runtime(account, repository, gateway, preferences)
+
+    runtime.start()
+    runCurrent()
+    assertEquals(1, gateway.replaceSeriesCount)
+    assertTrue(preferences.value.occurrenceFingerprints.getValue(
+      projectionId(accountId, com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind.SERIES_MASTER),
+    ).isNotEmpty())
+
+    repository.emit(ScheduleCalendarChange.SchedulesCommitted(accountId, emptySet()))
+    runCurrent()
+    assertEquals(1, gateway.replaceSeriesCount, "相同单次调整不能重复改写 EventKit")
+
+    repository.replaceSnapshot(listOf(recurring), emptyList())
+    repository.emit(ScheduleCalendarChange.SchedulesCommitted(accountId, emptySet()))
+    runCurrent()
+    assertEquals(2, gateway.replaceSeriesCount)
+    assertEquals(
+      "",
+      preferences.value.occurrenceFingerprints.getValue(
+        projectionId(accountId, com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind.SERIES_MASTER),
+      ),
+    )
     runtime.stop()
   }
 
@@ -1781,6 +1846,49 @@ class IosScheduleCalendarExportRuntimeTest {
     }
   }
 
+  /** 单次调整指纹必须保留“已确认为空”，并拒绝重复 identity、非系列投影和跨账号文本。 */
+  @Test
+  fun occurrenceFingerprintLedgerRoundTripsEmptyStateAndRejectsInvalidIdentity() {
+    val scope = IosScheduleCalendarExportSettings.scopeForAccount("runtime-occurrence-ledger")
+    val masterId = CalendarProjectionId(
+      scope = scope,
+      scheduleId = ScheduleId("018f7d5a-3333-7abc-8def-1234567890ac"),
+      kind = com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind.SERIES_MASTER,
+    )
+    val values = mapOf(masterId to "")
+    val serialized = IosScheduleCalendarExportSettings
+      .encodeOccurrenceFingerprintLedgerForTest(values)
+
+    assertEquals(
+      values,
+      IosScheduleCalendarExportSettings.decodeOccurrenceFingerprintLedgerForTest(serialized, scope),
+    )
+    assertEquals(
+      emptyMap(),
+      IosScheduleCalendarExportSettings.decodeOccurrenceFingerprintLedgerForTest(
+        serialized + serialized,
+        scope,
+      ),
+    )
+
+    val singleId = masterId.copy(
+      kind = com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind.SINGLE,
+    )
+    val singleSerialized = IosScheduleCalendarExportSettings
+      .encodeOccurrenceFingerprintLedgerForTest(mapOf(singleId to "fingerprint"))
+    assertEquals(
+      emptyMap(),
+      IosScheduleCalendarExportSettings.decodeOccurrenceFingerprintLedgerForTest(singleSerialized, scope),
+    )
+    assertEquals(
+      emptyMap(),
+      IosScheduleCalendarExportSettings.decodeOccurrenceFingerprintLedgerForTest(
+        serialized,
+        IosScheduleCalendarExportSettings.scopeForAccount("another-account"),
+      ),
+    )
+  }
+
   /** 通过纯内存 seam 构造 runtime，禁止触及 EventKit、notification 或真实 settings。 */
   private fun runtime(
     account: FakeAccount,
@@ -2128,6 +2236,7 @@ class IosScheduleCalendarExportRuntimeTest {
     var lookupCount = 0
     var upsertCount = 0
     var deleteCount = 0
+    var replaceSeriesCount = 0
     var fullAccessStarts = 0
     var committedEffectCount = 0
     val crudCount: Int get() = lookupCount + upsertCount + deleteCount
@@ -2195,6 +2304,21 @@ class IosScheduleCalendarExportRuntimeTest {
         atomicCalendarAndFirstEvent = atomicFirstCreate && !ordinaryExistingWithoutProof &&
           hints.calendarIdentifier == null,
         locatorRecoveryProof = recoveryProof,
+      )
+    }
+
+    override fun replaceRecurringSeries(
+      projection: CalendarEventProjection,
+      eventRef: PlatformCalendarEventRef,
+      hints: IosEventKitIdentifierHints,
+    ): IosEventKitGatewayResult {
+      replaceSeriesCount += 1
+      currentProjection = projection.withoutNativeOccurrenceExceptions()
+      val ref = PlatformCalendarEventRef("event-${upsertCount + replaceSeriesCount}")
+      currentRef = ref
+      return IosEventKitGatewayResult.Upserted(
+        binding = IosEventKitGatewayBinding("source", "calendar", ref.value),
+        changed = true,
       )
     }
 
@@ -2332,14 +2456,28 @@ class IosScheduleCalendarExportRuntimeTest {
     }
 
     override fun removeEventReference(accountId: String, projectionId: CalendarProjectionId) {
-      value = value.copy(eventReferences = value.eventReferences - projectionId)
+      value = value.copy(
+        eventReferences = value.eventReferences - projectionId,
+        occurrenceFingerprints = value.occurrenceFingerprints - projectionId,
+      )
+      cacheWrites += 1
+    }
+
+    override fun replaceOccurrenceFingerprint(
+      accountId: String,
+      projectionId: CalendarProjectionId,
+      fingerprint: String,
+    ) {
+      value = value.copy(
+        occurrenceFingerprints = value.occurrenceFingerprints + (projectionId to fingerprint),
+      )
       cacheWrites += 1
     }
 
     override fun clearEventReferences(accountId: String) {
       writeAttempts += "ledger:clear"
       if (failLedgerClearWrite) error("simulated ledger clear persistence failure")
-      value = value.copy(eventReferences = emptyMap())
+      value = value.copy(eventReferences = emptyMap(), occurrenceFingerprints = emptyMap())
       cacheWrites += 1
     }
   }
@@ -2391,6 +2529,17 @@ class IosScheduleCalendarExportRuntimeTest {
     /** 在测试中发布新的可信快照，驱动 runtime 的 snapshot drift 与完整对账边界。 */
     fun replaceSchedules(schedules: List<Schedule>) {
       values.value = values.value.copy(schedules = schedules)
+    }
+
+    /** 同时替换系列与单次调整，供原生 occurrence 对账测试冻结一个完整仓库快照。 */
+    fun replaceSnapshot(
+      schedules: List<Schedule>,
+      occurrenceAdjustments: List<ScheduleOccurrenceAdjustment>,
+    ) {
+      values.value = values.value.copy(
+        schedules = schedules,
+        occurrenceAdjustments = occurrenceAdjustments,
+      )
     }
   }
 

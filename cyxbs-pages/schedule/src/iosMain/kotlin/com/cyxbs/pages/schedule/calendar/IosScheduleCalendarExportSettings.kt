@@ -3,6 +3,7 @@ package com.cyxbs.pages.schedule.calendar
 import com.cyxbs.components.config.sp.AccountSettings
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportScope
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionId
+import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionUriCodec
 import com.cyxbs.pages.schedule.domain.calendar.PlatformCalendarEventRef
 
@@ -31,6 +32,13 @@ internal interface IosScheduleCalendarPreferenceStore {
   /** 仅在 event 缺失或严格删除确认后移除一个 locator。 */
   fun removeEventReference(accountId: String, projectionId: CalendarProjectionId)
 
+  /** 系列 master 与当前全部单次调整完成对账后，记录稳定的聚合指纹；空字符串表示已确认没有调整。 */
+  fun replaceOccurrenceFingerprint(
+    accountId: String,
+    projectionId: CalendarProjectionId,
+    fingerprint: String,
+  )
+
   /** source 切换或 calendar cache 无效时清空所有事件 locator，禁止跨 source 复用。 */
   fun clearEventReferences(accountId: String)
 }
@@ -47,6 +55,8 @@ internal object IosScheduleCalendarExportSettings : IosScheduleCalendarPreferenc
   private const val SOURCE_IDENTIFIER_KEY = "schedule.ios_calendar_source_identifier"
   private const val CALENDAR_IDENTIFIER_KEY = "schedule.ios_calendar_identifier"
   private const val EVENT_REFERENCE_LEDGER_KEY = "schedule.ios_calendar_event_reference_ledger_v1"
+  private const val OCCURRENCE_FINGERPRINT_LEDGER_KEY =
+    "schedule.ios_calendar_occurrence_fingerprint_ledger_v1"
 
   /** 一次读取的稳定快照，供 controller/runtime 在冻结 session 内复核。 */
   data class Preference(
@@ -54,6 +64,8 @@ internal object IosScheduleCalendarExportSettings : IosScheduleCalendarPreferenc
     val sourceIdentifier: String?,
     val calendarIdentifier: String?,
     val eventReferences: Map<CalendarProjectionId, PlatformCalendarEventRef> = emptyMap(),
+    /** key 存在且值为空，表示该系列已完成“没有单次调整”的确认，区别于从未对账。 */
+    val occurrenceFingerprints: Map<CalendarProjectionId, String> = emptyMap(),
   )
 
   /** 读取指定账号设置，禁止使用会随登录状态变化的 [AccountSettings.now]。 */
@@ -66,6 +78,10 @@ internal object IosScheduleCalendarExportSettings : IosScheduleCalendarPreferenc
       calendarIdentifier = settings.getStringOrNull(CALENDAR_IDENTIFIER_KEY),
       eventReferences = decodeLedger(
         serialized = settings.getStringOrNull(EVENT_REFERENCE_LEDGER_KEY),
+        scope = CalendarExportScope(canonicalAccountId),
+      ),
+      occurrenceFingerprints = decodeOccurrenceFingerprintLedger(
+        serialized = settings.getStringOrNull(OCCURRENCE_FINGERPRINT_LEDGER_KEY),
         scope = CalendarExportScope(canonicalAccountId),
       ),
     )
@@ -110,11 +126,34 @@ internal object IosScheduleCalendarExportSettings : IosScheduleCalendarPreferenc
     val canonicalAccountId = canonicalAccountId(accountId)
     val updated = get(canonicalAccountId).eventReferences.toMutableMap()
     if (updated.remove(projectionId) != null) writeLedger(canonicalAccountId, updated)
+    val updatedFingerprints = get(canonicalAccountId).occurrenceFingerprints.toMutableMap()
+    if (updatedFingerprints.remove(projectionId) != null) {
+      writeOccurrenceFingerprintLedger(canonicalAccountId, updatedFingerprints)
+    }
+  }
+
+  /** 只接受当前账号的系列 master；单次调整本身不拥有独立 EventKit locator。 */
+  override fun replaceOccurrenceFingerprint(
+    accountId: String,
+    projectionId: CalendarProjectionId,
+    fingerprint: String,
+  ) {
+    val canonicalAccountId = canonicalAccountId(accountId)
+    require(projectionId.scope == CalendarExportScope(canonicalAccountId) &&
+        projectionId.kind == CalendarProjectionKind.SERIES_MASTER
+    ) { "Occurrence fingerprint must belong to the account series master" }
+    val updated = get(canonicalAccountId).occurrenceFingerprints.toMutableMap().apply {
+      put(projectionId, fingerprint)
+    }
+    writeOccurrenceFingerprintLedger(canonicalAccountId, updated)
   }
 
   /** source/calendar 绑定失效后清空整份 locator ledger，避免旧 source 的 event id 被复用。 */
   override fun clearEventReferences(accountId: String) {
-    AccountSettings.get(canonicalAccountId(accountId)).remove(EVENT_REFERENCE_LEDGER_KEY)
+    AccountSettings.get(canonicalAccountId(accountId)).apply {
+      remove(EVENT_REFERENCE_LEDGER_KEY)
+      remove(OCCURRENCE_FINGERPRINT_LEDGER_KEY)
+    }
   }
 
   /** #281 首个 atomic calendar+event commit 成功后才可以调用，不能在 #280 设置阶段预创建日历。 */
@@ -170,6 +209,17 @@ internal object IosScheduleCalendarExportSettings : IosScheduleCalendarPreferenc
     scope: CalendarExportScope,
   ): Map<CalendarProjectionId, PlatformCalendarEventRef> = decodeLedger(serialized, scope)
 
+  /** 仅供 iosTest 验证系列单次调整指纹账本的稳定编码，不访问真实 Settings。 */
+  internal fun encodeOccurrenceFingerprintLedgerForTest(
+    values: Map<CalendarProjectionId, String>,
+  ): String = encodeOccurrenceFingerprintLedger(values)
+
+  /** 仅供 iosTest 验证损坏指纹账本 fail-closed 的无副作用入口。 */
+  internal fun decodeOccurrenceFingerprintLedgerForTest(
+    serialized: String?,
+    scope: CalendarExportScope,
+  ): Map<CalendarProjectionId, String> = decodeOccurrenceFingerprintLedger(serialized, scope)
+
   /** 以 projection URI 的稳定排序写入整个 ledger，确保同一 map 产生唯一 durable 文本。 */
   private fun writeLedger(
     accountId: String,
@@ -190,6 +240,48 @@ internal object IosScheduleCalendarExportSettings : IosScheduleCalendarPreferenc
       val uri = CalendarProjectionUriCodec.encode(id)
       "${uri.length}:$uri${ref.value.length}:${ref.value}"
     }
+
+  /** 单次调整 ledger 与 event locator 使用相同的严格长度前缀，值只保存业务指纹，不保存 EventKit 对象。 */
+  private fun decodeOccurrenceFingerprintLedger(
+    serialized: String?,
+    scope: CalendarExportScope,
+  ): Map<CalendarProjectionId, String> {
+    if (serialized.isNullOrEmpty()) return emptyMap()
+    val result = linkedMapOf<CalendarProjectionId, String>()
+    var offset = 0
+    while (offset < serialized.length) {
+      val uri = readLengthPrefixed(serialized, offset) ?: return emptyMap()
+      offset = uri.nextOffset
+      val fingerprint = readLengthPrefixed(serialized, offset) ?: return emptyMap()
+      offset = fingerprint.nextOffset
+      val id = CalendarProjectionUriCodec.decodeOrNull(uri.value)
+        ?.takeIf { it.scope == scope && it.kind == CalendarProjectionKind.SERIES_MASTER }
+        ?: return emptyMap()
+      if (result.put(id, fingerprint.value) != null) return emptyMap()
+    }
+    return result
+  }
+
+  /** 以 master URI 稳定排序，保证同一状态产生唯一文本。 */
+  private fun writeOccurrenceFingerprintLedger(
+    accountId: String,
+    values: Map<CalendarProjectionId, String>,
+  ) {
+    val settings = AccountSettings.get(accountId)
+    if (values.isEmpty()) {
+      settings.remove(OCCURRENCE_FINGERPRINT_LEDGER_KEY)
+      return
+    }
+    settings.putString(OCCURRENCE_FINGERPRINT_LEDGER_KEY, encodeOccurrenceFingerprintLedger(values))
+  }
+
+  /** 将系列 master 与聚合指纹规范化编码；空指纹仍需保留，用来表达“已确认没有单次调整”。 */
+  private fun encodeOccurrenceFingerprintLedger(values: Map<CalendarProjectionId, String>): String = values.entries
+      .sortedBy { CalendarProjectionUriCodec.encode(it.key) }
+      .joinToString(separator = "") { (id, fingerprint) ->
+        val uri = CalendarProjectionUriCodec.encode(id)
+        "${uri.length}:$uri${fingerprint.length}:$fingerprint"
+      }
 
   private data class ParsedValue(val value: String, val nextOffset: Int)
 

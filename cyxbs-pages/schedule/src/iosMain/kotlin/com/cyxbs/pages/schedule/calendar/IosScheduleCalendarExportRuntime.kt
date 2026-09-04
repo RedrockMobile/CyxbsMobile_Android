@@ -5,8 +5,10 @@ import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportAction
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportPlanner
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionId
+import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind
 import com.cyxbs.pages.schedule.domain.calendar.ManagedCalendarEvent
 import com.cyxbs.pages.schedule.domain.calendar.PlatformCalendarEventRef
+import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarProjectionCapability
 import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarProjectionFactory
 import com.cyxbs.pages.schedule.domain.calendar.ScheduleCalendarSource
 import com.cyxbs.pages.schedule.domain.repository.ScheduleCalendarChange
@@ -320,9 +322,15 @@ internal class IosScheduleCalendarExportRuntime(
       return
     }
     val initialSnapshot = readExportableSnapshot(expectedGeneration) ?: return
-    val projection = ScheduleCalendarProjectionFactory.project(
+    val completeProjection = ScheduleCalendarProjectionFactory.project(
       ScheduleCalendarSource(initialSnapshot.schedules, initialSnapshot.occurrenceAdjustments),
       IosScheduleCalendarExportSettings.scopeForAccount(accountId),
+      capabilities = setOf(ScheduleCalendarProjectionCapability.NATIVE_OCCURRENCE_EXCEPTIONS),
+    )
+    val completeEvents = completeProjection.events.associateBy { it.id }
+    // planner 仍只比较 EventKit master 可回读的字段；单次调整由下方独立的聚合指纹决定是否重建系列。
+    val projection = completeProjection.copy(
+      events = completeProjection.events.map { it.withoutNativeOccurrenceExceptions() },
     )
     ensureCurrent(expectedGeneration)
     var hints = IosEventKitIdentifierHints(sourceIdentifier, initialPreference.calendarIdentifier)
@@ -401,6 +409,16 @@ internal class IosScheduleCalendarExportRuntime(
             currentHints = hints,
             gateway = gateway,
           ) ?: return
+          hints = reconcileOccurrenceExceptionsIfNeeded(
+            expectedGeneration = expectedGeneration,
+            initialSnapshot = initialSnapshot,
+            initialPreference = initialPreference,
+            projection = requireNotNull(completeEvents[action.projection.id]),
+            eventRef = PlatformCalendarEventRef(upserted.binding.eventIdentifier),
+            hints = hints,
+            gateway = gateway,
+            newlyCreated = true,
+          ) ?: return
         }
 
         is CalendarExportAction.Update -> {
@@ -429,6 +447,16 @@ internal class IosScheduleCalendarExportRuntime(
             result = upserted,
             currentHints = hints,
             gateway = gateway,
+          ) ?: return
+          hints = reconcileOccurrenceExceptionsIfNeeded(
+            expectedGeneration = expectedGeneration,
+            initialSnapshot = initialSnapshot,
+            initialPreference = initialPreference,
+            projection = requireNotNull(completeEvents[action.projection.id]),
+            eventRef = PlatformCalendarEventRef(upserted.binding.eventIdentifier),
+            hints = hints,
+            gateway = gateway,
+            forceRebuild = true,
           ) ?: return
         }
 
@@ -465,6 +493,15 @@ internal class IosScheduleCalendarExportRuntime(
                   )
                 ) return
               }
+              hints = reconcileOccurrenceExceptionsIfNeeded(
+                expectedGeneration = expectedGeneration,
+                initialSnapshot = initialSnapshot,
+                initialPreference = initialPreference,
+                projection = requireNotNull(completeEvents[action.event.id]),
+                eventRef = lookup.event.platformEventRef,
+                hints = hints,
+                gateway = gateway,
+              ) ?: return
             }
             is IosEventKitVerifiedEventLookup.UnsupportedManaged -> {
               // 不能把 canonical 但 unsupported 的 master 误判为 ref 缺失或 foreign；不刷新 ledger、不删除也不降级。
@@ -507,10 +544,81 @@ internal class IosScheduleCalendarExportRuntime(
           }
         }
 
-        // occurrence exception 只保留已导出的 master，不会降级成单次 EventKit event 或删除旧 master。
+        // capability 已开启后正常不会产生 Unsupported；若未来出现新平台能力门禁，继续保留既有 master。
         is CalendarExportAction.Unsupported -> Unit
       }
       ensureSnapshotCurrent(initialSnapshot, expectedGeneration)
+    }
+  }
+
+  /**
+   * 仅在单次调整集合未知或变化时重建系列，并在 event locator 已持久化后记录聚合指纹。
+   *
+   * 新创建且没有调整的系列已经是权威空状态，无需额外重建；其余“未知”状态必须执行一次替换，以清除可能由旧安装
+   * 留在 EventKit 中但已无法查询的单次删除。
+   */
+  private suspend fun reconcileOccurrenceExceptionsIfNeeded(
+    expectedGeneration: Long,
+    initialSnapshot: ScheduleSnapshot,
+    initialPreference: IosScheduleCalendarExportSettings.Preference,
+    projection: com.cyxbs.pages.schedule.domain.calendar.CalendarEventProjection,
+    eventRef: PlatformCalendarEventRef,
+    hints: IosEventKitIdentifierHints,
+    gateway: IosScheduleCalendarRuntimeGateway,
+    newlyCreated: Boolean = false,
+    forceRebuild: Boolean = false,
+  ): IosEventKitIdentifierHints? {
+    if (projection.id.kind != CalendarProjectionKind.SERIES_MASTER) return hints
+    val targetFingerprint = projection.nativeOccurrenceExceptions.joinToString(separator = "") { exception ->
+      "${exception.fingerprint.length}:${exception.fingerprint}"
+    }
+    if (!forceRebuild && initialPreference.occurrenceFingerprints[projection.id] == targetFingerprint) return hints
+    if (newlyCreated && projection.nativeOccurrenceExceptions.isEmpty()) {
+      return if (replaceOccurrenceFingerprint(expectedGeneration, projection.id, targetFingerprint)) hints else null
+    }
+    ensureSnapshotCurrent(initialSnapshot, expectedGeneration)
+    ensureCurrent(expectedGeneration)
+    val result = gateway.replaceRecurringSeries(
+      projection = projection,
+      eventRef = eventRef,
+      hints = hints.copy(eventIdentifier = eventRef.value),
+    )
+    awaitBoundary(expectedGeneration, IosScheduleCalendarRuntimeSuspensionPoint.EVENTKIT_STORE)
+    val upserted = result as? IosEventKitGatewayResult.Upserted ?: run {
+      stopForGatewayFailure(expectedGeneration, (result as IosEventKitGatewayResult.Failed).reason)
+      return null
+    }
+    val updatedHints = updateHintsAfterUpsert(
+      expectedGeneration = expectedGeneration,
+      initialPreference = initialPreference,
+      projection = projection.withoutNativeOccurrenceExceptions(),
+      result = upserted,
+      currentHints = hints,
+      gateway = gateway,
+    ) ?: return null
+    return if (replaceOccurrenceFingerprint(expectedGeneration, projection.id, targetFingerprint)) {
+      updatedHints
+    } else {
+      null
+    }
+  }
+
+  /** 单次调整状态只能在 master locator 已 durable 后写入；失败时终止本轮并保留下一轮重试条件。 */
+  private suspend fun replaceOccurrenceFingerprint(
+    expectedGeneration: Long,
+    projectionId: CalendarProjectionId,
+    fingerprint: String,
+  ): Boolean {
+    return try {
+      ensureCurrent(expectedGeneration)
+      writeCacheIfCurrent(expectedGeneration) {
+        preferences.replaceOccurrenceFingerprint(accountId, projectionId, fingerprint)
+      }
+      awaitBoundary(expectedGeneration, IosScheduleCalendarRuntimeSuspensionPoint.CACHE_WRITE)
+      true
+    } catch (_: Throwable) {
+      markTerminalUncertain(expectedGeneration)
+      false
     }
   }
 

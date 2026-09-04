@@ -6,6 +6,8 @@ import com.cyxbs.components.config.time.toMinuteTimeDate
 import com.cyxbs.pages.schedule.domain.calendar.CalendarCanonicalBaselineMapper
 import com.cyxbs.pages.schedule.domain.calendar.CalendarEventProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportScope
+import com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionOperation
+import com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionFingerprint
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionId
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind
@@ -97,6 +99,27 @@ sealed interface IosEventKitWriteTiming {
 /** 相对开始时间的 EventKit 提醒；负数代表开始前，零分钟提醒保持为零。 */
 data class IosEventKitRelativeAlarm(
   val relativeOffsetSeconds: Long,
+)
+
+/** EventKit 查找原始重复实例所需的稳定身份；它不随单次调整后的展示时间变化。 */
+sealed interface IosEventKitOccurrenceIdentity {
+  /** 定时系列使用原始 recurrenceId 解析出的绝对时刻。 */
+  data class Timed(val start: IosEventKitRawMoment) : IosEventKitOccurrenceIdentity
+
+  /** 全天系列使用原始日期，bridge 再按 EventKit 的设备时区全天语义查询。 */
+  data class AllDay(val date: Date) : IosEventKitOccurrenceIdentity
+}
+
+/**
+ * 一条可由 EventKit bridge 应用到系列主事件的单次调整。
+ *
+ * [identity] 只负责定位原始 occurrence，[payload] 保存调整后的内容；两者不能互换，否则移动过的单次事件
+ * 会在下一轮对账中失去原始系列位置。
+ */
+data class IosEventKitOccurrenceWrite(
+  val identity: IosEventKitOccurrenceIdentity,
+  val payload: IosEventKitWritePayload,
+  val operation: CalendarOccurrenceExceptionOperation,
 )
 
 /** 已完整验证并可供 common planner 使用的 EventKit 托管事件快照。 */
@@ -197,6 +220,79 @@ object IosEventKitCalendarAdapterFoundation {
         timing = timing,
         recurrenceRule = canonicalFields.recurrenceRule,
         alarms = alarms,
+      ),
+    )
+  }
+
+  /**
+   * 将 common 单次调整映射为 EventKit 可执行写入。
+   *
+   * 原始 recurrenceId 用于找到系列实例；标题、描述、时间和提醒来自调整后的投影。CANCEL 也完整校验 payload，
+   * 但 bridge 只会消费其 identity 并以 `EKSpanThisEvent` 删除该次实例。
+   */
+  fun toOccurrenceWrite(
+    projection: CalendarOccurrenceExceptionProjection,
+  ): IosEventKitMappingResult<IosEventKitOccurrenceWrite> {
+    val recurrenceId = projection.id.recurrenceId
+      ?: return unsupported(IosEventKitMappingError.INVALID_PROJECTION_SHAPE)
+    if (projection.id.kind != CalendarProjectionKind.OCCURRENCE_EXCEPTION ||
+      CalendarProjectionUriCodec.decodeOrNull(projection.externalUri) != projection.id
+    ) {
+      return unsupported(IosEventKitMappingError.INVALID_CANONICAL_URI)
+    }
+    val expectedFingerprint = CalendarProjectionFingerprint.computeOccurrenceException(
+      externalUri = projection.externalUri,
+      title = projection.title,
+      description = projection.description,
+      timing = projection.timing,
+      reminderMinutes = projection.deviceReminderMinutes,
+      operation = projection.operation,
+    )
+    if (projection.fingerprint != expectedFingerprint) {
+      return unsupported(IosEventKitMappingError.INVALID_PROJECTION_FINGERPRINT)
+    }
+    val fields = runCatching {
+      CanonicalCalendarFields(
+        title = projection.title,
+        description = projection.description,
+        timing = projection.timing,
+        recurrenceRule = null,
+        deviceReminderMinutes = projection.deviceReminderMinutes,
+      )
+    }.getOrNull() ?: return unsupported(IosEventKitMappingError.INVALID_CANONICAL_FIELDS)
+    val timing = projection.timing.toWriteTimingOrError() ?: return unsupported(
+      if (projection.timing is CalendarTiming.AllDay) {
+        IosEventKitMappingError.INVALID_DATE_INTERVAL
+      } else {
+        IosEventKitMappingError.IRREVERSIBLE_WALL_TIME
+      },
+    )
+    val identity = if (recurrenceId.allDay) {
+      if (recurrenceId.timeZoneId != null) {
+        return unsupported(IosEventKitMappingError.INVALID_PROJECTION_SHAPE)
+      }
+      IosEventKitOccurrenceIdentity.AllDay(recurrenceId.originalDateTime.date)
+    } else {
+      val zoneId = recurrenceId.timeZoneId
+        ?: return unsupported(IosEventKitMappingError.INVALID_TIME_ZONE)
+      val start = resolveMinuteMomentOrNull(recurrenceId.originalDateTime, zoneId)
+        ?: return unsupported(IosEventKitMappingError.IRREVERSIBLE_WALL_TIME)
+      IosEventKitOccurrenceIdentity.Timed(start)
+    }
+    return IosEventKitMappingResult.Mapped(
+      IosEventKitOccurrenceWrite(
+        identity = identity,
+        payload = IosEventKitWritePayload(
+          externalUri = projection.externalUri,
+          title = fields.title,
+          notes = fields.description,
+          timing = timing,
+          recurrenceRule = null,
+          alarms = fields.deviceReminderMinutes.map { minutes ->
+            IosEventKitRelativeAlarm(-minutes.toLong() * SECONDS_PER_MINUTE)
+          },
+        ),
+        operation = projection.operation,
       ),
     )
   }

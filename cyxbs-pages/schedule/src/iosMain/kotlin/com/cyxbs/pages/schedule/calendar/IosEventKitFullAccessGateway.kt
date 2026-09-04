@@ -2,7 +2,9 @@ package com.cyxbs.pages.schedule.calendar
 
 import com.cyxbs.pages.schedule.domain.calendar.CalendarEventProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportScope
+import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionFingerprint
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionId
+import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionUriCodec
 import com.cyxbs.pages.schedule.domain.calendar.ManagedCalendarEvent
 import com.cyxbs.pages.schedule.domain.calendar.PlatformCalendarEventRef
@@ -256,6 +258,19 @@ private object IosEventKitAtomicRecoveryAttemptLedger {
   }
 }
 
+/** EventKit master 本身不保存子计划；普通 CRUD 与写后回读只比较这些主事件字段。 */
+internal fun CalendarEventProjection.withoutNativeOccurrenceExceptions(): CalendarEventProjection = copy(
+  fingerprint = CalendarProjectionFingerprint.compute(
+    externalUri = externalUri,
+    title = title,
+    description = description,
+    timing = timing,
+    recurrenceRule = recurrenceRule,
+    reminderMinutes = deviceReminderMinutes,
+  ),
+  nativeOccurrenceExceptions = emptyList(),
+)
+
 /** 成功写入后返回给未来 link 持久化层的最新 opaque cache。 */
 data class IosEventKitGatewayBinding(
   val sourceIdentifier: String,
@@ -337,6 +352,20 @@ internal interface IosScheduleCalendarRuntimeGateway {
     projection: CalendarEventProjection,
     hints: IosEventKitIdentifierHints,
   ): IosEventKitGatewayResult
+
+  /**
+   * 重建一个重复系列并一次性重放当前全部单次调整。
+   *
+   * EventKit 删除单次实例后不会再把它返回给查询，因此“取消删除/还原”不能靠增量补写完成；runtime 仅在本地记录的
+   * 单次调整指纹变化或缺失时调用本方法。
+   */
+  fun replaceRecurringSeries(
+    projection: CalendarEventProjection,
+    eventRef: PlatformCalendarEventRef,
+    hints: IosEventKitIdentifierHints,
+  ): IosEventKitGatewayResult = IosEventKitGatewayResult.Failed(
+    IosEventKitGatewayFailure.UNSUPPORTED_PROJECTION,
+  )
 
   /**
    * runtime 在 Update/Delete CRUD 前废止 preflight lookup 携带的旧 target eligibility。
@@ -492,6 +521,16 @@ internal interface IosEventKitStorePort {
     existingEventIdentifier: String?,
     payload: IosEventKitWritePayload,
   ): IosEventKitStoreResult<String>
+
+  /** 删除旧系列、创建新 master，并按原始 occurrence 身份重放当前全部单次调整。 */
+  fun replaceRecurringSeries(
+    calendarIdentifier: String,
+    existingEventIdentifier: String,
+    masterPayload: IosEventKitWritePayload,
+    occurrences: List<IosEventKitOccurrenceWrite>,
+  ): IosEventKitStoreResult<String> = IosEventKitStoreResult.Failure(
+    IosEventKitStoreFailure.AMBIGUOUS,
+  )
 
   fun removeEvent(eventIdentifier: String): IosEventKitStoreResult<Unit>
 }
@@ -1045,6 +1084,81 @@ class IosEventKitFullAccessGateway private constructor(
       calendar = calendar,
       eventIdentifier = savedIdentifier,
       window = window,
+      changed = true,
+    )
+  }
+
+  /**
+   * 用当前完整子计划替换一个重复系列。
+   *
+   * 普通 [upsert] 只维护系列 master；本方法先以 durable ref 再次验证所有权，再让 store 重建 master 并重放
+   * 单次调整。写后只核验 master 的 canonical 内容，子计划的完成状态由 runtime 在拿到成功结果后单独持久化。
+   */
+  override fun replaceRecurringSeries(
+    projection: CalendarEventProjection,
+    eventRef: PlatformCalendarEventRef,
+    hints: IosEventKitIdentifierHints,
+  ): IosEventKitGatewayResult {
+    requireFullAccess()?.let { return it }
+    if (projection.id.kind != CalendarProjectionKind.SERIES_MASTER || projection.recurrenceRule == null) {
+      return IosEventKitGatewayResult.Failed(IosEventKitGatewayFailure.UNSUPPORTED_PROJECTION)
+    }
+    val masterProjection = projection.withoutNativeOccurrenceExceptions()
+    val masterPayload = when (val mapped =
+      IosEventKitCalendarAdapterFoundation.toWritePayload(masterProjection)) {
+      is IosEventKitMappingResult.Mapped -> mapped.value
+      is IosEventKitMappingResult.Unsupported -> return IosEventKitGatewayResult.Failed(
+        IosEventKitGatewayFailure.UNSUPPORTED_PROJECTION,
+        mapped.error,
+      )
+    }
+    val occurrenceWrites = projection.nativeOccurrenceExceptions.map { exception ->
+      when (val mapped = IosEventKitCalendarAdapterFoundation.toOccurrenceWrite(exception)) {
+        is IosEventKitMappingResult.Mapped -> mapped.value
+        is IosEventKitMappingResult.Unsupported -> return IosEventKitGatewayResult.Failed(
+          IosEventKitGatewayFailure.UNSUPPORTED_PROJECTION,
+          mapped.error,
+        )
+      }
+    }
+    when (val verified = lookupVerified(
+      projectionId = projection.id,
+      eventRef = eventRef,
+      hints = hints.copy(eventIdentifier = eventRef.value),
+    )) {
+      is IosEventKitVerifiedEventLookup.Managed -> Unit
+      is IosEventKitVerifiedEventLookup.UnsupportedManaged -> return IosEventKitGatewayResult.Failed(
+        IosEventKitGatewayFailure.UNSUPPORTED_PROJECTION,
+        verified.mappingError,
+      )
+      IosEventKitVerifiedEventLookup.KnownAbsent -> return IosEventKitGatewayResult.Failed(
+        IosEventKitGatewayFailure.READ_AFTER_WRITE_MISMATCH,
+      )
+      is IosEventKitVerifiedEventLookup.Blocked -> return IosEventKitGatewayResult.Failed(verified.failure)
+    }
+    val calendarIdentifier = hints.calendarIdentifier
+      ?: return IosEventKitGatewayResult.Failed(IosEventKitGatewayFailure.CALENDAR_DISAPPEARED)
+    val calendar = when (val result = store.calendars()) {
+      is IosEventKitStoreResult.Success -> result.value.singleOrNull {
+        it.identifier == calendarIdentifier && it.sourceIdentifier == hints.sourceIdentifier &&
+          it.allowsContentModifications
+      } ?: return IosEventKitGatewayResult.Failed(IosEventKitGatewayFailure.CALENDAR_DISAPPEARED)
+      is IosEventKitStoreResult.Failure -> return storeFailure(result.reason, null, hints)
+    }
+    val savedIdentifier = when (val result = store.replaceRecurringSeries(
+      calendarIdentifier = calendarIdentifier,
+      existingEventIdentifier = eventRef.value,
+      masterPayload = masterPayload,
+      occurrences = occurrenceWrites,
+    )) {
+      is IosEventKitStoreResult.Success -> result.value
+      is IosEventKitStoreResult.Failure -> return storeFailure(result.reason, calendar, hints)
+    }
+    return confirmUpsert(
+      projection = masterProjection,
+      calendar = calendar,
+      eventIdentifier = savedIdentifier,
+      window = masterPayload.scanWindow(),
       changed = true,
     )
   }

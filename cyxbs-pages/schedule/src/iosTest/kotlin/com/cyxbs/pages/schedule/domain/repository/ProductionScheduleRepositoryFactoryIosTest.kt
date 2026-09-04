@@ -73,7 +73,6 @@ class ProductionScheduleRepositoryFactoryIosTest {
       return ScheduleCallResult.Completed(
         ApiWrapper(
           SyncResponse(
-            request.syncRequestId,
             CategorySyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
             ScheduleSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),
             OccurrenceAdjustmentSyncResponse(emptyList(), emptyList(), emptyList(), emptyList()),

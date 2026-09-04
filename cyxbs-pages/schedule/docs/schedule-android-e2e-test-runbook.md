@@ -462,9 +462,9 @@
 ### 15.1 最终结果（2026-09-04）
 
 - 已完成：241 项；阻塞失败：0 项；跳过：0 项；待完成：0 项。R25 的双客户端并发首次创建按用户要求从测试范围裁剪，不计入跳过。
-- K07/K14 属于既定需求，现已完成 Android Calendar Provider 的原生 exception 映射和真实设备验证；iOS EventKit 不属于本 Android 真机清单，当前仍对带有效单次调整的系列 fail-closed，避免写入错误副本。
+- K07/K14 属于既定需求，已完成 Android Calendar Provider 的原生 exception 映射和真实设备验证。后续独立 iOS 任务也已补齐 EventKit `.thisEvent` 单次修改/删除映射，并在 iOS 模拟器中验证系列 master 与修改实例的原始 occurrence 关联。
 - 已知非阻塞边界：日程被多层课程切割到极窄残余区域时，课表空白创建层仍可能响应轻击；正常可见的时间点、时间段、全天及双日程重叠均已通过，不修改课表通用手势框架。
 - 客户端修复提交：`c0f34cf86`、`42db235f6`、`15a5fb0c3`、`2300f789b`、`248393710`、`aeda4eac3`、`484a7488b`、`75f1ba6e8`、`b8f76512e`、`c0a17581f`、`ecd750d82`、`6a035c684`。
 - 本次待提交修复：补齐 Android 重复日程的 Provider 原生 exception 生产入口、重复 Deadline 和单次时间形态切换，并增加 17 项真实 Provider 回归验证。
 - 后端修复提交：`3537af4`（分类名称规范化）、`6a2f26c`（UTF-8 BLOB 保存 emoji）；均已推送 dev/test 并完成部署验证。
-- 当前无需用户补做 Android 核心验收；iOS EventKit 单次例外属于后续独立平台任务。
+- 当前无需用户补做 Android 核心验收；iOS EventKit 单次例外已在后续独立平台任务中完成。

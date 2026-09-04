@@ -6,6 +6,8 @@ import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.pages.schedule.domain.calendar.CalendarEventProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarExportScope
+import com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionOperation
+import com.cyxbs.pages.schedule.domain.calendar.CalendarOccurrenceExceptionProjection
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionFingerprint
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionId
 import com.cyxbs.pages.schedule.domain.calendar.CalendarProjectionKind
@@ -1031,6 +1033,55 @@ class IosEventKitFullAccessGatewayTest {
     assertEquals(0, ambiguousStore.removeCount)
   }
 
+  /** 单次修改和单次删除都必须按原始 recurrenceId 映射，修改后的时间不能反向改变定位身份。 */
+  @Test
+  fun occurrenceWriteKeepsOriginalIdentitySeparateFromAdjustedTiming() {
+    val target = recurringProjectionWithExceptions()
+
+    val upsert = assertIs<IosEventKitMappingResult.Mapped<IosEventKitOccurrenceWrite>>(
+      IosEventKitCalendarAdapterFoundation.toOccurrenceWrite(target.nativeOccurrenceExceptions[0]),
+    ).value
+    val cancel = assertIs<IosEventKitMappingResult.Mapped<IosEventKitOccurrenceWrite>>(
+      IosEventKitCalendarAdapterFoundation.toOccurrenceWrite(target.nativeOccurrenceExceptions[1]),
+    ).value
+
+    assertEquals(CalendarOccurrenceExceptionOperation.UPSERT, upsert.operation)
+    assertEquals(CalendarOccurrenceExceptionOperation.CANCEL, cancel.operation)
+    assertEquals(rawFor(projection(start = MinuteTimeDate(2026, 8, 8, 9, 30)), EVENT_ID).start,
+      assertIs<IosEventKitOccurrenceIdentity.Timed>(upsert.identity).start)
+    assertEquals(
+      rawFor(projection(start = MinuteTimeDate(2026, 8, 8, 11, 0)), EVENT_ID).start,
+      assertIs<IosEventKitWriteTiming.Timed>(upsert.payload.timing).start,
+    )
+  }
+
+  /** gateway 必须把当前全部单次调整交给一次系列替换，并以新 master identifier 完成 canonical 回读。 */
+  @Test
+  fun recurringSeriesReplacementReplaysAllCurrentOccurrenceExceptions() {
+    val target = recurringProjectionWithExceptions()
+    val master = target.withoutNativeOccurrenceExceptions()
+    val store = authorizedStore().apply {
+      addCalendar(CALENDAR_ID)
+      addEvent(CALENDAR_ID, EVENT_ID, rawFor(master, EVENT_ID))
+    }
+
+    val result = assertIs<IosEventKitGatewayResult.Upserted>(
+      IosEventKitFullAccessGateway(SCOPE, store).replaceRecurringSeries(
+        projection = target,
+        eventRef = PlatformCalendarEventRef(EVENT_ID),
+        hints = IosEventKitIdentifierHints(SOURCE_ID, CALENDAR_ID, EVENT_ID),
+      ),
+    )
+
+    assertTrue(result.changed)
+    assertEquals(1, store.replaceSeriesCount)
+    assertEquals(
+      listOf(CalendarOccurrenceExceptionOperation.UPSERT, CalendarOccurrenceExceptionOperation.CANCEL),
+      store.lastOccurrenceWrites.map { it.operation },
+    )
+    assertTrue(result.binding.eventIdentifier != EVENT_ID)
+  }
+
   private fun authorizedStore(): FakeEventKitStore = FakeEventKitStore(
     status = IosEventKitFullAccessStatus.FULL_ACCESS,
   ).apply {
@@ -1084,6 +1135,69 @@ class IosEventKitFullAccessGatewayTest {
     )
   }
 
+  /** 构造一个同时包含移动实例和删除实例的 weekly master。 */
+  private fun recurringProjectionWithExceptions(): CalendarEventProjection {
+    val master = projection(
+      kind = CalendarProjectionKind.SERIES_MASTER,
+      recurrence = "FREQ=WEEKLY",
+    )
+    fun exception(
+      original: MinuteTimeDate,
+      adjusted: MinuteTimeDate,
+      operation: CalendarOccurrenceExceptionOperation,
+    ): CalendarOccurrenceExceptionProjection {
+      val id = CalendarProjectionId(
+        scope = SCOPE,
+        scheduleId = SCHEDULE_ID,
+        kind = CalendarProjectionKind.OCCURRENCE_EXCEPTION,
+        recurrenceId = RecurrenceId(original, ZONE, allDay = false),
+      )
+      val uri = CalendarProjectionUriCodec.encode(id)
+      val timing = CalendarTiming.Timed(adjusted, durationMinutes = 60, timeZoneId = ZONE)
+      return CalendarOccurrenceExceptionProjection(
+        id = id,
+        externalUri = uri,
+        title = "单次调整",
+        description = "EventKit occurrence",
+        timing = timing,
+        deviceReminderMinutes = listOf(10),
+        operation = operation,
+        fingerprint = CalendarProjectionFingerprint.computeOccurrenceException(
+          externalUri = uri,
+          title = "单次调整",
+          description = "EventKit occurrence",
+          timing = timing,
+          reminderMinutes = listOf(10),
+          operation = operation,
+        ),
+      )
+    }
+    val exceptions = listOf(
+      exception(
+        original = MinuteTimeDate(2026, 8, 8, 9, 30),
+        adjusted = MinuteTimeDate(2026, 8, 8, 11, 0),
+        operation = CalendarOccurrenceExceptionOperation.UPSERT,
+      ),
+      exception(
+        original = MinuteTimeDate(2026, 8, 15, 9, 30),
+        adjusted = MinuteTimeDate(2026, 8, 15, 9, 30),
+        operation = CalendarOccurrenceExceptionOperation.CANCEL,
+      ),
+    )
+    return master.copy(
+      nativeOccurrenceExceptions = exceptions,
+      fingerprint = CalendarProjectionFingerprint.compute(
+        externalUri = master.externalUri,
+        title = master.title,
+        description = master.description,
+        timing = master.timing,
+        recurrenceRule = master.recurrenceRule,
+        reminderMinutes = master.deviceReminderMinutes,
+        nativeOccurrenceExceptions = exceptions,
+      ),
+    )
+  }
+
   private fun rawFor(
     projection: CalendarEventProjection,
     identifier: String,
@@ -1122,6 +1236,7 @@ class IosEventKitFullAccessGatewayTest {
     var createCalendarCount = 0
     var saveCount = 0
     var removeCount = 0
+    var replaceSeriesCount = 0
     var failNextSave = false
     var ambiguousAtomicCreateCommits = false
     var createConcurrentCanonicalCalendar = false
@@ -1132,6 +1247,7 @@ class IosEventKitFullAccessGatewayTest {
     var failSourcesOnCall: Int? = null
     var failCalendarsOnCall: Int? = null
     var lastPayload: IosEventKitWritePayload? = null
+    var lastOccurrenceWrites: List<IosEventKitOccurrenceWrite> = emptyList()
     val sourceSnapshots = mutableListOf<IosEventKitSourceSnapshot>()
     val scanWindows = mutableListOf<IosEventKitScanWindow>()
     val calendarCount: Int get() = calendarSnapshots.size
@@ -1263,6 +1379,29 @@ class IosEventKitFullAccessGatewayTest {
       events += IosEventKitStoreEventSnapshot(
         calendarIdentifier = calendarIdentifier,
         raw = payload.toRaw(committedIdentifier),
+      )
+      return IosEventKitStoreResult.Success(committedIdentifier)
+    }
+
+    override fun replaceRecurringSeries(
+      calendarIdentifier: String,
+      existingEventIdentifier: String,
+      masterPayload: IosEventKitWritePayload,
+      occurrences: List<IosEventKitOccurrenceWrite>,
+    ): IosEventKitStoreResult<String> {
+      val events = eventsByCalendar[calendarIdentifier]
+        ?: return IosEventKitStoreResult.Failure(IosEventKitStoreFailure.NOT_FOUND)
+      if (events.none { it.raw.eventIdentifier == existingEventIdentifier }) {
+        return IosEventKitStoreResult.Failure(IosEventKitStoreFailure.NOT_FOUND)
+      }
+      replaceSeriesCount += 1
+      lastPayload = masterPayload
+      lastOccurrenceWrites = occurrences
+      events.removeAll { it.raw.eventIdentifier == existingEventIdentifier }
+      val committedIdentifier = "replaced-series-${nextEvent++}"
+      events += IosEventKitStoreEventSnapshot(
+        calendarIdentifier,
+        masterPayload.toRaw(committedIdentifier),
       )
       return IosEventKitStoreResult.Success(committedIdentifier)
     }
@@ -1671,13 +1810,28 @@ class IosEventKitFullAccessGatewayTest {
 
     override fun removeEventReference(accountId: String, projectionId: CalendarProjectionId) {
       val key = accountId.lowercase()
-      values[key] = get(key).copy(eventReferences = get(key).eventReferences - projectionId)
+      values[key] = get(key).copy(
+        eventReferences = get(key).eventReferences - projectionId,
+        occurrenceFingerprints = get(key).occurrenceFingerprints - projectionId,
+      )
       recordWrite("event-remove")
+    }
+
+    override fun replaceOccurrenceFingerprint(
+      accountId: String,
+      projectionId: CalendarProjectionId,
+      fingerprint: String,
+    ) {
+      val key = accountId.lowercase()
+      values[key] = get(key).copy(
+        occurrenceFingerprints = get(key).occurrenceFingerprints + (projectionId to fingerprint),
+      )
+      recordWrite("occurrence-replace")
     }
 
     override fun clearEventReferences(accountId: String) {
       val key = accountId.lowercase()
-      values[key] = get(key).copy(eventReferences = emptyMap())
+      values[key] = get(key).copy(eventReferences = emptyMap(), occurrenceFingerprints = emptyMap())
       recordWrite("event-clear")
     }
   }
