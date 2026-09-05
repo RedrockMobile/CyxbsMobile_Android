@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.layout
@@ -18,6 +19,7 @@ import com.cyxbs.components.config.time.MinuteTime
 import com.cyxbs.components.utils.compose.derivedStateOfStructure
 import com.cyxbs.pages.course.view.item.CourseItemState
 import com.cyxbs.pages.course.view.page.LocalCoursePage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -25,7 +27,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.math.roundToInt
@@ -175,36 +176,40 @@ private fun calculateIndex(itemState: CourseItemState,): Int {
 }
 
 /**
- * 获取 item 在屏幕中的坐标
- * 会跟随 item 的位置移动而实时改变
- * @param forceCalculate 是否强制实时计算 item 的坐标位置，一般用于当前 item 还未完全变成对应时间的情况
+ * 获取 Item 在屏幕中的坐标，并在 Item 布局位置变化时持续更新。
+ *
+ * @param forceCalculate 为 true 时不依赖 Item 自身是否存在可用坐标，而是依据课表页面坐标、时间范围和
+ * 时间轴权重计算完整 Item 的位置。时间轴展开动画会逐帧改变权重，因此这里使用 [snapshotFlow] 继续
+ * 发出新的矩形；调用方若会同时滚动课表，需要剔除自身滚动造成的屏幕坐标变化，避免形成反馈循环。
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 fun CourseItemState.observeItemRectOnScreen(forceCalculate: Boolean = false): Flow<Rect> {
   return layoutCoordinatesFlow.flatMapLatest { itemCoordinates ->
     if (itemCoordinates != null && itemCoordinates.isAttached && !forceCalculate) {
       flowOf(Rect(itemCoordinates.positionOnScreen(), itemCoordinates.size.toSize()))
     } else {
-      // 此时 item 可能已经不可见，比如被上方重叠的 item 遮挡完了
-      // 使用 coursePage.layoutCoordinatesFlow 进行计算
+      // Item 可能已被上层重叠项完全遮挡，因此使用 CoursePage 坐标计算其完整业务区间。
       coursePageFlow.filterNotNull()
         .flatMapLatest { it.layoutCoordinatesFlow }
-        .filter { it.isAttached } // 需要确保 isAttached，防止 page 已经不可见
-        .map { pageCoordinates ->
-          // 手动计算 item 的位置，跟 courseItemLayout 计算逻辑保持一致
-          val beginWeightRatio = coursePage.timeline.calculateWeightRatio(item.whatTime.beginTime)
-          val finalWeightRatio = coursePage.timeline.calculateWeightRatio(item.whatTime.finalTime)
-          val width = pageCoordinates.size.width / 7
-          val height =
-            (pageCoordinates.size.height * (finalWeightRatio - beginWeightRatio)).roundToInt()
-          val x = calculateIndex(this) * pageCoordinates.size.width / 7F
-          val y = beginWeightRatio * pageCoordinates.size.height
-          val offsetOnScreen = pageCoordinates.positionOnScreen()
-          Rect(
-            left = x + offsetOnScreen.x,
-            top = y + offsetOnScreen.y,
-            right = x + width + offsetOnScreen.x,
-            bottom = y + height + offsetOnScreen.y,
-          )
+        .filter { it.isAttached }
+        .flatMapLatest { pageCoordinates ->
+          snapshotFlow {
+            // 与 courseItemLayout 保持相同的时间轴权重换算；权重变化会驱动新的坐标结果。
+            val beginWeightRatio = coursePage.timeline.calculateWeightRatio(item.whatTime.beginTime)
+            val finalWeightRatio = coursePage.timeline.calculateWeightRatio(item.whatTime.finalTime)
+            val width = pageCoordinates.size.width / 7
+            val height =
+              (pageCoordinates.size.height * (finalWeightRatio - beginWeightRatio)).roundToInt()
+            val x = calculateIndex(this) * pageCoordinates.size.width / 7F
+            val y = beginWeightRatio * pageCoordinates.size.height
+            val offsetOnScreen = pageCoordinates.positionOnScreen()
+            Rect(
+              left = x + offsetOnScreen.x,
+              top = y + offsetOnScreen.y,
+              right = x + width + offsetOnScreen.x,
+              bottom = y + height + offsetOnScreen.y,
+            )
+          }
         }
     }
   }

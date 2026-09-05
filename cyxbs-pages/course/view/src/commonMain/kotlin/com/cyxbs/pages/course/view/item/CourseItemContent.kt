@@ -133,6 +133,9 @@ private fun CourseRealShowRange(
  *
  * 这里只把 [MutableTimelineData.State.Collapse] 切换为展开，不会反向折叠已经展开的节点。时间点
  * 按时间轴计算所归属的 `(start, end]` 边界处理，时间段按真实区间相交处理；Item 的业务时间不会改变。
+ *
+ * BottomSheet 会持续负责当前 Item 的可见区域，因此这里禁止时间轴同时操作滚轴，避免两个滚动控制器
+ * 竞争同一个 ScrollState。
  */
 private fun CourseItemState.expandCoveredCollapsedTimeline() {
   val whatTime = item.whatTime.now.value
@@ -149,7 +152,7 @@ private fun CourseItemState.expandCoveredCollapsedTimeline() {
     } else {
       mutableData.startTime < finalTime && mutableData.endTime > beginTime
     }
-    if (isCovered) mutableData.click()
+    if (isCovered) mutableData.click(MutableTimelineData.ScrollMode.DoNotScroll)
   }
 }
 

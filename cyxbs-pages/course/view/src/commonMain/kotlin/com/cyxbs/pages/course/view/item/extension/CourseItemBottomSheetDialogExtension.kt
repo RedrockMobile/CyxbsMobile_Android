@@ -2,10 +2,8 @@ package com.cyxbs.pages.course.view.item.extension
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,15 +64,20 @@ import com.cyxbs.pages.course.view.item.modifier.BeginFinalTimeShowModifier
 import com.cyxbs.pages.course.view.item.modifier.observeItemRectOnScreen
 import com.cyxbs.pages.course.view.overlay.OverlapResult
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
@@ -251,6 +254,7 @@ private fun MobileCourseBottomSheetDialog(
 
 // 如果 item 被弹窗遮挡，则将滚轴向上移动
 @Composable
+@OptIn(ExperimentalCoroutinesApi::class)
 private fun OffsetScroll(
   state: CourseItemBottomSheetDialogState,
   layoutTopOnScreenFlow: SharedFlow<Float>,
@@ -265,45 +269,164 @@ private fun OffsetScroll(
   }
   LaunchedEffect(Unit) {
     val initScrollValue = scrollContext.scrollState.value
-    var prevItem = state.currentPageItemFlow.value
-    layoutTopOnScreenFlow.combine(
-      state.currentPageItemFlow.filterNotNull()
-        .map {
-          it.itemState.observeItemRectOnScreen(true).first() // 这里只获取一次，调用 refreshScrollOffset 以触发刷新
-            // 这里需要减去 margin 转换为初始坐标，在被重叠的 item 显示时有用
-            .translate(0F, marginBottomState.getOrElse(marginBottomKey) { 0 }.toFloat())
-        }
-    ) { layoutOffsetOnScreen, itemRectOnScreen ->
-      // 课表位于 Activity Window，弹窗位于 Dialog Window，必须统一为屏幕坐标后才能计算遮挡。
-      itemRectOnScreen.bottom - layoutOffsetOnScreen
-    }.collectLatest {
-      val total = it.coerceAtLeast(0F)
-      val newScrollValue = initScrollValue + total
-      val nowScrollValue = scrollContext.scrollState.value
-      val scrollDelta = newScrollValue - nowScrollValue
-      if (scrollDelta != 0F) {
-        // 键盘顶起与收回时都跟随目标遮挡量调整，避免只上移而无法恢复。
-        scrollContext.scrollState.scrollBy(scrollDelta)
+    var settledBaseScrollValue = initScrollValue
+    var hasSettledBaseScroll = false
+    var lastSettledState = state.bottomSheetState.state
+
+    /**
+     * 返回未施加弹窗避让时的课表滚动位置。
+     *
+     * 首次打开期间固定为点击前的位置；BottomSheet 首次展开后会根据 Item 的当前位置重新确定一次，
+     * 之后切换 Item、拖拽和关闭均使用该固定值，避免滚动基准随布局反复变化。
+     */
+    fun baseScrollValue(): Int = settledBaseScrollValue.coerceIn(0, scrollContext.scrollState.maxValue)
+
+    fun CourseItemBottomSheetDialogExtension.observeOverlapOnce(): Flow<Float> = flow {
+      val layoutTopOnScreen = layoutTopOnScreenFlow.first()
+      val itemRectOnScreen = itemState.observeItemRectOnScreen(forceCalculate = true).first()
+        .translate(
+          translateX = 0F,
+          translateY = (
+            marginBottomState.getOrElse(marginBottomKey) { 0 } +
+                scrollContext.scrollState.value - baseScrollValue()
+            ).toFloat(),
+        )
+      emit(itemRectOnScreen.bottom - layoutTopOnScreen)
+    }
+
+    /** 返回 OffsetScroll 已经施加到课表上的完整偏移。 */
+    fun currentOffset(): Float {
+      val scrollOffset = scrollContext.scrollState.value - baseScrollValue()
+      val marginOffset = marginBottomState.getOrElse(marginBottomKey) { 0 }
+      return (scrollOffset + marginOffset).toFloat().coerceAtLeast(0F)
+    }
+
+    /**
+     * BottomSheet 首次展开后确定关闭弹窗要恢复到的滚动位置。
+     *
+     * 如果 Item 在点击前的滚动位置本就可见，则继续沿用原位置；仅当最终 Item 底部超出课表视口时，
+     * 才把基准向下移动到刚好可见。这样中午时间轴不会因为 `maxValue == 0` 被误判为需要追随底部，
+     * 夜间时间轴关闭弹窗后也不会重新把 Item 留在屏幕外。
+     */
+    suspend fun trySettleBaselineAfterOpening() {
+      if (hasSettledBaseScroll) return
+      hasSettledBaseScroll = true
+      val outerCoordinates = scrollContext.outerCoordinates ?: return
+      if (!outerCoordinates.isAttached) return
+      val currentItem = state.currentPageItemFlow.value ?: return
+      if (scrollContext.scrollState.value == scrollContext.scrollState.maxValue) {
+        // 如果展开后滚轴已经是最大值，则收回时也显示在最大值，因为晚上的 item 通过后面的 requiredScroll 的计算会少一些距离
+        settledBaseScrollValue = scrollContext.scrollState.maxValue
+        return
       }
-      val oldMarginBottom = marginBottomState.getOrElse(marginBottomKey) { 0 }
-      val newMarginBottom = (total - (scrollContext.scrollState.value - initScrollValue))
-        .roundToInt().coerceAtLeast(0)
-      if (oldMarginBottom != newMarginBottom) {
-        if (state.bottomSheetState.state == BottomSheetValueState.Expanded
-          && prevItem != state.currentPageItemFlow.value
-        ) {
-          // 切换 item 时需要进行偏移
-          prevItem = state.currentPageItemFlow.value
-          animate(
-            initialValue = oldMarginBottom,
-            targetValue = newMarginBottom,
-            typeConverter = Int.VectorConverter,
-            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-          ) { value, _ ->
-            marginBottomState[marginBottomKey] = value
+      val currentRect = currentItem.itemState.observeItemRectOnScreen(forceCalculate = true).first()
+      // 撤销当前弹窗避让，得到 Item 位于旧基准滚动位置时的最终布局坐标。
+      val itemBottomWithoutAvoidance = currentRect.bottom + currentOffset()
+      val viewportBottom = outerCoordinates.positionOnScreen().y + outerCoordinates.size.height
+      val requiredScroll = (itemBottomWithoutAvoidance - viewportBottom)
+        .coerceAtLeast(0F).roundToInt()
+      settledBaseScrollValue = (settledBaseScrollValue + requiredScroll)
+        .coerceIn(0, scrollContext.scrollState.maxValue)
+    }
+
+    /**
+     * 立即应用完整偏移，优先使用课表本身可滚动的空间，不足的部分再交给底部补偿。
+     *
+     * 弹窗与时间轴本身已在逐帧动画时调用该方法，避免在外层再叠加一层动画。
+     */
+    suspend fun applyOffset(targetOffset: Float) {
+      val target = targetOffset.coerceAtLeast(0F)
+      val targetScrollValue = (baseScrollValue() + target.roundToInt())
+        .coerceIn(0, scrollContext.scrollState.maxValue)
+      scrollContext.scrollState.scrollBy(
+        (targetScrollValue - scrollContext.scrollState.value).toFloat()
+      )
+      marginBottomState[marginBottomKey] = (
+        target - (scrollContext.scrollState.value - baseScrollValue())
+        ).roundToInt().coerceAtLeast(0)
+    }
+
+    /**
+     * 将当前完整偏移动画到新 Item 的目标偏移。
+     *
+     * 滚动值和底部补偿必须共享同一动画进度，否则可滚动部分会先跳变，视觉上就像切换动画消失。
+     */
+    suspend fun animateOffset(targetOffset: Float) {
+      val target = targetOffset.coerceAtLeast(0F)
+      val initial = currentOffset()
+      if (initial == target) return
+      scrollContext.scrollState.scroll {
+        val scrollScope = this
+        animate(
+          initialValue = initial,
+          targetValue = target,
+          animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        ) { value, _ ->
+          val targetScrollValue = (baseScrollValue() + value.roundToInt())
+            .coerceIn(0, scrollContext.scrollState.maxValue)
+          scrollScope.scrollBy(
+            (targetScrollValue - scrollContext.scrollState.value).toFloat()
+          )
+          marginBottomState[marginBottomKey] = (
+            value - (scrollContext.scrollState.value - baseScrollValue())
+            ).roundToInt().coerceAtLeast(0)
+        }
+      }
+    }
+
+    state.bottomSheetState.stateFlow.collectLatest { bottomSheetState ->
+      when (bottomSheetState) {
+        BottomSheetValueState.Scrolling -> {
+          if (lastSettledState == BottomSheetValueState.Expanded) {
+            // 关闭时不再读取 Item；仅按照 BottomSheet 收起进度还原已经施加的偏移。
+            val startFraction = state.bottomSheetState.fraction.coerceAtLeast(0F)
+            val startOffset = currentOffset()
+            if (startFraction == 0F) {
+              applyOffset(0F)
+            } else {
+              snapshotFlow { state.bottomSheetState.fraction }.collect { fraction ->
+                applyOffset(startOffset * (fraction / startFraction).coerceIn(0F, 1F))
+              }
+            }
+          } else {
+            // 打开期间同时跟随 BottomSheet 与时间轴动画，动画结束后立即停止观察。
+            layoutTopOnScreenFlow.combine(
+              state.currentPageItemFlow.filterNotNull()
+                .flatMapLatest { extension ->
+                  extension.itemState.observeItemRectOnScreen(forceCalculate = true)
+                    .map { rect ->
+                      // 排除本逻辑自身施加的滚动与 margin，防止坐标反馈造成上下闪动；
+                      // 时间轴展开改变的真实布局坐标仍会保留。
+                      rect.translate(
+                        translateX = 0F,
+                        translateY = (
+                          marginBottomState.getOrElse(marginBottomKey) { 0 } +
+                              scrollContext.scrollState.value - baseScrollValue()
+                          ).toFloat(),
+                      )
+                    }
+                }
+            ) { layoutTopOnScreen, itemRectOnScreen ->
+              itemRectOnScreen.bottom - layoutTopOnScreen
+            }.collect { applyOffset(it) }
           }
-        } else {
-          marginBottomState[marginBottomKey] = newMarginBottom
+        }
+
+        BottomSheetValueState.Expanded -> {
+          lastSettledState = BottomSheetValueState.Expanded
+          trySettleBaselineAfterOpening()
+          // 进入稳定展开态时跳过当前值；后续仅为 Pager 切换的新 Item 计算一次目标位置。
+          state.currentPageItemFlow.filterNotNull().drop(1)
+            .flatMapLatest { it.observeOverlapOnce() }
+            .collectLatest { animateOffset(it) }
+        }
+
+        BottomSheetValueState.Collapsed,
+        BottomSheetValueState.Hide -> {
+          lastSettledState = bottomSheetState
+          if (currentOffset() != 0F) {
+            applyOffset(0F)
+          }
         }
       }
     }
