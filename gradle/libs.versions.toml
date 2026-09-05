@@ -241,6 +241,7 @@ androidx-room3-gradlePlugin = { module = "androidx.room3:room3-gradle-plugin", v
 androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 # Room3 的 SQLite bundled driver：非 Web target 复用既有 SQLite 2.7.0 实现。
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
+androidx-sqlite-bundled-jvm = { module = "androidx.sqlite:sqlite-bundled-jvm", version.ref = "androidx-sqlite" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
@@ -440,5 +441,4 @@ views = [
     "material",
     "flexbox",
 ]
-
 
