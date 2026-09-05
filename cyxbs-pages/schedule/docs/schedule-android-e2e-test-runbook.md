@@ -369,7 +369,7 @@
 - R26：后端 `TestMergeOccurrenceAdjustmentKeepsIdentityAndMergesFields` 以同一 canonical 调整模拟两个客户端的字段快照：较新的完成态被接受，较旧的标题 Patch 被忽略，服务端 ID 保持且资源版本只递增一次；`go test ./model/schedule` 通过，确认按每个 `AtomicField.modifiedAt` 合并而非整行覆盖。
 - S15：T15 修复部署后的冷启动 Sync 中，本地声明的 17 条日程全部只出现在 `confirmedResults`，新建于服务端且本地未声明的 Unicode 日程只出现在 `discoveredResults`；两组 ID 不重叠，合并后本地共 18 条且 pending=0。
 - A09 范围外边界：9 月 9 日 `E2E-SCHEDULE-0903-COLOR` 被课程切到仅剩 8px 时，展开“傍晚”后虽可见范围增至 106px，点击部分区域仍可能生成一小时临时事务。正常可见的时间段、时间点、全天及双日程重叠均已通过 T06/A08/A10/A17；该极窄命中属于课表通用手势限制，本轮不扩改。
-- A11/A23：真机对 `E2E-A02-AFFAIR` 执行长按拖动后，松手前后语义节点坐标均回到 `[252,427][384,579]`，`ScheduleNetwork` 与 `ScheduleV2Room` 全程没有 UPDATE。代码复核确认日程只注册 `enableExpandTimelineWhenMove=true`，未提供目标偏移和 `changeWhatTime`，因此仅产生拖动预览并由通用移动层动画回原位，不会触发 repository。
+- A11/A23：真机对 `E2E-A02-AFFAIR` 执行长按拖动后，松手前后语义节点坐标均回到 `[252,427][384,579]`，`ScheduleNetwork` 与 `ScheduleDetail` 全程没有 UPDATE。代码复核确认日程只注册 `enableExpandTimelineWhenMove=true`，未提供目标偏移和 `changeWhatTime`，因此仅产生拖动预览并由通用移动层动画回原位，不会触发 repository。
 - A17：真机创建 `E2E-A17-FIRST`（先为 19:00–20:00，后改为 18:00–20:00）和 `E2E-A17-SECOND`（19:00–20:00）。完全重叠时从顶层 `SECOND` 打开详情可左右切换到 `FIRST`；部分重叠后点击 `FIRST` 的 18:00–19:00 露出区会先将 `FIRST` 置顶，按课表既有交互不额外弹出包含原上层项的 Pager。两条日程的分栏、遮挡和置顶结果均正常，本轮未改造课表通用重叠算法。
 - Q06/Z01/Z02：通过 dev/test DELETE 精确删除标题以 `E2E-` 开头的本轮 Schedule，返回逐项 `SUCCESS`；随后正式清单页 Sync 成功。只读导出最新 Room 与 WAL 后确认 E2E 日程为 0、Schedule/Category/OccurrenceAdjustment 三类 pending 均为 0、adjustment 为 0，仅保留用户原有 `222`；账号 Settings 中没有 `schedule_failure_record_count` 残留。
 - Z03：迁移源码已恢复 `CURRENT_MIGRATION_VERSION=2`，正式测试构建已覆盖安装；READ/WRITE_CALENDAR 均恢复授权，设备恢复浅色模式 `Night mode: no`。本轮未关闭设备网络，也未留下应用级网络故障注入配置。
@@ -465,6 +465,7 @@
 - K07/K14 属于既定需求，已完成 Android Calendar Provider 的原生 exception 映射和真实设备验证。后续独立 iOS 任务也已补齐 EventKit `.thisEvent` 单次修改/删除映射，并在 iOS 模拟器中验证系列 master 与修改实例的原始 occurrence 关联。
 - 已知非阻塞边界：日程被多层课程切割到极窄残余区域时，课表空白创建层仍可能响应轻击；正常可见的时间点、时间段、全天及双日程重叠均已通过，不修改课表通用手势框架。
 - 客户端修复提交：`c0f34cf86`、`42db235f6`、`15a5fb0c3`、`2300f789b`、`248393710`、`aeda4eac3`、`484a7488b`、`75f1ba6e8`、`b8f76512e`、`c0a17581f`、`ecd750d82`、`6a035c684`。
-- 本次待提交修复：补齐 Android 重复日程的 Provider 原生 exception 生产入口、重复 Deadline 和单次时间形态切换，并增加 17 项真实 Provider 回归验证。
+- Android Provider 补充修复已提交为 `a48b79aed`：补齐重复日程原生 exception 生产入口、重复 Deadline 和单次时间形态切换，并通过 17 项真实 Provider 回归验证。
 - 后端修复提交：`3537af4`（分类名称规范化）、`6a2f26c`（UTF-8 BLOB 保存 emoji）；均已推送 dev/test 并完成部署验证。
-- 当前无需用户补做 Android 核心验收；iOS EventKit 单次例外已在后续独立平台任务中完成。
+- iOS 后续修复已提交为 `6844fcad3`、`1f5e58b20`：修复系统日历导出并补齐 EventKit `.thisEvent` 单次修改/删除映射；模拟器已验证系列 master 与修改实例的原始 occurrence 关联。
+- ICS 导出、日历事件圆点、课表折叠时间轴与弹窗避让已在后续提交中完成聚焦验证；当前无需用户补做 Android 核心验收。

@@ -1,6 +1,6 @@
 # Schedule 当前交接状态
 
-> 更新时间：2026-09-03。本文只记录当前实现，不保留已经废弃的历史方案。
+> 更新时间：2026-09-06。本文只记录当前实现，不保留已经废弃的历史方案。
 
 ## 已完成实现
 
@@ -13,7 +13,10 @@
 - 分类、日程和单次调整使用物理删除；还原单次调整即删除调整资源。
 - Android/iOS 旧清单与旧 Transaction 共享 commonMain 映射并按账号执行一次性迁移。
 - Android/iOS 系统日历保持单向投影；时间点使用零时长事件，提醒支持准时和提前分钟。
+- 支持导出标准 ICS 文件；Android、iOS、Desktop 与 Web 按各自平台能力保存或分享，重复规则和单次调整沿用同一套日历投影模型。
 - 课表按 AllDay、Timed、Deadline 三层投影，事务与清单分别渲染，只有当前登录账号主页课表允许创建和展示。
+- 清单页支持列表/时间轴切换、分类筛选和管理、批量操作、同步失败修复入口；首页 Feed 展示临期/超期提示与清单卡片。
+- 课表时间轴为被压缩的 Item 保留统一最小高度；点击后可展开对应时间轴，详情弹窗会跟随内容高度避让当前 Item，并限制 Item 不越过课表顶部安全间距。
 
 ## 当前协议事实源
 
@@ -28,14 +31,19 @@
 新数据结构完成后已执行的聚焦验证：
 
 ```text
+# 客户端仓库
 ./gradlew :cyxbs-pages:schedule:desktopTest :cyxbs-pages:course:view:compileKotlinDesktop :cyxbs-pages:course:compileKotlinDesktop :cyxbs-pages:discover:compileKotlinDesktop --quiet
 ./gradlew :cyxbs-pages:schedule:compileAndroidMain :cyxbs-pages:course:view:compileAndroidMain :cyxbs-pages:course:compileAndroidMain --quiet
 ./gradlew :cyxbs-pages:schedule:compileKotlinIosSimulatorArm64 --quiet
-/Users/guoxiangrui/sdk/go1.26.4/bin/go test ./schedule ./schedulewire ./dao
-/Users/guoxiangrui/sdk/go1.26.4/bin/go test ./service -run '^Test(Schedule|PublicSchedule)' -count=1
+
+# magipoke-todo 后端仓库
+go test ./schedule ./schedulewire ./dao
+go test ./service -run '^Test(Schedule|PublicSchedule)' -count=1
 ```
 
-Android 真机最终测试尚未执行，必须等待代码审批后按验收清单逐项进行。当前客户端和后端修改均保持未提交状态。
+Android 真机已按验收清单完成 241 项验证，阻塞失败、跳过和待完成均为 0；测试数据、pending 与失败记录已经清理。后续又完成了 Android Calendar Provider 与 iOS EventKit 的重复单次调整映射、ICS 导出及课表折叠时间轴的聚焦回归，详见验收清单中的最终结果和真机证据。
+
+当前客户端改动均已提交；配套后端已经推送并在 dev/test 环境完成部署验证。合入 `develop` 前仍需以最新远端分支为基线解决冲突，并重新执行受影响模块的编译与聚焦测试。
 
 ## 维护边界
 
