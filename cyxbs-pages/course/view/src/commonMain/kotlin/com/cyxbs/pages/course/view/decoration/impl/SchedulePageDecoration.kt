@@ -117,7 +117,7 @@ abstract class ScheduleTimedKindPageDecoration protected constructor(
     scheduleRangeFlow.onEach { range ->
       itemHierarchy.reset(
         range?.projectTimedOccurrences().orEmpty().map { item ->
-          ScheduleItemWhatTime(item, isDeadline = false, platformItemFactory)
+          ScheduleItemWhatTime(item, platformItemFactory)
         },
       )
     }.launchIn(coroutineScope)

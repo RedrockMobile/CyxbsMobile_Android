@@ -34,6 +34,7 @@ import com.cyxbs.pages.course.view.item.modifier.LongPressMoveItemModifier
 import com.cyxbs.pages.course.view.item.modifier.PressScaleItemModifier
 import com.cyxbs.pages.course.view.item.modifier.RoundedShadowItemModifier
 import com.cyxbs.pages.course.view.timeline.CourseTimeline
+import com.cyxbs.pages.course.view.timeline.data.MutableTimelineData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlin.math.roundToInt
@@ -115,12 +116,40 @@ private fun CourseRealShowRange(
   ) {
     CourseItemTopBottomText(
       modifier = it
-        .clickableNoIndicator { onClick?.invoke(range) }
+        .clickableNoIndicator {
+          itemState.expandCoveredCollapsedTimeline()
+          onClick?.invoke(range)
+        }
         .padding(top = textPadding.width, bottom = textPadding.height),
       topText = topText,
       bottomText = bottomText,
       textColor = textColor,
     )
+  }
+}
+
+/**
+ * 展开覆盖当前 Item 真实时间范围的折叠时间轴。
+ *
+ * 这里只把 [MutableTimelineData.State.Collapse] 切换为展开，不会反向折叠已经展开的节点。时间点
+ * 按时间轴计算所归属的 `(start, end]` 边界处理，时间段按真实区间相交处理；Item 的业务时间不会改变。
+ */
+private fun CourseItemState.expandCoveredCollapsedTimeline() {
+  val whatTime = item.whatTime.now.value
+  val beginTime = whatTime.beginTime
+  val finalTime = whatTime.finalTime
+  val timelineData = coursePage.timeline.data
+  timelineData.forEachIndexed { index, data ->
+    val mutableData = data as? MutableTimelineData ?: return@forEachIndexed
+    if (mutableData.state.value != MutableTimelineData.State.Collapse) return@forEachIndexed
+    val isCovered = if (beginTime == finalTime) {
+      // calculateWeight() 在时间恰好落到分段末尾时归入前一段，这里保持相同边界语义。
+      (beginTime > mutableData.startTime || index == 0 && beginTime == mutableData.startTime) &&
+          beginTime <= mutableData.endTime
+    } else {
+      mutableData.startTime < finalTime && mutableData.endTime > beginTime
+    }
+    if (isCovered) mutableData.click()
   }
 }
 

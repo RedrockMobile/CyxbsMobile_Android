@@ -38,17 +38,20 @@ import kotlin.math.roundToInt
  */
 object LayoutItemModifier : CourseItemModifier {
 
+  /** 所有课表 Item 共用的最小视觉高度，避免时间轴折叠后内容与点击区域完全消失。 */
+  val DefaultMinimumVisualHeight = 20.dp
+
   // 是否启动时间信息改变后的动画，默认开启
   val animLock = CourseItemState.ValueKey { Lock() }
 
   /**
-   * item 的最小视觉高度，默认不限制。
+   * Item 的最小视觉高度，默认对所有课表 Item 生效。
    *
    * 它以业务区间中心向上下两侧扩展绘制区域，不修改
-   * [com.cyxbs.pages.course.view.item.CourseItemWhatTime] 的业务时间范围；适用于截止时间点等需要
-   * 容纳一行文字、但不应伪造成长时间段的装饰项。
+   * [com.cyxbs.pages.course.view.item.CourseItemWhatTime] 的业务时间范围。零时长 Item 与被时间轴
+   * 压缩的时间段因此能保留一致的可读、可点击区域；特殊 Item 仍可按需覆盖该值。
    */
-  val minimumVisualHeight = CourseItemState.ValueKey<Dp> { 0.dp }
+  val minimumVisualHeight = CourseItemState.ValueKey<Dp> { DefaultMinimumVisualHeight }
 
   /**
    * item 的固定视觉优先级，最终会与 [CourseItemState.zIndexState] 的临时层级相加。

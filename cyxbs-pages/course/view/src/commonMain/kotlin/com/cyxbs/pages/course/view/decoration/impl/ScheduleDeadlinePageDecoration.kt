@@ -28,7 +28,7 @@ class ScheduleDeadlinePageDecoration(
       val items = if (range == null) emptyList() else projectDeadlineRange(range)
       itemHierarchy.reset(
         items.map { item ->
-          ScheduleItemWhatTime(item, isDeadline = true, platformItemFactory)
+          ScheduleItemWhatTime(item, platformItemFactory)
         },
       )
     }.launchIn(coroutineScope)

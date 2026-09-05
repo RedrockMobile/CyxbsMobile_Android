@@ -21,7 +21,6 @@ import com.cyxbs.pages.course.view.item.CourseItemWhatTime
 import com.cyxbs.pages.course.view.item.ItemHierarchyWhatTime
 import com.cyxbs.pages.course.view.item.createCourseDefaultModifierList
 import com.cyxbs.pages.course.view.item.extension.IMovableItemExtension
-import com.cyxbs.pages.course.view.item.modifier.LayoutItemModifier
 import com.cyxbs.pages.course.view.item.modifier.CourseItemModifier
 import com.cyxbs.pages.schedule.api.ScheduleDefaultOccurrenceColor
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceView
@@ -41,7 +40,6 @@ class CourseScheduleItem internal constructor(
   whatTime: CourseItemWhatTime,
   coroutineScope: CoroutineScope,
   private val data: ScheduleCourseDecorationItem,
-  private val isDeadline: Boolean,
   platformItemFactory: PlatformScheduleItemFactory,
 ) : CourseItem(whatTime, coroutineScope) {
 
@@ -53,11 +51,6 @@ class CourseScheduleItem internal constructor(
   /** Schedule API 暴露的只读 occurrence，供具体平台决定点击和详情行为。 */
   val occurrence
     get() = data.occurrence
-
-  private companion object {
-    /** 截止时间保持零分钟业务区间，仅额外提供可读、可点的视觉高度。 */
-    val DEADLINE_VISUAL_HEIGHT = 20.dp
-  }
 
   private val platform = platformItemFactory.create(this)
 
@@ -116,10 +109,6 @@ class CourseScheduleItem internal constructor(
     } else {
       remember { createCourseDefaultModifierList() }
     }
-    LayoutItemModifier.minimumVisualHeight.set(
-      itemState,
-      if (isDeadline) DEADLINE_VISUAL_HEIGHT else 0.dp,
-    )
     CourseDefaultItemContent(
       itemState = itemState,
       topText = data.title,
@@ -206,7 +195,6 @@ internal class ScheduleAllDayDecorationItem(
 /** 日程在 ItemHierarchy 中的稳定时间描述。 */
 internal class ScheduleItemWhatTime(
   private val data: ScheduleCourseDecorationItem,
-  private val isDeadline: Boolean,
   private val platformItemFactory: PlatformScheduleItemFactory,
 ) : ItemHierarchyWhatTime<CourseScheduleItem>() {
 
@@ -224,7 +212,6 @@ internal class ScheduleItemWhatTime(
       whatTime = this,
       coroutineScope = coroutineScope,
       data = data,
-      isDeadline = isDeadline,
       platformItemFactory = platformItemFactory,
     )
 
