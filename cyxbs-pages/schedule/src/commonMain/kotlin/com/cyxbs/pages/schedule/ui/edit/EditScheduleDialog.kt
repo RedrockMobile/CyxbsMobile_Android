@@ -49,6 +49,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -56,8 +57,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
@@ -69,6 +70,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -113,7 +115,6 @@ import com.cyxbs.pages.schedule.widget.rememberIcAddtodoTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 /**
  * 添加 / 查看 / 编辑日程的统一底部弹窗 —— **邮子清单与课表共用同一套**，外观对齐课表事务(affair)。
@@ -787,6 +788,7 @@ private fun InfoRow(
   ) {
     InfoTextSegment(
       id = "date",
+      suggestedRow = 0,
       text = if (hasEffectiveDate) {
         buildString {
           append(formatInfoDate(date))
@@ -820,31 +822,13 @@ private fun InfoRow(
     }
     InfoTextSegment(
       id = "time",
+      suggestedRow = 0,
       text = text ?: "未设置时间",
       icon = timeIcon,
       color = if (text == null) placeholderColor else colors.tvLv2,
       onClick = if (editable) onClickTime else null,
     )
   }
-  // 🔁重复规则
-  val repeatIcon = rememberIcAddtodoRepeat()
-  val repeatSegment =
-    remember(
-      colors,
-      editable,
-      modelState.outputRecurrence,
-      repeatIcon,
-      onClickRepeat
-    ) {
-      val text = recurrenceRowLabel(modelState.outputRecurrence)
-      InfoTextSegment(
-        id = "repeat",
-        text = text ?: "仅一次",
-        icon = repeatIcon,
-        color = colors.tvLv2,
-        onClick = if (editable) onClickRepeat else null,
-      )
-    }
   // ⏰提醒时间
   val remindIcon = rememberIcAddtodoNotice()
   val remindSegment =
@@ -860,6 +844,7 @@ private fun InfoRow(
       val unauthorized = text != null && !reminderAuthorized
       InfoTextSegment(
         id = "remind",
+        suggestedRow = 0,
         text = text ?: "不提醒",
         icon = remindIcon,
         color = if (unauthorized) placeholderColor else colors.tvLv2,
@@ -869,25 +854,26 @@ private fun InfoRow(
         onClick = if (editable || unauthorized) onClickRemind else null,
       )
     }
-  // 🏷分类；使用纯描边标签图标，避免 Material 图标与其余自绘图标的风格不一致。
-  val categoryIcon = rememberIcAddtodoCategory()
-  val categorySegment = remember(
-    colors,
-    editable,
-    categories,
-    modelState.categoryId,
-    categoryIcon,
-    onClickCategory,
-  ) {
-    val selectedName = categories.firstOrNull { it.id == modelState.categoryId }?.name
-    InfoTextSegment(
-      id = "category",
-      text = selectedName ?: "未分组",
-      icon = categoryIcon,
-      color = if (selectedName == null) placeholderColor else colors.tvLv2,
-      onClick = if (editable && categories.isNotEmpty()) onClickCategory else null,
-    )
-  }
+  // 🔁重复规则
+  val repeatIcon = rememberIcAddtodoRepeat()
+  val repeatSegment =
+    remember(
+      colors,
+      editable,
+      modelState.outputRecurrence,
+      repeatIcon,
+      onClickRepeat
+    ) {
+      val text = recurrenceRowLabel(modelState.outputRecurrence)
+      InfoTextSegment(
+        id = "repeat",
+        suggestedRow = 1,
+        text = text ?: "仅一次",
+        icon = repeatIcon,
+        color = colors.tvLv2,
+        onClick = if (editable) onClickRepeat else null,
+      )
+    }
   // 🔗课表/清单关联；来源类型固定，只展示当前关系，不把领域枚举泄漏到课表模块。
   val relationIcon = rememberIcAddtodoRelation()
   val relationSegment = remember(
@@ -904,60 +890,80 @@ private fun InfoRow(
       ScheduleKind.AFFAIR -> modelState.isInTodoList
     }
     val text = when (modelState.kind) {
-      ScheduleKind.TODO -> if (linked) "已关联课表" else "未关联课表"
-      ScheduleKind.AFFAIR -> if (linked) "已关联清单" else "未关联清单"
+      ScheduleKind.TODO -> if (linked) "已关联课表" else "关联课表"
+      ScheduleKind.AFFAIR -> if (linked) "已关联清单" else "关联清单"
     }
     InfoTextSegment(
       id = "relation",
+      suggestedRow = 1,
       text = text,
       icon = relationIcon,
       color = if (linked) colors.tvLv2 else placeholderColor,
       onClick = if (editable) onClickRelation else null,
     )
   }
-
-  BalancedInfoRow(
-    modifier = Modifier.fillMaxWidth(),
+  // 🏷分类；使用纯描边标签图标，避免 Material 图标与其余自绘图标的风格不一致。
+  val categoryIcon = rememberIcAddtodoCategory()
+  val categorySegment = remember(
+    colors,
+    editable,
+    categories,
+    modelState.categoryId,
+    categoryIcon,
+    onClickCategory,
+  ) {
+    val selectedName = categories.firstOrNull { it.id == modelState.categoryId }?.name
+    InfoTextSegment(
+      id = "category",
+      suggestedRow = 1,
+      text = selectedName ?: "未分组",
+      icon = categoryIcon,
+      color = if (selectedName == null) placeholderColor else colors.tvLv2,
+      onClick = if (editable && categories.isNotEmpty()) onClickCategory else null,
+    )
+  }
+  StableInfoFlowRow(
+    modifier = Modifier.fillMaxWidth().clipToBounds(),
     horizontalSpacing = 10.dp,
     verticalSpacing = 5.dp,
   ) {
-    // 日期和时间仍使用单个富文本，统一字体度量，避免桌面端纯数字/英文文本高度不一致。
-    BasicText(
-      text = dateSegment.annotatedText + AnnotatedString("  ") + timeSegment.annotatedText,
-      style = TextStyle(fontSize = 13.sp, lineHeight = 13.sp, color = colors.tvLv2),
-      inlineContent = dateSegment.inlineContent + timeSegment.inlineContent,
-      maxLines = 1,
-    )
     buildList {
-      add(repeatSegment)
+      // 日期、时间、提醒固定排在最前，只有实际宽度不足时才由 FlowRow 顺序换行。
+      add(dateSegment)
+      add(timeSegment)
       add(remindSegment)
+      add(repeatSegment)
+      if (showCourseRelation) add(relationSegment)
       // 原生事务没有清单分组；关联清单后才开放分组选择，并以默认灰色进入清单体系。
       if (modelState.kind == ScheduleKind.TODO || modelState.isInTodoList) add(categorySegment)
-      if (showCourseRelation) add(relationSegment)
     }.forEach {
       BasicText(
         text = it.annotatedText,
         style = TextStyle(fontSize = 13.sp, lineHeight = 13.sp, color = colors.tvLv2),
         inlineContent = it.inlineContent,
         maxLines = 1,
+        modifier = Modifier.infoRowSuggestedRow(it.suggestedRow),
       )
     }
   }
 }
 
 /**
- * 最多使用两行展示信息项，并在必须换行时选择更均衡的连续切分点。
+ * 行归属稳定的信息栏流式布局。
  *
- * 信息项顺序不会改变；优先保证第一行不短于第二行，再让两行宽度差尽可能小。
- * 这可以避免普通 [FlowRow] 把大多数内容塞进第一行、第二行只留下一个短项。
+ * 首次布局时从每个 Item 的建议行开始自然换行；前一行即使有剩余空间，也不会把后续 Item 提前。
+ * 之后容器宽度、Item 数量、建议行或间距变化时才整体重新分行。
+ * 单个文案变长并导致本行溢出时，只允许该 Item 临时移动到后续可容纳的行，其他 Item 保持基准行；
+ * 文案缩短后该 Item 会优先回到基准行。极端情况下单项仍超宽时由 [Modifier.clipToBounds] 裁剪。
  */
 @Composable
-private fun BalancedInfoRow(
-  modifier: Modifier = Modifier,
+private fun StableInfoFlowRow(
+  modifier: Modifier,
   horizontalSpacing: Dp,
   verticalSpacing: Dp,
   content: @Composable () -> Unit,
 ) {
+  val rowCache = remember { StableInfoRowLayoutCache() }
   Layout(
     modifier = modifier,
     content = content,
@@ -969,35 +975,41 @@ private fun BalancedInfoRow(
     } else {
       val horizontalSpacingPx = horizontalSpacing.roundToPx()
       val verticalSpacingPx = verticalSpacing.roundToPx()
-      val splitIndex = chooseBalancedInfoRowSplit(
+      val rowIndexes = rowCache.rowsFor(
         itemWidths = placeables.map { it.width },
+        suggestedRows = measurables.map {
+          (it.parentData as? InfoRowParentData)?.suggestedRow ?: 0
+        },
         horizontalSpacing = horizontalSpacingPx,
         maxWidth = constraints.maxWidth,
       )
-      val rows = if (splitIndex == null) {
-        listOf(placeables)
-      } else {
-        listOf(placeables.take(splitIndex), placeables.drop(splitIndex))
+      // 临时后移的 Item 可能使行号不再按 Item 顺序单调递增，必须取最大行号。
+      val rowCount = rowIndexes.max() + 1
+      val rowHeights = IntArray(rowCount)
+      val rowWidths = IntArray(rowCount)
+      placeables.forEachIndexed { index, placeable ->
+        val row = rowIndexes[index]
+        rowHeights[row] = maxOf(rowHeights[row], placeable.height)
+        if (rowWidths[row] > 0) rowWidths[row] += horizontalSpacingPx
+        rowWidths[row] += placeable.width
       }
-      val rowWidths = rows.map { row ->
-        row.sumOf { it.width } + horizontalSpacingPx * (row.size - 1).coerceAtLeast(0)
-      }
-      val rowHeights = rows.map { row -> row.maxOf { it.height } }
+      val contentHeight = rowHeights.sum() + verticalSpacingPx * (rowCount - 1)
       val layoutWidth = rowWidths.max().coerceIn(constraints.minWidth, constraints.maxWidth)
-      val contentHeight = rowHeights.sum() +
-        verticalSpacingPx * (rows.size - 1).coerceAtLeast(0)
       val layoutHeight = contentHeight.coerceIn(constraints.minHeight, constraints.maxHeight)
 
       layout(layoutWidth, layoutHeight) {
-        var y = 0
-        rows.forEachIndexed { rowIndex, row ->
-          var x = 0
-          val rowHeight = rowHeights[rowIndex]
-          row.forEach { placeable ->
-            placeable.placeRelative(x, y + (rowHeight - placeable.height) / 2)
-            x += placeable.width + horizontalSpacingPx
-          }
-          y += rowHeight + verticalSpacingPx
+        val rowY = IntArray(rowCount)
+        for (row in 1 until rowCount) {
+          rowY[row] = rowY[row - 1] + rowHeights[row - 1] + verticalSpacingPx
+        }
+        val rowX = IntArray(rowCount)
+        placeables.forEachIndexed { index, placeable ->
+          val row = rowIndexes[index]
+          placeable.placeRelative(
+            x = rowX[row],
+            y = rowY[row] + (rowHeights[row] - placeable.height) / 2,
+          )
+          rowX[row] += placeable.width + horizontalSpacingPx
         }
       }
     }
@@ -1005,67 +1017,118 @@ private fun BalancedInfoRow(
 }
 
 /**
- * 根据各信息项的实测宽度选择两行的连续切分位置；全部内容可放入一行时返回 `null`。
- *
- * [horizontalSpacing] 与 [maxWidth] 均为像素值。正常情况下两行都必须放得下；若极窄窗口下
- * 不存在可行切分，则优先选择总溢出最少的切分，交由父布局裁剪。
+ * 缓存信息栏的基准行归属；建议行是最早可展示位置，仅允许溢出的 Item 向后临时换行。
  */
-internal fun chooseBalancedInfoRowSplit(
-  itemWidths: List<Int>,
-  horizontalSpacing: Int,
-  maxWidth: Int,
-): Int? {
-  require(itemWidths.all { it >= 0 }) { "itemWidths must not contain negative values" }
-  require(horizontalSpacing >= 0) { "horizontalSpacing must not be negative" }
-  require(maxWidth >= 0) { "maxWidth must not be negative" }
-  if (itemWidths.size < 2) return null
+internal class StableInfoRowLayoutCache {
+  private var cachedMaxWidth = -1
+  private var cachedItemCount = -1
+  private var cachedHorizontalSpacing = -1
+  private var cachedSuggestedRows: List<Int> = emptyList()
+  private var cachedItemWidths: List<Int> = emptyList()
+  private var cachedRows: List<Int> = emptyList()
 
-  fun rowWidth(startIndex: Int, endIndex: Int): Long {
-    val itemCount = endIndex - startIndex
-    return itemWidths.subList(startIndex, endIndex).sumOf { it.toLong() } +
-      horizontalSpacing.toLong() * (itemCount - 1).coerceAtLeast(0)
-  }
+  /**
+   * 返回每个 Item 对应的行号。
+   *
+   * 容器边界未改变时从基准行开始重新尝试：增长项仅在本行溢出时独自后移，缩短后可自动返回；
+   * 其他 Item 不会因为相邻文案变化而跟随换行。
+   */
+  fun rowsFor(
+    itemWidths: List<Int>,
+    suggestedRows: List<Int>,
+    horizontalSpacing: Int,
+    maxWidth: Int,
+  ): List<Int> {
+    require(itemWidths.all { it >= 0 }) { "itemWidths must not contain negative values" }
+    require(suggestedRows.size == itemWidths.size) { "suggestedRows must match itemWidths" }
+    require(suggestedRows.all { it >= 0 }) { "suggestedRows must not contain negative values" }
+    require(horizontalSpacing >= 0) { "horizontalSpacing must not be negative" }
+    require(maxWidth >= 0) { "maxWidth must not be negative" }
+    val needsRecalculate = cachedMaxWidth != maxWidth ||
+        cachedItemCount != itemWidths.size ||
+        cachedHorizontalSpacing != horizontalSpacing ||
+        cachedSuggestedRows != suggestedRows
+    if (needsRecalculate) {
+      var row = 0
+      var rowWidth = 0L
+      var rowHasItem = false
+      cachedRows = itemWidths.mapIndexed { index, itemWidth ->
+        val suggestedRow = suggestedRows[index]
+        if (row < suggestedRow) {
+          row = suggestedRow
+          rowWidth = 0L
+          rowHasItem = false
+        }
+        val width = itemWidth.coerceAtMost(maxWidth).toLong()
+        val nextWidth = if (rowHasItem) {
+          rowWidth + horizontalSpacing + width
+        } else {
+          width
+        }
+        if (rowHasItem && nextWidth > maxWidth.toLong()) {
+          row++
+          rowWidth = width
+        } else {
+          rowWidth = nextWidth
+        }
+        rowHasItem = true
+        row
+      }
+      cachedMaxWidth = maxWidth
+      cachedItemCount = itemWidths.size
+      cachedHorizontalSpacing = horizontalSpacing
+      cachedSuggestedRows = suggestedRows
+      cachedItemWidths = itemWidths
+      return cachedRows
+    }
 
-  val maxWidthLong = maxWidth.toLong()
-  if (rowWidth(0, itemWidths.size) <= maxWidthLong) return null
+    val result = cachedRows.toMutableList()
 
-  val candidates = (1 until itemWidths.size).map { splitIndex ->
-    Triple(
-      splitIndex,
-      rowWidth(0, splitIndex),
-      rowWidth(splitIndex, itemWidths.size),
-    )
-  }
-  val fitting = candidates.filter { (_, firstWidth, secondWidth) ->
-    firstWidth <= maxWidthLong && secondWidth <= maxWidthLong
-  }
-  val firstRowNotShorter = fitting.filter { (_, firstWidth, secondWidth) ->
-    firstWidth >= secondWidth
-  }
+    fun rowWidth(row: Int, excludedIndex: Int? = null): Long {
+      val widths = result.indices.filter { index ->
+        index != excludedIndex && result[index] == row
+      }.map { itemWidths[it].coerceAtMost(maxWidth).toLong() }
+      return widths.sum() + horizontalSpacing.toLong() * (widths.size - 1).coerceAtLeast(0)
+    }
 
-  return when {
-    firstRowNotShorter.isNotEmpty() -> firstRowNotShorter.minBy { (_, firstWidth, secondWidth) ->
-      firstWidth - secondWidth
-    }.first
+    itemWidths.indices
+      .filter { index -> itemWidths[index] > cachedItemWidths[index] }
+      .forEach { index ->
+        val baseRow = cachedRows[index]
+        if (rowWidth(baseRow) <= maxWidth.toLong()) return@forEach
 
-    fitting.isNotEmpty() -> fitting.minBy { (_, firstWidth, secondWidth) ->
-      abs(firstWidth - secondWidth)
-    }.first
-
-    else -> candidates.minWith(
-      compareBy<Triple<Int, Long, Long>>(
-        { (_, firstWidth, secondWidth) ->
-          (firstWidth - maxWidthLong).coerceAtLeast(0) +
-            (secondWidth - maxWidthLong).coerceAtLeast(0)
-        },
-        { (_, firstWidth, secondWidth) -> abs(firstWidth - secondWidth) },
-      )
-    ).first
+        // 只移动发生增长的当前项；其他项始终保留在基准行，避免连续级联换行。
+        result[index] = -1
+        val itemWidth = itemWidths[index].coerceAtMost(maxWidth).toLong()
+        val lastExistingRow = result.max()
+        val targetRow = (baseRow + 1..lastExistingRow).firstOrNull { row ->
+          val occupiedWidth = rowWidth(row)
+          val spacing = if (occupiedWidth == 0L) 0 else horizontalSpacing
+          occupiedWidth + spacing + itemWidth <= maxWidth.toLong()
+        } ?: (lastExistingRow + 1)
+        result[index] = targetRow
+      }
+    return result
   }
 }
 
+/** 信息项声明的建议行；父布局只能将其向后移动，不能利用前面空位提前。 */
+private data class InfoRowParentData(val suggestedRow: Int)
+
+/** 把信息项的建议行传递给 [StableInfoFlowRow]。 */
+private data class InfoRowSuggestedRowModifier(
+  val suggestedRow: Int,
+) : ParentDataModifier {
+  override fun Density.modifyParentData(parentData: Any?): Any = InfoRowParentData(suggestedRow)
+}
+
+private fun Modifier.infoRowSuggestedRow(row: Int): Modifier =
+  this.then(InfoRowSuggestedRowModifier(row))
+
 private data class InfoTextSegment(
   val id: String,
+  /** 建议展示行；空间不足时允许后移，但不会自动提前到更靠前的行。 */
+  val suggestedRow: Int,
   val text: String?,
   val icon: ImageVector,
   val color: Color,

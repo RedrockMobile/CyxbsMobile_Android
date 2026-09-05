@@ -2,6 +2,7 @@ package com.cyxbs.pages.schedule.ui.edit
 
 import com.cyxbs.components.config.time.Date
 import com.cyxbs.pages.schedule.domain.model.IsoWeekDay
+import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 import kotlin.test.Test
@@ -85,11 +86,32 @@ class ScheduleInfoRowTest {
     assertEquals("提前2小时", formatRemindAhead(120))
   }
 
-  /** 重复缩写：每周单日用紧凑「每周一」；不重复为 null。 */
+  /** 重复缩写：保留紧凑规则，并补充次数或截止日期；不重复为 null。 */
   @Test
   fun recurrence_row_label() {
     assertEquals("每周一", recurrenceRowLabel(RecurrenceRule(RecurrenceFrequency.WEEKLY, byWeekDays = setOf(IsoWeekDay.MONDAY))))
     assertEquals("每2天", recurrenceRowLabel(RecurrenceRule(RecurrenceFrequency.DAILY, interval = 2)))
+    assertEquals(
+      "每周一 · 共5次",
+      recurrenceRowLabel(
+        RecurrenceRule(
+          frequency = RecurrenceFrequency.WEEKLY,
+          byWeekDays = setOf(IsoWeekDay.MONDAY),
+          end = RecurrenceEnd.Count(5),
+        ),
+      ),
+    )
+    assertEquals(
+      "每2天 · 至9月30日",
+      recurrenceRowLabel(
+        recurrence = RecurrenceRule(
+          frequency = RecurrenceFrequency.DAILY,
+          interval = 2,
+          end = RecurrenceEnd.Until(Date(2026, 9, 30)),
+        ),
+        today = Date(2026, 9, 5),
+      ),
+    )
     assertNull(recurrenceRowLabel(null))
   }
 

@@ -4,6 +4,7 @@ import com.cyxbs.components.config.time.Date
 import com.cyxbs.components.config.time.TodayNoEffect
 import com.cyxbs.pages.course.api.CourseUtils
 import com.cyxbs.pages.schedule.domain.model.RecurrenceFrequency
+import com.cyxbs.pages.schedule.domain.model.RecurrenceEnd
 import com.cyxbs.pages.schedule.domain.model.RecurrenceRule
 
 /**
@@ -78,12 +79,25 @@ fun remindOptionLabel(remindMinutes: Int): String =
 /**
  * 信息行里的重复摘要（紧凑版）：
  * - 每周单日、间隔1：`每周一`（比 [buildRecurrenceLabels] 的「每周 周一」更短）；
- * - 其余沿用 [buildRecurrenceLabels] 的首段；不重复返回 null。
+ * - 按次数结束：在规则后追加 `共N次`；按日期结束：追加格式化后的截止日期；
+ * - 永不结束不追加文案，避免信息栏过长；不重复返回 null。
  */
-fun recurrenceRowLabel(recurrence: RecurrenceRule?): String? {
+fun recurrenceRowLabel(
+  recurrence: RecurrenceRule?,
+  today: Date = TodayNoEffect,
+): String? {
   val r = recurrence ?: return null
-  if (r.frequency == RecurrenceFrequency.WEEKLY && r.interval == 1 && r.byWeekDays.size == 1) {
-    return "每周${weekNumberToChinese(r.byWeekDays.first().isoNumber)}"
+  val ruleLabel = if (
+    r.frequency == RecurrenceFrequency.WEEKLY && r.interval == 1 && r.byWeekDays.size == 1
+  ) {
+    "每周${weekNumberToChinese(r.byWeekDays.first().isoNumber)}"
+  } else {
+    buildRecurrenceLabels(recurrence).first()
   }
-  return buildRecurrenceLabels(recurrence).firstOrNull()
+  val endLabel = when (val end = r.end) {
+    RecurrenceEnd.Never -> null
+    is RecurrenceEnd.Count -> "共${end.value}次"
+    is RecurrenceEnd.Until -> "至${formatInfoDate(end.date, today)}"
+  }
+  return if (endLabel == null) ruleLabel else "$ruleLabel · $endLabel"
 }
