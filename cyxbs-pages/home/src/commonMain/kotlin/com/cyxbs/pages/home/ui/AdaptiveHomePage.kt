@@ -33,6 +33,7 @@ import com.cyxbs.components.navigation.NAV_EMPTY_ROOM
 import com.cyxbs.components.navigation.NAV_FOOD
 import com.cyxbs.components.navigation.NAV_MAP
 import com.cyxbs.components.navigation.NAV_SCHOOL_CAR
+import com.cyxbs.components.navigation.NAV_SIGN
 import com.cyxbs.components.utils.compose.dark
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.pages.course.api.CourseNavArgument
@@ -84,6 +85,9 @@ private val itemList = listOf(
   // 开发预览使用 Schedule 模块内的纯内存 mock，不写真实 Room，也不请求后端。
   ActionItem("日程 Mock") {
     AppScheme.jump("cyxbs://schedule/preview")
+  },
+  ActionItem("签到") {
+    AppScheme.jump("cyxbs://$NAV_SIGN")
   },
 
 

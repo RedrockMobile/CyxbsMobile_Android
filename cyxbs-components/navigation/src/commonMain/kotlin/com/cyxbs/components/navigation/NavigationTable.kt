@@ -86,3 +86,8 @@ const val NAV_SCHEDULE_CATEGORY_MANAGE = "schedule/category"
 
 // 日程设置
 const val NAV_SCHEDULE_SETTINGS = "schedule/settings"
+
+const val NAV_SIGN = "sign"
+
+// 通用 WebView
+const val NAV_WEBVIEW = "webview"

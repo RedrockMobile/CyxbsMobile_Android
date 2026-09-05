@@ -44,17 +44,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cyxbs.components.account.api.IAccountService
+import com.cyxbs.components.base.webview.WebViewNavArgument
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.login.rememberLoginDialogState
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.service.implOrNull
 import com.cyxbs.components.config.time.SchoolCalendar
+import com.cyxbs.components.navigation.AppScheme
+import com.cyxbs.components.navigation.NAV_SIGN
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.compose.dark
 import com.cyxbs.components.utils.compose.rememberDerivedStateOfStructure
 import com.cyxbs.components.utils.extensions.ImageFromUrlCompose
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.components.utils.utils.get.Num2CN
+import com.eygraber.uri.Uri
 import com.cyxbs.pages.discover.home.functions.PlatformDiscoverFunctions
 import com.cyxbs.pages.discover.home.viewmodel.DiscoverComposeViewModel
 import com.cyxbs.pages.discover.home.widget.BannerConfig
@@ -160,7 +164,7 @@ private fun Header() {
           .size(22.5.dp)
           .clickableNoIndicator {
             loginDialogState.doIfLogin(function = "签到") {
-              platform?.jumpCheckIn() ?: toast("暂不支持跳转")
+              AppScheme.jump("${AppScheme.SCHEME}://${NAV_SIGN}")
             }
           },
       )
@@ -195,6 +199,23 @@ private fun greetingText(): String {
 }
 
 /* ----------------------------- Banner ------------------------------ */
+
+/**
+ * [DiscoverNavPlatform] 无实现平台（如 iOS）的 banner 跳转兜底
+ */
+private fun onBannerClickFallback(pictureGotoUrl: String, keyword: String) {
+  val finalUrl = if (pictureGotoUrl.startsWith("http")) {
+    val uri = Uri.parse(pictureGotoUrl)
+    if (uri.getQueryParameter(WebViewNavArgument.DEFAULT_TITLE_QUERY_PARAMETER) == null) {
+      // Banner 关键词作为 WebView 路由的兜底标题。
+      uri.buildUpon()
+        .appendQueryParameter(WebViewNavArgument.DEFAULT_TITLE_QUERY_PARAMETER, keyword)
+        .build()
+        .toString()
+    } else pictureGotoUrl
+  } else pictureGotoUrl
+  AppScheme.jump(finalUrl)
+}
 
 @Composable
 private fun Banner(
@@ -253,7 +274,7 @@ private fun Banner(
               .clip(cornerShape)
               .clickableNoIndicator {
                 platform?.onBannerClick(data.pictureGotoUrl, data.keyword)
-                  ?: toast("暂不支持跳转")
+                  ?: onBannerClickFallback(data.pictureGotoUrl, data.keyword)
               },
             contentScale = ContentScale.Crop,
           )
