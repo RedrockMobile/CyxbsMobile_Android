@@ -67,17 +67,14 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
@@ -259,6 +256,7 @@ private fun OffsetScroll(
   state: CourseItemBottomSheetDialogState,
   layoutTopOnScreenFlow: SharedFlow<Float>,
 ) {
+  val minItemTopSpacingPx = with(LocalDensity.current) { 20.dp.toPx() }
   val marginBottomKey = "MobileCourseBottomSheetDialog#OffsetScroll"
   val scrollContext = remember {
     state.dialogContents.value.first().itemState.coursePageFlow.value?.scrollContext
@@ -267,7 +265,7 @@ private fun OffsetScroll(
   val marginBottomState = remember {
     scrollContext.timeline.marginBottom
   }
-  LaunchedEffect(Unit) {
+  LaunchedEffect(state, layoutTopOnScreenFlow, minItemTopSpacingPx) {
     val initScrollValue = scrollContext.scrollState.value
     var settledBaseScrollValue = initScrollValue
     var hasSettledBaseScroll = false
@@ -281,24 +279,46 @@ private fun OffsetScroll(
      */
     fun baseScrollValue(): Int = settledBaseScrollValue.coerceIn(0, scrollContext.scrollState.maxValue)
 
-    fun CourseItemBottomSheetDialogExtension.observeOverlapOnce(): Flow<Float> = flow {
-      val layoutTopOnScreen = layoutTopOnScreenFlow.first()
-      val itemRectOnScreen = itemState.observeItemRectOnScreen(forceCalculate = true).first()
-        .translate(
-          translateX = 0F,
-          translateY = (
-            marginBottomState.getOrElse(marginBottomKey) { 0 } +
-                scrollContext.scrollState.value - baseScrollValue()
-            ).toFloat(),
-        )
-      emit(itemRectOnScreen.bottom - layoutTopOnScreen)
-    }
-
     /** 返回 OffsetScroll 已经施加到课表上的完整偏移。 */
     fun currentOffset(): Float {
       val scrollOffset = scrollContext.scrollState.value - baseScrollValue()
       val marginOffset = marginBottomState.getOrElse(marginBottomKey) { 0 }
       return (scrollOffset + marginOffset).toFloat().coerceAtLeast(0F)
+    }
+
+    /**
+     * 计算 Item 为避让 BottomSheet 所需的完整偏移。
+     *
+     * [itemRectOnScreen] 是已经撤销本逻辑自身偏移后的坐标。通常按 Item 底部与弹窗顶部的重叠量
+     * 上移；若 Item 很高，则最多只移动到课表可视区顶部下方 20dp，避免标题和点击区域被推出课表。
+     */
+    fun calculateTargetOffset(
+      itemRectOnScreen: Rect,
+      layoutTopOnScreen: Float,
+    ): Float {
+      val overlapOffset = (itemRectOnScreen.bottom - layoutTopOnScreen).coerceAtLeast(0F)
+      val outerCoordinates = scrollContext.outerCoordinates
+      if (outerCoordinates == null || !outerCoordinates.isAttached) return overlapOffset
+      val minItemTop = outerCoordinates.positionOnScreen().y + minItemTopSpacingPx
+      val maxOffset = (itemRectOnScreen.top - minItemTop).coerceAtLeast(0F)
+      return minOf(overlapOffset, maxOffset)
+    }
+
+    /**
+     * 读取一次当前 Item 坐标并计算目标偏移。
+     *
+     * 坐标中会先撤销 OffsetScroll 自身已经施加的滚动和底部补偿，防止布局变化后以上一次偏移为
+     * 新基准继续累加。调用方可传入 BottomSheet 当前帧的顶部坐标，使高度动画与 Item 位移同步。
+     */
+    suspend fun CourseItemBottomSheetDialogExtension.calculateTargetOffsetOnce(
+      layoutTopOnScreen: Float,
+    ): Float {
+      val itemRectOnScreen = itemState.observeItemRectOnScreen(forceCalculate = true).first()
+        .translate(
+          translateX = 0F,
+          translateY = currentOffset(),
+        )
+      return calculateTargetOffset(itemRectOnScreen, layoutTopOnScreen)
     }
 
     /**
@@ -407,7 +427,7 @@ private fun OffsetScroll(
                     }
                 }
             ) { layoutTopOnScreen, itemRectOnScreen ->
-              itemRectOnScreen.bottom - layoutTopOnScreen
+              calculateTargetOffset(itemRectOnScreen, layoutTopOnScreen)
             }.collect { applyOffset(it) }
           }
         }
@@ -415,10 +435,22 @@ private fun OffsetScroll(
         BottomSheetValueState.Expanded -> {
           lastSettledState = BottomSheetValueState.Expanded
           trySettleBaselineAfterOpening()
-          // 进入稳定展开态时跳过当前值；后续仅为 Pager 切换的新 Item 计算一次目标位置。
-          state.currentPageItemFlow.filterNotNull().drop(1)
-            .flatMapLatest { it.observeOverlapOnce() }
-            .collectLatest { animateOffset(it) }
+          var currentItem = state.currentPageItemFlow.value
+          // 弹窗内容高度变化时直接逐帧同步偏移；只有 Pager 切换 Item 时才使用独立动画。
+          // combine 会在切换动画期间合并最新的弹窗坐标，动画完成后再按最终高度立即校准。
+          layoutTopOnScreenFlow.combine(
+            state.currentPageItemFlow.filterNotNull()
+          ) { layoutTopOnScreen, item ->
+            layoutTopOnScreen to item
+          }.collect { (layoutTopOnScreen, item) ->
+            val targetOffset = item.calculateTargetOffsetOnce(layoutTopOnScreen)
+            if (item === currentItem) {
+              applyOffset(targetOffset)
+            } else {
+              currentItem = item
+              animateOffset(targetOffset)
+            }
+          }
         }
 
         BottomSheetValueState.Collapsed,
