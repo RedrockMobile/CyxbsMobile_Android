@@ -70,8 +70,8 @@ import com.cyxbs.pages.discover.home.widget.JwNewsFlipper
 import com.cyxbs.pages.discover.home.widget.MsgImageVector
 import com.cyxbs.pages.discover.home.widget.rememberCyxbsV6BannerPainter
 import com.cyxbs.pages.electricity.api.IElectricityService
+import com.cyxbs.pages.schedule.api.IScheduleService
 import com.cyxbs.pages.sport.api.ISportService
-import com.cyxbs.pages.todo.api.ITodoService
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover_news_jwzx
@@ -411,32 +411,41 @@ private fun FunctionsSection(
 private fun FeedSection() {
   val cornerShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
   val containerColor = LocalAppColors.current.middleBg
+  val scheduleService = remember { IScheduleService::class.impl() }
 
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(top = 18.dp)
-      .clip(cornerShape)
-      .background(color = containerColor),
+    modifier = Modifier.fillMaxWidth(),
   ) {
-    // 体育打卡
-    ISportService::class.impl().SportFeed(Modifier.fillMaxWidth())
-    Spacer(
-      modifier = Modifier.fillMaxWidth().height(1.dp)
-        .alpha(0.1F)
-        .background(color = LocalAppColors.current.tvLv4)
+    scheduleService.ScheduleUrgentBanner(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, top = 18.dp, end = 16.dp),
     )
-    // 邮子清单
-    ITodoService::class.impl().TodoFeed(Modifier.fillMaxWidth())
-    Spacer(
-      modifier = Modifier.fillMaxWidth().height(1.dp)
-        .alpha(0.1F)
-        .background(color = LocalAppColors.current.tvLv4)
-    )
-    // 电费查询
-    IElectricityService::class.impl().ElectricityFeed(Modifier.fillMaxWidth())
-    // 80dp 顶起来课表与底部按钮
-    Spacer(modifier = Modifier.fillMaxWidth().navigationBarsPadding().height(80.dp))
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp)
+        .clip(cornerShape)
+        .background(color = containerColor),
+    ) {
+      // 体育打卡
+      ISportService::class.impl().SportFeed(Modifier.fillMaxWidth())
+      Spacer(
+        modifier = Modifier.fillMaxWidth().height(1.dp)
+          .alpha(0.1F)
+          .background(color = LocalAppColors.current.tvLv4)
+      )
+      // 邮子清单
+      scheduleService.ScheduleFeed(Modifier.fillMaxWidth())
+      Spacer(
+        modifier = Modifier.fillMaxWidth().height(1.dp)
+          .alpha(0.1F)
+          .background(color = LocalAppColors.current.tvLv4)
+      )
+      // 电费查询
+      IElectricityService::class.impl().ElectricityFeed(Modifier.fillMaxWidth())
+      // 80dp 顶起来课表与底部按钮
+      Spacer(modifier = Modifier.fillMaxWidth().navigationBarsPadding().height(80.dp))
+    }
   }
 }
-

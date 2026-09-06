@@ -106,7 +106,7 @@ deeplink: cyxbs://dialog/update?versionName={String}&updateContent={String}&down
 - argument: `com.cyxbs.pages.course.api.CourseNavArgument`
 
 ```text
-deeplink: cyxbs://course?stuNum={String}&stableKey=[String?]
+deeplink: cyxbs://course?stuNum=[String?]&stableKey=[String?]
 ```
 
 ### course_find
@@ -256,13 +256,22 @@ object fields:
 
 ## :cyxbs-pages:schedule
 
-### schedule/edit
+### schedule/category/items
 
-- entry: `com.cyxbs.pages.schedule.ui.edit.EditScheduleDialogPreview`
-- argument: `com.cyxbs.pages.schedule.ui.edit.EditScheduleDialogNavArgument`
+- entry: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryItemsNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryItemsNavArgument`
 
 ```text
-deeplink: cyxbs://schedule/edit
+deeplink: cyxbs://schedule/category/items?categoryId={String?}&categoryName={String}
+```
+
+### schedule/category
+
+- entry: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavArgument`
+
+```text
+deeplink: cyxbs://schedule/category
 ```
 
 ### schedule
@@ -271,7 +280,45 @@ deeplink: cyxbs://schedule/edit
 - argument: `com.cyxbs.pages.schedule.api.ScheduleMainNavArgument`
 
 ```text
-deeplink: cyxbs://schedule
+deeplink: cyxbs://schedule?scheduleId=[ScheduleId?]&recurrenceId=[RecurrenceId?]
+object fields:
+  [scheduleId]: ScheduleId? {
+    value: String
+  }
+  [recurrenceId]: RecurrenceId? {
+    originalDateTime: MinuteTimeDate {
+      value: Int
+    }
+    timeZoneId: String?
+    allDay: Boolean
+  }
+```
+
+### schedule/preview
+
+- entry: `com.cyxbs.pages.schedule.ui.main.SchedulePreviewNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.main.SchedulePreviewNavArgument`
+
+```text
+deeplink: cyxbs://schedule/preview
+```
+
+### schedule/settings
+
+- entry: `com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.settings.ScheduleSettingsNavArgument`
+
+```text
+deeplink: cyxbs://schedule/settings
+```
+
+### schedule/failures
+
+- entry: `com.cyxbs.pages.schedule.ui.todo.failure.ScheduleFailureNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.todo.failure.ScheduleFailureNavArgument`
+
+```text
+deeplink: cyxbs://schedule/failures
 ```
 
 ## :cyxbs-pages:schoolcar

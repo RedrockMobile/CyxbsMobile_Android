@@ -38,7 +38,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.service.implOrNull
 import com.cyxbs.components.utils.compose.dark
-import com.cyxbs.components.utils.extensions.toastLong
 import com.cyxbs.components.view.ui.BottomSheetValueState
 import com.cyxbs.pages.home.api.HomeNavArgument
 import com.cyxbs.pages.home.api.IHomeDiscoverTab
@@ -52,7 +51,6 @@ import com.g985892345.provider.api.annotation.ImplProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -154,20 +152,8 @@ internal fun HomeViewPagerCompose(
   }
 }
 
-// 旧版课表
-interface IOldHomeCourse {
-  val enable: Boolean
-  val content: @Composable (modifier: Modifier) -> Unit
-}
-
 @Composable
 private fun HomeCourseCompose(modifier: Modifier = Modifier) {
-  val oldHomeCourse = IOldHomeCourse::class.implOrNull()
-  if (oldHomeCourse?.enable == true) {
-    // 使用旧版课表进行展示
-    oldHomeCourse.content.invoke(modifier)
-    return
-  }
   val bottomNavViewModel = viewModel(BottomNavViewModel::class)
   val courseFrameViewModel = viewModel(MobileCourseFrameViewModel::class)
   // CourseBottomSheetViewModel 提供对外控制课表展示和监听当前展示状态
@@ -225,11 +211,6 @@ private fun HomeCourseCompose(modifier: Modifier = Modifier) {
         BottomSheetValueState.Scrolling -> {}
       }
     }
-  }
-  LaunchedEffect(Unit) {
-    courseFrameViewModel.frame.bottomSheetState.stateFlow
-      .first { it == BottomSheetValueState.Expanded }
-    toastLong("注意：新版课表在开发中，可能存在bug\n设置中可回退旧版课表")
   }
 }
 

@@ -78,8 +78,17 @@ const val NAV_SCHOOL_CAR = "school_car"
 // 空教室
 const val NAV_EMPTY_ROOM = "emptyroom"
 
-// 日程（邮子清单，todo + 课表事务融合）
+// 日程主页（清单与时间轴在页面内切换）
 const val NAV_SCHEDULE_MAIN = "schedule"
+
+// 邮子清单分组管理
+const val NAV_SCHEDULE_CATEGORY_MANAGE = "schedule/category"
+
+// 指定分组引用的全部清单与事务
+const val NAV_SCHEDULE_CATEGORY_ITEMS = "schedule/category/items"
+
+// 日程设置
+const val NAV_SCHEDULE_SETTINGS = "schedule/settings"
 
 const val NAV_SIGN = "sign"
 

@@ -15,9 +15,10 @@ kotlin {
       implementation(projects.cyxbsComponents.utils)
       implementation(projects.cyxbsComponents.account.api)
       implementation(projects.cyxbsPages.course.api)
-      implementation(projects.cyxbsPages.affair.api)
     }
     androidMain.dependencies {
+      // 桌面小组件继续读取旧 Android 事务数据。
+      implementation(projects.cyxbsPages.affair.api)
       implementation(libs.bundles.projectBase)
       implementation(libs.bundles.views)
 
@@ -27,5 +28,4 @@ kotlin {
     }
   }
 }
-
 
