@@ -17,8 +17,6 @@ import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.service.startActivity
 import com.cyxbs.components.config.sp.SP_COURSE_SHOW_STATE
 import com.cyxbs.components.config.sp.defaultSp
-import com.cyxbs.components.navigation.AppScheme
-import com.cyxbs.components.utils.extensions.logg
 import com.cyxbs.components.utils.logger.TrackingUtils
 import com.cyxbs.components.utils.logger.event.ClickEvent
 import com.cyxbs.functions.update.api.IAppUpdateService
@@ -44,9 +42,9 @@ internal actual fun PlatformMobileHomePage(
   val activity = LocalActivity.current as BaseActivity
   DisposableEffect(Unit) {
     // 处理 intent.action
-    execIntentAction(activity.intent, false, courseBottomNavViewModel)
+    execIntentAction(activity.intent, courseBottomNavViewModel)
     val onNewIntentListener = Consumer<Intent> { intent ->
-      execIntentAction(intent, true, courseBottomNavViewModel)
+      execIntentAction(intent, courseBottomNavViewModel)
     }
     activity.addOnNewIntentListener(onNewIntentListener)
     onDispose {
@@ -70,7 +68,6 @@ internal actual fun PlatformMobileHomePage(
 
 private fun execIntentAction(
   intent: Intent,
-  isNewIntent: Boolean,
   courseBottomNavViewModel: CourseBottomSheetViewModel,
 ) {
   when (intent.action) {
@@ -97,16 +94,6 @@ private fun execIntentAction(
         if (!IAccountService::class.impl().isTouristMode()) {
           courseBottomNavViewModel.state.value = true
         }
-      }
-    }
-  }
-  if (isNewIntent) {
-    val url = intent.data
-    if (url != null) {
-      runCatching {
-        AppScheme.jump(url.toString())
-      }.onFailure {
-        logg(it.stackTraceToString())
       }
     }
   }

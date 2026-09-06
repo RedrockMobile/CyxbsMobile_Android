@@ -45,13 +45,6 @@ class KmpInterfaceImpl: IOSKmpInterface {
         nav.pushViewController(vc, animated: true)
     }
 
-    func jumpTodoMain() {
-        guard let nav = Self.topNavigationController() else { return }
-        let vc = ToDoVC()
-        vc.hidesBottomBarWhenPushed = true
-        nav.pushViewController(vc, animated: true)
-    }
-
     func jumpWeDate() {
         guard let nav = Self.topNavigationController() else { return }
         let vc = WeDateVC()
@@ -158,10 +151,11 @@ class KmpInterfaceImpl: IOSKmpInterface {
         nav.pushViewController(vc, animated: true)
     }
 
-    // 登录成功后同步 iOS 原生数据：待办、用户信息、Person 模型、邮箱绑定检查、登录时间。
+    // 登录成功后同步仍由原生维护的用户资料、邮箱绑定状态与登录时间。
+    // 邮子清单已由 schedule CMP 仓库按账号会话初始化和迁移，不能再触发旧 TodoSyncTool，
+    // 否则会并行请求旧接口并继续维护一份不会展示的原生待办缓存。
     // 对齐 RYLoginViewController.loginIfNeeded() 成功后的处理逻辑。
     func onLoginSuccess(stuNum: String) {
-        TodoSyncTool.share().logInSuccess()
         UserItem.default().getUserInfo()
         updatePersonModel()
         checkoutEmailBinding()

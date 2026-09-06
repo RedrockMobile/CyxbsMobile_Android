@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cyxbs.components.account.api.IAccountService
+import com.cyxbs.components.base.webview.WebViewNavArgument
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.login.rememberLoginDialogState
 import com.cyxbs.components.config.service.impl
@@ -57,6 +58,7 @@ import com.cyxbs.components.utils.compose.rememberDerivedStateOfStructure
 import com.cyxbs.components.utils.extensions.ImageFromUrlCompose
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.components.utils.utils.get.Num2CN
+import com.eygraber.uri.Uri
 import com.cyxbs.pages.discover.home.functions.PlatformDiscoverFunctions
 import com.cyxbs.pages.discover.home.viewmodel.DiscoverComposeViewModel
 import com.cyxbs.pages.discover.home.widget.BannerConfig
@@ -68,8 +70,8 @@ import com.cyxbs.pages.discover.home.widget.JwNewsFlipper
 import com.cyxbs.pages.discover.home.widget.MsgImageVector
 import com.cyxbs.pages.discover.home.widget.rememberCyxbsV6BannerPainter
 import com.cyxbs.pages.electricity.api.IElectricityService
+import com.cyxbs.pages.schedule.api.IScheduleService
 import com.cyxbs.pages.sport.api.ISportService
-import com.cyxbs.pages.todo.api.ITodoService
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover_news_jwzx
@@ -198,6 +200,23 @@ private fun greetingText(): String {
 
 /* ----------------------------- Banner ------------------------------ */
 
+/**
+ * [DiscoverNavPlatform] 无实现平台（如 iOS）的 banner 跳转兜底
+ */
+private fun onBannerClickFallback(pictureGotoUrl: String, keyword: String) {
+  val finalUrl = if (pictureGotoUrl.startsWith("http")) {
+    val uri = Uri.parse(pictureGotoUrl)
+    if (uri.getQueryParameter(WebViewNavArgument.DEFAULT_TITLE_QUERY_PARAMETER) == null) {
+      // Banner 关键词作为 WebView 路由的兜底标题。
+      uri.buildUpon()
+        .appendQueryParameter(WebViewNavArgument.DEFAULT_TITLE_QUERY_PARAMETER, keyword)
+        .build()
+        .toString()
+    } else pictureGotoUrl
+  } else pictureGotoUrl
+  AppScheme.jump(finalUrl)
+}
+
 @Composable
 private fun Banner(
   viewModel: DiscoverComposeViewModel,
@@ -255,7 +274,7 @@ private fun Banner(
               .clip(cornerShape)
               .clickableNoIndicator {
                 platform?.onBannerClick(data.pictureGotoUrl, data.keyword)
-                  ?: toast("暂不支持跳转")
+                  ?: onBannerClickFallback(data.pictureGotoUrl, data.keyword)
               },
             contentScale = ContentScale.Crop,
           )
@@ -392,32 +411,41 @@ private fun FunctionsSection(
 private fun FeedSection() {
   val cornerShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
   val containerColor = LocalAppColors.current.middleBg
+  val scheduleService = remember { IScheduleService::class.impl() }
 
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(top = 18.dp)
-      .clip(cornerShape)
-      .background(color = containerColor),
+    modifier = Modifier.fillMaxWidth(),
   ) {
-    // 体育打卡
-    ISportService::class.impl().SportFeed(Modifier.fillMaxWidth())
-    Spacer(
-      modifier = Modifier.fillMaxWidth().height(1.dp)
-        .alpha(0.1F)
-        .background(color = LocalAppColors.current.tvLv4)
+    scheduleService.ScheduleUrgentBanner(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, top = 18.dp, end = 16.dp),
     )
-    // 邮子清单
-    ITodoService::class.impl().TodoFeed(Modifier.fillMaxWidth())
-    Spacer(
-      modifier = Modifier.fillMaxWidth().height(1.dp)
-        .alpha(0.1F)
-        .background(color = LocalAppColors.current.tvLv4)
-    )
-    // 电费查询
-    IElectricityService::class.impl().ElectricityFeed(Modifier.fillMaxWidth())
-    // 80dp 顶起来课表与底部按钮
-    Spacer(modifier = Modifier.fillMaxWidth().navigationBarsPadding().height(80.dp))
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp)
+        .clip(cornerShape)
+        .background(color = containerColor),
+    ) {
+      // 体育打卡
+      ISportService::class.impl().SportFeed(Modifier.fillMaxWidth())
+      Spacer(
+        modifier = Modifier.fillMaxWidth().height(1.dp)
+          .alpha(0.1F)
+          .background(color = LocalAppColors.current.tvLv4)
+      )
+      // 邮子清单
+      scheduleService.ScheduleFeed(Modifier.fillMaxWidth())
+      Spacer(
+        modifier = Modifier.fillMaxWidth().height(1.dp)
+          .alpha(0.1F)
+          .background(color = LocalAppColors.current.tvLv4)
+      )
+      // 电费查询
+      IElectricityService::class.impl().ElectricityFeed(Modifier.fillMaxWidth())
+      // 80dp 顶起来课表与底部按钮
+      Spacer(modifier = Modifier.fillMaxWidth().navigationBarsPadding().height(80.dp))
+    }
   }
 }
-

@@ -6,8 +6,8 @@ package com.cyxbs.pages.discover.home
  * 由 cyxbs-applications/multiplatform 的 IOSKmpInterfaceLink 通过 KtProvider 注入，
  * 最终落到 iosApp 的 KmpInterfaceImpl 调用原生 push / present / open。
  *
- * 与 Step 1/2/2.5 同款模式（参见 SportIosPlatform / TodoIosPlatform /
- * DiscoverFunctionsIosPlatform）。
+ * 与其他 iOS 原生桥接保持同款模式（参见 SportIosPlatform / DiscoverFunctionsIosPlatform）。
+ * 邮子清单已改走 schedule CMP 导航，不再需要单独的原生平台接口。
  */
 interface DiscoverIosPlatform {
 

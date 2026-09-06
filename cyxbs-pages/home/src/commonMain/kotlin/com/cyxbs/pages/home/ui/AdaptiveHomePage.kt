@@ -79,8 +79,12 @@ private val itemList = listOf(
   ActionItem("资料编辑") {
     AppScheme.jump("cyxbs://$NAV_EDIT_INFO")
   },
-  ActionItem("日程编辑") {
-    AppScheme.jump("cyxbs://schedule/edit")
+  ActionItem("邮子清单") {
+    AppScheme.jump("cyxbs://schedule")
+  },
+  // 开发预览使用 Schedule 模块内的纯内存 mock，不写真实 Room，也不请求后端。
+  ActionItem("日程 Mock") {
+    AppScheme.jump("cyxbs://schedule/preview")
   },
   ActionItem("签到") {
     AppScheme.jump("cyxbs://$NAV_SIGN")

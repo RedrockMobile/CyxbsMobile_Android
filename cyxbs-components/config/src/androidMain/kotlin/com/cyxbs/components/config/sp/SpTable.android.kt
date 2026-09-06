@@ -28,6 +28,3 @@ actual val defaultSettings: Settings = SharedPreferencesSettings(defaultSp)
 
 // 启动 App 是否优先显示课表界面
 const val SP_COURSE_SHOW_STATE = "course_show_state"
-
-// 使用 Compose 课表
-const val SP_COURSE_COMPOSE = "course_compose"

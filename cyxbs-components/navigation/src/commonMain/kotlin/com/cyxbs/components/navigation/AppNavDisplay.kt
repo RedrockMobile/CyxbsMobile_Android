@@ -66,10 +66,10 @@ fun AppNavDisplay() {
     backStack = appNavBackStack,
     onBack = { appNavBackStack.lastOrNull()?.popBackStack() },
     entryDecorators = listOf(
-      // 添加 view model store 装饰器
-      rememberViewModelStoreNavEntryDecorator(),
-      // 添加状态保存的默认装饰器
+      // ViewModel 装饰器依赖 NavEntry 的 SavedStateRegistryOwner，状态保存装饰器必须在前。
       rememberSaveableStateHolderNavEntryDecorator(),
+      // 为每个 NavEntry 提供独立且可随保存状态恢复的 ViewModelStoreOwner。
+      rememberViewModelStoreNavEntryDecorator(),
     ),
     sceneStrategies = appNavCollector.values.mapNotNull {
       key(it) {

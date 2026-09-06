@@ -14,16 +14,16 @@ kotlin {
       implementation(projects.cyxbsComponents.utils)
       implementation(projects.cyxbsComponents.account.api)
       implementation(projects.cyxbsPages.store.api)
-      implementation(projects.cyxbsPages.affair.api)
       implementation(projects.cyxbsPages.course.api)
       implementation(projects.cyxbsPages.course.widget)
     }
     androidMain.dependencies {
+      // 没课约仅通过旧 Android View 事务入口跳转。
+      implementation(projects.cyxbsPages.affair.api)
       implementation(libs.bundles.projectBase)
       implementation(libs.bundles.views)
     }
   }
 }
-
 
 

@@ -19,7 +19,6 @@ import com.cyxbs.pages.login.api.LoginNavArgument
 import com.cyxbs.pages.login.service.LoginIosPlatform
 import com.cyxbs.pages.mine.home.MineIosPlatform
 import com.cyxbs.pages.sport.service.SportIosPlatform
-import com.cyxbs.pages.todo.service.TodoIosPlatform
 import com.cyxbs.pages.ufield.fairground.FairgroundIosPlatform
 import com.cyxbs.pages.course.service.CourseIosPlatform
 import com.g985892345.provider.api.annotation.ImplProvider
@@ -95,9 +94,6 @@ interface IOSKmpInterface {
   /** push 体育打卡详情页（iOS 原生 SportAttendanceViewController） */
   fun jumpSportDetail()
 
-  /** push 邮子清单主页（iOS 原生 ToDoVC） */
-  fun jumpTodoMain()
-
   /** push 没课约（iOS 原生 WeDateVC） */
   fun jumpWeDate()
 
@@ -152,7 +148,7 @@ interface IOSKmpInterface {
 
   /**
    * 登录成功后同步 iOS 原生数据。
-   * Swift 端执行：同步待办、获取用户信息、更新 Person 模型、检查邮箱绑定、记录登录时间。
+   * Swift 端执行：获取用户信息、更新 Person 模型、检查邮箱绑定、记录登录时间。
    */
   fun onLoginSuccess(stuNum: String)
 
@@ -178,14 +174,12 @@ interface IOSKmpInterface {
   fun exitApp()
 }
 
-// SportIosPlatform / TodoIosPlatform / DiscoverFunctionsIosPlatform 之间存在同名同签名
-// 方法（jumpSportDetail / jumpTodoMain），同一个 override 一次性满足多个接口，是 Kotlin
-// 多接口合并的标准行为，不需要 super<X> 仲裁。
+// SportIosPlatform / DiscoverFunctionsIosPlatform 都声明了 jumpSportDetail；同一个 override
+// 一次性满足两个接口，是 Kotlin 多接口合并的标准行为，不需要 super<X> 仲裁。
 @ImplProvider(IOSHomeViewPager::class)
 @ImplProvider(IOSToast::class)
 @ImplProvider(ConfigApplicationInfo::class)
 @ImplProvider(SportIosPlatform::class)
-@ImplProvider(TodoIosPlatform::class)
 @ImplProvider(DiscoverFunctionsIosPlatform::class)
 @ImplProvider(DiscoverIosPlatform::class)
 @ImplProvider(FairgroundIosPlatform::class)
@@ -197,7 +191,6 @@ internal object IOSKmpInterfaceLink :
   IOSToast,
   ConfigApplicationInfo,
   SportIosPlatform,
-  TodoIosPlatform,
   DiscoverFunctionsIosPlatform,
   DiscoverIosPlatform,
   FairgroundIosPlatform,
@@ -225,10 +218,6 @@ internal object IOSKmpInterfaceLink :
 
   override fun jumpSportDetail() {
     impl.jumpSportDetail()
-  }
-
-  override fun jumpTodoMain() {
-    impl.jumpTodoMain()
   }
 
   override fun jumpWeDate() {

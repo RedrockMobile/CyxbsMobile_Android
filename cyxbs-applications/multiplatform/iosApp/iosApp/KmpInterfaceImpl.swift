@@ -36,9 +36,6 @@ class KmpInterfaceImpl: IOSKmpInterface {
     func jumpSportDetail() {
     }
 
-    func jumpTodoMain() {
-    }
-
     func jumpWeDate() {
     }
 
@@ -103,4 +100,3 @@ class KmpInterfaceImpl: IOSKmpInterface {
         exit(0)
     }
 }
-
