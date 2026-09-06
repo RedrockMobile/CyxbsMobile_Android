@@ -40,7 +40,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToInt
 import kotlin.time.Clock
 
-private const val MIN_INTERVAL_MINUTES = 30
+private const val MIN_INTERVAL_MINUTES = 10
 private const val LAST_MINUTE_OF_DAY = 23 * 60 + 59
 
 /** 当前由哪一端滚轮驱动时间段变化；另一端负责自动补足最短时长。 */
@@ -104,7 +104,7 @@ internal fun EditScheduleTimeArea(
   val hours = remember { (0..23).map { it.toString().padStart(2, '0') }.toPersistentList() }
   val minutes = remember { (0..59).map { it.toString().padStart(2, '0') }.toPersistentList() }
   val coroutineScope = rememberCoroutineScope()
-  /** 根据本次操作端补足 30 分钟，并把滚轮与表单状态一次收敛到同一结果。 */
+  /** 根据本次操作端补足 10 分钟，并把滚轮与表单状态一次收敛到同一结果。 */
   suspend fun settleInterval(
     boundary: ScheduleTimeBoundary,
     component: ScheduleTimeComponent,
@@ -135,7 +135,7 @@ internal fun EditScheduleTimeArea(
           when (selectedMode) {
             ScheduleTimeEditMode.ALL_DAY -> state.applyExplicitAllDaySelection()
             ScheduleTimeEditMode.INTERVAL -> {
-              // 切回时间段也属于显式操作，需要立即补足最短 30 分钟并同步滚轮位置。
+              // 切回时间段也属于显式操作，需要立即补足最短 10 分钟并同步滚轮位置。
               coroutineScope.launch {
                 settleInterval(ScheduleTimeBoundary.START, ScheduleTimeComponent.MINUTE)
               }
@@ -249,9 +249,10 @@ internal fun EditScheduleModelState.applyExplicitAllDaySelection() {
 /**
  * 按最后操作的一端修正同日时间段。
  *
- * 调整开始小时且越过结束时间时，先只把结束小时抬到相同小时、保留原结束分钟；该结果仍不足 30 分钟才
- * 改为“开始 + 30 分钟”。调整开始分钟直接补足结束端；调整结束端则固定结束值并把开始端最多推到
- * “结束 - 30 分钟”。由于当前编辑器不表达跨日时间段，开始端最晚为 23:29，结束端最早为 00:30。
+ * 调整开始小时且越过结束时间时，先只把结束小时抬到相同小时、保留原结束分钟；该结果仍不足 10 分钟才
+ * 改为“开始 + 10 分钟”。调整开始分钟直接补足结束端；调整结束端则固定结束值并把开始端最多推到
+ * “结束 - 10 分钟”。由于当前编辑器不表达跨日时间段，开始端最晚为 23:49，结束端最早为 00:10。
+ * 该约束只在用户显式操作滚轮或时间形态时执行；仓库已有的更短时间段仍按原值展示和保存。
  */
 internal fun adjustScheduleTimeInterval(
   startMinuteOfDay: Int,
@@ -275,7 +276,7 @@ internal fun adjustScheduleTimeInterval(
   }
   ScheduleTimeBoundary.END -> {
     val end = endMinuteOfDay.coerceIn(MIN_INTERVAL_MINUTES, LAST_MINUTE_OF_DAY)
-    // 保留用户选择的结束值；若它越过开始端，则把开始端直接拉回到结束前 30 分钟。
+    // 保留用户选择的结束值；若它越过开始端，则把开始端直接拉回到结束前 10 分钟。
     val start = startMinuteOfDay.coerceIn(0, LAST_MINUTE_OF_DAY)
       .coerceAtMost(end - MIN_INTERVAL_MINUTES)
     ScheduleTimeInterval(start, end)

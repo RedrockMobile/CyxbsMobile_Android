@@ -46,7 +46,7 @@ class ScheduleEditNoOpTest {
       ),
     )
     assertEquals(
-      ScheduleTimeInterval(startMinuteOfDay = 14 * 60 + 50, endMinuteOfDay = 15 * 60 + 20),
+      ScheduleTimeInterval(startMinuteOfDay = 14 * 60 + 50, endMinuteOfDay = 15 * 60),
       adjustScheduleTimeInterval(
         startMinuteOfDay = 14 * 60 + 50,
         endMinuteOfDay = 11 * 60 + 10,
@@ -56,25 +56,25 @@ class ScheduleEditNoOpTest {
     )
   }
 
-  /** 调整开始分钟后不足 30 分钟时，由结束端向后补足。 */
+  /** 调整开始分钟后不足 10 分钟时，由结束端向后补足。 */
   @Test
-  fun changingStartMinutePushesEndToThirtyMinutesLater() {
+  fun changingStartMinutePushesEndToTenMinutesLater() {
     assertEquals(
-      ScheduleTimeInterval(startMinuteOfDay = 10 * 60 + 50, endMinuteOfDay = 11 * 60 + 20),
+      ScheduleTimeInterval(startMinuteOfDay = 10 * 60 + 50, endMinuteOfDay = 11 * 60),
       adjustScheduleTimeInterval(
         startMinuteOfDay = 10 * 60 + 50,
-        endMinuteOfDay = 11 * 60 + 10,
+        endMinuteOfDay = 10 * 60 + 55,
         changedBoundary = ScheduleTimeBoundary.START,
         changedComponent = ScheduleTimeComponent.MINUTE,
       ),
     )
   }
 
-  /** 调整结束端时始终保留结束值，并把开始端向前调整到至少相隔 30 分钟。 */
+  /** 调整结束端时始终保留结束值，并把开始端向前调整到至少相隔 10 分钟。 */
   @Test
   fun changingEndKeepsEndAndPullsStartBackward() {
     assertEquals(
-      ScheduleTimeInterval(startMinuteOfDay = 9 * 60 + 45, endMinuteOfDay = 10 * 60 + 15),
+      ScheduleTimeInterval(startMinuteOfDay = 10 * 60 + 5, endMinuteOfDay = 10 * 60 + 15),
       adjustScheduleTimeInterval(
         startMinuteOfDay = 10 * 60 + 45,
         endMinuteOfDay = 10 * 60 + 15,
@@ -83,9 +83,9 @@ class ScheduleEditNoOpTest {
       ),
     )
     assertEquals(
-      ScheduleTimeInterval(startMinuteOfDay = 10 * 60 + 15, endMinuteOfDay = 10 * 60 + 45),
+      ScheduleTimeInterval(startMinuteOfDay = 10 * 60 + 35, endMinuteOfDay = 10 * 60 + 45),
       adjustScheduleTimeInterval(
-        startMinuteOfDay = 10 * 60 + 30,
+        startMinuteOfDay = 10 * 60 + 40,
         endMinuteOfDay = 10 * 60 + 45,
         changedBoundary = ScheduleTimeBoundary.END,
         changedComponent = ScheduleTimeComponent.MINUTE,
@@ -93,20 +93,20 @@ class ScheduleEditNoOpTest {
     )
   }
 
-  /** 同日时间段无法跨越午夜，起止两端分别收敛到 23:29—23:59 与 00:00—00:30。 */
+  /** 同日时间段无法跨越午夜，起止两端分别收敛到 23:49—23:59 与 00:00—00:10。 */
   @Test
   fun intervalAdjustmentHandlesDayBoundary() {
     assertEquals(
-      ScheduleTimeInterval(startMinuteOfDay = 23 * 60 + 29, endMinuteOfDay = 23 * 60 + 59),
+      ScheduleTimeInterval(startMinuteOfDay = 23 * 60 + 49, endMinuteOfDay = 23 * 60 + 59),
       adjustScheduleTimeInterval(
-        startMinuteOfDay = 23 * 60 + 40,
+        startMinuteOfDay = 23 * 60 + 55,
         endMinuteOfDay = 10 * 60,
         changedBoundary = ScheduleTimeBoundary.START,
         changedComponent = ScheduleTimeComponent.HOUR,
       ),
     )
     assertEquals(
-      ScheduleTimeInterval(startMinuteOfDay = 0, endMinuteOfDay = 30),
+      ScheduleTimeInterval(startMinuteOfDay = 0, endMinuteOfDay = 10),
       adjustScheduleTimeInterval(
         startMinuteOfDay = 10 * 60,
         endMinuteOfDay = 10,
@@ -114,6 +114,19 @@ class ScheduleEditNoOpTest {
         changedComponent = ScheduleTimeComponent.MINUTE,
       ),
     )
+  }
+
+  /** 小于 10 分钟的既有时间段允许展示和保存；只有用户修改时间输入时才执行最短时长收敛。 */
+  @Test
+  fun existingShortIntervalIsPreservedWithoutTimingInput() {
+    val shortTiming = ScheduleTiming.Timed(
+      MinuteTimeDate(2026, 9, 6, 12, 0),
+      5,
+      "Asia/Shanghai",
+    )
+    val state = EditScheduleModelState(parentSchedule().copy(timing = shortTiming, recurrence = null))
+
+    assertEquals(shortTiming, state.toDraft().timing)
   }
 
   /** 新建草稿的默认值不算用户修改，产生有效输入后才需要未保存确认。 */

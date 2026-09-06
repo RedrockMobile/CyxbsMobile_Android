@@ -56,6 +56,7 @@ import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
 import com.cyxbs.pages.schedule.domain.model.CategoryId
 import com.cyxbs.pages.schedule.domain.model.RecurrenceId
 import com.cyxbs.pages.schedule.domain.model.ScheduleId
+import com.cyxbs.pages.schedule.domain.model.ScheduleTiming
 import com.cyxbs.pages.schedule.domain.repository.ScheduleRepositoryStatus
 import com.cyxbs.pages.schedule.ui.calendar.rememberScheduleCalendarMarkedDates
 import com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavArgument
@@ -75,8 +76,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
+import kotlin.time.Instant
+
+private const val TODO_DEFAULT_DURATION_MINUTES = 60
+private const val TODO_MIN_INTERVAL_MINUTES = 10
+private const val TODO_LAST_MINUTE_OF_DAY = 23 * 60 + 59
 
 /**
  * 日程主页内容。
@@ -119,6 +126,7 @@ fun ScheduleTodoPage(
   val clickDate = calendarState.clickDate
 
   var showCreateEditor by remember { mutableStateOf(false) }
+  var createTiming by remember { mutableStateOf<ScheduleTiming.Timed?>(null) }
   var editingIdentity by remember { mutableStateOf<Pair<ScheduleId, RecurrenceId?>?>(null) }
   var timelineEditingIdentity by remember {
     mutableStateOf<Pair<ScheduleId, RecurrenceId?>?>(null)
@@ -583,6 +591,8 @@ fun ScheduleTodoPage(
         onClick = {
           editingIdentity = null
           timelineEditingIdentity = null
+          // 每次点击时重新读取当前时间，避免页面驻留后仍使用首次组合时的旧时间。
+          createTiming = defaultTodoCreationTiming(Clock.System.now(), viewerTimeZone)
           showCreateEditor = true
         },
         backgroundColor = ScheduleTodoAccentColor,
@@ -638,6 +648,7 @@ fun ScheduleTodoPage(
       Box(modifier = Modifier.fillMaxSize()) {
         EditScheduleDialog(
           show = showCreateEditor,
+          creationTiming = createTiming,
           categoryRepository = viewModel.repository,
           showCourseRelation = true,
           onDismiss = { showCreateEditor = false },
@@ -699,4 +710,33 @@ fun ScheduleTodoPage(
       }
     }
   }
+}
+
+/**
+ * 生成清单页新增事项的当天默认时间段。
+ *
+ * 正常情况下从 [now] 所在分钟开始持续一小时；时间段不跨日，结束最晚为当天 23:59。
+ * 若当前时间已经晚于 23:49，则把开始时间回收到 23:49，以继续满足编辑器至少 10 分钟的输入约束。
+ * [timeZone] 同时决定“当天”和最终写入的时间区，调用方应传页面当前使用的系统时区。
+ */
+internal fun defaultTodoCreationTiming(
+  now: Instant,
+  timeZone: TimeZone,
+): ScheduleTiming.Timed {
+  val localNow = now.toLocalDateTime(timeZone)
+  val currentMinute = localNow.hour * 60 + localNow.minute
+  val latestStartMinute = TODO_LAST_MINUTE_OF_DAY - TODO_MIN_INTERVAL_MINUTES
+  val startMinute = currentMinute.coerceAtMost(latestStartMinute)
+  val endMinute = (startMinute + TODO_DEFAULT_DURATION_MINUTES).coerceAtMost(TODO_LAST_MINUTE_OF_DAY)
+  return ScheduleTiming.Timed(
+    start = MinuteTimeDate(
+      localNow.year,
+      localNow.date.month.number,
+      localNow.day,
+      startMinute / 60,
+      startMinute % 60,
+    ),
+    durationMinutes = endMinute - startMinute,
+    timeZoneId = timeZone.id,
+  )
 }
