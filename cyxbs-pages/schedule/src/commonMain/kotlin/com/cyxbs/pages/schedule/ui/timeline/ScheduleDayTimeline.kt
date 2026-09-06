@@ -138,16 +138,18 @@ fun ScheduleTimelinePane(
             modifier = Modifier.fillMaxWidth().height(TimelineHeight),
           )
         }
+        if (fullDay.isNotEmpty()) {
+          // 标题层必须与事件区共享同一坐标系。放在固定视口内既能保持标题 sticky，
+          // 又能让全天条和标题使用完全相同的可用宽度，避免多条全天日程时列中心错位。
+          FullDayTitleOverlay(
+            fullDay = fullDay,
+            categoryColors = categoryColors,
+            defaultScheduleColors = defaultScheduleColors,
+            onScheduleClick = onScheduleClick,
+            modifier = Modifier.align(Alignment.CenterEnd),
+          )
+        }
       }
-    }
-    if (fullDay.isNotEmpty()) {
-      FullDayTitleOverlay(
-        fullDay = fullDay,
-        categoryColors = categoryColors,
-        defaultScheduleColors = defaultScheduleColors,
-        onScheduleClick = onScheduleClick,
-        modifier = Modifier.align(Alignment.CenterEnd).padding(vertical = 8.dp),
-      )
     }
   }
 }
