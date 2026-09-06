@@ -337,6 +337,7 @@ private fun FullDayTitleOverlay(
       }
       .padding(horizontal = EventGap),
     horizontalArrangement = Arrangement.spacedBy(EventGap),
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     fullDay.forEach { e ->
       val eventColors = e.occurrence.timelineColors(categoryColors, defaultScheduleColors)
