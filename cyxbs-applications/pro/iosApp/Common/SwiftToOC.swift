@@ -62,9 +62,6 @@ class SwiftToOC: NSObject {
         // 清除课表数据和备忘数据
         try? FileManager.default.removeItem(atPath: remAndLesDataDirectoryPath)
         
-        // 清除ToDo
-        TodoSyncTool.share().logOutSuccess()
-    
         // 标记为未读
 //        UserDefaultsManager.shared.didReadUserAgreementBefore = false
     }
