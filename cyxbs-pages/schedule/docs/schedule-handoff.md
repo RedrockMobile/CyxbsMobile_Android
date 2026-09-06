@@ -18,6 +18,7 @@
 - 清单页支持列表/时间轴切换、分类筛选和管理、批量操作、同步失败修复入口；分类管理可进入“全部”或指定分类的全量日程页，并按“待办事项/普通日程”分别查看和批量处理；首页 Feed 展示临期/超期提示与清单卡片。
 - 分类全量页中的普通日程按有效实例分为“未过期/已过期”：前者取今天及之后第一次实例升序展示并保留 24 小时临期提示，后者取最后一次历史实例倒序展示且不追加超期标签。
 - 课表时间轴为被压缩的 Item 保留统一最小高度；点击后可展开对应时间轴，详情弹窗会跟随内容高度避让当前 Item，并限制 Item 不越过课表顶部安全间距。
+- 通知中心收到的没课约行程和活动详情不再写旧事务/旧清单接口：前者按单组学期节次创建课表事务，后者按活动开始时间创建清单；外部来源使用稳定 Schedule ID 去重，并沿用本地优先、失败后续同步的仓库链路。
 
 ## 当前协议事实源
 
@@ -36,6 +37,8 @@
 ./gradlew :cyxbs-pages:schedule:desktopTest :cyxbs-pages:course:view:compileKotlinDesktop :cyxbs-pages:course:compileKotlinDesktop :cyxbs-pages:discover:compileKotlinDesktop --quiet
 ./gradlew :cyxbs-pages:schedule:compileAndroidMain :cyxbs-pages:course:view:compileAndroidMain :cyxbs-pages:course:compileAndroidMain --quiet
 ./gradlew :cyxbs-pages:schedule:compileKotlinIosSimulatorArm64 --quiet
+./gradlew :cyxbs-pages:schedule:desktopTest :cyxbs-pages:notification:desktopTest :cyxbs-pages:notification:compileAndroidMain :cyxbs-pages:ufield:compileAndroidMain
+./gradlew :cyxbs-pages:notification:compileKotlinIosSimulatorArm64 :cyxbs-pages:schedule:compileKotlinIosSimulatorArm64
 
 # magipoke-todo 后端仓库
 go test ./schedule ./schedulewire ./dao

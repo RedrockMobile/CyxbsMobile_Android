@@ -7,6 +7,7 @@ import com.cyxbs.components.config.ConfigApplicationInfo
 import com.cyxbs.components.config.compose.theme.AppTheme
 import com.cyxbs.components.config.init.InitialManager
 import com.cyxbs.components.config.service.impl
+import com.cyxbs.components.config.time.toMinuteTimeDate
 import com.cyxbs.components.init.appCoroutineScope
 import com.cyxbs.components.navigation.AppNavDisplay
 import com.cyxbs.components.utils.extensions.IOSToast
@@ -18,6 +19,14 @@ import com.cyxbs.pages.home.mobile.ui.IOSHomeViewPager
 import com.cyxbs.pages.login.api.LoginNavArgument
 import com.cyxbs.pages.login.service.LoginIosPlatform
 import com.cyxbs.pages.mine.home.MineIosPlatform
+import com.cyxbs.pages.schedule.api.IScheduleOccurrenceService
+import com.cyxbs.pages.schedule.api.ScheduleExternalCategory
+import com.cyxbs.pages.schedule.api.ScheduleExternalCreateFailureReason
+import com.cyxbs.pages.schedule.api.ScheduleExternalCreateRequest
+import com.cyxbs.pages.schedule.api.ScheduleExternalCreateResult
+import com.cyxbs.pages.schedule.api.ScheduleExternalSource
+import com.cyxbs.pages.schedule.api.ScheduleOccurrenceKind
+import com.cyxbs.pages.schedule.api.ScheduleOccurrenceTiming
 import com.cyxbs.pages.sport.service.SportIosPlatform
 import com.cyxbs.pages.ufield.fairground.FairgroundIosPlatform
 import com.cyxbs.pages.course.service.CourseIosPlatform
@@ -26,7 +35,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import platform.UIKit.UIViewController
+import kotlin.time.Instant
 
 /**
  * .
@@ -77,6 +89,52 @@ fun onLogout() {
   IAccountEditService::class.impl().onLogout()
   // 退出登录后跳转到 CMP 登录页，登录成功后回到主页
   LoginNavArgument.navigate(HomeNavArgument(), clearStack = true)
+}
+
+/**
+ * 将 iOS 原生活动详情中的活动创建为 Schedule 原生清单。
+ *
+ * 参数映射与 Android 邮子活动保持一致：活动开始时间作为截止时间、提前 10 分钟提醒、归入“其他”分类，
+ * 进入清单但不投射到课表。[onResult] 在主线程回调；null 表示本地保存成功，非 null 为可直接展示的失败原因。
+ */
+fun createUfieldActivitySchedule(
+  activityId: Long,
+  title: String,
+  place: String,
+  startAtEpochSeconds: Long,
+  onResult: (String?) -> Unit,
+) {
+  appCoroutineScope.launch(Dispatchers.Main) {
+    val result = runCatching {
+      val timeZone = TimeZone.currentSystemDefault()
+      val start = Instant.fromEpochSeconds(startAtEpochSeconds)
+        .toLocalDateTime(timeZone)
+        .toMinuteTimeDate()
+      IScheduleOccurrenceService::class.impl().createExternalSchedule(
+        ScheduleExternalCreateRequest(
+          source = ScheduleExternalSource.UFIELD_ACTIVITY,
+          sourceId = activityId.toString(),
+          title = title,
+          description = place,
+          timing = ScheduleOccurrenceTiming.Deadline(
+            due = start,
+            timeZoneId = timeZone.id,
+          ),
+          reminderOffsetMinutes = 10,
+          kind = ScheduleOccurrenceKind.TODO,
+          isInTodoList = true,
+          linkedToCourse = false,
+          category = ScheduleExternalCategory.OTHER,
+        ),
+      )
+    }.getOrNull()
+
+    when (result) {
+      is ScheduleExternalCreateResult.Success -> onResult(null)
+      is ScheduleExternalCreateResult.Failure -> onResult(result.reason)
+      null -> onResult(ScheduleExternalCreateFailureReason.LOCAL_SAVE_FAILED)
+    }
+  }
 }
 
 // 初始化 KtProvider

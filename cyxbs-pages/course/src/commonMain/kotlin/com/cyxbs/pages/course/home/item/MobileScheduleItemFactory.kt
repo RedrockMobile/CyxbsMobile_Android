@@ -76,6 +76,9 @@ private class MobileScheduleCourseItem(
             occurrence = item.occurrence,
             embeddedInHost = false,
             onDismiss = { showStandalone.value = false },
+            onEditModeChanged = {},
+            onDismissRequestChanged = {},
+            onWindowOverlayContentChanged = {},
           )
         }
       }
@@ -174,6 +177,9 @@ private class MobileScheduleAllDayItem(
             occurrence = item.occurrence,
             embeddedInHost = false,
             onDismiss = { showDetail.value = false },
+            onEditModeChanged = {},
+            onDismissRequestChanged = {},
+            onWindowOverlayContentChanged = {},
           )
         }
       }

@@ -11,6 +11,8 @@ import com.cyxbs.components.config.time.Date
 import com.cyxbs.components.config.time.MinuteTimeDate
 import com.cyxbs.components.init.appCoroutineScope
 import com.cyxbs.pages.schedule.api.IScheduleOccurrenceService
+import com.cyxbs.pages.schedule.api.ScheduleExternalCreateRequest
+import com.cyxbs.pages.schedule.api.ScheduleExternalCreateResult
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceKind
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceTiming
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceView
@@ -54,6 +56,11 @@ object ScheduleOccurrenceServiceImpl : IScheduleOccurrenceService {
   private val repository
     get() = ScheduleRepositoryProvider.repository
 
+  /** 外部业务创建统一经过该服务，避免直接触碰仓库命令和分类目录。 */
+  private val externalCreateService by lazy {
+    ScheduleExternalCreateService(repository, ScheduleRepositoryProvider.clock)
+  }
+
   /** 多个课表页切换观察窗口时只启动一次仓库初始化；失败时允许后续观察重新尝试。 */
   private val initializationStarted = atomic(false)
 
@@ -63,6 +70,11 @@ object ScheduleOccurrenceServiceImpl : IScheduleOccurrenceService {
    * key 与 API model 的 identity 一致；详情只供随后点击使用，不承担持久化或同步状态。
    */
   private val detailByIdentity = MutableStateFlow<Map<String, Detail>>(emptyMap())
+
+  /** 将通知中心、活动中心等外部来源保存为原生日程。 */
+  override suspend fun createExternalSchedule(
+    request: ScheduleExternalCreateRequest,
+  ): ScheduleExternalCreateResult = externalCreateService.create(request)
 
   override fun observeLinkedOccurrencesInRange(
     startInclusive: com.cyxbs.components.config.time.MinuteTimeDate,
