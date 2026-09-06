@@ -118,11 +118,13 @@ abstract class CommonLoginViewModel(val argument: LoginNavArgument) : BaseViewMo
       }
       wrapper.throwApiExceptionIfFail() // 如果网络请求返回了异常，则直接抛出
       wrapper.data
-    }.onFailure {
-      runCatchingCoroutine { onLoginFailure(it) }.onFailure {
+    }.onFailure { throwable ->
+      logg("requestLogin, onLoginFailure: $throwable")
+      runCatchingCoroutine { onLoginFailure(throwable) }.onFailure {
         // TODO 打开 CrashDialog
       }.getOrThrow()
     }.onSuccess {
+      logg("requestLogin, onLoginSuccess")
       runCatchingCoroutine { onLoginSuccess(stuNum, it) }.onFailure {
         // TODO 打开 CrashDialog
       }.getOrThrow()
@@ -188,6 +190,7 @@ abstract class CommonLoginViewModel(val argument: LoginNavArgument) : BaseViewMo
   // 进入游客模式
   open fun enterTouristMode() {
     // 弹出所有页面，重新回到主页
+    IAccountEditService::class.impl().onTouristMode()
     appNavBackStack.clear()
     HomeNavArgument().navigate()
   }

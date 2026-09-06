@@ -21,15 +21,16 @@ internal class IosScheduleRoomDatabaseResources(
 /**
  * iOS 进程唯一的 Schedule Room3 数据库 owner。
  *
- * 数据库路径固定在应用 Home 的独立 production 文件，不兼容旧 P0 probe 或 Settings envelope。账号切换与同账号的
- * repository 代次刷新只创建新的 facade，绝不能关闭或重建数据库。数据库初始化失败会向调用者传播，禁止退回
- * Settings-backed repository。
+ * 数据库路径固定为应用支持目录下的 `schedule/schedule.db`，不再读取开发期同为 version 1 的旧
+ * `schedule-room3-production.db`，避免旧结构绕过 destructive migration 后触发 Room identity 校验失败。
+ * 账号切换与同账号的 repository 代次刷新只创建新的 facade，绝不能关闭或重建数据库。数据库初始化失败会向
+ * 调用者传播，禁止退回 Settings-backed repository。
  */
 internal object IosScheduleRoomDatabaseOwner {
   /** 生产资源仅创建一次；测试必须自行构造 [IosScheduleRoomDatabaseResources]。 */
   internal val resources: IosScheduleRoomDatabaseResources by lazy {
     IosScheduleRoomDatabaseResources(
-      databasePath = "${NSHomeDirectory()}/schedule-room3-production.db",
+      databasePath = "${NSHomeDirectory()}/Library/Application Support/schedule/schedule.db",
     )
   }
 }

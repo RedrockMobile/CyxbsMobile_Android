@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +57,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -142,6 +144,13 @@ class BottomSheetState(
    */
   suspend fun expandSuspend() {
     if (state == BottomSheetValueState.Expanded) return
+    // 若直接以 0 作为动画目标，状态会被错误标记为 Expanded，但弹窗仍停留在屏幕外；
+    // 因此需要等待有效高度后再展开，同时保留协程的可取消性。
+    // Android Dialog 当前通常会在展开协程前完成首轮布局测量，因此不会暴露该问题；
+    // iOS CMP Dialog 可能先执行展开、再触发 onSizeChanged，此时内容高度仍为 0，所以需要等待布局测量完成
+    if (showMaxHeight.floatValue <= 0F) {
+      snapshotFlow { showMaxHeight.floatValue }.first { it > 0F }
+    }
     val now = showHeight.floatValue
     val target = showMaxHeight.floatValue
     if (now != target) {

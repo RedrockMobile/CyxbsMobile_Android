@@ -51,6 +51,8 @@ actual class LoginViewModel actual constructor(argument: LoginNavArgument) :
     if (appNavBackStack.size == 1) {
       // 没有上一级时就退出 activity
       appTopActivity.get()?.finish()
+    } else {
+      argument.popBackStack()
     }
   }
 
