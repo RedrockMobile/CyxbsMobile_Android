@@ -38,6 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.sp.accountSettings
 import com.cyxbs.components.config.time.MinuteTimeDate
@@ -141,6 +144,17 @@ fun ScheduleTodoPage(
   }
   var deepLinkReplayVersion by remember(argument.scheduleId, argument.recurrenceId) {
     mutableIntStateOf(0)
+  }
+
+  // 批量管理是页面内临时状态：系统返回、返回手势与 ESC 应先收起管理态，不能直接退出清单页。
+  val backEventState = rememberNavigationEventState(currentInfo = NavigationEventInfo.None)
+  NavigationBackHandler(
+    state = backEventState,
+    isBackEnabled = manageMode,
+    onBackCompleted = viewModel::exitManageMode,
+  )
+  val handleBack: () -> Unit = {
+    if (manageMode) viewModel.exitManageMode() else onBack()
   }
 
   LaunchedEffect(Unit) {
@@ -361,7 +375,7 @@ fun ScheduleTodoPage(
         manageMode = manageMode,
         failureCount = failureRecords.size,
         viewMode = viewMode,
-        onBack = onBack,
+        onBack = handleBack,
         onFailures = { ScheduleFailureNavArgument.navigate() },
         onToggleViewMode = {
           viewMode = if (viewMode == ScheduleTodoViewMode.LIST) {
@@ -409,7 +423,15 @@ fun ScheduleTodoPage(
           verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
           item(key = "pending-title") {
-            ScheduleTodoSectionTitle("未完成")
+            ScheduleTodoSectionTitle(
+              text = "未完成",
+              allSelected = if (manageMode && pending.isNotEmpty()) {
+                pending.all { it.schedule.id in selectedIds }
+              } else null,
+              onToggleSelectAll = {
+                viewModel.toggleSelectSection(pending.map { it.schedule.id })
+              },
+            )
           }
           if (pending.isEmpty()) {
             item(key = "pending-empty") {
@@ -464,7 +486,15 @@ fun ScheduleTodoPage(
           }
 
           item(key = "completed-title") {
-            ScheduleTodoSectionTitle("已完成")
+            ScheduleTodoSectionTitle(
+              text = "已完成",
+              allSelected = if (manageMode && completed.isNotEmpty()) {
+                completed.all { it.schedule.id in selectedIds }
+              } else null,
+              onToggleSelectAll = {
+                viewModel.toggleSelectSection(completed.map { it.schedule.id })
+              },
+            )
           }
           if (completed.isEmpty()) {
             item(key = "completed-empty") {
@@ -577,12 +607,12 @@ fun ScheduleTodoPage(
       ScheduleTodoManageBar(
         selectedCount = selectedIds.size,
         totalCount = (pending + completed).map { it.schedule.id }.distinct().size,
-        shouldUnpinSelected = shouldUnpinSelected,
+        middleActionLabel = if (shouldUnpinSelected) "取消置顶" else "置顶",
         onSelectAll = {
           viewModel.selectAll((pending + completed).map { it.schedule.id }.distinct())
         },
         onDelete = viewModel::batchDelete,
-        onPin = {
+        onMiddleAction = {
           if (shouldUnpinSelected) {
             // 置顶只属于当前账号 Settings；批量取消时保持其他未选中事项的顺序不变。
             pinnedIds = pinnedIds.filterNot { it in selectedPinTargets }
@@ -622,37 +652,10 @@ fun ScheduleTodoPage(
           },
         )
         editingItem?.let { item ->
-          EditScheduleDialog(
-            show = true,
-            editSchedule = item.schedule,
-            editOccurrence = item.occurrence.toDomainOccurrence(),
-            recurrenceId = item.occurrence.recurrenceId,
-            categoryRepository = viewModel.repository,
-            showCourseRelation = true,
+          ScheduleExistingItemEditor(
+            item = item,
+            viewModel = viewModel,
             onDismiss = { editingIdentity = null },
-            onConfirm = { state, scope, newCategory ->
-              viewModel.saveSchedule(
-                state,
-                scope,
-                item.occurrence.recurrenceId,
-                newCategory,
-              )
-            },
-            onDelete = { scope ->
-              viewModel.deleteScheduleScoped(
-                item.schedule.id,
-                scope,
-                item.occurrence.recurrenceId,
-              )
-              editingIdentity = null
-            },
-            onToggleCompleted = { completed ->
-              viewModel.completeSchedule(
-                item.schedule.id,
-                item.occurrence.recurrenceId,
-                completed,
-              )
-            },
           )
         }
         val timelineOccurrence = timelineEditingOccurrence

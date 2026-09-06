@@ -256,6 +256,15 @@ object fields:
 
 ## :cyxbs-pages:schedule
 
+### schedule/category/items
+
+- entry: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryItemsNavEntry`
+- argument: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryItemsNavArgument`
+
+```text
+deeplink: cyxbs://schedule/category/items?categoryId={String?}&categoryName={String}
+```
+
 ### schedule/category
 
 - entry: `com.cyxbs.pages.schedule.ui.category.ScheduleCategoryManageNavEntry`

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -162,24 +163,21 @@ internal fun ScheduleUiOccurrence.toDomainOccurrence(): ScheduleOccurrence =
     isAdjusted = isAdjusted,
   )
 
-/** 顶部栏保留 Figma 的返回、标题和批量管理结构，但颜色完全来自应用主题。 */
+/**
+ * 日程列表页面共用标题栏骨架。
+ *
+ * 返回按钮、标题基线、状态栏安全区和底部分隔线只在这里维护；[actions] 由清单主页、分组日程页分别
+ * 提供，避免两个高度相同的页面继续复制一套难以同步的间距。
+ */
 @Composable
-internal fun ScheduleTodoHeader(
-  manageMode: Boolean,
-  failureCount: Int,
-  viewMode: ScheduleTodoViewMode,
+internal fun ScheduleListPageHeader(
+  title: String,
   onBack: () -> Unit,
-  onFailures: () -> Unit,
-  onToggleViewMode: () -> Unit,
-  onSettings: () -> Unit,
-  onManageDone: () -> Unit,
+  actions: @Composable RowScope.() -> Unit,
 ) {
   val colors = LocalAppColors.current
-  val timelineIcon = rememberScheduleTimelineModeIcon()
-  val listIcon = rememberScheduleListModeIcon()
   Surface(
     color = colors.bottomBg,
-    // 页面以 edge-to-edge 方式绘制；只由标题栏消费顶部安全区，避免标题进入状态栏或列表重复留白。
     modifier = Modifier.statusBarsPadding(),
   ) {
     Column(modifier = Modifier.padding(top = 13.dp)) {
@@ -205,72 +203,105 @@ internal fun ScheduleTodoHeader(
           )
         }
         Text(
-          text = "邮子清单",
+          text = title,
           color = colors.tvLv1,
           fontSize = 21.sp,
           fontWeight = FontWeight.Bold,
           letterSpacing = 1.05.sp,
           modifier = Modifier.weight(1f),
+          maxLines = 1,
         )
-        if (!manageMode && failureCount > 0) {
-          TextButton(onClick = onFailures) {
-            Text(
-              text = "失败 $failureCount",
-              color = MaterialTheme.colors.error,
-              fontSize = 13.sp,
-            )
-          }
-        }
-        if (manageMode) {
-          Surface(
-            color = ScheduleTodoAccentColor,
-            contentColor = if (MaterialTheme.colors.isLight) {
-              ScheduleTodoHeaderOnAccentColor
-            } else {
-              colors.tvLv1
-            },
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.clickableNoIndicator(onClick = onManageDone),
-          ) {
-            Text(
-              text = "完成",
-              fontSize = 16.sp,
-              fontWeight = FontWeight.Medium,
-              letterSpacing = 0.8.sp,
-              modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
-            )
-          }
-        } else {
-          IconButton(onClick = onToggleViewMode) {
-            Icon(
-              imageVector = if (viewMode == ScheduleTodoViewMode.LIST) {
-                timelineIcon
-              } else {
-                listIcon
-              },
-              contentDescription = if (viewMode == ScheduleTodoViewMode.LIST) {
-                "切换到时间轴"
-              } else {
-                "切换到清单列表"
-              },
-              tint = colors.tvLv1,
-            )
-          }
-          IconButton(onClick = onSettings) {
-            Icon(
-              imageVector = Icons.Default.Settings,
-              contentDescription = "设置",
-              tint = colors.tvLv1,
-            )
-          }
-        }
+        actions()
       }
-      // Figma 标题栏底部使用 tvLv4 的 10% 透明度细线，深色主题也由同一 token 自适应。
       Box(
         modifier = Modifier
           .fillMaxWidth()
           .height(1.dp)
           .background(colors.tvLv4.copy(alpha = 0.1f)),
+      )
+    }
+  }
+}
+
+/** 清单类页面共用的批量管理入口；进入态使用文字按钮，管理态使用强调色“完成”胶囊。 */
+@Composable
+internal fun ScheduleManageHeaderAction(
+  manageMode: Boolean,
+  onEnter: () -> Unit,
+  onDone: () -> Unit,
+) {
+  val colors = LocalAppColors.current
+  if (manageMode) {
+    Surface(
+      color = ScheduleTodoAccentColor,
+      contentColor = if (MaterialTheme.colors.isLight) ScheduleTodoHeaderOnAccentColor else colors.tvLv1,
+      shape = RoundedCornerShape(16.dp),
+      modifier = Modifier.clickableNoIndicator(onClick = onDone),
+    ) {
+      Text(
+        text = "完成",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = 0.8.sp,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+      )
+    }
+  } else {
+    TextButton(onClick = onEnter) {
+      Text(text = "批量管理", color = colors.tvLv2, fontSize = 13.sp)
+    }
+  }
+}
+
+/** 顶部栏保留 Figma 的清单操作，并复用 [ScheduleListPageHeader] 的公共布局。 */
+@Composable
+internal fun ScheduleTodoHeader(
+  manageMode: Boolean,
+  failureCount: Int,
+  viewMode: ScheduleTodoViewMode,
+  onBack: () -> Unit,
+  onFailures: () -> Unit,
+  onToggleViewMode: () -> Unit,
+  onSettings: () -> Unit,
+  onManageDone: () -> Unit,
+) {
+  val colors = LocalAppColors.current
+  val timelineIcon = rememberScheduleTimelineModeIcon()
+  val listIcon = rememberScheduleListModeIcon()
+  ScheduleListPageHeader(title = "邮子清单", onBack = onBack) {
+    if (!manageMode && failureCount > 0) {
+      TextButton(onClick = onFailures) {
+        Text(
+          text = "失败 $failureCount",
+          color = MaterialTheme.colors.error,
+          fontSize = 13.sp,
+        )
+      }
+    }
+    if (!manageMode) {
+      IconButton(onClick = onToggleViewMode) {
+        Icon(
+          imageVector = if (viewMode == ScheduleTodoViewMode.LIST) timelineIcon else listIcon,
+          contentDescription = if (viewMode == ScheduleTodoViewMode.LIST) {
+            "切换到时间轴"
+          } else {
+            "切换到清单列表"
+          },
+          tint = colors.tvLv1,
+        )
+      }
+      IconButton(onClick = onSettings) {
+        Icon(
+          imageVector = Icons.Default.Settings,
+          contentDescription = "设置",
+          tint = colors.tvLv1,
+        )
+      }
+    } else {
+      ScheduleManageHeaderAction(
+        manageMode = true,
+        onEnter = {},
+        onDone = onManageDone,
       )
     }
   }
@@ -309,17 +340,45 @@ internal fun ScheduleTodoUrgentBanner(count: Int) {
   }
 }
 
+/**
+ * 清单列表分区标题。
+ *
+ * [allSelected] 为 null 时只展示标题；非 null 时在右侧展示当前分区的全选/取消全选入口。
+ * 选择范围由调用方传入 [onToggleSelectAll] 处理，组件不感知跨分区的批量状态。
+ */
 @Composable
-internal fun ScheduleTodoSectionTitle(text: String) {
+internal fun ScheduleTodoSectionTitle(
+  text: String,
+  allSelected: Boolean? = null,
+  onToggleSelectAll: () -> Unit = {},
+) {
   val colors = LocalAppColors.current
-  Text(
-    text = text,
-    color = colors.tvLv3,
-    fontSize = 20.sp,
-    fontWeight = FontWeight.SemiBold,
-    letterSpacing = 1.sp,
-    modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 2.dp),
-  )
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 16.dp, top = 4.dp, end = 16.dp, bottom = 2.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Text(
+      text = text,
+      color = colors.tvLv3,
+      fontSize = 20.sp,
+      fontWeight = FontWeight.SemiBold,
+      letterSpacing = 1.sp,
+    )
+    Spacer(Modifier.weight(1F))
+    if (allSelected != null) {
+      Text(
+        text = if (allSelected) "取消全选" else "全选",
+        color = colors.tvLv2,
+        fontSize = 13.sp,
+        modifier = Modifier
+          .clip(RoundedCornerShape(4.dp))
+          .clickableNoIndicator(onClick = onToggleSelectAll)
+          .padding(horizontal = 4.dp, vertical = 3.dp),
+      )
+    }
+  }
 }
 
 /**

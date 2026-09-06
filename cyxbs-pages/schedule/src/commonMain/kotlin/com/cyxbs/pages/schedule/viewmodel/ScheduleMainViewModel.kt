@@ -123,6 +123,57 @@ class ScheduleMainViewModel(
   fun toggleSelect(id: ScheduleId) { _selectedIds.value = _selectedIds.value.toMutableSet().apply { if (!add(id)) remove(id) } }
   fun selectAll(ids: List<ScheduleId>) { _selectedIds.value = ids.toSet() }
   fun clearSelection() { _selectedIds.value = emptySet() }
+
+  /** 当前分区已全选时只取消该分区，否则把该分区加入已有选择，不影响其他分区的勾选。 */
+  fun toggleSelectSection(ids: List<ScheduleId>) {
+    val sectionIds = ids.toSet()
+    if (sectionIds.isEmpty()) return
+    _selectedIds.value = if (sectionIds.all(_selectedIds.value::contains)) {
+      _selectedIds.value - sectionIds
+    } else {
+      _selectedIds.value + sectionIds
+    }
+  }
+
+  /**
+   * 将当前批量选择从 [categoryId] 移出，但不删除日程本身。
+   *
+   * 系列级分类改为未分组；显式指向该分类的单次调整改回继承。若调整在移除分类后不再包含任何字段且状态
+   * 仍为 ACTIVE，则直接删除这条空调整。所有命令沿用仓库 local-first 链路，失败时保留 pending。
+   */
+  fun removeSelectedFromCategory(categoryId: CategoryId) {
+    val ids = _selectedIds.value
+    launchByViewModelScope {
+      try {
+        val current = snapshot.value
+        val now = ScheduleRepositoryProvider.clock.now()
+        val commands = buildList {
+          current.schedules
+            .filter { it.id in ids && it.categoryId == categoryId }
+            .forEach { schedule ->
+              add(ScheduleCommand.Update(schedule.copy(categoryId = null, updatedAt = now)))
+            }
+          current.occurrenceAdjustments
+            .filter { adjustment ->
+              adjustment.scheduleId in ids &&
+                (adjustment.patch?.categoryId as? FieldPatch.Replace)?.value == categoryId
+            }
+            .forEach { adjustment ->
+              val patch = adjustment.patch?.copy(categoryId = FieldPatch.Inherit)?.withoutInheritedFields()
+              if (patch == null && adjustment.status == OccurrenceStatus.ACTIVE) {
+                add(ScheduleCommand.DeleteOccurrenceAdjustment(adjustment.scheduleId, adjustment.recurrenceId))
+              } else {
+                add(ScheduleCommand.UpsertOccurrenceAdjustment(adjustment.copy(patch = patch, updatedAt = now)))
+              }
+            }
+        }
+        repository.executeSerially(commands = commands, shouldContinue = ::canSubmitMutation)
+      } finally {
+        exitManageMode()
+      }
+    }
+  }
+
   /**
    * 快照当前选择后，在仓库冻结的批量 binding 内串行删除。
    *
@@ -142,4 +193,14 @@ class ScheduleMainViewModel(
       }
     }
   }
+}
+
+/** 仅在单次调整仍含有效覆盖时保留对象，避免批量移出分组留下全是 Inherit 的空壳。 */
+private fun OccurrencePatch.withoutInheritedFields(): OccurrencePatch? = takeUnless {
+  date == FieldPatch.Inherit &&
+    time == FieldPatch.Inherit &&
+    title == FieldPatch.Inherit &&
+    description == FieldPatch.Inherit &&
+    categoryId == FieldPatch.Inherit &&
+    reminder == FieldPatch.Inherit
 }

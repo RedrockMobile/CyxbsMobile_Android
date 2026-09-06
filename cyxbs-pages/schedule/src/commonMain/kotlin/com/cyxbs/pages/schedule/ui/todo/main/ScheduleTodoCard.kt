@@ -84,14 +84,16 @@ internal fun ScheduleTodoCard(
   onSelect: () -> Unit,
   onLongPress: () -> Unit,
   onOpen: () -> Unit,
-  onComplete: () -> Unit,
-  onTogglePin: () -> Unit,
+  onComplete: (() -> Unit)?,
+  onTogglePin: (() -> Unit)?,
   isLinkedToCalendar: Boolean,
   onToggleCalendarLink: () -> Unit,
   onDelete: () -> Unit,
 ) {
   val colors = LocalAppColors.current
   val completed = item.occurrence.status == OccurrenceStatus.COMPLETED
+  // 调用方只有在该条目确实支持完成态切换时才传回调；避免重复系列兜底卡片显示无效圆圈。
+  val canComplete = onComplete != null
   val pinIcon = ConfigRes.configIcPin()
   val deleteIcon = ConfigRes.configIcDelete()
   val restoreIcon = ConfigRes.configIcRestore()
@@ -101,7 +103,8 @@ internal fun ScheduleTodoCard(
   }
   val timeIcon = rememberIcAddtodoTime()
   val cardShape = RoundedCornerShape(16.dp)
-  val actionWidth = 110.dp
+  val hasLeadingSwipeAction = (completed && onComplete != null) || onTogglePin != null
+  val actionWidth = if (hasLeadingSwipeAction) 110.dp else 62.dp
   val actionWidthPx = with(LocalDensity.current) { actionWidth.toPx() }
   var dragOffsetPx by remember(item.key) { mutableFloatStateOf(0f) }
   var settleAnimation by remember(item.key) { mutableStateOf<Job?>(null) }
@@ -154,29 +157,31 @@ internal fun ScheduleTodoCard(
       horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.End),
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      ScheduleTodoSwipeAction(
-        icon = if (completed) restoreIcon else pinIcon,
-        contentDescription = when {
-          completed -> "恢复未完成"
-          isPinned -> "取消置顶"
-          else -> "置顶"
-        },
-        backgroundColor = if (completed) {
-          ScheduleTodoRestoreActionBackgroundColor
-        } else {
-          ScheduleTodoPinActionBackgroundColor
-        },
-        tint = if (completed) {
-          ScheduleTodoRestoreActionTintColor
-        } else {
-          ScheduleTodoPinActionTintColor
-        },
-        showCancelMark = isPinned && !completed,
-        onClick = {
-          settleSwipe(0f)
-          if (completed) onComplete() else onTogglePin()
-        },
-      )
+      if (hasLeadingSwipeAction) {
+        ScheduleTodoSwipeAction(
+          icon = if (completed) restoreIcon else pinIcon,
+          contentDescription = when {
+            completed -> "恢复未完成"
+            isPinned -> "取消置顶"
+            else -> "置顶"
+          },
+          backgroundColor = if (completed) {
+            ScheduleTodoRestoreActionBackgroundColor
+          } else {
+            ScheduleTodoPinActionBackgroundColor
+          },
+          tint = if (completed) {
+            ScheduleTodoRestoreActionTintColor
+          } else {
+            ScheduleTodoPinActionTintColor
+          },
+          showCancelMark = isPinned && !completed,
+          onClick = {
+            settleSwipe(0f)
+            if (completed) onComplete?.invoke() else onTogglePin?.invoke()
+          },
+        )
+      }
       ScheduleTodoSwipeAction(
         icon = deleteIcon,
         contentDescription = "删除",
@@ -240,52 +245,56 @@ internal fun ScheduleTodoCard(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
           ) {
-            Box(
-              modifier = Modifier
-                // 圆圈和方框始终占用相同宽度，切换批量模式时标题不会左右跳动。
-                .size(24.dp)
-                .clickableNoIndicator { if (manageMode) onSelect() else onComplete() },
-              contentAlignment = Alignment.Center,
-            ) {
-              if (manageMode && selected) {
-                ScheduleTodoCheckedBox()
-              } else {
-                Icon(
-                  imageVector = when {
-                    manageMode -> Icons.Outlined.CheckBoxOutlineBlank
-                    completed -> Icons.Outlined.CheckCircle
-                    else -> Icons.Outlined.RadioButtonUnchecked
+            if (manageMode || canComplete) {
+              Box(
+                modifier = Modifier
+                  // 待办的圆圈与批量方框保持等宽；普通日程在非批量状态下不保留空占位。
+                  .size(24.dp)
+                  .clickableNoIndicator {
+                    if (manageMode) onSelect() else onComplete?.invoke()
                   },
-                  contentDescription = when {
-                    manageMode -> "选择"
-                    completed -> "恢复未完成"
-                    else -> "标记完成"
-                  },
-                  tint = when {
-                    // 批量方框只表达选中状态，不能继承事项的完成色。
-                    manageMode -> if (MaterialTheme.colors.isLight) {
-                      ScheduleTodoPendingIndicatorColor
-                    } else {
-                      colors.tvLv3.copy(alpha = 0.46f)
-                    }
-                    // Figma 的完成圆圈使用“完成色”，与批量选择主色承担不同语义。
-                    completed -> if (MaterialTheme.colors.isLight) {
-                      ScheduleTodoCompletedIndicatorColor
-                    } else {
-                      colors.tvLv3.copy(alpha = 0.46f)
-                    }
-                    else -> if (MaterialTheme.colors.isLight) {
-                      ScheduleTodoPendingIndicatorColor
-                    } else {
-                      colors.tvLv3.copy(alpha = 0.46f)
-                    }
-                  },
-                  modifier = Modifier.size(if (completed && !manageMode) 22.dp else 24.dp),
-                )
+                contentAlignment = Alignment.Center,
+              ) {
+                if (manageMode && selected) {
+                  ScheduleTodoCheckedBox()
+                } else {
+                  Icon(
+                    imageVector = when {
+                      manageMode -> Icons.Outlined.CheckBoxOutlineBlank
+                      completed -> Icons.Outlined.CheckCircle
+                      else -> Icons.Outlined.RadioButtonUnchecked
+                    },
+                    contentDescription = when {
+                      manageMode -> "选择"
+                      completed -> "恢复未完成"
+                      else -> "标记完成"
+                    },
+                    tint = when {
+                      // 批量方框只表达选中状态，不能继承事项的完成色。
+                      manageMode -> if (MaterialTheme.colors.isLight) {
+                        ScheduleTodoPendingIndicatorColor
+                      } else {
+                        colors.tvLv3.copy(alpha = 0.46f)
+                      }
+                      // Figma 的完成圆圈使用“完成色”，与批量选择主色承担不同语义。
+                      completed -> if (MaterialTheme.colors.isLight) {
+                        ScheduleTodoCompletedIndicatorColor
+                      } else {
+                        colors.tvLv3.copy(alpha = 0.46f)
+                      }
+                      else -> if (MaterialTheme.colors.isLight) {
+                        ScheduleTodoPendingIndicatorColor
+                      } else {
+                        colors.tvLv3.copy(alpha = 0.46f)
+                      }
+                    },
+                    modifier = Modifier.size(if (completed && !manageMode) 22.dp else 24.dp),
+                  )
+                }
               }
+              // 仅当前置状态控件存在时保留标题间距，普通日程标题直接使用卡片内容起点。
+              Spacer(modifier = Modifier.width(12.dp))
             }
-            // 图标画布增至 24dp 后同步收窄间距，标题起点仍保持在卡片左侧 52dp。
-            Spacer(modifier = Modifier.width(12.dp))
             Row(
               modifier = Modifier
                 .weight(1f)
@@ -553,15 +562,16 @@ private fun ScheduleTodoCalendarLinkButton(
 /**
  * Figma 清单批量管理底栏。
  *
- * 全选和删除继续作用于去重后的 ScheduleId；置顶只调整当前页面的展示优先级，不写入远端协议。
+ * 全选和删除继续作用于去重后的 ScheduleId；中间操作由调用页面按需提供，清单主页用于置顶，具体
+ * 分组页用于移出分组，“全部”聚合页则隐藏该操作。
  */
 @Composable
 internal fun ScheduleTodoManageBar(
   selectedCount: Int,
   totalCount: Int,
-  shouldUnpinSelected: Boolean,
+  middleActionLabel: String?,
   onSelectAll: () -> Unit,
-  onPin: () -> Unit,
+  onMiddleAction: (() -> Unit)?,
   onDelete: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -579,7 +589,11 @@ internal fun ScheduleTodoManageBar(
         .navigationBarsPadding()
         .height(80.dp)
         .padding(horizontal = 35.dp, vertical = 20.dp),
-      horizontalArrangement = Arrangement.SpaceBetween,
+      horizontalArrangement = if (middleActionLabel == null) {
+        Arrangement.SpaceEvenly
+      } else {
+        Arrangement.SpaceBetween
+      },
       verticalAlignment = Alignment.CenterVertically,
     ) {
       ScheduleTodoManageButton(
@@ -593,13 +607,15 @@ internal fun ScheduleTodoManageBar(
         enabled = totalCount > 0,
         onClick = onSelectAll,
       )
-      ScheduleTodoManageButton(
-        label = if (shouldUnpinSelected) "取消置顶" else "置顶",
-        backgroundColor = ScheduleTodoAccentColor.copy(alpha = 0.9f),
-        contentColor = if (MaterialTheme.colors.isLight) ScheduleTodoOnAccentColor else colors.tvLv1,
-        enabled = selectedCount > 0,
-        onClick = onPin,
-      )
+      if (middleActionLabel != null && onMiddleAction != null) {
+        ScheduleTodoManageButton(
+          label = middleActionLabel,
+          backgroundColor = ScheduleTodoAccentColor.copy(alpha = 0.9f),
+          contentColor = if (MaterialTheme.colors.isLight) ScheduleTodoOnAccentColor else colors.tvLv1,
+          enabled = selectedCount > 0,
+          onClick = onMiddleAction,
+        )
+      }
       ScheduleTodoManageButton(
         label = "删除",
         backgroundColor = ScheduleTodoOverdueContainerColor,

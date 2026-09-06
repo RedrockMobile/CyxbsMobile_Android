@@ -99,19 +99,29 @@ internal fun projectScheduleTodo(
       .forEach(completed::add)
   }
 
-  val sortedPending = pending
-    .sortedWith(
-      compareBy<ScheduleTodoItemUi> { it.sortInstant(viewerTimeZone) == null }
-        .thenBy { it.sortInstant(viewerTimeZone) }
-        .thenBy { it.schedule.id.value },
-    )
-  val sortedCompleted = completed
-    .sortedWith(
-      compareByDescending<ScheduleTodoItemUi> { it.sortInstant(viewerTimeZone) }
-        .thenBy { it.schedule.id.value },
-    )
+  val sortedPending = sortScheduleTodoByTime(pending, viewerTimeZone)
+  val sortedCompleted = sortScheduleTodoCompleted(completed, viewerTimeZone)
   return ScheduleTodoProjection(pending = sortedPending, completed = sortedCompleted)
 }
+
+/** 按发生时间升序排列，未设置时间的清单放在最后；同一时刻使用 ScheduleId 保持顺序稳定。 */
+internal fun sortScheduleTodoByTime(
+  items: List<ScheduleTodoItemUi>,
+  viewerTimeZone: TimeZone,
+): List<ScheduleTodoItemUi> = items.sortedWith(
+  compareBy<ScheduleTodoItemUi> { it.sortInstant(viewerTimeZone) == null }
+    .thenBy { it.sortInstant(viewerTimeZone) }
+    .thenBy { it.schedule.id.value },
+)
+
+/** 按发生时间倒序排列已完成项，与清单主页的历史分区保持一致。 */
+internal fun sortScheduleTodoCompleted(
+  items: List<ScheduleTodoItemUi>,
+  viewerTimeZone: TimeZone,
+): List<ScheduleTodoItemUi> = items.sortedWith(
+  compareByDescending<ScheduleTodoItemUi> { it.sortInstant(viewerTimeZone) }
+    .thenBy { it.schedule.id.value },
+)
 
 /**
  * 按清单产品优先级排列未完成事项。
@@ -189,19 +199,22 @@ private fun Schedule.todoOccurrences(
 }
 
 /** 把实例的四态 timing 转成卡片文案，并计算临期状态。 */
-private fun ScheduleUiOccurrence.toTodoItem(
+internal fun ScheduleUiOccurrence.toTodoItem(
   schedule: Schedule,
   now: Instant,
   viewerTimeZone: TimeZone,
+  allowDueSoonWithoutTodo: Boolean = false,
 ): ScheduleTodoItemUi {
   val boundary = boundaryInstant(viewerTimeZone)
   return ScheduleTodoItemUi(
     schedule = schedule,
     occurrence = this,
     timeText = timing.todoTimeText(),
-    isOverdue = isExpired(now, viewerTimeZone),
+    // 事务没有“逾期”语义；该公共投影也会被分组全量页用于展示纯事务。
+    isOverdue = schedule.todoState != null && isExpired(now, viewerTimeZone),
     // “临期”只覆盖未来 24 小时；超期由独立状态表达，不能与临期重叠。
-    isDueSoon = status == OccurrenceStatus.ACTIVE && boundary != null &&
+    isDueSoon = (schedule.todoState != null || allowDueSoonWithoutTodo) &&
+      status == OccurrenceStatus.ACTIVE && boundary != null &&
       boundary >= now && boundary <= now + 24.hours,
   )
 }
@@ -219,7 +232,7 @@ private fun ScheduleUiOccurrence.boundaryInstant(viewerTimeZone: TimeZone): Inst
 }
 
 /** 卡片排序使用清单展示的截止边界；旧 Timed 数据也按结束时刻排序。 */
-private fun ScheduleTodoItemUi.sortInstant(viewerTimeZone: TimeZone): Instant? =
+internal fun ScheduleTodoItemUi.sortInstant(viewerTimeZone: TimeZone): Instant? =
   occurrence.boundaryInstant(viewerTimeZone)
 
 /** 与卡片相同的时间排序规则，供重复实例选择和最终列表排序复用。 */
@@ -239,7 +252,7 @@ private fun ScheduleUiOccurrence.sortInstant(viewerTimeZone: TimeZone): Instant?
  * Deadline 展示单个时间点；Timed 必须同时展示开始和结束，避免已经由课表或其他入口创建的
  * 时间段在清单中丢失持续时间。跨日区间会分别展示两端日期，同日区间只重复一次日期。
  */
-private fun ScheduleTiming.todoTimeText(): String = when (this) {
+internal fun ScheduleTiming.todoTimeText(): String = when (this) {
   is ScheduleTiming.Deadline -> "${due.date.shortText()} ${due.minuteText()}"
   is ScheduleTiming.Timed -> {
     val zone = TimeZone.of(timeZoneId)

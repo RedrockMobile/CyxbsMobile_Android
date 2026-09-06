@@ -84,6 +84,9 @@ const val NAV_SCHEDULE_MAIN = "schedule"
 // 邮子清单分组管理
 const val NAV_SCHEDULE_CATEGORY_MANAGE = "schedule/category"
 
+// 指定分组引用的全部清单与事务
+const val NAV_SCHEDULE_CATEGORY_ITEMS = "schedule/category/items"
+
 // 日程设置
 const val NAV_SCHEDULE_SETTINGS = "schedule/settings"
 

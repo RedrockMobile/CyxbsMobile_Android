@@ -27,6 +27,7 @@ private val ScheduleCategoryIdGenerator = UuidV7Generator()
 internal class ScheduleCategoryCatalog internal constructor(
   val actualCategories: List<ScheduleCategory>,
   val selectableCategories: List<ScheduleCategory>,
+  val totalScheduleCount: Int,
   private val usageCountById: Map<CategoryId, Int>,
   private val repository: ScheduleRepository,
 ) {
@@ -110,6 +111,7 @@ internal fun rememberScheduleCategoryCatalog(
     ScheduleCategoryCatalog(
       actualCategories = snapshot.categories,
       selectableCategories = mergeScheduleCategories(snapshot.categories),
+      totalScheduleCount = snapshot.schedules.size,
       usageCountById = categoryUsageCountById(
         snapshot.schedules,
         snapshot.occurrenceAdjustments,

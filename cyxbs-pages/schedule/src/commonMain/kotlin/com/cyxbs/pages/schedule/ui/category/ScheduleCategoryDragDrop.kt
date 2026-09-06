@@ -32,20 +32,23 @@ import kotlinx.coroutines.launch
  *
  * 算法来自 AndroidX 官方 `LazyColumnDragAndDropDemo`：
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:compose/foundation/foundation/integration-tests/foundation-demos/src/main/java/androidx/compose/foundation/demos/LazyColumnDragAndDropDemo.kt
- * 本实现只把手势监听从整个 LazyColumn 下沉到左侧拖动手柄，避免长按名称或操作按钮误触排序。
+ * 本实现只把手势监听从整个 LazyColumn 下沉到左侧拖动手柄，避免长按名称或操作按钮误触排序；
+ * [firstDraggableItemIndex] 之前的固定入口会参与滚动，但不会成为拖拽换位目标。
  */
 @Composable
 internal fun rememberScheduleCategoryDragDropState(
   lazyListState: LazyListState,
+  firstDraggableItemIndex: Int = 0,
   onMove: (fromIndex: Int, toIndex: Int) -> Unit,
   onDragFinished: () -> Unit,
 ): ScheduleCategoryDragDropState {
   val scope = rememberCoroutineScope()
   val currentOnMove by rememberUpdatedState(onMove)
   val currentOnDragFinished by rememberUpdatedState(onDragFinished)
-  val state = remember(lazyListState, scope) {
+  val state = remember(lazyListState, firstDraggableItemIndex, scope) {
     ScheduleCategoryDragDropState(
       lazyListState = lazyListState,
+      firstDraggableItemIndex = firstDraggableItemIndex,
       scope = scope,
       onMove = { from, to -> currentOnMove(from, to) },
       onDragFinished = { currentOnDragFinished() },
@@ -60,6 +63,7 @@ internal fun rememberScheduleCategoryDragDropState(
 /** 拖拽过程只保存可见条目的布局身份与位移，不持有分类业务数据。 */
 internal class ScheduleCategoryDragDropState(
   private val lazyListState: LazyListState,
+  private val firstDraggableItemIndex: Int,
   private val scope: CoroutineScope,
   private val onMove: (Int, Int) -> Unit,
   private val onDragFinished: () -> Unit,
@@ -107,7 +111,9 @@ internal class ScheduleCategoryDragDropState(
     val endOffset = startOffset + draggingItem.size
     val middleOffset = startOffset + (endOffset - startOffset) / 2f
     val targetItem = lazyListState.layoutInfo.visibleItemsInfo.firstOrNull { item ->
-      item.index != draggingItem.index && middleOffset.toInt() in item.offset..item.offsetEnd
+      item.index >= firstDraggableItemIndex &&
+        item.index != draggingItem.index &&
+        middleOffset.toInt() in item.offset..item.offsetEnd
     }
     if (targetItem != null) {
       val scrollToIndex = when {

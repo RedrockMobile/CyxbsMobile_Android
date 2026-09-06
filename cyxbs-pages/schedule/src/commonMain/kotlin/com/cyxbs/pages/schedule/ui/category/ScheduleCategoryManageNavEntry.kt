@@ -112,10 +112,14 @@ private fun ScheduleCategoryManagePage(onBack: () -> Unit) {
 
   val dragDropState = rememberScheduleCategoryDragDropState(
     lazyListState = listState,
+    firstDraggableItemIndex = 1,
     onMove = { from, to ->
-      if (from in orderedCategories.indices && to in orderedCategories.indices) {
+      // LazyColumn 第 0 项是不可拖动的“全部”，真实分组索引需要减去这一项。
+      val categoryFrom = from - 1
+      val categoryTo = to - 1
+      if (categoryFrom in orderedCategories.indices && categoryTo in orderedCategories.indices) {
         orderedCategories = orderedCategories.toMutableList().apply {
-          add(to, removeAt(from))
+          add(categoryTo, removeAt(categoryFrom))
         }
       }
     },
@@ -167,20 +171,38 @@ private fun ScheduleCategoryManagePage(onBack: () -> Unit) {
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 88.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
       ) {
+        item(key = "schedule-category-all") {
+          ScheduleCategoryAllRow(
+            totalCount = catalog.totalScheduleCount,
+            onOpen = {
+              ScheduleCategoryItemsNavArgument(
+                categoryId = null,
+                categoryName = "全部",
+              ).navigate()
+            },
+          )
+        }
         itemsIndexed(
           items = orderedCategories,
           key = { _, category -> category.id.value },
         ) { index, category ->
-          ScheduleCategoryDraggableItem(dragDropState, index) { isDragging ->
+          val lazyItemIndex = index + 1
+          ScheduleCategoryDraggableItem(dragDropState, lazyItemIndex) { isDragging ->
             ScheduleCategoryManageRow(
               category = category,
               usageCount = catalog.usageCount(category.id),
               isDragging = isDragging,
               dragHandleModifier = Modifier.scheduleCategoryDragHandle(
                 state = dragDropState,
-                index = index,
+                index = lazyItemIndex,
                 enabled = !savingOrder,
               ),
+              onOpen = {
+                ScheduleCategoryItemsNavArgument(
+                  categoryId = category.id.value,
+                  categoryName = category.name,
+                ).navigate()
+              },
               onEdit = {
                 editingCategory = category
                 showEditor = true
@@ -188,7 +210,7 @@ private fun ScheduleCategoryManagePage(onBack: () -> Unit) {
               onDelete = when {
                 isFixedScheduleCategory(category) -> null
                 catalog.usageCount(category.id) > 0 -> {
-                  { toast("仍有 ${catalog.usageCount(category.id)} 项日程使用该分组") }
+                  { toast("仍有 ${catalog.usageCount(category.id)} 项日程使用该分组，请点击分组查看") }
                 }
                 else -> ({ deletingCategory = category })
               },
@@ -272,6 +294,60 @@ private fun ScheduleCategoryManagePage(onBack: () -> Unit) {
   )
 }
 
+/**
+ * 固定在真实分组之前的聚合入口。
+ *
+ * “全部”不是分类资源，因此不参与排序，也不提供改名、配色或删除；进入后按每条日程自身的分类展示。
+ */
+@Composable
+private fun ScheduleCategoryAllRow(
+  totalCount: Int,
+  onOpen: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  val colors = LocalAppColors.current
+  Surface(
+    color = colors.topBg,
+    shape = RoundedCornerShape(14.dp),
+    elevation = 1.dp,
+    modifier = modifier.fillMaxWidth().clickableNoIndicator(onClick = onOpen),
+  ) {
+    Row(
+      modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      ScheduleCategoryDragHandle(modifier = Modifier, enabled = false)
+      Surface(
+        color = ScheduleDefaultCategoryColorValue.backgroundColor(MaterialTheme.colors.isLight),
+        contentColor = ScheduleDefaultCategoryColorValue.contentColor(MaterialTheme.colors.isLight),
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier.size(40.dp),
+      ) {
+        Box(contentAlignment = Alignment.Center) {
+          Text("Aa", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+        }
+      }
+      Spacer(Modifier.width(12.dp))
+      Column(Modifier.weight(1F)) {
+        Text(
+          text = "全部",
+          color = colors.tvLv1,
+          fontSize = 16.sp,
+          fontWeight = FontWeight.Medium,
+        )
+        Spacer(Modifier.height(3.dp))
+        Text(
+          text = "$totalCount 项日程",
+          color = colors.tvLv2,
+          fontSize = 12.sp,
+        )
+      }
+      // 与普通行的编辑、删除区域等宽，保证名称和数量的可用宽度不会在首行突然变化。
+      Spacer(Modifier.width(96.dp))
+    }
+  }
+}
+
 /** 分组管理页标题栏，返回图标沿用项目统一资源。 */
 @Composable
 private fun ScheduleCategoryManageHeader(onBack: () -> Unit) {
@@ -311,13 +387,14 @@ private fun ScheduleCategoryManageHeader(onBack: () -> Unit) {
   }
 }
 
-/** 单个分组行：点阵只负责拖动，名称和右侧按钮仍保持普通点击语义。 */
+/** 单个分组行：点阵只负责拖动，点击行查看完整日程，右侧按钮保留编辑和删除语义。 */
 @Composable
 private fun ScheduleCategoryManageRow(
   category: ScheduleCategory,
   usageCount: Int,
   isDragging: Boolean,
   dragHandleModifier: Modifier,
+  onOpen: () -> Unit,
   onEdit: () -> Unit,
   onDelete: (() -> Unit)?,
 ) {
@@ -330,7 +407,7 @@ private fun ScheduleCategoryManageRow(
     color = colors.topBg,
     shape = RoundedCornerShape(14.dp),
     elevation = if (isDragging) 6.dp else 1.dp,
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier.fillMaxWidth().clickableNoIndicator(onClick = onOpen),
   ) {
     Row(
       modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
@@ -381,14 +458,19 @@ private fun ScheduleCategoryManageRow(
   }
 }
 
-/** 2×3 点阵拖动手柄；只有该区域长按才会启动列表排序。 */
+/** 2×3 点阵拖动手柄；禁用时仅保留置灰占位，不响应长按排序。 */
 @Composable
-private fun ScheduleCategoryDragHandle(modifier: Modifier) {
-  val color = LocalAppColors.current.tvLv3
+private fun ScheduleCategoryDragHandle(
+  modifier: Modifier,
+  enabled: Boolean = true,
+) {
+  val color = LocalAppColors.current.tvLv3.copy(alpha = if (enabled) 1F else 0.28F)
   Box(
     modifier = modifier
       .size(48.dp)
-      .semantics { contentDescription = "按住拖动调整顺序" },
+      .semantics {
+        contentDescription = if (enabled) "按住拖动调整顺序" else "固定分组，不可调整顺序"
+      },
     contentAlignment = Alignment.Center,
   ) {
     Canvas(Modifier.size(width = 16.dp, height = 24.dp)) {
