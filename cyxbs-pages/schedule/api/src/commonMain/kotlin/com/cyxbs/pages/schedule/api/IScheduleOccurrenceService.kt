@@ -89,6 +89,15 @@ sealed interface ScheduleOccurrenceTiming {
 interface IScheduleOccurrenceService {
 
   /**
+   * 将通知、活动等外部业务的一条稳定资源创建为原生日程。
+   *
+   * 实现负责账号隔离、幂等 ID、固定分类解析与本地优先同步；调用方不得再同时写旧事务或旧清单接口。
+   */
+  suspend fun createExternalSchedule(
+    request: ScheduleExternalCreateRequest,
+  ): ScheduleExternalCreateResult
+
+  /**
    * 持续观察半开时间窗口内、已允许投射到课表的有效 occurrence。
    *
    * 实现会完成重复规则展开、单次调整合并、账号隔离与“关联到课表”过滤；调用方不能据此修改日程。
