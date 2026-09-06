@@ -85,6 +85,9 @@ sealed interface ScheduleOccurrenceTiming {
  *
  * API 只暴露日程数据和 Schedule 自己的详情内容，不感知 CoursePageDecoration、CourseItem、课表页码或
  * 重叠层级。调用方负责把 occurrence 映射为自己的 UI。
+ *
+ * 抽象 `@Composable` 方法的函数类型参数不得提供默认值：Kotlin/Native 跨模块编译可能让接口与实现
+ * 生成不同的可空 ABI，并在运行时落入 `throwIrLinkageError`；不关心回调的调用方也必须显式传入空实现。
  */
 interface IScheduleOccurrenceService {
 
@@ -118,14 +121,14 @@ interface IScheduleOccurrenceService {
     embeddedInHost: Boolean,
     onDismiss: () -> Unit,
     /** 内容进入或退出编辑态时通知外层宿主，用于锁定当前正在编辑的日程。 */
-    onEditModeChanged: (Boolean) -> Unit = {},
+    onEditModeChanged: (Boolean) -> Unit,
     /**
      * 向外部宿主注册关闭拦截函数：函数返回 true 表示允许继续收起，返回 false 表示拦截关闭，宿主需将
      * 已被拖动的 BottomSheet 回弹至展开状态；传入 null 表示内容已离开组合，宿主应解除注册。
      */
-    onDismissRequestChanged: (((suspend () -> Boolean)?) -> Unit) = {},
+    onDismissRequestChanged: ((suspend () -> Boolean)?) -> Unit,
     /** 将范围选择、未保存确认等内容交给外层 Window 根布局绘制；null 表示清除。 */
-    onWindowOverlayContentChanged: (((@Composable () -> Unit)?) -> Unit) = {},
+    onWindowOverlayContentChanged: ((@Composable () -> Unit)?) -> Unit,
   )
 
   /**
@@ -141,13 +144,13 @@ interface IScheduleOccurrenceService {
     onDismiss: () -> Unit,
     onCreated: () -> Unit,
     /** 创建表单始终处于编辑态，外层重叠宿主可据此只保留当前页。 */
-    onEditModeChanged: (Boolean) -> Unit = {},
+    onEditModeChanged: (Boolean) -> Unit,
     /**
      * 向外部宿主注册关闭拦截函数：函数返回 true 表示允许继续收起，返回 false 表示拦截关闭，宿主需将
      * 已被拖动的 BottomSheet 回弹至展开状态；传入 null 表示内容已离开组合，宿主应解除注册。
      */
-    onDismissRequestChanged: (((suspend () -> Boolean)?) -> Unit) = {},
+    onDismissRequestChanged: ((suspend () -> Boolean)?) -> Unit,
     /** 将范围选择、未保存确认等内容交给外层 Window 根布局绘制；null 表示清除。 */
-    onWindowOverlayContentChanged: (((@Composable () -> Unit)?) -> Unit) = {},
+    onWindowOverlayContentChanged: ((@Composable () -> Unit)?) -> Unit,
   )
 }
