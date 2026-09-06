@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,17 +26,24 @@ import org.jetbrains.compose.resources.painterResource
 
 /** 左滑动作按钮使用设计稿给出的带透明度底色，Preview 与实际页面共用，避免两处样式再次偏离。 */
 internal val ScheduleTodoPinActionBackgroundColor = 0xB23852DA.color()
-internal val ScheduleTodoPinActionTintColor = 0xB23852DA.color()
 internal val ScheduleTodoDeleteActionBackgroundColor = 0xB2E2554E.color()
-internal val ScheduleTodoDeleteActionTintColor = 0xB2E2554E.color()
 internal val ScheduleTodoRestoreActionBackgroundColor = 0xB26BC166.color()
-internal val ScheduleTodoRestoreActionTintColor = 0xB249AB43.color()
+internal val ScheduleTodoPinnedIndicatorTintColor = 0xB23852DA.color()
+
+/** 侧滑动作图标统一使用高对比度前景色，并随当前深浅主题切换。 */
+@Composable
+internal fun scheduleTodoSwipeActionTintColor(): Color = if (MaterialTheme.colors.isLight) {
+  Color(0xFFFBFBFB)
+} else {
+  Color(0xFFC6C6C6)
+}
 
 /** 预览 ConfigRes 暴露的置顶、删除和恢复矢量资源，确保资源与实际清单页面一致。 */
 @Preview
 @Composable
 private fun PreviewScheduleTodoSwipeIcons() {
   AppTheme {
+    val actionTint = scheduleTodoSwipeActionTintColor()
     Row(
       modifier = Modifier.padding(12.dp),
       horizontalArrangement = Arrangement.spacedBy(14.dp),
@@ -43,23 +51,23 @@ private fun PreviewScheduleTodoSwipeIcons() {
       ScheduleTodoSwipeIconPreview(
         icon = ConfigRes.configIcPin(),
         backgroundColor = ScheduleTodoPinActionBackgroundColor,
-        tint = ScheduleTodoPinActionTintColor,
+        tint = actionTint,
       )
       ScheduleTodoSwipeIconPreview(
         icon = ConfigRes.configIcPin(),
         backgroundColor = ScheduleTodoPinActionBackgroundColor,
-        tint = ScheduleTodoPinActionTintColor,
+        tint = actionTint,
         showCancelMark = true,
       )
       ScheduleTodoSwipeIconPreview(
         icon = ConfigRes.configIcDelete(),
         backgroundColor = ScheduleTodoDeleteActionBackgroundColor,
-        tint = ScheduleTodoDeleteActionTintColor,
+        tint = actionTint,
       )
       ScheduleTodoSwipeIconPreview(
         icon = ConfigRes.configIcRestore(),
         backgroundColor = ScheduleTodoRestoreActionBackgroundColor,
-        tint = ScheduleTodoRestoreActionTintColor,
+        tint = actionTint,
       )
     }
   }

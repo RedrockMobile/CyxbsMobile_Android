@@ -250,7 +250,7 @@ private fun ScheduleSettingsPage(onBack: () -> Unit) {
       if (isDebug()) {
         ScheduleSettingActionRow(
           title = "清空当前账号全部日程",
-          summary = if (isClearing) "正在清空服务端与本地数据…" else "测试工具；操作前需要连续确认三次",
+          summary = if (isClearing) "正在清空服务端与本地数据…" else "清空后将不可恢复!!!",
           enabled = !isClearing,
           danger = true,
           onClick = {

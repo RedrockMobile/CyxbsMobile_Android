@@ -110,6 +110,7 @@ internal fun ScheduleTodoCard(
   var settleAnimation by remember(item.key) { mutableStateOf<Job?>(null) }
   val cardCoroutineScope = rememberCoroutineScope()
   val isLightTheme = MaterialTheme.colors.isLight
+  val swipeActionTint = scheduleTodoSwipeActionTintColor()
   val baseCardColor = if (isLightTheme) ScheduleTodoCardContainerColor else colors.middleBg
   val highlightAlpha = remember(item.key) { Animatable(0f) }
   LaunchedEffect(highlighted) {
@@ -170,11 +171,7 @@ internal fun ScheduleTodoCard(
           } else {
             ScheduleTodoPinActionBackgroundColor
           },
-          tint = if (completed) {
-            ScheduleTodoRestoreActionTintColor
-          } else {
-            ScheduleTodoPinActionTintColor
-          },
+          tint = swipeActionTint,
           showCancelMark = isPinned && !completed,
           onClick = {
             settleSwipe(0f)
@@ -186,7 +183,7 @@ internal fun ScheduleTodoCard(
         icon = deleteIcon,
         contentDescription = "删除",
         backgroundColor = ScheduleTodoDeleteActionBackgroundColor,
-        tint = ScheduleTodoDeleteActionTintColor,
+        tint = swipeActionTint,
         onClick = {
           settleSwipe(0f)
           onDelete()
@@ -330,7 +327,7 @@ internal fun ScheduleTodoCard(
                 Icon(
                   painter = painterResource(pinIcon),
                   contentDescription = "已置顶",
-                  tint = ScheduleTodoPinActionTintColor,
+                  tint = ScheduleTodoPinnedIndicatorTintColor,
                   modifier = Modifier.size(18.dp),
                 )
               }
