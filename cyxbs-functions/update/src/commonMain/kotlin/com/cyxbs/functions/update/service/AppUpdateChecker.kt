@@ -24,6 +24,12 @@ internal class AppUpdateChecker(
   private val mutex = Mutex()
   private var request: Deferred<AppUpdateStatus.Result>? = null
 
+  // 测试弹窗复用真实商店信息，但不将“预览”写入版本检查结果。
+  suspend fun checkPreviewInfo(): UpdateInfo? = when (checkUpdate()) {
+    is AppUpdateStatus.Result.Error -> null
+    else -> info.value
+  }
+
   suspend fun checkUpdate(): AppUpdateStatus.Result {
     // 页面离开只取消等待者；共享请求仍会完成，避免状态永久停在 Checking。
     val deferred = mutex.withLock {

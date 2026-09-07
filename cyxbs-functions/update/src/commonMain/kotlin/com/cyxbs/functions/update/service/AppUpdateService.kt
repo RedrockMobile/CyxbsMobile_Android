@@ -2,11 +2,13 @@ package com.cyxbs.functions.update.service
 
 import com.cyxbs.components.config.Platform
 import com.cyxbs.components.config.appPlatform
+import com.cyxbs.components.config.isDebug
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.sp.defaultSettings
 import com.cyxbs.components.init.appCoroutineScope
 import com.cyxbs.components.utils.utils.get.getAppVersionCode
 import com.cyxbs.components.utils.utils.get.getAppVersionName
+import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.functions.update.api.AppUpdateStatus
 import com.cyxbs.functions.update.api.IAppUpdateService
 import com.cyxbs.functions.update.api.UpdateInfo
@@ -30,21 +32,18 @@ import kotlin.time.Duration.Companion.milliseconds
 @ImplProvider
 object AppUpdateService : IAppUpdateService {
 
-  // 用于 mock 当前处于过期状态，检测能否正常触发更新弹窗
-  private var mockDated = false
-
   private val checker = AppUpdateChecker(
     scope = appCoroutineScope,
     requestInfo = {
       if (appPlatform == Platform.IOS) getAppStoreUpdateInfo() else getAndroidUpdateInfo()
     },
-    isNewVersion = { info ->
-      when {
-        mockDated -> true
-        appPlatform == Platform.IOS -> isNewerAppStoreVersion(info.versionName, getAppVersionName())
-        info.versionCode == getAppVersionCode() -> info.versionName != getAppVersionName()
-        else -> info.versionCode > getAppVersionCode()
-      }
+    isNewVersion = { remoteInfo ->
+      isUpdateAvailable(
+        platform = appPlatform,
+        remoteInfo = remoteInfo,
+        installedVersionName = getAppVersionName(),
+        installedVersionCode = getAppVersionCode(),
+      )
     },
   )
 
@@ -86,8 +85,11 @@ object AppUpdateService : IAppUpdateService {
   }
 
   override fun debug() {
-    mockDated = true
-    tryNoticeUpdate(needFrequency = false)
+    if (!isDebug()) return
+    appCoroutineScope.launch(Dispatchers.Main.immediate) {
+      val info = checker.checkPreviewInfo()
+      if (info != null) noticeUpdate(info) else "检查更新失败，请稍后重试".toast()
+    }
   }
 
   private suspend fun getAndroidUpdateInfo(): UpdateInfo {

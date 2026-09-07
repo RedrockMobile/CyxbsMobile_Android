@@ -19,6 +19,29 @@ import kotlin.test.assertSame
 @OptIn(ExperimentalCoroutinesApi::class)
 class AppUpdateCheckerTest {
   @Test
+  fun previewThenNormalClickDoesNotTurnEqualVersionIntoUpdate() = runTest {
+    for (platform in listOf(com.cyxbs.components.config.Platform.IOS, com.cyxbs.components.config.Platform.Android)) {
+      val checker = AppUpdateChecker(backgroundScope, { info }) {
+        isUpdateAvailable(platform, it, "6.6.4", info.versionCode)
+      }
+      assertEquals(info, checker.checkPreviewInfo())
+      assertSame(AppUpdateStatus.Result.Valid, checker.status.value)
+      assertSame(AppUpdateStatus.Result.Valid, checker.checkUpdate())
+    }
+  }
+
+  @Test
+  fun failedPreviewDoesNotReuseOldStoreInfo() = runTest {
+    var fail = false
+    val checker = AppUpdateChecker(backgroundScope, {
+      if (fail) error("offline") else info
+    }, { false })
+    checker.checkUpdate()
+    fail = true
+    assertNull(checker.checkPreviewInfo())
+    assertIs<AppUpdateStatus.Result.Error>(checker.status.value)
+  }
+  @Test
   fun automaticAndManualChecksShareOneRequest() = runTest {
     val response = CompletableDeferred<UpdateInfo>()
     var requests = 0

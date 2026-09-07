@@ -200,6 +200,7 @@ private fun BackgroundIvCompose(modifier: Modifier = Modifier) {
 
 @Composable
 private fun VersionUpdateCompose(modifier: Modifier = Modifier) {
+    val enableDebugUpdate = isDebug()
     val updateStatus = remember { mutableStateOf("") }
     val manualCheckInProgress = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -234,7 +235,7 @@ private fun VersionUpdateCompose(modifier: Modifier = Modifier) {
                     }
                 },
                 onLongClick = {
-                    if (isDebug()) {
+                    if (enableDebugUpdate) {
                         IAppUpdateService::class.implOrNull()?.debug()
                     }
                 }
@@ -243,7 +244,7 @@ private fun VersionUpdateCompose(modifier: Modifier = Modifier) {
     ) {
         Text(
             modifier = Modifier.padding(start = 20.dp),
-            text = "版本更新" + if (isDebug()) " (长按测试)" else "",
+            text = "版本更新" + if (enableDebugUpdate) " (长按测试)" else "",
             color = LocalAppColors.current.tvLv2,
             fontSize = 16.sp
         )

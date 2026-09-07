@@ -42,11 +42,13 @@ fun UpdateInfoDialog(showState: MutableState<Boolean>) {
             val status by IAppUpdateService.getUpdateStatus().collectAsState()
             val info by IAppUpdateService.getUpdateInfo().collectAsState()
             val latestInfo = info
-            title = latestInfo?.let { "App Store ${it.versionName} 版本信息" } ?: "App Store 版本信息"
+            title = "当前版本：${getAppVersionName()}"
             content = when (status) {
                 AppUpdateStatus.Checking -> "正在获取版本信息..."
                 is AppUpdateStatus.Result.Error -> "获取失败，请关闭后点击「版本更新」重试"
-                else -> latestInfo?.updateContent ?: "暂无更新说明"
+                else -> latestInfo?.let {
+                    "App Store 最新版本：${it.versionName}\n\n${it.updateContent}"
+                } ?: "暂无更新说明"
             }
         } else {
             title = "${getAppVersionName()}版本信息"
