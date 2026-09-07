@@ -40,6 +40,7 @@ description: >
 - **配套 scene strategy**：`cyxbs-components/view/src/commonMain/.../ui/BottomSheetSceneStrategy.kt`（用于 navigation3 overlay）
 - **项目内使用示例**：`cyxbs-pages/schoolcar/src/commonMain/.../widget/CarInfoButtonSheet.kt`
 - **说明**：`peekHeight` 控制常驻高度；`expand()` / `collapse()` / `hide()` 三个状态；`bottomSheetDraggable()` 必须挂在 content 内子组件上才能响应拖拽。
+- **安全区**：`BottomSheetSceneStrategy.Properties` 默认在外壳应用 `navigationBarsPadding()`，折叠态也会避开系统导航栏。不要仅在整张可滑动内容底部加 padding 后将外壳设为 `Modifier`：折叠只露出顶部 `peekHeight`，内容末尾的 padding 会随其滑到屏幕外，无法保护 peek 区域。
 
 ### `TodoBottomSheet` — 临时对话框用法（包装模式）
 
