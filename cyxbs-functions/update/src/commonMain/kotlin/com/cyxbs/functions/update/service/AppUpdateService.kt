@@ -1,5 +1,7 @@
 package com.cyxbs.functions.update.service
 
+import com.cyxbs.components.config.Platform
+import com.cyxbs.components.config.appPlatform
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.sp.defaultSettings
 import com.cyxbs.components.init.appCoroutineScope
@@ -10,12 +12,10 @@ import com.cyxbs.functions.update.api.IAppUpdateService
 import com.cyxbs.functions.update.api.UpdateInfo
 import com.cyxbs.functions.update.dialog.UpdateInfoNavArgument
 import com.cyxbs.functions.update.network.AppUpdateApiService
+import com.cyxbs.functions.update.network.getAppStoreUpdateInfo
 import com.g985892345.provider.api.annotation.ImplProvider
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
@@ -30,27 +30,38 @@ import kotlin.time.Duration.Companion.milliseconds
 @ImplProvider
 object AppUpdateService : IAppUpdateService {
 
-  private val stateFlow: MutableStateFlow<AppUpdateStatus> = MutableStateFlow(AppUpdateStatus.Checking)
-
   // 用于 mock 当前处于过期状态，检测能否正常触发更新弹窗
   private var mockDated = false
 
+  private val checker = AppUpdateChecker(
+    scope = appCoroutineScope,
+    requestInfo = {
+      if (appPlatform == Platform.IOS) getAppStoreUpdateInfo() else getAndroidUpdateInfo()
+    },
+    isNewVersion = { info ->
+      when {
+        mockDated -> true
+        appPlatform == Platform.IOS -> isNewerAppStoreVersion(info.versionName, getAppVersionName())
+        info.versionCode == getAppVersionCode() -> info.versionName != getAppVersionName()
+        else -> info.versionCode > getAppVersionCode()
+      }
+    },
+  )
+
   init {
     appCoroutineScope.launch {
-      checkUpdateInternal()
+      checkUpdate()
     }
   }
 
   override fun getUpdateStatus(): StateFlow<AppUpdateStatus> {
-    return stateFlow
+    return checker.status
   }
 
+  override fun getUpdateInfo(): StateFlow<UpdateInfo?> = checker.info
+
   override suspend fun checkUpdate(): AppUpdateStatus.Result {
-    if (stateFlow.value == AppUpdateStatus.Checking) {
-      // 当前状态处于 CHECKING 状态，则等待请求结果
-      return stateFlow.filterIsInstance<AppUpdateStatus.Result>().first()
-    }
-    return checkUpdateInternal()
+    return checker.checkUpdate()
   }
 
   override fun noticeUpdate(newVersion: UpdateInfo) {
@@ -79,8 +90,7 @@ object AppUpdateService : IAppUpdateService {
     tryNoticeUpdate(needFrequency = false)
   }
 
-  private suspend fun checkUpdateInternal(): AppUpdateStatus.Result {
-    stateFlow.value = AppUpdateStatus.Checking
+  private suspend fun getAndroidUpdateInfo(): UpdateInfo {
     val apiService = AppUpdateApiService::class.impl()
     return runCatching {
       apiService.getUpdateInfo()
@@ -99,26 +109,6 @@ object AppUpdateService : IAppUpdateService {
         )
       }
       throw it
-    }.map {
-      val appVersionCode = getAppVersionCode()
-      when {
-        mockDated -> AppUpdateStatus.Result.Dated(it)
-        it.versionCode == appVersionCode -> {
-          val name = getAppVersionName()
-          if (name != it.versionName) {
-            // 名字不相等，说明安装的版本有问题，可能是测试版
-            AppUpdateStatus.Result.Dated(it)
-          } else AppUpdateStatus.Result.Valid
-        }
-        it.versionCode < appVersionCode -> {
-          AppUpdateStatus.Result.Valid
-        }
-        else -> AppUpdateStatus.Result.Dated(it)
-      }
-    }.getOrElse {
-      AppUpdateStatus.Result.Error(it)
-    }.also {
-      stateFlow.value = it
-    }
+    }.getOrThrow()
   }
 }

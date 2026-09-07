@@ -36,6 +36,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.cyxbs.components.config.APP_WEBSITE
 import com.cyxbs.components.config.ICP_WEBSITE
+import com.cyxbs.components.config.Platform
+import com.cyxbs.components.config.appPlatform
 import com.cyxbs.components.config.compose.theme.DefaultIndication
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.isDebug
@@ -199,6 +201,7 @@ private fun BackgroundIvCompose(modifier: Modifier = Modifier) {
 @Composable
 private fun VersionUpdateCompose(modifier: Modifier = Modifier) {
     val updateStatus = remember { mutableStateOf("") }
+    val manualCheckInProgress = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     Box(
         modifier = modifier
@@ -208,15 +211,24 @@ private fun VersionUpdateCompose(modifier: Modifier = Modifier) {
                 onClick = {
                     val appUpdateService = IAppUpdateService
                     val nowUpdateStatus = appUpdateService.getUpdateStatus().value
-                    if (nowUpdateStatus is AppUpdateStatus.Result.Dated) {
+                    if (appPlatform != Platform.IOS && nowUpdateStatus is AppUpdateStatus.Result.Dated) {
                         appUpdateService.noticeUpdate(nowUpdateStatus.newVersion)
-                    } else coroutineScope.launch {
-                        when (val status = appUpdateService.checkUpdate()) {
-                            AppUpdateStatus.Result.Valid -> toast("已经是最新版了哦")
-                            is AppUpdateStatus.Result.Dated -> appUpdateService.noticeUpdate(status.newVersion)
-                            is AppUpdateStatus.Result.Error -> {
-                                toast("有一股神秘力量阻拦了更新，可尝试点击「产品官网」下载最新版～")
-                                // TODO 打开 CrashDialog
+                    } else if (!manualCheckInProgress.value) {
+                        manualCheckInProgress.value = true
+                        coroutineScope.launch {
+                            try {
+                                when (val status = appUpdateService.checkUpdate()) {
+                                    AppUpdateStatus.Result.Valid -> toast("已经是最新版了哦")
+                                    is AppUpdateStatus.Result.Dated -> appUpdateService.noticeUpdate(status.newVersion)
+                                    is AppUpdateStatus.Result.Error -> {
+                                        toast(
+                                            if (appPlatform == Platform.IOS) "检查更新失败，请稍后重试"
+                                            else "有一股神秘力量阻拦了更新，可尝试点击「产品官网」下载最新版～"
+                                        )
+                                    }
+                                }
+                            } finally {
+                                manualCheckInProgress.value = false
                             }
                         }
                     }
@@ -249,6 +261,10 @@ private fun VersionUpdateCompose(modifier: Modifier = Modifier) {
         )
     }
     LaunchedEffect(Unit) {
+        if (appPlatform == Platform.IOS) {
+            // 进入关于页只刷新状态；更新弹窗由用户手动检查触发。
+            launch { IAppUpdateService.checkUpdate() }
+        }
         IAppUpdateService.getUpdateStatus().collectLatest {
             updateStatus.value = when (it) {
                 AppUpdateStatus.Checking -> "检查中..."
