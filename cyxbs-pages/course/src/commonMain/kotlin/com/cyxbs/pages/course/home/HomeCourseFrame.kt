@@ -25,7 +25,7 @@ import com.cyxbs.pages.course.frame.header.MobileHomeCourseHeader
 import com.cyxbs.pages.course.home.bottomsheet.MobileHomeBottomSheet
 import com.cyxbs.pages.course.home.item.MobileCourseCreateItemFactory
 import com.cyxbs.pages.course.home.item.MobileCourseLinkLessonItemFactory
-import com.cyxbs.pages.course.home.item.MobileCourseSelfLessonItemFactory
+import com.cyxbs.pages.course.home.item.MobileCourseLessonItemFactory
 import com.cyxbs.pages.course.home.item.MobileScheduleItemFactory
 import com.cyxbs.pages.course.view.AbstractCourseFrame
 import com.cyxbs.pages.course.view.HomeCoursePageContent
@@ -131,27 +131,34 @@ private fun createCoursePageDecorationManager(
       courseFrame = frame,
       courseCoroutineScope = coroutineScope,
       ScheduleDeadlinePageDecoration(
-        frame,
-        coroutineScope,
-        MobileScheduleItemFactory,
+        courseFrame = frame,
+        coroutineScope = coroutineScope,
+        platformItemFactory = MobileScheduleItemFactory,
       ), // 截止时间点始终位于课表最上层
-      CreateItemPageDecoration(courseFrame = frame, platformItemFactory = MobileCourseCreateItemFactory), // 长按创建事务
-      SelfLessonPageDecoration(platformItemFactory = MobileCourseSelfLessonItemFactory), // 自己的课程
+      CreateItemPageDecoration(
+        courseFrame = frame,
+        platformItemFactory = MobileCourseCreateItemFactory
+      ), // 长按创建事务
+      SelfLessonPageDecoration(
+        platformItemFactory = MobileCourseLessonItemFactory
+      ), // 自己的课程
       ScheduleTodoTimedPageDecoration(
-        frame,
-        coroutineScope,
-        MobileScheduleItemFactory,
-      ), // TODO 时间段独立位于事务上方
+        courseFrame = frame,
+        coroutineScope = coroutineScope,
+        platformItemFactory = MobileScheduleItemFactory,
+      ), // 清单时间段独立位于事务上方
       ScheduleAffairPageDecoration(
-        frame,
-        coroutineScope,
-        MobileScheduleItemFactory,
+        courseFrame = frame,
+        coroutineScope = coroutineScope,
+        platformItemFactory = MobileScheduleItemFactory,
       ), // Schedule 原生事务使用独立层级
-      LinkLessonPageDecoration(platformItemFactory = MobileCourseLinkLessonItemFactory), // 关联人的课程
+      LinkLessonPageDecoration(
+        platformItemFactory = MobileCourseLinkLessonItemFactory
+      ), // 关联人的课程
       ScheduleAllDayPageDecoration(
-        frame,
-        coroutineScope,
-        MobileScheduleItemFactory,
+        courseFrame = frame,
+        coroutineScope = coroutineScope,
+        platformItemFactory = MobileScheduleItemFactory,
       ), // 全天背景不参与重叠，固定放在最底层
     )
   }
