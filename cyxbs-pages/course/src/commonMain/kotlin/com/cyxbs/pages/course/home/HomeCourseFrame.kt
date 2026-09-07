@@ -1,8 +1,6 @@
 package com.cyxbs.pages.course.home
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -15,10 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.cyxbs.components.utils.compose.px2dpCompose
 import com.cyxbs.components.view.ui.BottomSheetState
 import com.cyxbs.pages.course.api.IMobileHomeCourseFrame
 import com.cyxbs.pages.course.frame.header.MobileHomeCourseHeader
@@ -97,17 +93,15 @@ private fun MobileHomeCourseFrameContent(
   CompositionLocalProvider(
     LocalCourseItemBottomSheetDialog provides itemBottomSheetDialog
   ) {
-    val density = LocalDensity.current
-    val navigationBars = WindowInsets.navigationBars
-    val navigationBarHeight = (navigationBars.getTop(density) + navigationBars.getBottom(density)).px2dpCompose
     MobileHomeBottomSheet(
-      modifier = modifier.statusBarsPadding(),
+      // 与首页底导消费相同的剩余安全区，避免 iOS 的原始 inset 再次计入折叠高度。
+      modifier = modifier.statusBarsPadding().navigationBarsPadding(),
       frame = frame,
-      peekHeightExtra = frame.bottomBarHeightState.value + navigationBarHeight, // 额外添加底导和导航栏的高度
+      peekHeightExtra = frame.bottomBarHeightState.value,
       header = { MobileHomeCourseHeader(modifier = Modifier, frame = frame) },
     ) {
       HorizontalPager(
-        modifier = Modifier.navigationBarsPadding().fillMaxSize().graphicsLayer {
+        modifier = Modifier.fillMaxSize().graphicsLayer {
           alpha = frame.bottomSheetState.fraction
         },
         state = frame.pagerState,
