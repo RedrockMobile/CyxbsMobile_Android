@@ -89,11 +89,16 @@ private class IosWebViewPlatformHost(
       "无法打开该链接".toast()
       return
     }
-    if (UIApplication.sharedApplication.canOpenURL(url)) {
-      UIApplication.sharedApplication.openURL(url)
-    } else {
-      "未安装可处理该链接的应用".toast()
-    }
+    // canOpenURL 受查询白名单限制，不能用来判断 QQ 等外部应用是否已安装。
+    UIApplication.sharedApplication.openURL(
+      url = url,
+      options = emptyMap<Any?, Any>(),
+      completionHandler = { success ->
+        if (!success) {
+          "无法打开该链接，请确认已安装对应应用".toast()
+        }
+      },
+    )
   }
 }
 
