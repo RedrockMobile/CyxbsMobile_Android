@@ -48,20 +48,15 @@ object AppUpdateService : IAppUpdateService {
   )
 
   init {
-    appCoroutineScope.launch {
-      checkUpdate()
+    // iOS 由关于页触发检查，避免首次进入时与初始化请求重复。
+    if (appPlatform != Platform.IOS) {
+      appCoroutineScope.launch { checkUpdate() }
     }
   }
 
-  override fun getUpdateStatus(): StateFlow<AppUpdateStatus> {
-    return checker.status
-  }
-
+  override fun getUpdateStatus(): StateFlow<AppUpdateStatus> = checker.status
   override fun getUpdateInfo(): StateFlow<UpdateInfo?> = checker.info
-
-  override suspend fun checkUpdate(): AppUpdateStatus.Result {
-    return checker.checkUpdate()
-  }
+  override suspend fun checkUpdate(): AppUpdateStatus.Result = checker.checkUpdate()
 
   override fun noticeUpdate(newVersion: UpdateInfo) {
     UpdateInfoNavArgument(
