@@ -72,11 +72,7 @@ fun AppNavDisplay() {
       rememberViewModelStoreNavEntryDecorator(),
     ),
     sceneStrategies = appNavCollector.values.mapNotNull {
-      key(it) {
-        remember {
-          it.navEntry.getSceneStrategy() as SceneStrategy<AppNavArgument>?
-        }
-      }
+      key(it) { remember { it.navEntry.getSceneStrategy() } }
     } + listOf(
       rememberAppListDetailSceneStrategy(),     // 宽屏下的列表与详细页处理
       remember { DialogSceneStrategy() },       // 支持 Dialog 栈处理

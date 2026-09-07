@@ -31,18 +31,18 @@ import kotlin.time.Duration.Companion.seconds
  * @author 985892345
  * @date 2026/3/7
  */
-object MobileCourseSelfLessonItemFactory : PlatformCourseLessonItemFactory {
+object MobileCourseLessonItemFactory : PlatformCourseLessonItemFactory {
   override fun create(item: CourseLessonItem): PlatformCourseLessonItem {
-    return MobileCourseSelfLessonItem(item)
+    return MobileCourseLessonItem(item)
   }
 }
 
-private class MobileCourseSelfLessonItem(
+private class MobileCourseLessonItem(
   val item: CourseLessonItem
 ) : PlatformCourseLessonItem {
 
   init {
-    item.extensions.add(MobileSelfCourseBottomSheetExtension(item))
+    item.extensions.add(MobileCourseBottomSheetExtension(item))
   }
 
   @Composable
@@ -58,7 +58,7 @@ private class MobileCourseSelfLessonItem(
 }
 
 
-private class MobileSelfCourseBottomSheetExtension(
+private class MobileCourseBottomSheetExtension(
   val itemKeyImpl: CourseLessonItem
 ) : CourseBottomSheetHeaderExtension, CourseItemBottomSheetDialogExtension {
 
