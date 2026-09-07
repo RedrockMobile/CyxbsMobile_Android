@@ -22,6 +22,6 @@ interface DiscoverNavPlatform {
   /** 跳转教务在线某条新闻详情 */
   fun jumpJwNewsItem(newId: String)
 
-  /** Banner 点击行为（含登录埋点 + url 跳转） */
-  fun onBannerClick(pictureGotoUrl: String, keyword: String)
+  /** Banner 点击埋点 */
+  fun trackBannerClick() {}
 }

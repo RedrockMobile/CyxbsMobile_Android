@@ -206,9 +206,6 @@ interface IOSKmpInterface {
   /** 跳转教务在线某条新闻详情（iOS 原版功能已停服，toast 兜底） */
   fun jumpJwNewsItem(newId: String)
 
-  /** Banner 点击：UIApplication.shared.open(url) 交给系统 Safari */
-  fun onBannerClick(pictureGotoUrl: String, keyword: String)
-
   /** push 答疑广场（iOS 原生 QAMainVC） */
   fun jumpQaEntry()
 
@@ -337,10 +334,6 @@ internal object IOSKmpInterfaceLink :
 
   override fun jumpJwNewsItem(newId: String) {
     impl.jumpJwNewsItem(newId)
-  }
-
-  override fun onBannerClick(pictureGotoUrl: String, keyword: String) {
-    impl.onBannerClick(pictureGotoUrl, keyword)
   }
 
   override fun jumpQaEntry() {

@@ -57,9 +57,6 @@ class KmpInterfaceImpl: IOSKmpInterface {
     func jumpJwNewsItem(newId: String) {
     }
 
-    func onBannerClick(pictureGotoUrl: String, keyword: String) {
-    }
-
     func jumpQaEntry() {
     }
 
