@@ -22,15 +22,16 @@ internal class AppUpdateChecker(
   val info = mutableInfo.asStateFlow()
 
   private val mutex = Mutex()
-  private var request: Deferred<AppUpdateStatus.Result>? = null
+  private var request: Deferred<CheckResult>? = null
+
+  private data class CheckResult(val status: AppUpdateStatus.Result, val info: UpdateInfo?)
 
   // 测试弹窗复用真实商店信息，但不将“预览”写入版本检查结果。
-  suspend fun checkPreviewInfo(): UpdateInfo? = when (checkUpdate()) {
-    is AppUpdateStatus.Result.Error -> null
-    else -> info.value
-  }
+  suspend fun checkPreviewInfo(): UpdateInfo? = check().info
 
-  suspend fun checkUpdate(): AppUpdateStatus.Result {
+  suspend fun checkUpdate(): AppUpdateStatus.Result = check().status
+
+  private suspend fun check(): CheckResult {
     // 页面离开只取消等待者；共享请求仍会完成，避免状态永久停在 Checking。
     val deferred = mutex.withLock {
       request?.takeUnless { it.isCompleted } ?: scope.async {
@@ -40,14 +41,15 @@ internal class AppUpdateChecker(
           val updateInfo = requestInfo()
           val outdated = isNewVersion(updateInfo)
           mutableInfo.value = updateInfo
-          if (outdated) AppUpdateStatus.Result.Dated(updateInfo) else AppUpdateStatus.Result.Valid
+          val status = if (outdated) AppUpdateStatus.Result.Dated(updateInfo) else AppUpdateStatus.Result.Valid
+          CheckResult(status, updateInfo)
         } catch (error: CancellationException) {
           mutableStatus.value = AppUpdateStatus.Result.Error(error)
           throw error
         } catch (error: Exception) {
-          AppUpdateStatus.Result.Error(error)
+          CheckResult(AppUpdateStatus.Result.Error(error), null)
         }
-        mutableStatus.value = result
+        mutableStatus.value = result.status
         result
       }.also { request = it }
     }

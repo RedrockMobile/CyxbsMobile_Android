@@ -4,11 +4,14 @@ import com.cyxbs.functions.update.api.AppUpdateStatus
 import com.cyxbs.functions.update.api.UpdateInfo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -41,6 +44,27 @@ class AppUpdateCheckerTest {
     assertNull(checker.checkPreviewInfo())
     assertIs<AppUpdateStatus.Result.Error>(checker.status.value)
   }
+
+  @Test
+  fun previewKeepsItsResponseWhenAnotherCheckFinishesBeforeItResumes() = runTest {
+    val firstResponse = CompletableDeferred<UpdateInfo>()
+    val nextInfo = info.copy(versionName = "6.6.5")
+    var requests = 0
+    val requestScope = CoroutineScope(backgroundScope.coroutineContext + UnconfinedTestDispatcher(testScheduler))
+    val checker = AppUpdateChecker(requestScope, {
+      if (++requests == 1) firstResponse.await() else nextInfo
+    }, { false })
+    val preview = async { checker.checkPreviewInfo() }
+    runCurrent()
+
+    // 请求先完成，预览调用者仍在排队恢复；此时另一次检查刷新了公共状态。
+    firstResponse.complete(info)
+    val refresh = async(start = CoroutineStart.UNDISPATCHED) { checker.checkUpdate() }
+    assertSame(AppUpdateStatus.Result.Valid, refresh.await())
+    assertEquals(nextInfo, checker.info.value)
+    assertEquals(info, preview.await())
+  }
+
   @Test
   fun automaticAndManualChecksShareOneRequest() = runTest {
     val response = CompletableDeferred<UpdateInfo>()
