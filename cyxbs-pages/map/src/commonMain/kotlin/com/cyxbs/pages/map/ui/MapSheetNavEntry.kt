@@ -40,7 +40,7 @@ class PlaceDetailNavEntry : AppNavEntry<PlaceDetailNavArgument>() {
 
   override fun isNeedLogin(argument: PlaceDetailNavArgument): Boolean = false
 
-  override fun getSceneStrategy(): SceneStrategy<Any> = BottomSheetSceneStrategy()
+  override fun getSceneStrategy(): SceneStrategy<AppNavArgument> = BottomSheetSceneStrategy()
 
   override fun buildMetadata(argument: PlaceDetailNavArgument): Map<String, Any> {
     return BottomSheetSceneStrategy.bottomSheet(
@@ -87,7 +87,7 @@ class SearchNavEntry : AppNavEntry<SearchNavArgument>() {
   // 单例 overlay，使用固定 contentKey
   override fun getContentKey(argument: SearchNavArgument): String = NAV_MAP_SEARCH
 
-  override fun getSceneStrategy(): SceneStrategy<Any> = BottomSheetSceneStrategy()
+  override fun getSceneStrategy(): SceneStrategy<AppNavArgument> = BottomSheetSceneStrategy()
 
   override fun buildMetadata(argument: SearchNavArgument): Map<String, Any> {
     return BottomSheetSceneStrategy.bottomSheet(
