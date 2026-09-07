@@ -26,6 +26,8 @@ actual fun shareText(text: String) {
       .filter { it.activationState == UISceneActivationStateForegroundActive }
       .flatMap { it.windows.filterIsInstance<UIWindow>() }
       .firstOrNull { it.isKeyWindow() }
+      // 混合壳仍由 AppDelegate 管理窗口，没有 UIWindowScene。
+      ?: UIApplication.sharedApplication.keyWindow
     val presenter = window?.rootViewController?.sharePresenter()
     if (presenter == null) {
       "暂时无法打开分享面板".toast()
