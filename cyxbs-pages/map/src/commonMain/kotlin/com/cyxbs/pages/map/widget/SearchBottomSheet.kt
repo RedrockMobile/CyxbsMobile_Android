@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -82,7 +81,6 @@ fun SearchBottomSheetContent() {
       .background(LocalAppColors.current.topBg)
       .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
       .padding(start = 16.dp, end = 16.dp)
-      .navigationBarsPadding()
   ) {
     Box(
       modifier = Modifier
