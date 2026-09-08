@@ -79,6 +79,11 @@ internal fun FindCourseScreen(
 
   val searchState by vm.searchState.collectAsState()
 
+  // 搜索异常是一次性提示事件，不参与内容状态切换，因此页面可以继续保留请求前的结果。
+  LaunchedEffect(vm) {
+    vm.toastEvent.collect { message -> toast(message) }
+  }
+
   // 统一返回逻辑：搜索状态非 Idle 时先清空输入回到 Idle，否则真正退出页面。
   // 由顶部栏返回按钮、系统返回键 / 手势 / ESC 共用
   val onBack: () -> Unit = {
@@ -174,10 +179,6 @@ private fun SearchBottomContent() {
 
       FindCourseViewModel.SearchState.Empty -> TopHintStatus {
         Text("查无此人", color = LocalAppColors.current.tvLv2, fontSize = 14.sp)
-      }
-
-      is FindCourseViewModel.SearchState.Error -> TopHintStatus {
-        Text(state.message, color = LocalAppColors.current.tvLv2, fontSize = 14.sp)
       }
 
       is FindCourseViewModel.SearchState.Success -> SearchResultList(
@@ -280,7 +281,7 @@ private fun SearchField(
 
 // IdleContent / LinkCard 已拆至同包 IdleContent.kt / LinkCard.kt
 
-/** 搜索框正下方一定距离的提示位（Loading / Empty / Error 共用），不再撑满剩余空间居中 */
+/** 搜索框正下方一定距离的提示位（Loading / Empty 共用），不再撑满剩余空间居中 */
 @Composable
 private fun TopHintStatus(content: @Composable () -> Unit) {
   Box(
@@ -297,8 +298,7 @@ private fun FindCourseViewModel.SearchState.contentKey(): Int = when (this) {
   FindCourseViewModel.SearchState.Idle -> 0
   FindCourseViewModel.SearchState.Loading -> 1
   FindCourseViewModel.SearchState.Empty -> 2
-  is FindCourseViewModel.SearchState.Error -> 3
-  is FindCourseViewModel.SearchState.Success -> 4
+  is FindCourseViewModel.SearchState.Success -> 3
 }
 
 /* ---------- 跳转 ---------- */

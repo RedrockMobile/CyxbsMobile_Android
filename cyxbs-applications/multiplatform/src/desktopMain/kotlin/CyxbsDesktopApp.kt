@@ -7,10 +7,6 @@ import com.cyxbs.components.config.ConfigApplicationInfo
 import com.cyxbs.components.config.compose.theme.AppTheme
 import com.cyxbs.components.config.init.InitialManager
 import com.cyxbs.components.config.res.ConfigRes
-import com.cyxbs.components.base.webview.bindDesktopWebViewApplicationExit
-import com.cyxbs.components.base.webview.initializeDesktopWebViewRuntime
-import com.cyxbs.components.base.webview.prepareDesktopWebViewComposeInterop
-import com.cyxbs.components.base.webview.requestDesktopWebViewApplicationExit
 import com.cyxbs.components.init.runApp
 import com.cyxbs.components.navigation.AppNavDisplay
 import com.cyxbs.components.utils.extensions.PlatformToastCompose
@@ -27,20 +23,21 @@ import org.jetbrains.compose.resources.painterResource
  */
 
 fun main() {
-  prepareDesktopWebViewComposeInterop()
+//  prepareDesktopWebViewComposeInterop() // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
   runApp {
     MultiplatformKtProviderInitializer.tryInitKtProvider()
     InitialManager.init(isMainProcess = true)
     FileKit.init(appId = "com.mredrock.cyxbs")
-    initializeDesktopWebViewRuntime()
+//    initializeDesktopWebViewRuntime() // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
     launchApplication {
-      remember {
-        bindDesktopWebViewApplicationExit(::exitApplication)
-      }
+//      remember { // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+//        bindDesktopWebViewApplicationExit(::exitApplication)
+//      }
       val width = 900
       val height = 600
       Window(
-        onCloseRequest = ::requestDesktopWebViewApplicationExit,
+//        onCloseRequest = ::requestDesktopWebViewApplicationExit, // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+        onCloseRequest = ::exitApplication,
         title = "桌上重邮",
         state = rememberWindowState(width = width.dp, height = height.dp),
         icon = painterResource(ConfigRes.configIcAppLogo())
