@@ -78,6 +78,9 @@ const val NAV_SCHOOL_CAR = "school_car"
 // 空教室
 const val NAV_EMPTY_ROOM = "emptyroom"
 
+// 校历
+const val NAV_SCHOOL_CALENDAR = "school/calendar"
+
 // 日程主页（清单与时间轴在页面内切换）
 const val NAV_SCHEDULE_MAIN = "schedule"
 

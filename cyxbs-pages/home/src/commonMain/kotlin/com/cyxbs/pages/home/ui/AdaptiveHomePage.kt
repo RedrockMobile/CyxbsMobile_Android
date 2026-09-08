@@ -33,6 +33,7 @@ import com.cyxbs.components.navigation.NAV_EMPTY_ROOM
 import com.cyxbs.components.navigation.NAV_FOOD
 import com.cyxbs.components.navigation.NAV_MAP
 import com.cyxbs.components.navigation.NAV_SCHOOL_CAR
+import com.cyxbs.components.navigation.NAV_SCHOOL_CALENDAR
 import com.cyxbs.components.navigation.NAV_SIGN
 import com.cyxbs.components.utils.compose.dark
 import com.cyxbs.components.utils.extensions.toast
@@ -69,6 +70,9 @@ private val itemList = listOf(
   },
   ActionItem("空教室查询") {
     AppScheme.jump("cyxbs://$NAV_EMPTY_ROOM")
+  },
+  ActionItem("校历") {
+    AppScheme.jump("cyxbs://$NAV_SCHOOL_CALENDAR")
   },
   ActionItem("校车查询", Platform.Web){
     AppScheme.jump("cyxbs://$NAV_SCHOOL_CAR")

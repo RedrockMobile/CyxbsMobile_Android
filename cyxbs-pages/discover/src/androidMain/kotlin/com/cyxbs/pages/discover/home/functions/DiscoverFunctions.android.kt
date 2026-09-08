@@ -1,6 +1,5 @@
 package com.cyxbs.pages.discover.home.functions
 
-import com.cyxbs.components.config.route.DISCOVER_CALENDAR
 import com.cyxbs.components.config.route.DISCOVER_GRADES
 import com.cyxbs.components.config.route.DISCOVER_NO_CLASS
 import com.cyxbs.components.config.route.DISCOVER_SPORT
@@ -37,7 +36,7 @@ actual object PlatformDiscoverFunctions : DiscoverFunctions() {
   }
 
   override fun clickSchoolCalendar() {
-    startActivity(DISCOVER_CALENDAR)
+    super.clickSchoolCalendar()
     TrackingUtils.trackClickEvent2(ClickEvent.CLICK_YLC_XL_ENTRY)
   }
 
