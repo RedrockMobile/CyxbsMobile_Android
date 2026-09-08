@@ -99,9 +99,9 @@ fun MainViewController(): UIViewController {
 /**
  * 统一限制 iOS CMP 页面消费的底部导航栏安全区高度。
  *
- * 系统原始 inset 保持不变，避免课表等直接读取 [WindowInsets.navigationBars] 的布局发生位移；这里只
- * 消费超出 12dp 的部分，让后代 `navigationBarsPadding()` 最多再补 12dp。该包装位于主题外层，
- * 因此页面重复嵌套 [AppTheme] 时不会重复消费。
+ * 消费超出 12dp 的部分，让后代 `navigationBarsPadding()` 最多再补 12dp。系统原始
+ * [WindowInsets.navigationBars] 保持不变，页面不能再把完整 inset 手动累加到内容高度。
+ * 该包装位于主题外层，因此页面重复嵌套 [AppTheme] 时不会重复消费。
  */
 @Composable
 private fun IOSNavigationBarPadding(content: @Composable () -> Unit) {
@@ -205,9 +205,6 @@ interface IOSKmpInterface {
 
   /** 跳转教务在线某条新闻详情（iOS 原版功能已停服，toast 兜底） */
   fun jumpJwNewsItem(newId: String)
-
-  /** Banner 点击：UIApplication.shared.open(url) 交给系统 Safari */
-  fun onBannerClick(pictureGotoUrl: String, keyword: String)
 
   /** push 答疑广场（iOS 原生 QAMainVC） */
   fun jumpQaEntry()
@@ -337,10 +334,6 @@ internal object IOSKmpInterfaceLink :
 
   override fun jumpJwNewsItem(newId: String) {
     impl.jumpJwNewsItem(newId)
-  }
-
-  override fun onBannerClick(pictureGotoUrl: String, keyword: String) {
-    impl.onBannerClick(pictureGotoUrl, keyword)
   }
 
   override fun jumpQaEntry() {

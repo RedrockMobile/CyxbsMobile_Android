@@ -26,8 +26,4 @@ object DiscoverNavPlatformIosImpl : DiscoverNavPlatform {
   override fun jumpJwNewsItem(newId: String) {
     DiscoverIosPlatform::class.implOrNull()?.jumpJwNewsItem(newId) ?: toast("暂不支持跳转")
   }
-
-  override fun onBannerClick(pictureGotoUrl: String, keyword: String) {
-    DiscoverIosPlatform::class.implOrNull()?.onBannerClick(pictureGotoUrl, keyword) ?: toast("暂不支持跳转")
-  }
 }

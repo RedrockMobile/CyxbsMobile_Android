@@ -2,11 +2,13 @@ package com.cyxbs.pages.map.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.scene.SceneStrategy
 import com.cyxbs.components.navigation.AppNav
+import com.cyxbs.components.config.Platform
+import com.cyxbs.components.config.appPlatform
 import com.cyxbs.components.navigation.AppNavArgument
 import com.cyxbs.components.navigation.AppNavEntry
 import com.cyxbs.components.navigation.NAV_MAP_PLACE_DETAIL
@@ -14,6 +16,7 @@ import com.cyxbs.components.navigation.NAV_MAP_SEARCH
 import com.cyxbs.components.navigation.appNavBackStack
 import com.cyxbs.components.view.ui.BottomSheetSceneStrategy
 import com.cyxbs.components.view.ui.BottomSheetSceneStrategy.Companion.Properties
+import androidx.compose.foundation.layout.navigationBarsPadding
 import com.cyxbs.pages.map.widget.PlaceDetailBottomSheetContent
 import com.cyxbs.pages.map.widget.SearchBottomSheetContent
 import kotlinx.serialization.Serializable
@@ -56,12 +59,12 @@ class PlaceDetailNavEntry : AppNavEntry<PlaceDetailNavArgument>() {
             }
             ?.bottomSheetState
         },
-        peekHeight = 112.dp,
+        // iOS 底部留白在 sheet 内部，折叠时也要为它保留可见高度。
+        peekHeight = 112.dp + if (appPlatform == Platform.IOS) 12.dp else 0.dp,
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         scrimColor = Color.Transparent,
-        // 内层 ConstraintLayout 已自带 navigationBarsPadding，这里外壳不再重复
-        modifier = Modifier,
+        modifier = if (appPlatform == Platform.Android) Modifier.navigationBarsPadding() else Modifier,
         // 由 MapBottomSheetEntryHost 统一随地图页进出栈，不按单个 sheet 的 Hide 出栈（保证与 Search 的稳定 z-order）
         popOnHide = false,
       )
@@ -97,12 +100,11 @@ class SearchNavEntry : AppNavEntry<SearchNavArgument>() {
             ?.takeIf { it.mapPagerState.value == 0 }
             ?.searchBottomSheetState
         },
-        peekHeight = 80.dp,
+        peekHeight = 80.dp + if (appPlatform == Platform.IOS) 12.dp else 0.dp,
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         scrimColor = Color.Transparent,
-        // 内层 Column 已自带 navigationBarsPadding，这里外壳不再重复
-        modifier = Modifier,
+        modifier = if (appPlatform == Platform.Android) Modifier.navigationBarsPadding() else Modifier,
         // 由 MapBottomSheetEntryHost 统一随地图页进出栈（搜索 sheet 本就 hideable=false，不会 Hide）
         popOnHide = false,
       )

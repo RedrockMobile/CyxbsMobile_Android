@@ -93,13 +93,6 @@ class KmpInterfaceImpl: IOSKmpInterface {
         toast(s: "教务新闻功能暂时停止服务", isLong: false)
     }
 
-    func onBannerClick(pictureGotoUrl: String, keyword: String) {
-        // 与原 FinderBannerView.jxBanner(_:didSelectItemAt:) 一致：交给系统 Safari。
-        // 这里不做埋点（Android 端 DiscoverNavPlatformImpl 里那段 TrackingUtils 是 Android 专用）。
-        guard let url = URL(string: pictureGotoUrl) else { return }
-        UIApplication.shared.open(url)
-    }
-
     func jumpQaEntry() {
         guard let nav = Self.topNavigationController() else { return }
         let vc = QAMainVC()

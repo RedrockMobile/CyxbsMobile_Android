@@ -1,7 +1,7 @@
 package com.cyxbs.pages.discover.home
 
 /**
- * 发现首页 Header / Banner / 教务在线在 iOS 端的跳转能力契约
+ * 发现首页 Header / 教务在线在 iOS 端的跳转能力契约
  *
  * 由 cyxbs-applications/multiplatform 的 IOSKmpInterfaceLink 通过 KtProvider 注入，
  * 最终落到 iosApp 的 KmpInterfaceImpl 调用原生 push / present / open。
@@ -22,7 +22,4 @@ interface DiscoverIosPlatform {
 
   /** 跳转教务在线某条新闻详情（iOS 原版功能已停服，留 toast 兜底） */
   fun jumpJwNewsItem(newId: String)
-
-  /** Banner 点击：把外链交给系统 Safari 打开（UIApplication.shared.open） */
-  fun onBannerClick(pictureGotoUrl: String, keyword: String)
 }

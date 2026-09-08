@@ -200,10 +200,7 @@ private fun greetingText(): String {
 
 /* ----------------------------- Banner ------------------------------ */
 
-/**
- * [DiscoverNavPlatform] 无实现平台（如 iOS）的 banner 跳转兜底
- */
-private fun onBannerClickFallback(pictureGotoUrl: String, keyword: String) {
+private fun onBannerClick(pictureGotoUrl: String, keyword: String) {
   val finalUrl = if (pictureGotoUrl.startsWith("http")) {
     val uri = Uri.parse(pictureGotoUrl)
     if (uri.getQueryParameter(WebViewNavArgument.DEFAULT_TITLE_QUERY_PARAMETER) == null) {
@@ -273,8 +270,8 @@ private fun Banner(
               .fillMaxSize()
               .clip(cornerShape)
               .clickableNoIndicator {
-                platform?.onBannerClick(data.pictureGotoUrl, data.keyword)
-                  ?: onBannerClickFallback(data.pictureGotoUrl, data.keyword)
+                platform?.trackBannerClick()
+                onBannerClick(data.pictureGotoUrl, data.keyword)
               },
             contentScale = ContentScale.Crop,
           )
