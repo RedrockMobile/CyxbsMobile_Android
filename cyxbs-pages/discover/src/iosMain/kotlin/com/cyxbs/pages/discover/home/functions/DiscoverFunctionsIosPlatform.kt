@@ -14,9 +14,6 @@ interface DiscoverFunctionsIosPlatform {
   /** push 没课约（WeDateVC） */
   fun jumpWeDate()
 
-  /** push 校历（CalendarViewController） */
-  fun jumpSchoolCalendar()
-
   /** push 体育打卡详情页（SportAttendanceViewController），与 SportIosPlatform.jumpSportDetail 行为一致 */
   fun jumpSportDetail()
 

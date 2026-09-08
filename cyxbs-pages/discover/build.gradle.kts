@@ -25,12 +25,11 @@ kotlin {
       implementation(projects.cyxbsPages.schoolcar.api)
       implementation(projects.cyxbsPages.course.api)
       implementation(projects.cyxbsPages.home.api)
+      // 校历页直接通过 ImageRequest.Builder 配置图片缓存身份。
+      implementation(libs.coil.compose)
     }
-    androidMain.dependencies {
-      implementation(libs.bundles.projectBase)
-      implementation(libs.bundles.views)
-      implementation(libs.glide)
+    commonTest.dependencies {
+      implementation(kotlin("test"))
     }
   }
 }
-

@@ -52,13 +52,6 @@ class KmpInterfaceImpl: IOSKmpInterface {
         nav.pushViewController(vc, animated: true)
     }
 
-    func jumpSchoolCalendar() {
-        guard let nav = Self.topNavigationController() else { return }
-        let vc = CalendarViewController()
-        vc.hidesBottomBarWhenPushed = true
-        nav.pushViewController(vc, animated: true)
-    }
-
     func jumpTestArrange() {
         guard let nav = Self.topNavigationController() else { return }
         let vc = TestArrangeViewController()

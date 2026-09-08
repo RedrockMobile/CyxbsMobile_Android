@@ -324,7 +324,6 @@ typedef NS_ENUM(NSInteger, ScheduleType) {
 #import "UserItem.h"
 #import "MineMessageVC.h"
 #import "CheckInViewController.h"
-#import "CalendarViewController.h"
 #import "ClassDetailModel.h"
 #import "AttitudeMainPageVC.h"
 #import "SportAttendanceViewController.h" // 体育打卡
