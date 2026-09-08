@@ -33,7 +33,7 @@ fun requestDesktopWebViewApplicationExit() {
 /** 将 Chromium 的运行时和 Profile 固定在用户目录，避免污染工程目录或复用其他应用的默认 Profile。 */
 private fun CefAppBuilder.configureCefUserDataDirectory() {
   val rootDirectory = File(System.getProperty("user.home"), ".cyxbs/cef-user-data")
-  cefSettings.root_cache_path = rootDirectory.absolutePath
+//  cefSettings.root_cache_path = rootDirectory.absolutePath
   cefSettings.cache_path = File(rootDirectory, "default-profile").absolutePath
   cefSettings.persist_session_cookies = true
 }
