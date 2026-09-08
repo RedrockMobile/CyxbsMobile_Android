@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface IAppUpdateService {
     // 订阅更新状态
     fun getUpdateStatus(): StateFlow<AppUpdateStatus>
-    // 最近一次成功查询的商店/发布版本信息，无更新时也可读取更新说明。
+    // 当前检查成功后的商店/发布版本信息（含无需更新的结果）；检查开始时清空，失败时为 null。
     fun getUpdateInfo(): StateFlow<UpdateInfo?>
     // 检查更新
     suspend fun checkUpdate(): AppUpdateStatus.Result

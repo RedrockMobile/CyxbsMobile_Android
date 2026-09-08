@@ -22,6 +22,15 @@ import kotlin.test.assertSame
 @OptIn(ExperimentalCoroutinesApi::class)
 class AppUpdateCheckerTest {
   @Test
+  fun missingInstalledVersionProducesErrorInsteadOfUpToDate() = runTest {
+    val checker = AppUpdateChecker(backgroundScope, { info }) {
+      isNewerAppStoreVersion(it.versionName, "")
+    }
+    assertIs<AppUpdateStatus.Result.Error>(checker.checkUpdate())
+    assertNull(checker.info.value)
+  }
+
+  @Test
   fun previewThenNormalClickDoesNotTurnEqualVersionIntoUpdate() = runTest {
     for (platform in listOf(com.cyxbs.components.config.Platform.IOS, com.cyxbs.components.config.Platform.Android)) {
       val checker = AppUpdateChecker(backgroundScope, { info }) {

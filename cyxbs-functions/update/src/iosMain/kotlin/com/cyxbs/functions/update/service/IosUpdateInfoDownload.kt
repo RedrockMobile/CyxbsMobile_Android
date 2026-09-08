@@ -11,8 +11,12 @@ import platform.UIKit.UIApplication
 class IosUpdateInfoDownload : IPlatformUpdateInfoDownload {
   override fun clickDownload(downloadUrl: String) {
     // 该入口只负责掌邮自身更新，始终打开固定的产品页。
+    val url = NSURL.URLWithString("itms-apps://apps.apple.com/cn/app/id$APP_STORE_ID") ?: run {
+      "无法打开 App Store，请稍后重试".toast()
+      return
+    }
     UIApplication.sharedApplication.openURL(
-      url = NSURL(string = "itms-apps://apps.apple.com/cn/app/id$APP_STORE_ID"),
+      url = url,
       options = emptyMap<Any?, Any>(),
       completionHandler = { success ->
         if (!success) "无法打开 App Store，请稍后重试".toast()

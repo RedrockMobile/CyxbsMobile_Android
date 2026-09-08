@@ -1,6 +1,7 @@
 package com.cyxbs.pages.map.viewmodel
 
 import com.eygraber.uri.Uri
+import com.cyxbs.components.utils.extensions.toast
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 
@@ -16,10 +17,14 @@ actual class MapComposeViewModel : CommonMapComposeViewModel() {
       .appendQueryParameter("mode", "walking")
       .appendQueryParameter("src", "ios.redrock.cyxbs")
       .build()
+    val navigationUrl = NSURL.URLWithString(navigationUri.toString()) ?: run {
+      "无法打开导航链接".toast()
+      return
+    }
     UIApplication.sharedApplication.openURL(
-      url = NSURL(string = navigationUri.toString()),
+      url = navigationUrl,
       options = emptyMap<Any?, Any>(),
-      completionHandler = { success ->
+      completionHandler = navigation@ { success ->
         if (!success) {
           // 未安装百度地图时，与 Android 一样打开目的地的网页版地图。
           val webUri = Uri.Builder()
@@ -30,8 +35,12 @@ actual class MapComposeViewModel : CommonMapComposeViewModel() {
             .appendQueryParameter("output", "html")
             .appendQueryParameter("src", "webapp.baidu.openAPIdemo")
             .build()
+          val webUrl = NSURL.URLWithString(webUri.toString()) ?: run {
+            "无法打开网页版地图".toast()
+            return@navigation
+          }
           UIApplication.sharedApplication.openURL(
-            url = NSURL(string = webUri.toString()),
+            url = webUrl,
             options = emptyMap<Any?, Any>(),
             completionHandler = null,
           )
