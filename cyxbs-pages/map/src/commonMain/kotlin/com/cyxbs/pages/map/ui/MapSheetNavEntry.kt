@@ -59,7 +59,8 @@ class PlaceDetailNavEntry : AppNavEntry<PlaceDetailNavArgument>() {
             }
             ?.bottomSheetState
         },
-        peekHeight = 112.dp,
+        // iOS 底部留白在 sheet 内部，折叠时也要为它保留可见高度。
+        peekHeight = 112.dp + if (appPlatform == Platform.IOS) 12.dp else 0.dp,
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         scrimColor = Color.Transparent,
@@ -99,7 +100,7 @@ class SearchNavEntry : AppNavEntry<SearchNavArgument>() {
             ?.takeIf { it.mapPagerState.value == 0 }
             ?.searchBottomSheetState
         },
-        peekHeight = 80.dp,
+        peekHeight = 80.dp + if (appPlatform == Platform.IOS) 12.dp else 0.dp,
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         scrimColor = Color.Transparent,

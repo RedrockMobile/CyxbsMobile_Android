@@ -100,7 +100,10 @@ fun PlaceDetailBottomSheetContent() {
         )
         .background(LocalAppColors.current.topBg)
         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-        .padding(start = 16.dp, end = 16.dp)
+        .padding(
+          horizontal = if (appPlatform == Platform.IOS) 20.dp else 16.dp,
+        )
+        .padding(bottom = if (appPlatform == Platform.IOS) 12.dp else 0.dp)
         .then(if (appPlatform == Platform.Android) Modifier.navigationBarsPadding() else Modifier),
       animateChangesSpec = spring(
         stiffness = Spring.StiffnessMediumLow
