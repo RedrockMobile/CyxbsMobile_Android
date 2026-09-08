@@ -38,5 +38,9 @@ kotlin {
       // https://github.com/kyleduo/SwitchButton
       implementation("com.kyleduo.switchbutton:library:2.1.0")
     }
+    iosMain.dependencies {
+      implementation(libs.filekit.core)
+      implementation(libs.filekit.dialogs.compose)
+    }
   }
 }
