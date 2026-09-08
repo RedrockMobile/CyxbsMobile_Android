@@ -34,6 +34,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
@@ -293,6 +294,8 @@ private fun BottomSheetBackgroundCompose(
   Box(
     modifier = modifier
       .fillMaxSize()
+      // 外层可能包含 navigationBarsPadding，隐藏时禁止 sheet 越界绘制残片。
+      .clipToBounds()
       .focusRequester(focusRequester)
       .focusable()
       .plusDsl {
