@@ -20,7 +20,6 @@ const val MAIN_ENTRY = "/main/entry"
 
 const val DISCOVER_OTHER_COURSE = "/other_course/discover/entry"
 const val DISCOVER_NO_CLASS = "/no_class/discover/entry"
-const val DISCOVER_CALENDAR = "/calendar/discover/entry"
 const val DISCOVER_EMPTY_ROOM = "/empty_room/discover/entry"
 const val DISCOVER_GRADES = "/grades/discover/entry"
 const val DISCOVER_VOLUNTEER = "/volunteer/discover/entry"

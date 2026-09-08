@@ -31,10 +31,5 @@ kotlin {
     commonTest.dependencies {
       implementation(kotlin("test"))
     }
-    androidMain.dependencies {
-      implementation(libs.bundles.projectBase)
-      implementation(libs.bundles.views)
-      implementation(libs.glide)
-    }
   }
 }
