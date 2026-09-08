@@ -166,7 +166,6 @@
 		18CDF4C9257F8DBD006E8E5C /* safePopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDF4B3257F8DBD006E8E5C /* safePopView.m */; };
 		18CDF4CA257F8DBD006E8E5C /* SelfSafeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDF4B6257F8DBD006E8E5C /* SelfSafeView.m */; };
 		18CDF696257F91BD006E8E5C /* FYHCycleLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDF55B257F91BD006E8E5C /* FYHCycleLabel.m */; };
-		18CDF6C7257F91BE006E8E5C /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CDF5CB257F91BD006E8E5C /* CalendarViewController.m */; };
 		18FE64F625FDA186008748AE /* UIControl+MGD.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE64F525FDA186008748AE /* UIControl+MGD.m */; };
 		1A141320235F521C0001417E /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A14131A235F521C0001417E /* BaseTableViewController.m */; };
 		1A141321235F521C0001417E /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A14131B235F521C0001417E /* BaseViewController.m */; };
@@ -797,8 +796,6 @@
 		18CDF4B6257F8DBD006E8E5C /* SelfSafeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelfSafeView.m; sourceTree = "<group>"; };
 		18CDF55B257F91BD006E8E5C /* FYHCycleLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FYHCycleLabel.m; sourceTree = "<group>"; };
 		18CDF578257F91BD006E8E5C /* FYHCycleLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FYHCycleLabel.h; sourceTree = "<group>"; };
-		18CDF5CA257F91BD006E8E5C /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
-		18CDF5CB257F91BD006E8E5C /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
 		18FE64F425FDA186008748AE /* UIControl+MGD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIControl+MGD.h"; sourceTree = "<group>"; };
 		18FE64F525FDA186008748AE /* UIControl+MGD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIControl+MGD.m"; sourceTree = "<group>"; };
 		1A0AC5F6252B235800221514 /* CyxbsMobile2019_iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CyxbsMobile2019_iOS-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1081,7 +1078,6 @@
 		7AA4C4712891230900E204C8 /* ChangePasswordHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangePasswordHeader.h; sourceTree = "<group>"; };
 		7AA4C4722891237600E204C8 /* StampCenterHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StampCenterHeader.h; sourceTree = "<group>"; };
 		7AA4C473289123B700E204C8 /* FeedBackCenterHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FeedBackCenterHeader.h; sourceTree = "<group>"; };
-		7AA4C47628921BF400E204C8 /* SchoolCalendarHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SchoolCalendarHeader.h; sourceTree = "<group>"; };
 		7AA4C480289220CE00E204C8 /* ADHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADHeader.h; sourceTree = "<group>"; };
 		7AA4C4842892217100E204C8 /* MapHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapHeader.h; sourceTree = "<group>"; };
 		7FBF39E8257B79F20077494E /* ByWordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ByWordViewController.h; sourceTree = "<group>"; };
@@ -2610,7 +2606,6 @@
 				18CDF512257F91BC006E8E5C /* Discover_FindScheduleInquiry */,
 				18CDF53B257F91BC006E8E5C /* Discover_WeDate */,
 				18CDF542257F91BC006E8E5C /* Discover_Map */,
-				18CDF5C9257F91BD006E8E5C /* Discover_SchoolCalendar */,
 				18CDF65A257F91BD006E8E5C /* Discover_ToolPage */,
 			);
 			path = Discover;
@@ -2764,15 +2759,6 @@
 			children = (
 			);
 			path = PlaceDetail;
-			sourceTree = "<group>";
-		};
-		18CDF5C9257F91BD006E8E5C /* Discover_SchoolCalendar */ = {
-			isa = PBXGroup;
-			children = (
-				18CDF5CA257F91BD006E8E5C /* CalendarViewController.h */,
-				18CDF5CB257F91BD006E8E5C /* CalendarViewController.m */,
-			);
-			path = Discover_SchoolCalendar;
 			sourceTree = "<group>";
 		};
 		18CDF65A257F91BD006E8E5C /* Discover_ToolPage */ = {
@@ -4034,7 +4020,6 @@
 				7AA4C480289220CE00E204C8 /* ADHeader.h */,
 				14B73F32281BED7B00D08ADD /* MineMessageHeader.h */,
 				7AA4C4842892217100E204C8 /* MapHeader.h */,
-				7AA4C47628921BF400E204C8 /* SchoolCalendarHeader.h */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -5741,7 +5726,6 @@
 				FC5279002AAC46D500B09685 /* StudentResultItem.swift in Sources */,
 				187DF4BA260310DD000BCDE9 /* LYEmptyBaseView.m in Sources */,
 				FCB39F312AB08C0200914462 /* CreateGroupAlertVC.swift in Sources */,
-				18CDF6C7257F91BE006E8E5C /* CalendarViewController.m in Sources */,
 				14B73F6E281BED7B00D08ADD /* MessageSettingCell.m in Sources */,
 				DB4064FB2466D889006CE5BC /* DLWeeklSelectView.m in Sources */,
 				14B73F72281BED7B00D08ADD /* ActiveMessageCell.m in Sources */,

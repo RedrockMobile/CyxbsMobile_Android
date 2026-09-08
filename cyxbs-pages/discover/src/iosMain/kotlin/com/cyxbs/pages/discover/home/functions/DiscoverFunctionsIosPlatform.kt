@@ -14,9 +14,6 @@ interface DiscoverFunctionsIosPlatform {
   /** push 没课约（WeDateVC） */
   fun jumpWeDate()
 
-  /** 旧版原生校历跳转；当前发现页已经统一走 CMP 导航，仅为兼容现有 iOS 接口暂时保留。 */
-  fun jumpSchoolCalendar()
-
   /** push 体育打卡详情页（SportAttendanceViewController），与 SportIosPlatform.jumpSportDetail 行为一致 */
   fun jumpSportDetail()
 

@@ -39,9 +39,6 @@ class KmpInterfaceImpl: IOSKmpInterface {
     func jumpWeDate() {
     }
 
-    func jumpSchoolCalendar() {
-    }
-
     func jumpTestArrange() {
     }
 

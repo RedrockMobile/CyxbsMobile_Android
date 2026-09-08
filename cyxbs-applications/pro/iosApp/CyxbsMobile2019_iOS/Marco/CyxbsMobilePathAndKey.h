@@ -56,8 +56,6 @@
 
 #import "MineMessageHeader.h"
 
-#import "SchoolCalendarHeader.h"
-
 #import "ADHeader.h"
 
 #import "ScorePageHeader.h"

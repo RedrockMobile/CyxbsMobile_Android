@@ -188,9 +188,6 @@ interface IOSKmpInterface {
   /** push 没课约（iOS 原生 WeDateVC） */
   fun jumpWeDate()
 
-  /** push 校历（iOS 原生 CalendarViewController） */
-  fun jumpSchoolCalendar()
-
   /** push 我的考试（iOS 原生 TestArrangeViewController） */
   fun jumpTestArrange()
 
@@ -313,10 +310,6 @@ internal object IOSKmpInterfaceLink :
 
   override fun jumpWeDate() {
     impl.jumpWeDate()
-  }
-
-  override fun jumpSchoolCalendar() {
-    impl.jumpSchoolCalendar()
   }
 
   override fun jumpTestArrange() {
