@@ -68,7 +68,7 @@ import com.cyxbs.pages.discover.home.widget.FunctionsRow
 import com.cyxbs.pages.discover.home.widget.InfiniteBanner
 import com.cyxbs.pages.discover.home.widget.JwNewsFlipper
 import com.cyxbs.pages.discover.home.widget.MsgImageVector
-import com.cyxbs.pages.discover.home.widget.rememberCyxbsV6BannerPainter
+import com.cyxbs.pages.discover.home.widget.rememberCyxbsBannerPainter
 import com.cyxbs.pages.electricity.api.IElectricityService
 import com.cyxbs.pages.schedule.api.IScheduleService
 import com.cyxbs.pages.sport.api.ISportService
@@ -223,7 +223,7 @@ private fun Banner(
   val cornerShape = RoundedCornerShape(8.dp)
   // 纯 Compose 绘制的兜底图：同时作为外层渐隐层，以及内层单张图的 placeholder / error，
   // 替代已废弃的 discover_ic_cyxbsv6.webp。圆角由 Painter 自绘，无需再 clip。
-  val placeholderPainter = rememberCyxbsV6BannerPainter(cornerRadius = 8.dp)
+  val placeholderPainter = rememberCyxbsBannerPainter(cornerRadius = 8.dp)
 
   // 进入页面后从 0 → 1 的整页淡入（对应原 SlideShow alpha 600ms 动画）
   val ssAlpha = remember { Animatable(0F) }
