@@ -3,6 +3,8 @@ package com.cyxbs.pages.discover.home.functions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.painter.Painter
+import com.cyxbs.components.navigation.AppScheme
+import com.cyxbs.components.navigation.NAV_SPORT
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.pages.course.api.FindCourseNavArgument
 import com.cyxbs.pages.emptyroom.api.EmptyRoomNavArgument
@@ -144,7 +146,7 @@ abstract class DiscoverFunctions {
   }
 
   open fun clickSport() {
-    toast("该平台未实现")
+    AppScheme.jump("cyxbs://${NAV_SPORT}")
   }
 
   open fun clickExam() {

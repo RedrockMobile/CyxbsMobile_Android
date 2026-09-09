@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -95,10 +96,10 @@ fun SportPage(argument: SportNavArgument) {
         val viewModel: SportViewModel = viewModel()
         val state = viewModel.uiState.collectAsStateWithLifecycle().value
         TopBarCompose(modifier = Modifier.layoutId(SportElement.TopBar), argument)
-        DetailTotalTitle(modifier = Modifier.layoutId(SportElement.DetailTotalTitle), argument)
-        DetailTotal(modifier = Modifier.layoutId(SportElement.DetailTotal), argument)
-        SportImage(modifier = Modifier.layoutId(SportElement.SportImage), argument)
-        SportDetailRun(modifier = Modifier.layoutId(SportElement.SportDetailRun), argument)
+        DetailTotalTitle(modifier = Modifier.layoutId(SportElement.DetailTotalTitle))
+        DetailTotal(modifier = Modifier.layoutId(SportElement.DetailTotal))
+        SportImage(modifier = Modifier.layoutId(SportElement.SportImage))
+        SportDetailRun(modifier = Modifier.layoutId(SportElement.SportDetailRun))
         SportRecord(
             modifier = Modifier.layoutId(SportElement.SportRecord),
             state = state
@@ -163,7 +164,6 @@ private fun TopBarCompose(
 @Composable
 private fun DetailTotalTitle(
     modifier: Modifier = Modifier,
-    argument: SportNavArgument
 ) {
     Text(
         modifier = modifier
@@ -177,7 +177,6 @@ private fun DetailTotalTitle(
 @Composable
 private fun DetailTotal(
     modifier: Modifier = Modifier,
-    argument: SportNavArgument
 ) {
     val impactFontFamily = remember { ConfigRes.impactFontFamily() }
     val impactMinFontFamily = remember { ConfigRes.impactMinFontFamily() }
@@ -224,7 +223,6 @@ private fun DetailTotal(
 @Composable
 private fun SportImage(
     modifier: Modifier = Modifier,
-    argument: SportNavArgument
 ) {
     Image(
         modifier = modifier
@@ -237,7 +235,6 @@ private fun SportImage(
 @Composable
 private fun SportDetailRun(
     modifier: Modifier = Modifier,
-    argument: SportNavArgument
 ) {
     val viewmodel: SportViewModel = viewModel()
     val sportUiState by viewmodel.uiState.collectAsStateWithLifecycle()
@@ -351,67 +348,106 @@ private fun SportRecord(
         )
     }
 
-    val refreshNestedScrollConnection = remember(listState, refreshState) {
-        RefreshNestedScrollConnection(
-            state = refreshState,
-            canPull = {
-                listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
-            },
-        )
-    }
     Box(
         modifier = modifier
+            .padding(top = 8.dp)
+            .fillMaxSize()
             .clip(RoundedCornerShape(24.dp))
             .background(0xFFFBFCFF.dark(0xFF1D1D1D))
     ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxWidth()
-                .height(64.dp)
-                .graphicsLayer {
-                    translationY =
-                        refreshState.pullOffset - refreshState.triggerOffset
-                },
-            contentAlignment = Alignment.Center,
-        ) {
-            RefreshHeader(
-                state = refreshState
-            )
-        }
-
-        LazyColumn(
-            userScrollEnabled = !refreshState.isRefreshing,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 15.dp, end = 15.dp)
-                .graphicsLayer {
-                    translationY = refreshState.pullOffset
-                }
-                .nestedScroll(refreshNestedScrollConnection),
-            contentPadding = PaddingValues(vertical = 5.dp)
-        ) {
-            if (state is SportDetailUiState.Content) {
-                items(state.records.size) { index ->
-                    ContentItem(
-                        modifier = Modifier,
-                        record = state.records[index]
+        PullToRefresh(
+            state = refreshState,
+            canPull = {
+                listState.firstVisibleItemIndex == 0 &&
+                        listState.firstVisibleItemScrollOffset == 0
+            },
+            header = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(64.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    RefreshHeader(
+                        state = refreshState
                     )
                 }
-            } else {
-                if (state !is SportDetailUiState.Loading) {
-                    item {
-                        DetailHint(modifier = Modifier.fillParentMaxSize(), state = state)
+            },
+            modifier = Modifier,
+        ) {
+            LazyColumn(
+                userScrollEnabled = !refreshState.isRefreshing,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 15.dp, end = 15.dp)
+                    .graphicsLayer {
+                        translationY = refreshState.pullOffset
+                    },
+                contentPadding = PaddingValues(vertical = 5.dp)
+            ) {
+                if (state is SportDetailUiState.Content) {
+                    items(state.records.size) { index ->
+                        ContentItem(
+                            modifier = Modifier,
+                            record = state.records[index]
+                        )
+                    }
+                } else {
+                    if (state !is SportDetailUiState.Loading) {
+                        item {
+                            DetailHint(modifier = Modifier.fillParentMaxSize(), state = state)
+                        }
                     }
                 }
             }
         }
     }
+
     val vmRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     LaunchedEffect(vmRefreshing) {
         if (refreshState.isRefreshing && state !is SportDetailUiState.Loading) {
             refreshState.finishRefresh()
         }
+    }
+}
+
+@Composable
+private fun PullToRefresh(
+    state: RefreshState,
+    canPull: () -> Boolean,
+    modifier: Modifier,
+    header: @Composable (RefreshState) -> Unit = {
+        RefreshHeader(state = it)
+    },
+    content: @Composable BoxScope.() -> Unit,
+) {
+    val connection = remember(state) {
+        RefreshNestedScrollConnection(
+            state = state,
+            canPull = canPull,
+        )
+    }
+
+    Box(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .graphicsLayer {
+                    translationY = state.pullOffset - state.triggerOffset
+                }
+        ) {
+            header(state)
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    translationY = state.pullOffset
+                }
+                .nestedScroll(connection),
+            content = content
+        )
     }
 }
 
