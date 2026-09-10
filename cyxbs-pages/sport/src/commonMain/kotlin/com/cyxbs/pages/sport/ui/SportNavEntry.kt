@@ -180,8 +180,8 @@ private fun DetailTotalTitle(
 private fun DetailTotal(
     modifier: Modifier = Modifier,
 ) {
-    val impactFontFamily = remember { ConfigRes.impactFontFamily() }
-    val impactMinFontFamily = remember { ConfigRes.impactMinFontFamily() }
+    val impactFontFamily = ConfigRes.impactFontFamily()
+    val impactMinFontFamily = ConfigRes.impactMinFontFamily()
     val viewmodel: SportViewModel = viewModel()
     val sportUiState by viewmodel.uiState.collectAsStateWithLifecycle()
     val textDone = when (val state = sportUiState) {
@@ -381,6 +381,9 @@ private fun SportRecord(
             modifier = Modifier,
         ) {
             LazyColumn(
+                state = listState,
+                // 自定义刷新负责边界拖动，避免 iOS 弹性回滚先消费下拉距离。
+                overscrollEffect = null,
                 userScrollEnabled = !refreshState.isRefreshing,
                 modifier = Modifier
                     .fillMaxSize()
@@ -407,7 +410,7 @@ private fun SportRecord(
 
     val vmRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     LaunchedEffect(vmRefreshing) {
-        if (refreshState.isRefreshing && state !is SportDetailUiState.Loading) {
+        if (refreshState.isRefreshing && !vmRefreshing) {
             refreshState.finishRefresh()
         }
     }

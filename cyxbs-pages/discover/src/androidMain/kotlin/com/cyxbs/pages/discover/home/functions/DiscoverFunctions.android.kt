@@ -2,8 +2,6 @@ package com.cyxbs.pages.discover.home.functions
 
 import com.cyxbs.components.config.route.DISCOVER_GRADES
 import com.cyxbs.components.config.route.DISCOVER_NO_CLASS
-import com.cyxbs.components.config.route.DISCOVER_TODO_MAIN
-import com.cyxbs.components.config.route.DISCOVER_SPORT
 import com.cyxbs.components.config.service.startActivity
 import com.cyxbs.components.utils.logger.TrackingUtils
 import com.cyxbs.components.utils.logger.event.ClickEvent
