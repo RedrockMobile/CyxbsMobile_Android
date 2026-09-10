@@ -10,12 +10,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavMetadataKey
+import androidx.navigation3.runtime.get
 import androidx.navigation3.runtime.metadata
+import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
-import androidx.navigation3.runtime.get
-import androidx.navigation3.scene.OverlayScene
+import com.cyxbs.components.navigation.AppNavArgument
 
 
 /**
@@ -36,9 +37,9 @@ import androidx.navigation3.scene.OverlayScene
  * email: 1487144524@qq.com
  * date: 2026/5/30 15:24
  */
-class BottomSheetSceneStrategy : SceneStrategy<Any> {
+class BottomSheetSceneStrategy<T : AppNavArgument> : SceneStrategy<T> {
 
-  override fun SceneStrategyScope<Any>.calculateScene(entries: List<NavEntry<Any>>): Scene<Any>? {
+  override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
     // 只处理backStack最顶上的entry
     val entry = entries.lastOrNull() ?: return null
     // 如果这个entry没有声明BottomSheetKey metadata，就交给后面的来处理
@@ -110,16 +111,16 @@ class BottomSheetSceneStrategy : SceneStrategy<Any> {
  * - previousEntries / overlaidEntries 是底下仍然显示的页面；
  * - content 里决定覆盖层长什么样。
  */
-private class BottomSheetScene(
+private class BottomSheetScene<T : AppNavArgument>(
   override val key: Any,
-  override val previousEntries: List<NavEntry<Any>>,
-  override val overlaidEntries: List<NavEntry<Any>>,
-  private val entry: NavEntry<Any>,
+  override val previousEntries: List<NavEntry<T>>,
+  override val overlaidEntries: List<NavEntry<T>>,
+  private val entry: NavEntry<T>,
   private val properties: BottomSheetSceneStrategy.Companion.Properties,
   private val onBack: () -> Unit,
-) : OverlayScene<Any> {
+) : OverlayScene<T> {
 
-  override val entries: List<NavEntry<Any>> = listOf(entry)
+  override val entries: List<NavEntry<T>> = listOf(entry)
 
   private lateinit var bottomSheetState: BottomSheetState
 
@@ -177,9 +178,7 @@ private class BottomSheetScene(
   // 参考官方 DialogScene，实现 equals/hashCode 保证 Scene 身份稳定（不纳入 onBack）
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
-    if (other == null || this::class != other::class) return false
-
-    other as BottomSheetScene
+    if (other == null || other !is BottomSheetScene<*>) return false
 
     return key == other.key &&
         previousEntries == other.previousEntries &&

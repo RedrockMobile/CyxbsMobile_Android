@@ -22,26 +22,34 @@ import org.jetbrains.compose.resources.painterResource
  * @date 2024/12/29
  */
 
-fun main() = runApp {
-  MultiplatformKtProviderInitializer.tryInitKtProvider()
-  InitialManager.init(isMainProcess = true)
-  FileKit.init(appId = "com.mredrock.cyxbs")
-  launchApplication {
-    val width = 900
-    val height = 600
-    Window(
-      onCloseRequest = ::exitApplication,
-      title = "桌上重邮",
-      state = rememberWindowState(width = width.dp, height = height.dp),
-      icon = painterResource(ConfigRes.configIcAppLogo())
-//      resizable = false,
-    ) {
-      remember {
-        this.window.minimumSize = java.awt.Dimension(300, 600)
-      }
-      AppTheme {
-        AppNavDisplay()
-        PlatformToastCompose()
+fun main() {
+//  prepareDesktopWebViewComposeInterop() // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+  runApp {
+    MultiplatformKtProviderInitializer.tryInitKtProvider()
+    InitialManager.init(isMainProcess = true)
+    FileKit.init(appId = "com.mredrock.cyxbs")
+//    initializeDesktopWebViewRuntime() // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+    launchApplication {
+//      remember { // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+//        bindDesktopWebViewApplicationExit(::exitApplication)
+//      }
+      val width = 900
+      val height = 600
+      Window(
+//        onCloseRequest = ::requestDesktopWebViewApplicationExit, // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+        onCloseRequest = ::exitApplication,
+        title = "桌上重邮",
+        state = rememberWindowState(width = width.dp, height = height.dp),
+        icon = painterResource(ConfigRes.configIcAppLogo())
+//        resizable = false,
+      ) {
+        remember {
+          this.window.minimumSize = java.awt.Dimension(300, 600)
+        }
+        AppTheme {
+          AppNavDisplay()
+          PlatformToastCompose()
+        }
       }
     }
   }

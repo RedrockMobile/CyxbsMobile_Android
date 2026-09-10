@@ -29,10 +29,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
@@ -56,6 +58,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -68,7 +71,14 @@ import kotlinx.coroutines.launch
 @Stable
 class BottomSheetState(
   var onDismissRequest: suspend BottomSheetState.() -> Unit = { collapseSuspend() },
-  val hideable: Boolean = false
+  val hideable: Boolean = false,
+  /**
+   * 拖拽吸附到关闭位置时是否统一通过 [onDismissRequest]。
+   *
+   * 默认开启，使返回键、点击遮罩和下拉关闭共享同一套业务拦截。依赖 [hideable] 区分“收起”与
+   * “完全隐藏”的调用方需要显式关闭，否则 [onDismissRequest] 无法获知本次拖拽的目标状态。
+   */
+  val requestDismissOnDrag: Boolean = true,
 ) {
 
   internal val showHeight = mutableFloatStateOf(0F)
@@ -135,6 +145,13 @@ class BottomSheetState(
    */
   suspend fun expandSuspend() {
     if (state == BottomSheetValueState.Expanded) return
+    // 若直接以 0 作为动画目标，状态会被错误标记为 Expanded，但弹窗仍停留在屏幕外；
+    // 因此需要等待有效高度后再展开，同时保留协程的可取消性。
+    // Android Dialog 当前通常会在展开协程前完成首轮布局测量，因此不会暴露该问题；
+    // iOS CMP Dialog 可能先执行展开、再触发 onSizeChanged，此时内容高度仍为 0，所以需要等待布局测量完成
+    if (showMaxHeight.floatValue <= 0F) {
+      snapshotFlow { showMaxHeight.floatValue }.first { it > 0F }
+    }
     val now = showHeight.floatValue
     val target = showMaxHeight.floatValue
     if (now != target) {
@@ -277,6 +294,8 @@ private fun BottomSheetBackgroundCompose(
   Box(
     modifier = modifier
       .fillMaxSize()
+      // 外层可能包含 navigationBarsPadding，隐藏时禁止 sheet 越界绘制残片。
+      .clipToBounds()
       .focusRequester(focusRequester)
       .focusable()
       .plusDsl {
@@ -441,19 +460,24 @@ private class BottomSheetScopeImpl(
       },
       onDragStopped = { velocity ->
         coroutineScope.launch {
+          var targetState = BottomSheetValueState.Expanded
           bottomSheetState.scrollableState.scroll {
             with(flingBehavior) {
               performFling(velocity)
             }
-            bottomSheetState.setState(
-              if (bottomSheetState.fraction == 0F) {
-                BottomSheetValueState.Collapsed
-              } else {
-                if (bottomSheetState.fraction < 0F) {
-                  BottomSheetValueState.Hide
-                } else BottomSheetValueState.Expanded
-              }
-            )
+            targetState = if (bottomSheetState.fraction == 0F) {
+              BottomSheetValueState.Collapsed
+            } else if (bottomSheetState.fraction < 0F) {
+              BottomSheetValueState.Hide
+            } else {
+              BottomSheetValueState.Expanded
+            }
+          }
+          if (targetState != BottomSheetValueState.Expanded && bottomSheetState.requestDismissOnDrag) {
+            // 离开 scroll mutation 后再请求关闭，回弹/收起动画才能安全重新取得 ScrollableState。
+            bottomSheetState.onDismissRequest.invoke(bottomSheetState)
+          } else {
+            bottomSheetState.setState(targetState)
           }
         }
       }
@@ -508,14 +532,21 @@ private class BottomSheetNestedScrollConnection(
     val old = bottomSheetState.showHeight.floatValue
     if (old == max) return available.copy(x = 0F) // 完全展开时继续保持展开状态
     var consumeVelocity = available.y
+    var targetState = BottomSheetValueState.Expanded
     bottomSheetState.scrollableState.scroll(scrollPriority = MutatePriority.UserInput) {
       with(flingBehavior) {
         consumeVelocity = available.y - performFling(available.y)
       }
-      bottomSheetState.setState(
-        if (bottomSheetState.fraction == 0F)
-          BottomSheetValueState.Collapsed else BottomSheetValueState.Expanded
-      )
+      targetState = if (bottomSheetState.fraction == 0F) {
+        BottomSheetValueState.Collapsed
+      } else {
+        BottomSheetValueState.Expanded
+      }
+    }
+    if (targetState != BottomSheetValueState.Expanded && bottomSheetState.requestDismissOnDrag) {
+      bottomSheetState.onDismissRequest.invoke(bottomSheetState)
+    } else {
+      bottomSheetState.setState(targetState)
     }
     return Velocity(x = 0F, y = consumeVelocity)
   }

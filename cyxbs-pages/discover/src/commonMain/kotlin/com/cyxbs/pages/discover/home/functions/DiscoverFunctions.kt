@@ -10,6 +10,7 @@ import com.cyxbs.pages.course.api.FindCourseNavArgument
 import com.cyxbs.pages.emptyroom.api.EmptyRoomNavArgument
 import com.cyxbs.pages.map.api.MapNavArgument
 import com.cyxbs.pages.schoolcar.api.SchoolCarNavArgument
+import com.cyxbs.pages.discover.pages.calendar.SchoolCalendarNavArgument
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover_ic_bus_track
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover_ic_empty_classroom
@@ -138,7 +139,7 @@ abstract class DiscoverFunctions {
   }
 
   open fun clickSchoolCalendar() {
-    toast("该平台未实现")
+    SchoolCalendarNavArgument.navigate()
   }
 
   open fun clickTodo() {

@@ -17,16 +17,16 @@ kotlin {
       implementation(projects.cyxbsComponents.utils)
       implementation(projects.cyxbsComponents.config)
       implementation(projects.cyxbsComponents.account.api)
-      implementation(projects.cyxbsPages.affair.api)
       implementation(projects.cyxbsPages.map.api)
-      implementation(projects.cyxbsPages.schedule.api) // 课表注册 SchedulePageDecoration(经 api 工厂, 与 affair 并存)
+      implementation(projects.cyxbsPages.schedule.api) // 课表通过 API 工厂注册 Schedule PageDecoration
     }
     androidMain.dependencies {
+      // 仅供设置页回退后的旧 Android View 课表事务链路使用。
+      implementation(projects.cyxbsPages.affair.api)
       implementation(libs.bundles.projectBase)
       implementation(libs.bundles.views)
       implementation(libs.slideShow)
     }
   }
 }
-
 

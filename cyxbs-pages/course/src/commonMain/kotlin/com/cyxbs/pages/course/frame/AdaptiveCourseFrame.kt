@@ -20,18 +20,24 @@ import androidx.compose.ui.unit.dp
 import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.service.impl
-import com.cyxbs.pages.course.frame.item.DefaultCourseAffairItemFactory
-import com.cyxbs.pages.course.frame.item.DefaultCourseLessonItemFactory
-import com.cyxbs.pages.course.frame.item.DefaultCourseLinkLessonItemFactory
+import com.cyxbs.pages.course.home.item.MobileCourseCreateItemFactory
+import com.cyxbs.pages.course.home.item.MobileCourseLessonItemFactory
+import com.cyxbs.pages.course.home.item.MobileCourseLinkLessonItemFactory
+import com.cyxbs.pages.course.home.item.MobileScheduleItemFactory
 import com.cyxbs.pages.course.view.AbstractCourseFrame
 import com.cyxbs.pages.course.view.HomeCoursePageContent
 import com.cyxbs.pages.course.view.decoration.CoursePageDecorationManager
-import com.cyxbs.pages.course.view.decoration.impl.AffairPageDecoration
 import com.cyxbs.pages.course.view.decoration.impl.CourseLessonPageDecoration
+import com.cyxbs.pages.course.view.decoration.impl.CreateItemPageDecoration
 import com.cyxbs.pages.course.view.decoration.impl.LinkLessonPageDecoration
+import com.cyxbs.pages.course.view.decoration.impl.ScheduleAffairPageDecoration
+import com.cyxbs.pages.course.view.decoration.impl.ScheduleAllDayPageDecoration
+import com.cyxbs.pages.course.view.decoration.impl.ScheduleDeadlinePageDecoration
+import com.cyxbs.pages.course.view.decoration.impl.ScheduleTodoTimedPageDecoration
 import com.cyxbs.pages.course.view.decoration.impl.SelfLessonPageDecoration
+import com.cyxbs.pages.course.view.item.extension.LocalCourseItemBottomSheetDialog
+import com.cyxbs.pages.course.view.item.extension.rememberCourseItemBottomSheetDialogState
 import com.cyxbs.pages.course.view.page.CourseFrameHeader
-import com.cyxbs.pages.schedule.api.IScheduleCourseDecorationFactory
 
 /**
  * 支持自适应宽高的课表框架
@@ -74,21 +80,27 @@ private fun AdaptiveHomeCourseFrameContent(
   modifier: Modifier,
   frame: AdaptiveCourseFrame,
 ) {
-  Column(modifier = modifier.background(LocalAppColors.current.topBg).systemBarsPadding()) {
-    CourseFrameHeader(
-      modifier = Modifier.height(50.dp),
-      frame = frame,
-      linkBtnVisibility = false,
-    )
-    HorizontalPager(
-      modifier = Modifier.fillMaxSize(),
-      state = frame.pagerState,
-      pageContent = { page ->
-        frame.HomeCoursePageContent(
-          page = page,
-        )
-      },
-    )
+  // 原移动端详情容器已经下沉到 commonMain；自适应端复用同一个宿主，不再维护简化版分支。
+  val itemBottomSheetDialog = rememberCourseItemBottomSheetDialogState()
+  CompositionLocalProvider(
+    LocalCourseItemBottomSheetDialog provides itemBottomSheetDialog,
+  ) {
+    Column(modifier = modifier.background(LocalAppColors.current.topBg).systemBarsPadding()) {
+      CourseFrameHeader(
+        modifier = Modifier.height(50.dp),
+        frame = frame,
+        linkBtnVisibility = false,
+      )
+      HorizontalPager(
+        modifier = Modifier.fillMaxSize(),
+        state = frame.pagerState,
+        pageContent = { page ->
+          frame.HomeCoursePageContent(
+            page = page,
+          )
+        },
+      )
+    }
   }
 }
 
@@ -99,6 +111,7 @@ private fun createCoursePageDecorationManager(
 ): CoursePageDecorationManager {
   val coroutineScope = rememberCoroutineScope()
   val selfStuNum by IAccountService::class.impl().stuNumFlow.collectAsState(null)
+  // todo platformItemFactory 先都使用 Mobile*ItemFactory，后续再单独做其他平台的 ui
   return remember(stuNum, selfStuNum) {
     if (selfStuNum != stuNum) {
       CoursePageDecorationManager(
@@ -106,20 +119,43 @@ private fun createCoursePageDecorationManager(
         courseCoroutineScope = coroutineScope,
         CourseLessonPageDecoration(
           stuNum = stuNum,
-          platformItemFactory = DefaultCourseLessonItemFactory
+          platformItemFactory = MobileCourseLessonItemFactory
         ),
       )
     } else {
       CoursePageDecorationManager(
         courseFrame = frame,
         courseCoroutineScope = coroutineScope,
-        SelfLessonPageDecoration(platformItemFactory = DefaultCourseLessonItemFactory), // 自己的课程
-        AffairPageDecoration(
+        ScheduleDeadlinePageDecoration(
           courseFrame = frame,
-          platformItemFactory = DefaultCourseAffairItemFactory
-        ), // 自己的事务
-        LinkLessonPageDecoration(platformItemFactory = DefaultCourseLinkLessonItemFactory), // 关联人的课程
-        IScheduleCourseDecorationFactory::class.impl().create(frame), // 新日程模块(与 affair 并存)
+          coroutineScope = coroutineScope,
+          platformItemFactory = MobileScheduleItemFactory,
+        ), // 截止时间点始终位于课表最上层
+        CreateItemPageDecoration(
+          courseFrame = frame,
+          platformItemFactory = MobileCourseCreateItemFactory
+        ), // 长按创建事务
+        SelfLessonPageDecoration(
+          platformItemFactory = MobileCourseLessonItemFactory
+        ), // 自己的课程
+        ScheduleTodoTimedPageDecoration(
+          courseFrame = frame,
+          coroutineScope = coroutineScope,
+          platformItemFactory = MobileScheduleItemFactory,
+        ), // 清单时间段独立位于事务上方
+        ScheduleAffairPageDecoration(
+          courseFrame = frame,
+          coroutineScope = coroutineScope,
+          platformItemFactory = MobileScheduleItemFactory,
+        ), // Schedule 原生事务使用独立层级
+        LinkLessonPageDecoration(
+          platformItemFactory = MobileCourseLinkLessonItemFactory
+        ), // 关联人的课程
+        ScheduleAllDayPageDecoration(
+          courseFrame = frame,
+          coroutineScope = coroutineScope,
+          platformItemFactory = MobileScheduleItemFactory,
+        ), // 全天背景不参与重叠，固定放在最底层
       )
     }
   }
