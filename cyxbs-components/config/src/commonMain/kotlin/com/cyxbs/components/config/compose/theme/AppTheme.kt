@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
-import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
@@ -24,9 +23,7 @@ import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.node.DelegatableNode
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.invalidateDraw
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
@@ -48,7 +45,7 @@ fun AppTheme(
       val appColors = if (!LocalAppDark.current) AppColor else AppDarkColor
       MaterialTheme(
         colors = if (!LocalAppDark.current) LightColor else DarkColor,
-        typography = createTypography(),
+        typography = createAppTypography(),
         shapes = Shapes,
       ) {
         DefaultIndication = LocalIndication.current
@@ -110,69 +107,6 @@ internal expect fun ConfigAppThemeBefore(content: @Composable () -> Unit)
 
 @Composable
 internal expect fun ConfigAppThemeAfter(content: @Composable () -> Unit)
-
-@Composable
-internal expect fun getFontFamily(): FontFamily
-
-@Composable
-private fun createTypography(): Typography {
-  val defaultFontFamily = getFontFamily()
-  return Typography(
-    // 去掉字体的默认行高间距
-    h1 = MaterialTheme.typography.h1.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    h2 = MaterialTheme.typography.h2.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    h3 = MaterialTheme.typography.h3.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    h4 = MaterialTheme.typography.h4.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    h5 = MaterialTheme.typography.h5.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    h6 = MaterialTheme.typography.h6.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    subtitle1 = MaterialTheme.typography.subtitle1.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    subtitle2 = MaterialTheme.typography.subtitle2.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    body1 = MaterialTheme.typography.body1.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    body2 = MaterialTheme.typography.body2.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    button = MaterialTheme.typography.button.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    caption = MaterialTheme.typography.caption.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-    overline = MaterialTheme.typography.overline.copy(
-      lineHeight = TextUnit.Unspecified,
-      fontFamily = defaultFontFamily
-    ),
-  )
-}
 
 private val Shapes = Shapes(
   small = RoundedCornerShape(4.dp),
