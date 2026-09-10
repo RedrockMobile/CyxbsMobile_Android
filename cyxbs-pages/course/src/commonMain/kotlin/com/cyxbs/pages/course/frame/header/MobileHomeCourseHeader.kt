@@ -12,6 +12,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import com.cyxbs.components.config.login.rememberLoginDialogState
 import com.cyxbs.components.config.time.MinuteTime
 import com.cyxbs.components.config.time.Today
 import com.cyxbs.components.view.ui.BottomSheetValueState
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.math.max
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * 主页课表头，分为折叠时的外课表头与展开时的内课表头
@@ -96,32 +98,42 @@ private fun MobileHomeCourseOuterHeader(
   modifier: Modifier,
   frame: HomeCourseFrame,
 ) {
-  val headerState = remember(frame) { mutableStateOf<CourseBottomSheetHeaderExtension>(EmptyHeader) }
-  key(headerState.value) {
-    headerState.value.CourseBottomSheetHeaderContent(modifier)
-  }
-  val decorationManager = CoursePageDecorationManager.current
-  LaunchedEffect(frame) {
-    frame.beginDate.filterNotNull().collectLatest { beginDate ->
-      snapshotFlow { Today }.collectLatest { today ->
-        if (today < beginDate) {
-          headerState.value = HolidayHeader
-        } else {
-          val page = frame.getPage(today)
-          if (page == null) {
+  val login = rememberLoginDialogState()
+  login.doIfLoginNotShowDialog {
+    val headerState = remember(frame) {
+      mutableStateOf<CourseBottomSheetHeaderExtension>(EmptyHeader)
+    }
+    key(headerState.value) {
+      headerState.value.CourseBottomSheetHeaderContent(modifier)
+    }
+    val decorationManager = CoursePageDecorationManager.current
+    LaunchedEffect(frame) {
+      frame.beginDate.filterNotNull().collectLatest { beginDate ->
+        snapshotFlow { Today }.collectLatest { today ->
+          if (today < beginDate) {
             headerState.value = HolidayHeader
           } else {
-            delay(500) // 防止上游数据因为首次加载的抖动
-            decorationManager.nextItemFlow.collectLatest {
-              headerState.value = if (it == null) NoLessonHeader else {
-                // MobileCourseNextSearch 保证返回的一定是 CourseBottomSheetHeaderExtension 类型
-                it.item.extensions.get(CourseBottomSheetHeaderExtension::class)!!
+            val page = frame.getPage(today)
+            if (page == null) {
+              headerState.value = HolidayHeader
+            } else {
+              delay(500.milliseconds) // 防止上游数据因为首次加载的抖动
+              decorationManager.nextItemFlow.collectLatest {
+                headerState.value = if (it == null) NoLessonHeader else {
+                  // MobileCourseNextSearch 保证返回的一定是 CourseBottomSheetHeaderExtension 类型
+                  it.item.extensions.get(CourseBottomSheetHeaderExtension::class)!!
+                }
               }
             }
           }
         }
       }
     }
+  }.doIfNotLogin {
+    HintCourseBottomSheetHeader("登录后才可查看课表") {
+      // 点击事件
+      showDialog("课表")
+    }.CourseBottomSheetHeaderContent(modifier)
   }
 }
 

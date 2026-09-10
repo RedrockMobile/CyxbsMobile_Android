@@ -35,7 +35,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.cyxbs.components.account.api.AccountState
+import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.config.compose.theme.LocalAppColors
+import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.service.implOrNull
 import com.cyxbs.components.utils.compose.dark
 import com.cyxbs.components.view.ui.BottomSheetValueState
@@ -210,6 +213,11 @@ private fun HomeCourseCompose(modifier: Modifier = Modifier) {
         }
         BottomSheetValueState.Scrolling -> {}
       }
+    }
+  }
+  LaunchedEffect(Unit) {
+    IAccountService::class.impl().state.collectLatest {
+      courseFrameViewModel.frame.bottomSheetState.userScrollEnabled.value = it is AccountState.Login
     }
   }
 }
