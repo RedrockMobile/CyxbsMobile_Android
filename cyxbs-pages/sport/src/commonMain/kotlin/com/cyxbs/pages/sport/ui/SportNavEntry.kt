@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -69,7 +68,6 @@ import cyxbsmobile.cyxbs_pages.sport.generated.resources.sport_ic_shoes
 import cyxbsmobile.cyxbs_pages.sport.generated.resources.sport_ic_spot
 import cyxbsmobile.cyxbs_pages.sport.generated.resources.sport_ic_time
 import cyxbsmobile.cyxbs_pages.sport.generated.resources.sport_ic_valid
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -363,18 +361,6 @@ private fun SportRecord(
                 listState.firstVisibleItemIndex == 0 &&
                         listState.firstVisibleItemScrollOffset == 0
             },
-//            header = {
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(64.dp),
-//                    contentAlignment = Alignment.Center,
-//                ) {
-//                    RefreshHeader(
-//                        state = refreshState
-//                    )
-//                }
-//            },
             onRefresh = {
                 viewModel.refresh(isFirstLoading = false)
             },
@@ -427,16 +413,13 @@ private fun PullToRefresh(
     },
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
     val connection = remember(state) {
         RefreshNestedScrollConnection(
             state = state,
             canPull = canPull,
             onRelease = {
-                scope.launch {
-                    if (state.release()) {
-                        onRefresh()
-                    }
+                if (state.release()) {
+                    onRefresh()
                 }
             }
         )
@@ -475,7 +458,7 @@ private fun ContentItem(
             .padding(top = 10.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
-            .background(Color.White),
+            .background(0xFFFFFFFF.dark(0xFF1D1D1D)),
     ) {
         Column {
             LabelItem(
