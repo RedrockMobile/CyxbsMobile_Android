@@ -7,7 +7,8 @@ import androidx.compose.ui.unit.Velocity
 
 class RefreshNestedScrollConnection(
     private val state: RefreshState,
-    private val canPull: () -> Boolean
+    private val canPull: () -> Boolean,
+    private val onRelease: suspend () -> Unit
 ) : NestedScrollConnection {
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -46,7 +47,7 @@ class RefreshNestedScrollConnection(
             return Velocity.Zero
         }
 
-        state.release()
+        onRelease()
         return available
     }
 
@@ -54,7 +55,9 @@ class RefreshNestedScrollConnection(
         if (
             !state.isRefreshing && available.y > 0f && canPull()
         ) {
-            state.consumeFling(available.y)
+            if (state.consumeFling(available.y)) {
+                onRelease()
+            }
             return available
         }
 

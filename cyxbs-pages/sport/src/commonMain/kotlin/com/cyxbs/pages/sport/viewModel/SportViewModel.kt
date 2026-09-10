@@ -5,7 +5,6 @@ import com.cyxbs.components.account.api.AccountState
 import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.base.ui.BaseViewModel
 import com.cyxbs.components.config.service.impl
-import com.cyxbs.components.config.time.SchoolCalendar
 import com.cyxbs.components.utils.extensions.logg
 import com.cyxbs.pages.sport.model.NoticeItem
 import com.cyxbs.pages.sport.model.SportDetailBean
@@ -26,13 +25,12 @@ class SportViewModel : BaseViewModel() {
     val noticeData: SharedFlow<Result<List<NoticeItem>>?> get() = _noticeData
     private val _noticeData = MutableSharedFlow<Result<List<NoticeItem>>?>(replay = 1)
 
-    val sportData: SharedFlow<Result<SportDetailBean>?> get() = _sportData
     private val _sportData = MutableSharedFlow<Result<SportDetailBean>?>(replay = 1)
 
     val uiState: StateFlow<SportDetailUiState> get() = _uiState
     private val _uiState = MutableStateFlow<SportDetailUiState>(SportDetailUiState.Loading)
 
-    val _isRefreshing: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _isRefreshing: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> get() = _isRefreshing.asStateFlow()
 
     fun refresh(isFirstLoading: Boolean = false): Boolean {
@@ -40,7 +38,6 @@ class SportViewModel : BaseViewModel() {
 
         _isRefreshing.value = true
 
-        val week = SchoolCalendar.getWeekOfTerm() ?: 22
         viewModelScope.launch {
             if (isFirstLoading) {
                 _uiState.value = SportDetailUiState.Loading
@@ -64,7 +61,6 @@ class SportViewModel : BaseViewModel() {
             .onEach {
                 when (it) {
                     is AccountState.Login -> refresh(isFirstLoading = true)
-                    is AccountState.Logout -> _sportData.emit(null)
                     else -> Unit
                 }
             }.launchIn(viewModelScope)

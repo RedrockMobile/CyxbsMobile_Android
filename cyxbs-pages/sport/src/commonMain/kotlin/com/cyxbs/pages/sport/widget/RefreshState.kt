@@ -6,17 +6,20 @@ import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.animateDecay
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.spring
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
+@Stable
 class RefreshState(
     val triggerOffset: Float,
     private val onRefresh: () -> Boolean,
 ) {
     var pullOffset by mutableFloatStateOf(0f)
         private set
+
 
     var isRefreshing by mutableStateOf(false)
         private set
@@ -41,21 +44,17 @@ class RefreshState(
         return pullOffset - oldOffset
     }
 
-    suspend fun release() {
-        if (pullOffset <= 0f || isRefreshing) return
+    suspend fun release(): Boolean {
+        if (pullOffset <= 0f || isRefreshing) return false
 
         if (pullOffset < triggerOffset) {
             animatePullOffsetTo(0f)
-            return
+            return false
         }
 
         isRefreshing = true
         animatePullOffsetTo(triggerOffset)
-
-        if (!onRefresh()) {
-            isRefreshing = false
-            animatePullOffsetTo(0f)
-        }
+        return true
     }
 
     suspend fun finishRefresh() {
@@ -77,8 +76,8 @@ class RefreshState(
         }
     }
 
-    suspend fun consumeFling(initialVelocity: Float) {
-        if (isRefreshing || initialVelocity <= 0f) return
+    suspend fun consumeFling(initialVelocity: Float): Boolean {
+        if (isRefreshing || initialVelocity <= 0f) return false
 
         val maxOffset = triggerOffset * 1.5f
         var oldAnimationValue = 0f
@@ -104,6 +103,6 @@ class RefreshState(
                         velocity <= 250f -> cancelAnimation()
             }
         }
-        release()
+        return pullOffset > 0
     }
 }
