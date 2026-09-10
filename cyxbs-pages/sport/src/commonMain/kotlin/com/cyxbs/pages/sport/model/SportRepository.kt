@@ -2,18 +2,15 @@ package com.cyxbs.pages.sport.model
 
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.utils.extensions.runCatchingCoroutine
-import com.cyxbs.pages.sport.network.SportDetailApiService
-import com.cyxbs.pages.sport.network.SportNoticeApiService
+import com.cyxbs.pages.sport.model.network.SportApiService
 
 object SportRepository {
 
-    private val detailService = SportDetailApiService::class.impl()
-
-    private val noticeService = SportNoticeApiService::class.impl()
+    private val service = SportApiService::class.impl()
 
     suspend fun getSportDetailData(): Result<SportDetailBean> {
         return runCatchingCoroutine {
-            detailService.getSportDetailData()
+            service.getSportDetail()
         }.mapCatching {
             it.data
         }
@@ -21,7 +18,7 @@ object SportRepository {
 
     suspend fun getSportNoticeData(): Result<List<NoticeItem>> {
         return runCatchingCoroutine {
-            noticeService.getSportNoticeData()
+            service.getSportNotice()
         }.mapCatching {
             it.data
         }

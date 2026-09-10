@@ -27,8 +27,6 @@ class SportConstraintSet(
     val sportDetailRun = scope.createRefFor(SportElement.SportDetailRun)
     val sportRecord = scope.createRefFor(SportElement.SportRecord)
     fun createConstrain() {
-        //预留后续根据比例适配
-        val ratio = windowSize.height / windowSize.width
         wh100vInfinity()
     }
 }

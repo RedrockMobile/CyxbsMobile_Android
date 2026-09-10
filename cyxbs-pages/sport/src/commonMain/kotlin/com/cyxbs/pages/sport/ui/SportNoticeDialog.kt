@@ -38,7 +38,7 @@ import org.jetbrains.compose.resources.stringResource
  * 体育打卡信息说明弹窗
  *
  * 复刻旧 sport_dialog_feed.xml：标题 + 后端下发的 3 组「小标题 + 内容」+ 确认按钮。
- * 数据来自 [SportNoticeRepository]：
+ * 数据来自 [SportViewModel]：
  * - 加载中（结果未返回）：居中 [CircularProgressIndicator]
  * - 加载失败：统一兜底文案
  * - 加载成功：展示说明内容

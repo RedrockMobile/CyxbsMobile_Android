@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 @Stable
 class RefreshState(
     val triggerOffset: Float,
-    private val onRefresh: () -> Boolean,
 ) {
     var pullOffset by mutableFloatStateOf(0f)
         private set

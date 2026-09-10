@@ -25,8 +25,6 @@ class SportViewModel : BaseViewModel() {
     val noticeData: SharedFlow<Result<List<NoticeItem>>?> get() = _noticeData
     private val _noticeData = MutableSharedFlow<Result<List<NoticeItem>>?>(replay = 1)
 
-    private val _sportData = MutableSharedFlow<Result<SportDetailBean>?>(replay = 1)
-
     val uiState: StateFlow<SportDetailUiState> get() = _uiState
     private val _uiState = MutableStateFlow<SportDetailUiState>(SportDetailUiState.Loading)
 

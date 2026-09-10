@@ -340,12 +340,7 @@ private fun SportRecord(
         70.dp.toPx()
     }
     val refreshState = remember {
-        RefreshState(
-            triggerOffset = triggerOffset,
-            onRefresh = {
-                viewModel.refresh(isFirstLoading = false)
-            }
-        )
+        RefreshState(triggerOffset = triggerOffset)
     }
 
     Box(

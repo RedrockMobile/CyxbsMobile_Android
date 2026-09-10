@@ -3,7 +3,6 @@ plugins {
   id("kmp.compose")
 }
 
-useNetwork() // 网络请求
 useKtProvider() // api 模块服务提供
 useNavigation()
 
