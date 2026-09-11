@@ -116,7 +116,8 @@ private fun Project.enableIosUnitTestSourceSet() {
  */
 private fun Project.enablePersistentAndroidDeviceTest() {
   val taskName = "persistentAndroidDeviceTest"
-  val adbExecutable = findAndroidAdbExecutable()
+  // 配置阶段只计算候选路径，存在性校验留到执行阶段，避免本机没配 Android SDK 时 sync 直接失败。
+  val adbCandidates = findAndroidAdbCandidates()
   val deviceSerial = providers.gradleProperty("androidDeviceSerial")
     .orElse(providers.environmentVariable("ANDROID_SERIAL"))
   val deviceTestClass = providers.gradleProperty("androidDeviceTestClass")
@@ -150,7 +151,7 @@ private fun Project.enablePersistentAndroidDeviceTest() {
         }
         add(component)
       }
-      executable(adbExecutable)
+      executable(adbCandidates.resolveAndroidAdb())
       args(instrumentationArguments)
     }
     doLast {
@@ -171,8 +172,15 @@ private fun Project.enablePersistentAndroidDeviceTest() {
   }
 }
 
-/** 查找 Android Studio local.properties 或标准环境变量配置的 adb。 */
-private fun Project.findAndroidAdbExecutable() = run {
+/**
+ * 列出 Android Studio local.properties 或标准环境变量所配置 SDK 下可能的 adb 路径。
+ *
+ * Windows 的 platform-tools 中可执行文件名为 `adb.exe`，macOS/Linux 为 `adb`。这里不做宿主系统判断，
+ * 而是同时列出两种命名，交给 [resolveAndroidAdb] 挑选真正存在的那个，三种系统共用一个实现。
+ *
+ * 配置阶段只计算路径、不校验文件是否存在，因此未配置 Android SDK 时 sync 同样不会失败。
+ */
+private fun Project.findAndroidAdbCandidates(): List<java.io.File> {
   val localSdkDirectory = rootProject.file("local.properties")
     .takeIf { it.isFile }
     ?.inputStream()
@@ -183,14 +191,21 @@ private fun Project.findAndroidAdbExecutable() = run {
     providers.environmentVariable("ANDROID_SDK_ROOT").orNull,
     providers.environmentVariable("ANDROID_HOME").orNull,
     localSdkDirectory,
-  ).firstOrNull { !it.isNullOrBlank() }
-  checkNotNull(sdkDirectory) {
-    "未找到 Android SDK，请配置 ANDROID_SDK_ROOT、ANDROID_HOME 或 local.properties 的 sdk.dir"
-  }
-  rootProject.file("$sdkDirectory/platform-tools/adb").also {
-    check(it.isFile) { "未找到 adb：${it.absolutePath}" }
+  ).firstOrNull { !it.isNullOrBlank() } ?: return emptyList()
+  return listOf("adb.exe", "adb").map {
+    rootProject.file("$sdkDirectory/platform-tools/$it")
   }
 }
+
+/** 从候选路径中取出实际存在的 adb 可执行文件，都不存在时给出可定位的错误信息。 */
+private fun List<java.io.File>.resolveAndroidAdb(): java.io.File = firstOrNull { it.isFile }
+  ?: throw GradleException(
+    if (isEmpty()) {
+      "未找到 Android SDK，请配置 ANDROID_SDK_ROOT、ANDROID_HOME 或 local.properties 的 sdk.dir"
+    } else {
+      "未找到 adb，已尝试：${joinToString { it.absolutePath }}"
+    },
+  )
 
 /** 从本次生成的测试 Manifest 返回 adb 可直接使用的 `package/runner` component。 */
 private fun readInstrumentationComponent(manifestFile: java.io.File): String {
