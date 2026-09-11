@@ -1,7 +1,9 @@
 package com.cyxbs.components.config.res
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import cyxbsmobile.cyxbs_components.config.generated.resources.Res
+import cyxbsmobile.cyxbs_components.config.generated.resources.config_ic_404
 import cyxbsmobile.cyxbs_components.config.generated.resources.config_ic_circle_add
 import cyxbsmobile.cyxbs_components.config.generated.resources.config_ic_calendar_sync
 import cyxbsmobile.cyxbs_components.config.generated.resources.config_ic_change_date
@@ -26,6 +28,7 @@ object ConfigRes {
     fun configIcPlaceHolder() : DrawableResource = Res.drawable.config_ic_compose_place_holder
     fun configIcDefaultAvatar(): DrawableResource = Res.drawable.config_ic_default_avatar
     fun configIcCircleAdd(): DrawableResource = Res.drawable.config_ic_circle_add
+    fun configIc404(): DrawableResource = Res.drawable.config_ic_404
 
     /** Figma 待办详情「同步到课表」按钮使用的通用日历图标。 */
     fun configIcCalendarSync(): DrawableResource = Res.drawable.config_ic_calendar_sync
@@ -45,9 +48,12 @@ object ConfigRes {
     /**
      * Impact 字体（用于电费、课时分数等数字强调样式）。
      *
-     * - Android 端返回基于 `res/font/impact_min.ttf` 的 [FontFamily]
-     * - 其他平台暂未提供对应字体文件，返回 `null`；调用方根据是否为 null
+     * - Android / iOS 端返回基于 `impact_min` 字体文件的 [FontFamily]
+     * - desktop / web 端暂未提供对应字体文件，返回 `null`；调用方根据是否为 null
      *   决定要不要给 Text 设置 `fontFamily`，否则会回退到平台默认字体
      */
+    @Composable
     fun impactFontFamily(): FontFamily? = platformImpactFontFamily()
+    @Composable
+    fun impactMinFontFamily(): FontFamily? = platformImpactMinFontFamily()
 }

@@ -101,3 +101,7 @@ const val NAV_SIGN = "sign"
 
 // 通用 WebView
 const val NAV_WEBVIEW = "webview"
+
+
+// 体育打卡
+const val NAV_SPORT = "sport"

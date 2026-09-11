@@ -342,3 +342,14 @@ deeplink: cyxbs://schedule/failures
 ```text
 deeplink: cyxbs://school/car
 ```
+
+## :cyxbs-pages:sport
+
+### sport
+
+- entry: `com.cyxbs.pages.sport.ui.SportNavEntry`
+- argument: `com.cyxbs.pages.sport.api.SportNavArgument`
+
+```text
+deeplink: cyxbs://sport
+```
