@@ -25,7 +25,9 @@ class ApkInstallStep(val project: Project) {
     return true
   }
 
-  private val adb = project.localProperties["sdk.dir"].toString() + File.separator + "platform-tools" + File.separator + "adb"
+  // Windows 的 platform-tools 中可执行文件名为 adb.exe，macOS/Linux 为 adb
+  private val adb = project.localProperties["sdk.dir"].toString() + File.separator + "platform-tools" + File.separator +
+    if (System.getProperty("os.name").lowercase().contains("windows")) "adb.exe" else "adb"
 
   private fun installApk(apk: File): Boolean {
     while (true) {
