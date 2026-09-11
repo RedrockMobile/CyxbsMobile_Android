@@ -71,13 +71,25 @@ import cyxbsmobile.cyxbs_pages.sport.generated.resources.sport_ic_valid
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * @Desc : 体育打卡 Compose 页面及导航入口
+ * @Author : xt
+ */
 @AppNav(route = NAV_SPORT)
 class SportNavEntry : AppNavEntry<SportNavArgument>() {
 
+    /**
+     * 体育页面始终要求用户登录
+     * @param argument 体育页面导航参数
+     */
     override fun isNeedLogin(argument: SportNavArgument): Boolean {
         return true
     }
 
+    /**
+     * 创建页面 ViewModel 并渲染体育页面
+     * @param argument 体育页面导航参数
+     */
     @Composable
     override fun Content(argument: SportNavArgument) {
         viewModel { SportViewModel() }
@@ -85,6 +97,10 @@ class SportNavEntry : AppNavEntry<SportNavArgument>() {
     }
 }
 
+/**
+ * 渲染体育打卡详情页的统计、插图和记录列表
+ * @param argument 体育页面导航参数
+ */
 @Composable
 fun SportPage(argument: SportNavArgument) {
     ConstraintLayout(
@@ -107,6 +123,7 @@ fun SportPage(argument: SportNavArgument) {
     }
 }
 
+//根据窗口尺寸创建页面约束集合
 @Composable
 private fun createConstraintSet(): ConstraintSet {
     val windowSize = getWindowScreenSize()
@@ -118,6 +135,11 @@ private fun createConstraintSet(): ConstraintSet {
     }
 }
 
+/**
+ * 渲染顶部标题栏及返回操作。
+ * @param modifier 顶部栏布局修饰符
+ * @param argument 体育页面导航参数
+ */
 @Composable
 private fun TopBarCompose(
     modifier: Modifier = Modifier,
@@ -161,6 +183,7 @@ private fun TopBarCompose(
     }
 }
 
+//展示体育详情区域的标题文本
 @Composable
 private fun DetailTotalTitle(
     modifier: Modifier = Modifier,
@@ -174,6 +197,7 @@ private fun DetailTotalTitle(
     )
 }
 
+// 展示总完成次数、目标次数和奖励统计
 @Composable
 private fun DetailTotal(
     modifier: Modifier = Modifier,
@@ -220,6 +244,7 @@ private fun DetailTotal(
     }
 }
 
+// 展示体育页面右侧装饰图片
 @Composable
 private fun SportImage(
     modifier: Modifier = Modifier,
@@ -232,6 +257,7 @@ private fun SportImage(
     )
 }
 
+//展示跑步和其他项目的完成进度
 @Composable
 private fun SportDetailRun(
     modifier: Modifier = Modifier,
@@ -295,6 +321,13 @@ private fun SportDetailRun(
     }
 }
 
+/**
+ * 渲染单条体育打卡记录卡片
+ * @param modifier 记录卡片布局修饰符
+ * @param title 项目标题
+ * @param done 已完成次数
+ * @param need 目标次数
+ */
 @Composable
 private fun SportDetailItem(
     modifier: Modifier = Modifier,
@@ -329,6 +362,11 @@ private fun SportDetailItem(
     }
 }
 
+/**
+ * 根据 UI 状态渲染记录列表或空状态提示
+ * @param modifier 记录区域布局修饰符
+ * @param state 当前详情 UI 状态
+ */
 @Composable
 private fun SportRecord(
     modifier: Modifier = Modifier,
@@ -397,6 +435,15 @@ private fun SportRecord(
     }
 }
 
+/**
+ * 将下拉刷新状态连接到内容区域
+ * @param state 下拉刷新状态
+ * @param canPull 当前列表是否允许下拉
+ * @param onRefresh 刷新触发回调
+ * @param modifier 容器布局修饰符
+ * @param header 刷新头部内容
+ * @param content 页面内容
+ */
 @Composable
 private fun PullToRefresh(
     state: RefreshState,
@@ -443,6 +490,7 @@ private fun PullToRefresh(
     }
 }
 
+// 渲染记录卡片的容器和点击内容
 @Composable
 private fun ContentItem(
     modifier: Modifier = Modifier,
@@ -472,6 +520,7 @@ private fun ContentItem(
     }
 }
 
+// 渲染记录日期、奖励和有效性标签
 @Composable
 private fun LabelItem(
     modifier: Modifier = Modifier,
@@ -520,6 +569,7 @@ private fun LabelItem(
     }
 }
 
+// 渲染记录的时间、地点和运动类型信息
 @Composable
 private fun Info(
     modifier: Modifier = Modifier,
@@ -556,6 +606,7 @@ private fun Info(
     }
 }
 
+// 渲染带图标的单项记录信息
 @Composable
 private fun InfoItem(
     modifier: Modifier = Modifier,
@@ -583,6 +634,7 @@ private fun InfoItem(
     }
 }
 
+// 根据详情状态选择对应的空状态提示
 @Composable
 private fun DetailHint(
     state: SportDetailUiState,
@@ -603,6 +655,7 @@ private fun DetailHint(
     )
 }
 
+// 展示空状态插图和提示文案
 @Composable
 private fun HintItem(
     modifier: Modifier = Modifier,

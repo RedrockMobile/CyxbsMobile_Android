@@ -16,8 +16,16 @@ import cyxbsmobile.cyxbs_pages.sport.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.sport.generated.resources.sport_ic_refresh
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * @Desc : 体育页面下拉刷新指示器
+ * @Author : xt
+ *
+ * 根据刷新状态显示跟随下拉或持续旋转的图标
+ * @param state 当前下拉刷新状态
+ * @param modifier 指示器布局修饰符
+ */
 @Composable
-fun RefreshHeader(
+ fun RefreshHeader(
     state: RefreshState,
     modifier: Modifier = Modifier,
 ) {

@@ -12,6 +12,12 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
+/**
+ * @Desc : 下拉刷新状态与动画管理
+ * @Author : xt
+ *
+ * @param triggerOffset 触发刷新的下拉距离
+ */
 @Stable
 class RefreshState(
     val triggerOffset: Float,
@@ -27,6 +33,11 @@ class RefreshState(
     val progress: Float
         get() = (pullOffset / triggerOffset)
 
+    /**
+     * 消费手指拖动距离并返回实际消耗的偏移量。
+     * @param deltaY 手指本次垂直移动距离
+     * @return 实际被刷新头部消费的距离
+     */
     fun consumeDrag(deltaY: Float): Float {
         if (isRefreshing) return 0f
 
@@ -43,6 +54,7 @@ class RefreshState(
         return pullOffset - oldOffset
     }
 
+    // 在用户松手后根据阈值开始刷新或回弹
     suspend fun release(): Boolean {
         if (pullOffset <= 0f || isRefreshing) return false
 
@@ -56,12 +68,17 @@ class RefreshState(
         return true
     }
 
+    // 完成刷新并将刷新头部收回
     suspend fun finishRefresh() {
         if (!isRefreshing) return
         animatePullOffsetTo(0f)
         isRefreshing = false
     }
 
+    /**
+     * 使用弹簧动画将头部移动到指定偏移量
+     * @param target 目标偏移量
+     */
     suspend fun animatePullOffsetTo(target: Float) {
         animate(
             initialValue = pullOffset,
@@ -75,6 +92,11 @@ class RefreshState(
         }
     }
 
+    /**
+     * 消费下拉惯性并判断是否需要触发刷新
+     * @param initialVelocity 初始垂直速度
+     * @return 是否产生有效下拉偏移
+     */
     suspend fun consumeFling(initialVelocity: Float): Boolean {
         if (isRefreshing || initialVelocity <= 0f) return false
 

@@ -6,6 +6,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintSetScope
 import androidx.constraintlayout.compose.Dimension
 
+/**
+ * @Desc : 体育页面约束布局元素标识
+ * @Author : xt
+ */
 enum class SportElement {
     TopBar,
     DetailTotalTitle,
@@ -15,6 +19,11 @@ enum class SportElement {
     SportRecord
 }
 
+/**
+ * 封装体育页面各区域的 ConstraintLayout 约束关系
+ * @param scope 当前约束布局作用域
+ * @param windowSize 页面窗口尺寸
+ */
 @Stable
 class SportConstraintSet(
     val scope: ConstraintSetScope,
@@ -26,11 +35,14 @@ class SportConstraintSet(
     val sportImage = scope.createRefFor(SportElement.SportImage)
     val sportDetailRun = scope.createRefFor(SportElement.SportDetailRun)
     val sportRecord = scope.createRefFor(SportElement.SportRecord)
+
+    // 创建体育页面的完整约束集合
     fun createConstrain() {
         wh100vInfinity()
     }
 }
 
+// 按纵向全屏布局连接体育页面的各个区域
 private fun SportConstraintSet.wh100vInfinity() {
     with(scope) {
         constrain(topBar) {

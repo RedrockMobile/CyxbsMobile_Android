@@ -7,6 +7,10 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
+/**
+ * @Desc : 体育打卡详情页 UI 状态
+ * @Author : xt
+ */
 sealed interface SportDetailUiState {
     data object Loading : SportDetailUiState
     data class Holiday(
@@ -25,6 +29,7 @@ sealed interface SportDetailUiState {
     data object Error : SportDetailUiState
 }
 
+// 供 Compose 列表展示的单条打卡记录
 data class SportRecordUi(
     val date: String,
     val time: String,
@@ -34,6 +39,7 @@ data class SportRecordUi(
     val isValid: Boolean,
 )
 
+// 供 Compose 顶部统计区域展示的汇总数据
 data class SummaryUi(
     val totalDone: String,
     val totalNeed: String,
@@ -44,6 +50,10 @@ data class SummaryUi(
     val award: String,
 )
 
+/**
+ * 将网络层体育详情转换为页面可直接消费的 UI 状态
+ * @return 根据学期、记录和请求结果生成的详情状态
+ */
 fun SportDetailBean.toDetailUiState(): SportDetailUiState {
     val summary = SummaryUi(
         totalDone = (runDone + otherDone).toString(),
@@ -83,6 +93,7 @@ fun SportDetailBean.toDetailUiState(): SportDetailUiState {
     } else SportDetailUiState.Holiday(summary)
 }
 
+// 统一特殊场地名称，避免 UI 中出现冗余括号说明
 private fun String.normalizeSportSpot() = when (this) {
     "风雨操场（羽毛球馆）",
     "风雨操场（乒乓球馆）" -> "风雨操场"
@@ -90,6 +101,7 @@ private fun String.normalizeSportSpot() = when (this) {
     else -> this
 }
 
+// 根据当前日期生成学期标题文本
 fun currentTermText(): String {
     val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     val year = currentDate.year
