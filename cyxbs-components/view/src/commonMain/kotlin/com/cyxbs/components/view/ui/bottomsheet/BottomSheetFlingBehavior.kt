@@ -56,7 +56,7 @@ internal class BottomSheetFlingBehavior(
   suspend fun ScrollScope.settle(
     initialVelocity: Float,
     source: BottomSheetSettleSource,
-    onRemainingDistanceUpdated: (Float) -> Unit = {},
+    onRemainingDistanceUpdated: ((Float) -> Unit)? = null,
   ): Result {
     bottomSheetState.animationVelocity = initialVelocity
     val now = bottomSheetState.showHeight.floatValue
@@ -69,10 +69,10 @@ internal class BottomSheetFlingBehavior(
     )
     // ScrollableState 的正方向会减小 showHeight，因此目标滚动量需要使用 now - targetHeight。
     val targetScrollOffset = now - target.heightPx
-    onRemainingDistanceUpdated(targetScrollOffset)
+    onRemainingDistanceUpdated?.invoke(targetScrollOffset)
     if (abs(targetScrollOffset) < settlingThresholdPx) {
       scrollBy(targetScrollOffset)
-      onRemainingDistanceUpdated(0F)
+      onRemainingDistanceUpdated?.invoke(0F)
       bottomSheetState.animationVelocity = 0F
       bottomSheetState.completeSettling(transitionId, target.anchor)
       return Result(target.anchor, 0F)
@@ -85,14 +85,14 @@ internal class BottomSheetFlingBehavior(
       initialVelocity = initialVelocity,
     ).animateTo(
       targetValue = targetScrollOffset,
-      animationSpec = bottomSheetState.bottomSheetSpring,
+      animationSpec = bottomSheetState.animationSpecFor(target.heightPx),
     ) {
       val requestedDelta = value - consumedOffset
       val consumedDelta = scrollBy(requestedDelta)
       consumedOffset += consumedDelta
       remainingVelocity = velocity
       bottomSheetState.animationVelocity = velocity
-      onRemainingDistanceUpdated(targetScrollOffset - consumedOffset)
+      onRemainingDistanceUpdated?.invoke(targetScrollOffset - consumedOffset)
 
       // 内容高度或 Insets 在动画途中变化时，布局边界可能拒绝部分位移；此时立即结束并把剩余速度
       // 交还嵌套滚动链，避免弹簧持续尝试越过已经失效的目标。

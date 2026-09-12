@@ -164,8 +164,8 @@ private fun BottomSheetBackgroundCompose(
   val coroutineScope = rememberCoroutineScope()
   val focusRequester = remember { FocusRequester() }
   val dismissInteractionEnabled by rememberDerivedStateOfStructure {
-    // 拦截能力跟随语义方向，而不是依赖视觉比例阈值：展开目标一建立即可关闭，关闭目标一建立
-    // 就立刻释放背景点击和返回事件。Dragging 尚无目标，仅保留从 Expanded 开始拖动时的拦截。
+    // 关闭目标建立后立即撤销内部关闭入口，避免动画期间再次点击导致旧动画被取消并重新开始。
+    // Window 仍会拦截底层内容，真正解除平台级触摸隔离要等宿主在动画完成后移除 Window。
     when (val motion = bottomSheetState.motionState) {
       is BottomSheetMotionState.Idle -> motion.anchor == BottomSheetAnchor.Expanded
       is BottomSheetMotionState.Dragging -> motion.originAnchor == BottomSheetAnchor.Expanded
@@ -186,8 +186,7 @@ private fun BottomSheetBackgroundCompose(
             }
           }
         }
-        // 全屏 Window 会保留到收起动画结束，因此一旦目标明确为 Collapsed/Hidden 就提前移除点击
-        // 节点；展开动画则始终允许点击背景发起关闭，不受 expansionFraction 阈值影响。
+        // 全屏 Window 会保留到收起动画结束；这里只控制组件内部是否仍可重复发起关闭。
         if (dismissOnClickOutside && dismissInteractionEnabled) {
           clickableNoIndicator { // 这里给背景设置点击事件默认会拦截后面的 XML 布局，所以只有需要时才设置
             coroutineScope.launch {

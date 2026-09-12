@@ -2,6 +2,7 @@ package com.cyxbs.components.view.ui.bottomsheet
 
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.animateTo
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.gestures.ScrollableState
@@ -255,6 +256,20 @@ class BottomSheetState(
     visibilityThreshold = 1F,
   )
 
+  /** 完全移出屏幕时缩短弹簧尾段，使外层 Window 能更早释放触摸。 */
+  private val closeBottomSheetSpring = spring<Float>(
+    dampingRatio = bottomSheetSpring.dampingRatio,
+    stiffness = bottomSheetSpring.stiffness,
+    visibilityThreshold = 10F,
+  )
+
+  /**
+   * 根据目标高度选择动画：完全退出屏幕时缩短尾段，保留常驻内容的折叠与展开使用标准曲线。
+   */
+  internal fun animationSpecFor(targetHeightPx: Float): SpringSpec<Float> {
+    return if (targetHeightPx == 0F) closeBottomSheetSpring else bottomSheetSpring
+  }
+
   private var nextTransitionId = 0L
 
   /**
@@ -464,7 +479,7 @@ class BottomSheetState(
         initialVelocity = animationVelocity,
       ).animateTo(
         targetValue = targetScrollOffset,
-        animationSpec = bottomSheetSpring,
+        animationSpec = animationSpecFor(targetHeightPx),
       ) {
         val requestedDelta = value - consumedOffset
         val consumedDelta = scrollBy(requestedDelta)
