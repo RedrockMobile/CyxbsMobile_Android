@@ -225,8 +225,6 @@ interface IOSKmpInterface {
   fun exitApp()
 }
 
-// SportIosPlatform / DiscoverFunctionsIosPlatform 都声明了 jumpSportDetail；同一个 override
-// 一次性满足两个接口，是 Kotlin 多接口合并的标准行为，不需要 super<X> 仲裁。
 @ImplProvider(IOSHomeViewPager::class)
 @ImplProvider(IOSToast::class)
 @ImplProvider(ConfigApplicationInfo::class)
