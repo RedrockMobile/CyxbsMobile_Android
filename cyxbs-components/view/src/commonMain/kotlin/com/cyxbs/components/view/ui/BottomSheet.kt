@@ -1,19 +1,18 @@
 package com.cyxbs.components.view.ui
 
+import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateTo
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.gestures.TargetedFlingBehavior
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
-import androidx.compose.foundation.gestures.snapping.snapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Spacer
@@ -68,6 +67,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 /**
@@ -92,6 +92,14 @@ class BottomSheetState(
 
   internal val showHeight = mutableFloatStateOf(0F)
   internal val showMaxHeight = mutableFloatStateOf(0F)
+
+  /**
+   * 当前吸附动画在 ScrollableState 坐标系中的速度，正值表示 Sheet 向下移动。
+   *
+   * 动画正常结束时清零；被新动画取消时保留最后一帧速度，使接管动画可以连续起步。该状态只在
+   * Compose UI 线程中的 ScrollableState 互斥区读写，不参与重组。
+   */
+  internal var animationVelocity = 0F
 
   /**
    * 折叠高度计算器，对外可读取包含父级剩余导航栏后的最终高度。
@@ -130,10 +138,55 @@ class BottomSheetState(
     now - new
   }
 
-  internal val bottomSheetSpring = spring(
+  /**
+   * BottomSheet 统一使用的吸附弹簧。
+   *
+   * 拖拽释放由 [BottomSheetFlingBehavior] 将手势速度传入该弹簧；程序化切换若接管一段
+   * 正在运行的吸附动画，也会从上一帧速度继续，静止状态下则从零速度启动。
+   */
+  internal val bottomSheetSpring = spring<Float>(
     stiffness = Spring.StiffnessMediumLow,
-    visibilityThreshold = 1F  // 当距离目标 < 1px 时认为到达，如果不设置，会导致动画持续较久
+    visibilityThreshold = 1F,
   )
+
+  /**
+   * 使用当前吸附弹簧把 Sheet 移动到指定显示高度。
+   *
+   * 新动画取得 ScrollableState 互斥权后才读取 [animationVelocity]，确保上一段被取消的动画已经
+   * 写入最后一帧速度。正常完成或因布局边界拒绝位移而提前结束时清零；协程被接管动画取消时则
+   * 刻意保留速度。
+   *
+   * @param targetHeight Sheet 最终露出的高度，单位为 px。
+   */
+  private suspend fun animateToHeight(targetHeight: Float) {
+    scrollableState.scroll {
+      val targetScrollOffset = showHeight.floatValue - targetHeight
+      if (abs(targetScrollOffset) < 1F) {
+        scrollBy(targetScrollOffset)
+        animationVelocity = 0F
+        return@scroll
+      }
+
+      var consumedOffset = 0F
+      AnimationState(
+        initialValue = 0F,
+        initialVelocity = animationVelocity,
+      ).animateTo(
+        targetValue = targetScrollOffset,
+        animationSpec = bottomSheetSpring,
+      ) {
+        val requestedDelta = value - consumedOffset
+        val consumedDelta = scrollBy(requestedDelta)
+        consumedOffset += consumedDelta
+        animationVelocity = velocity
+        if (abs(requestedDelta - consumedDelta) >= 1F) {
+          cancelAnimation()
+        }
+      }
+      // 外部取消会直接抛出 CancellationException，不会执行到这里，最后一帧速度会留给接管动画。
+      animationVelocity = 0F
+    }
+  }
 
   /**
    * 异步触发 expand
@@ -164,11 +217,8 @@ class BottomSheetState(
     if (now != target) {
       setState(BottomSheetValueState.Scrolling)
     }
-    // now 即使等于 target 也需要执行 animateScrollBy，将其他正在进行中的协程给取消掉
-    scrollableState.animateScrollBy(
-      value = now - target,
-      animationSpec = bottomSheetSpring,
-    )
+    // now 即使等于 target 也需要进入 scroll mutation，将其他正在进行中的动画取消掉。
+    animateToHeight(target)
     setState(BottomSheetValueState.Expanded)
   }
 
@@ -191,10 +241,7 @@ class BottomSheetState(
     if (now != target) {
       setState(BottomSheetValueState.Scrolling)
     }
-    scrollableState.animateScrollBy(
-      value = now - target,
-      animationSpec = bottomSheetSpring,
-    )
+    animateToHeight(target)
     setState(BottomSheetValueState.Collapsed)
   }
 
@@ -212,13 +259,9 @@ class BottomSheetState(
    */
   suspend fun hideSuspend() {
     if (state == BottomSheetValueState.Hide) return
-    val now = showHeight.floatValue
     val target = 0F
     // hide 不触发 Scrolling 状态
-    scrollableState.animateScrollBy(
-      value = now - target,
-      animationSpec = bottomSheetSpring,
-    )
+    animateToHeight(target)
     setState(BottomSheetValueState.Hide)
   }
 
@@ -327,7 +370,7 @@ fun BottomSheetCompose(
         }
         bottomSheetState.commandFlow.value = null
       } catch (_: CancellationException) {
-        // 被新命令的 animateScrollBy 取消（例如展开动画中触发了折叠）
+        // 被新命令的吸附动画取消（例如展开动画中触发了折叠），最后一帧速度会由新动画继承。
       }
     }
   }
@@ -473,34 +516,97 @@ private fun BottomSheetBackgroundCompose(
   }
 }
 
-private class BottomSheetSnapLayoutInfoProvider(
+/**
+ * 使用单段弹簧完成 Sheet 松手后的锚点吸附。
+ */
+private class BottomSheetFlingBehavior(
   private val bottomSheetState: BottomSheetState,
-) : SnapLayoutInfoProvider {
-  override fun calculateApproachOffset(velocity: Float, decayOffset: Float): Float {
-    if (velocity == 0F) return 0F
-    // 返回衰减动画应该需要执行的偏移量，decayOffset 是根据衰减动画计算出来可以执行的最大偏移量
-    val min = if (bottomSheetState.hideable) 0F else bottomSheetState.peekHeightUpdater.peekHeightPx
-    val max = bottomSheetState.showMaxHeight.floatValue
+) : TargetedFlingBehavior {
+
+  /** Spring 与布局边界之间不足该距离时视为抵达目标，单位为 px。 */
+  private val settlingThresholdPx = 1F
+
+  /**
+   * 将松手速度投影到未来位置时使用的时间窗口，单位为秒。
+   *
+   * 投影只决定最终吸附锚点，不会先播放一段衰减动画。
+   */
+  private val velocityProjectionSeconds = 0.2F
+
+  /**
+   * `initialVelocity` 一方面用于预测用户意图并选择 Hide、Collapsed 或 Expanded，另一方面作为
+   * Spring 的初速度直接延续手势。这里不播放 decay 动画，避免速度曲线在 decay 与 snap 的交界处
+   * 发生肉眼可见的阶段切换。
+   */
+  override suspend fun ScrollScope.performFling(
+    initialVelocity: Float,
+    onRemainingDistanceUpdated: (Float) -> Unit,
+  ): Float {
+    bottomSheetState.animationVelocity = initialVelocity
     val now = bottomSheetState.showHeight.floatValue
-    val new = now - decayOffset
-    if (new < min) return now - min
-    if (new > max) return now - max
-    return 0F
+    val targetHeight = calculateTargetHeight(initialVelocity)
+    // ScrollableState 的正方向会减小 showHeight，因此目标滚动量需要使用 now - targetHeight。
+    val targetScrollOffset = now - targetHeight
+    onRemainingDistanceUpdated(targetScrollOffset)
+    if (abs(targetScrollOffset) < settlingThresholdPx) {
+      scrollBy(targetScrollOffset)
+      onRemainingDistanceUpdated(0F)
+      bottomSheetState.animationVelocity = 0F
+      return 0F
+    }
+
+    var consumedOffset = 0F
+    var remainingVelocity = initialVelocity
+    AnimationState(
+      initialValue = 0F,
+      initialVelocity = initialVelocity,
+    ).animateTo(
+      targetValue = targetScrollOffset,
+      animationSpec = bottomSheetState.bottomSheetSpring,
+    ) {
+      val requestedDelta = value - consumedOffset
+      val consumedDelta = scrollBy(requestedDelta)
+      consumedOffset += consumedDelta
+      remainingVelocity = velocity
+      bottomSheetState.animationVelocity = velocity
+      onRemainingDistanceUpdated(targetScrollOffset - consumedOffset)
+
+      // 内容高度或 Insets 在动画途中变化时，布局边界可能拒绝部分位移；此时立即结束并把剩余速度
+      // 交还嵌套滚动链，避免弹簧持续尝试越过已经失效的目标。
+      if (abs(requestedDelta - consumedDelta) >= settlingThresholdPx) {
+        cancelAnimation()
+      }
+    }
+    val result = if (abs(targetScrollOffset - consumedOffset) < settlingThresholdPx) {
+      0F
+    } else {
+      remainingVelocity
+    }
+    // 被外部动画取消时不会执行到这里，最后一帧速度会保留给接管动画。
+    bottomSheetState.animationVelocity = 0F
+    return result
   }
 
-  override fun calculateSnapOffset(velocity: Float): Float {
-    // 衰减动画执行完 calculateApproachOffset 返回的偏移后，开启新动画需要偏移的量
-    // 如果衰减动画的起始速度为 0，则就相当于松手后执行动画回到起点或终点
-    val min = bottomSheetState.peekHeightUpdater.peekHeightPx
+  /** 根据当前位置和释放速度投影选择最终锚点，不实际播放投影过程。 */
+  private fun calculateTargetHeight(initialVelocity: Float): Float {
+    val peekHeight = bottomSheetState.peekHeightUpdater.peekHeightPx
     val max = bottomSheetState.showMaxHeight.floatValue
     val now = bottomSheetState.showHeight.floatValue
-    if (bottomSheetState.hideable && now <= min) {
-      if (now == 0F) return 0F
-      return if (now <= min / 2F) now else now - min
+    if (max <= 0F) return 0F
+
+    // 正速度表示向下拖动，因此从 showHeight 中减去速度投影距离。
+    val projectedHeight = (
+      now - initialVelocity * velocityProjectionSeconds
+    ).coerceIn(0F, max)
+    if (!bottomSheetState.hideable) {
+      return if (projectedHeight <= (peekHeight + max) / 2F) peekHeight else max
     }
-    if (now == min || now == max) return 0F
-    val boundary = (min + max) / 2F
-    return if (now <= boundary) now - min else now - max
+
+    return when {
+      projectedHeight <= peekHeight / 2F -> 0F
+      projectedHeight <= (peekHeight + max) / 2F -> peekHeight
+      else -> max
+    }
   }
 }
 
@@ -513,14 +619,8 @@ private fun BottomSheetContent(
   content: @Composable BottomSheetScope.() -> Unit,
 ) {
   val coroutineScope = rememberCoroutineScope()
-  val decayAnimationSpec = rememberSplineBasedDecay<Float>()
-  // 参考 PagerDefaults#flingBehavior
   val flingBehavior = remember(bottomSheetState) {
-    snapFlingBehavior(
-      snapLayoutInfoProvider = BottomSheetSnapLayoutInfoProvider(bottomSheetState),
-      decayAnimationSpec = decayAnimationSpec,
-      snapAnimationSpec = bottomSheetState.bottomSheetSpring,
-    )
+    BottomSheetFlingBehavior(bottomSheetState)
   }
   val scope = remember(bottomSheetState) {
     BottomSheetScopeImpl(
@@ -608,6 +708,7 @@ private class BottomSheetScopeImpl(
       onDragStarted = {
         bottomSheetState.scrollableState.scroll(scrollPriority = MutatePriority.UserInput) {
           // 这里会打断惯性滑动
+          bottomSheetState.animationVelocity = 0F
           bottomSheetState.setState(BottomSheetValueState.Scrolling)
         }
       },
@@ -708,8 +809,9 @@ private class BottomSheetNestedScrollConnection(
     val min = bottomSheetState.peekHeightUpdater.peekHeightPx
     val max = bottomSheetState.showMaxHeight.floatValue
     val old = bottomSheetState.showHeight.floatValue
-    // 再消耗手指向下的滑动，只有 手指拖动 或者 惯性滑动但已经不是完全展开时 才能消耗
-    if (available.y > 0 && (source == NestedScrollSource.UserInput || old != max)) {
+    // 只接管用户手指产生的剩余位移；列表的 SideEffect 惯性应在 onPostFling 以剩余速度一次性交接，
+    // 否则 Sheet 会先跟随列表 decay 移动，再切换到 Spring，形成两段式速度变化。
+    if (available.y > 0 && source == NestedScrollSource.UserInput) {
       bottomSheetState.setState(BottomSheetValueState.Scrolling)
       val new = (old - available.y).coerceIn(min, max)
       val diff = old - new
@@ -719,21 +821,60 @@ private class BottomSheetNestedScrollConnection(
     return super.onPostScroll(consumed, available, source)
   }
 
+  override suspend fun onPreFling(available: Velocity): Velocity {
+    if (!bottomSheetState.userScrollEnabled.value) return super.onPreFling(available)
+    val min = bottomSheetState.peekHeightUpdater.peekHeightPx
+    val max = bottomSheetState.showMaxHeight.floatValue
+    val current = bottomSheetState.showHeight.floatValue
+    val isBetweenAnchors = current > min && current < max
+    val shouldExpandFromCollapsed = current <= min && available.y < 0F
+    if (!isBetweenAnchors && !shouldExpandFromCollapsed) return Velocity.Zero
+
+    // Sheet 已经离开锚点时，应在子列表启动 decay 前取得完整手势速度；折叠态的向上 fling 也应
+    // 优先展开 Sheet。完全展开态则先交给列表；列表到顶后的剩余惯性由 onPostFling 截断，避免
+    // 同一次 fling 继续折叠 Sheet。
+    val remainingVelocity = settleWithVelocity(available.y)
+    return Velocity(x = 0F, y = available.y - remainingVelocity)
+  }
+
   override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
     if (!bottomSheetState.userScrollEnabled.value) return super.onPostFling(consumed, available)
+    val min = bottomSheetState.peekHeightUpdater.peekHeightPx
     val max = bottomSheetState.showMaxHeight.floatValue
-    val old = bottomSheetState.showHeight.floatValue
-    if (old == max) return available.copy(x = 0F) // 完全展开时继续保持展开状态
-    var consumeVelocity = available.y
+    val current = bottomSheetState.showHeight.floatValue
+
+    // Sheet 完全展开时，onPostFling 收到的是子列表 fling 后未消费的剩余速度。这里刻意截断它，
+    // 使列表的惯性最多滚到顶部，不会在同一次 fling 中继续带动 Sheet 折叠；用户需要继续按住拖动，
+    // 或重新向下拖动，才会通过 onPostScroll 让 Sheet 离开展开锚点。返回 available 表示这部分速度
+    // 已被当前嵌套滚动节点消费，避免它继续传给更外层容器。
+    if (current == max) return available.copy(x = 0F)
+
+    val canMoveDown = available.y > 0F && current > min
+    val canMoveUp = available.y < 0F && current < max
+    if (!canMoveDown && !canMoveUp) return Velocity.Zero
+
+    // 子列表已经优先处理其 fling，这里只用它无法消费的剩余速度驱动 Sheet。
+    val remainingVelocity = settleWithVelocity(available.y)
+    return Velocity(x = 0F, y = available.y - remainingVelocity)
+  }
+
+  /**
+   * 使用嵌套滚动交付的速度吸附 Sheet，并在离开滚动互斥区后同步最终业务状态。
+   *
+   * @param initialVelocity 嵌套滚动坐标系中的初速度，正值向下、负值向上。
+   * @return Sheet 动画结束后未消费、可继续交给祖先节点的速度。
+   */
+  private suspend fun settleWithVelocity(initialVelocity: Float): Float {
+    var remainingVelocity = initialVelocity
     var targetState = BottomSheetValueState.Expanded
     bottomSheetState.scrollableState.scroll(scrollPriority = MutatePriority.UserInput) {
       with(flingBehavior) {
-        consumeVelocity = available.y - performFling(available.y)
+        remainingVelocity = performFling(initialVelocity)
       }
-      targetState = if (bottomSheetState.fraction == 0F) {
-        BottomSheetValueState.Collapsed
-      } else {
-        BottomSheetValueState.Expanded
+      targetState = when {
+        bottomSheetState.fraction < 0F -> BottomSheetValueState.Hide
+        bottomSheetState.fraction == 0F -> BottomSheetValueState.Collapsed
+        else -> BottomSheetValueState.Expanded
       }
     }
     if (targetState != BottomSheetValueState.Expanded && bottomSheetState.requestDismissOnDrag) {
@@ -741,6 +882,6 @@ private class BottomSheetNestedScrollConnection(
     } else {
       bottomSheetState.setState(targetState)
     }
-    return Velocity(x = 0F, y = consumeVelocity)
+    return remainingVelocity
   }
 }
