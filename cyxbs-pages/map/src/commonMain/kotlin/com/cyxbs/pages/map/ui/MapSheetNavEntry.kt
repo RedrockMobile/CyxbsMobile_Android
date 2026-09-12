@@ -1,22 +1,27 @@
 package com.cyxbs.pages.map.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.scene.SceneStrategy
+import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.navigation.AppNav
-import com.cyxbs.components.config.Platform
-import com.cyxbs.components.config.appPlatform
 import com.cyxbs.components.navigation.AppNavArgument
 import com.cyxbs.components.navigation.AppNavEntry
 import com.cyxbs.components.navigation.NAV_MAP_PLACE_DETAIL
 import com.cyxbs.components.navigation.NAV_MAP_SEARCH
 import com.cyxbs.components.navigation.appNavBackStack
+import com.cyxbs.components.utils.compose.getWindowScreenSize
 import com.cyxbs.components.view.ui.BottomSheetSceneStrategy
 import com.cyxbs.components.view.ui.BottomSheetSceneStrategy.Companion.Properties
-import androidx.compose.foundation.layout.navigationBarsPadding
 import com.cyxbs.pages.map.widget.PlaceDetailBottomSheetContent
 import com.cyxbs.pages.map.widget.SearchBottomSheetContent
 import kotlinx.serialization.Serializable
@@ -59,12 +64,13 @@ class PlaceDetailNavEntry : AppNavEntry<PlaceDetailNavArgument>() {
             }
             ?.bottomSheetState
         },
-        // iOS 底部留白在 sheet 内部，折叠时也要为它保留可见高度。
-        peekHeight = 112.dp + if (appPlatform == Platform.IOS) 12.dp else 0.dp,
+        // 系统导航栏的剩余高度由 BottomSheetCompose 自动加入，无需为 iOS 手动预留常量。
+        peekHeight = 112.dp,
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         scrimColor = Color.Transparent,
-        modifier = if (appPlatform == Platform.Android) Modifier.navigationBarsPadding() else Modifier,
+        navigationBarContent = { MapBottomSheetNavigationBarContent() },
+        modifier = Modifier,
         // 由 MapBottomSheetEntryHost 统一随地图页进出栈，不按单个 sheet 的 Hide 出栈（保证与 Search 的稳定 z-order）
         popOnHide = false,
       )
@@ -100,11 +106,12 @@ class SearchNavEntry : AppNavEntry<SearchNavArgument>() {
             ?.takeIf { it.mapPagerState.value == 0 }
             ?.searchBottomSheetState
         },
-        peekHeight = 80.dp + if (appPlatform == Platform.IOS) 12.dp else 0.dp,
+        peekHeight = 80.dp,
         dismissOnBackPress = false,
         dismissOnClickOutside = false,
         scrimColor = Color.Transparent,
-        modifier = if (appPlatform == Platform.Android) Modifier.navigationBarsPadding() else Modifier,
+        navigationBarContent = { MapBottomSheetNavigationBarContent() },
+        modifier = Modifier,
         // 由 MapBottomSheetEntryHost 统一随地图页进出栈（搜索 sheet 本就 hideable=false，不会 Hide）
         popOnHide = false,
       )
@@ -129,4 +136,26 @@ fun MapBottomSheetEntryHost(landscape: Boolean) {
       PlaceDetailNavArgument.navigate()
     }
   }
+}
+
+/**
+ * 地图 BottomSheet 的导航栏占位。
+ *
+ * 竖屏铺满可用宽度；横屏与地点详情、搜索 Sheet 保持相同的左侧间距和三分之一屏宽。
+ */
+@Composable
+private fun MapBottomSheetNavigationBarContent() {
+  val windowSize = getWindowScreenSize()
+  val modifier = if (windowSize.height / windowSize.width > 1.5F) {
+    Modifier.fillMaxWidth()
+  } else {
+    Modifier
+      .padding(start = 30.dp)
+      .width(windowSize.width / 3)
+  }
+  Spacer(
+    modifier = modifier
+      .fillMaxHeight()
+      .background(LocalAppColors.current.topBg)
+  )
 }

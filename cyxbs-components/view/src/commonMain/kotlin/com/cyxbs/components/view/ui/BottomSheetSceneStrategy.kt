@@ -1,6 +1,6 @@
 package com.cyxbs.components.view.ui
 
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -69,11 +69,23 @@ class BottomSheetSceneStrategy<T : AppNavArgument> : SceneStrategy<T> {
        */
       val stateProvider: @Composable () -> BottomSheetState?,
       val peekHeight: Dp = 0.dp,
+      /**
+       * 父级剩余 navBar 区域的占位内容，会在折叠和展开状态时进行 navBar 的占位。
+       * 默认使用 `LocalAppColors.topBg`，传入 {} 可保留高度但保持透明，传 null 则关闭导航栏适配，由调用方自行兼容。
+       */
+      val navigationBarContent: (@Composable BoxScope.() -> Unit)? = {
+        DefaultBottomSheetNavigationBarContent()
+      },
+      /**
+       * 是否对展开的内容应用 `navigationBarsPadding()`，
+       * 默认在 [navigationBarContent] 非 null 时开启；业务已自行处理时传 false。
+       */
+      val navigationBarPaddingInContent: Boolean = navigationBarContent != null,
       val expandOnShow: Boolean = false, // 出现时是否展开到最大高度
       val dismissOnBackPress: Boolean = true, // 是否让 BottomSheetCompose 自己处理返回键
       val dismissOnClickOutside: Boolean = false, // 点击 sheet 外部区域是否 dismiss
       val scrimColor: Color = Color.Transparent, // 背景遮罩颜色
-      val modifier: Modifier = Modifier.navigationBarsPadding(),
+      val modifier: Modifier = Modifier,
       /**
        * 是否在 state 进入 [BottomSheetValueState.Hide] 时自动出栈。
        * 默认 true
@@ -135,6 +147,8 @@ private class BottomSheetScene<T : AppNavArgument>(
         bottomSheetState = state,
         modifier = properties.modifier,
         peekHeight = properties.peekHeight,
+        navigationBarContent = properties.navigationBarContent,
+        navigationBarPaddingInContent = properties.navigationBarPaddingInContent,
         dismissOnBackPress = properties.dismissOnBackPress,
         dismissOnClickOutside = properties.dismissOnClickOutside,
         scrimColor = properties.scrimColor

@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -475,10 +475,12 @@ private fun OffsetScroll(
 private fun BottomSheet(
   state: CourseItemBottomSheetDialogState,
 ) {
+  val bottomSheetBackgroundColor = LocalAppColors.current.whiteBlack
   BottomSheetCompose(
     bottomSheetState = state.bottomSheetState,
     dismissOnClickOutside = true,
     scrimColor = Color.Transparent,
+    navigationBarContent = { Spacer(Modifier.fillMaxSize().background(bottomSheetBackgroundColor)) }
   ) {
     val currentPageLocked by state.currentPageLockedFlow.collectAsState()
     val layoutTopOnScreenFlow = remember {
@@ -488,7 +490,6 @@ private fun BottomSheet(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
       )
     }
-    val bottomSheetBackgroundColor = LocalAppColors.current.whiteBlack
     val shadowHeightPx = with(LocalDensity.current) { 36.dp.toPx() }
     val shadowBrush = remember(shadowHeightPx) {
       // 阴影高度固定，仅在 density 变化时重建 Brush，内容尺寸动画不会产生重复分配。
@@ -517,7 +518,7 @@ private fun BottomSheet(
             size = Size(size.width, fillHeight),
             cornerRadius = CornerRadius(radius),
           )
-          // 只保留顶部圆角，底部继续铺满导航栏区域。
+          // 只保留顶部圆角；导航栏区域由 navigationBarContent 使用相同颜色补齐。
           if (fillHeight > radius) {
             drawRect(
               color = bottomSheetBackgroundColor,
@@ -526,7 +527,6 @@ private fun BottomSheet(
             )
           }
         }
-        .navigationBarsPadding()
         .fillMaxWidth()
         .then(
           if (currentPageLocked) Modifier.heightIn(min = DefaultCourseBottomSheetHeight)

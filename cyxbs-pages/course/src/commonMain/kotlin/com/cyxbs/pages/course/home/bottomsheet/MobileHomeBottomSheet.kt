@@ -44,6 +44,10 @@ fun MobileHomeBottomSheet(
     bottomSheetState = frame.bottomSheetState,
     scrimColor = Color.Transparent,
     peekHeight = frame.peekHeightState.value + peekHeightExtra,
+    navigationBarContent = {
+      // 课表底部导航栏由底导遮挡，这里只保留折叠高度，不额外绘制背景。
+    },
+    navigationBarPaddingInContent = false, // 课表内部处理展开态导航栏避让。
   ) {
     CourseBottomSheetBackground(
       headerHeight = frame.peekHeightState.value

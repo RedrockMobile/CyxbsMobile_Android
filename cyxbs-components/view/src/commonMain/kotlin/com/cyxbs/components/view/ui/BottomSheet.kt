@@ -17,8 +17,14 @@ import androidx.compose.foundation.gestures.snapping.snapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.onConsumedWindowInsetsChanged
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -34,7 +40,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
@@ -45,9 +50,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.utils.compose.backHandler
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.compose.derivedStateOfStructure
@@ -60,6 +68,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 /**
  * 在底部显示的抽屉组件
@@ -84,15 +93,12 @@ class BottomSheetState(
   internal val showHeight = mutableFloatStateOf(0F)
   internal val showMaxHeight = mutableFloatStateOf(0F)
 
-  var peekHeight = 0F
-    set(value) {
-      if (field != value) {
-        field = value
-        if (stateFlow.value != BottomSheetValueState.Hide && showHeight.floatValue < value) {
-          showHeight.floatValue = value
-        }
-      }
-    }
+  /**
+   * 折叠高度计算器，对外可读取包含父级剩余导航栏后的最终高度。
+   *
+   * 高度配置仍由 [BottomSheetCompose] 统一更新，调用方不应直接绕过组件修改计算结果。
+   */
+  val peekHeightUpdater = BottomSheetPeekHeightUpdater(this)
 
   val stateFlow: StateFlow<BottomSheetValueState> get() = stateFlowInternal
   private val stateFlowInternal = MutableStateFlow(BottomSheetValueState.Collapsed)
@@ -112,6 +118,7 @@ class BottomSheetState(
   val fraction by derivedStateOfStructure {
     val showHeight = showHeight.floatValue
     val showMaxHeight = showMaxHeight.floatValue
+    val peekHeight = peekHeightUpdater.peekHeightPx
     if (showMaxHeight == 0F) 0F else (showHeight - peekHeight) / (showMaxHeight - peekHeight)
   }
 
@@ -180,7 +187,7 @@ class BottomSheetState(
   suspend fun collapseSuspend() {
     if (state == BottomSheetValueState.Collapsed) return
     val now = showHeight.floatValue
-    val target = peekHeight
+    val target = peekHeightUpdater.peekHeightPx
     if (now != target) {
       setState(BottomSheetValueState.Scrolling)
     }
@@ -219,6 +226,21 @@ class BottomSheetState(
     stateFlowInternal.tryEmit(value)
     state = value
   }
+
+  /**
+   * 在有效折叠高度改变时同步当前显示高度。
+   *
+   * 折叠态需要同时响应增大与减小；其他可见状态只做下限保护，避免安全区增大后内容落入系统栏。
+   */
+  internal fun onPeekHeightChanged(value: Float) {
+    when (stateFlow.value) {
+      BottomSheetValueState.Collapsed -> showHeight.floatValue = value
+      BottomSheetValueState.Hide -> Unit
+      else -> if (showHeight.floatValue < value) {
+        showHeight.floatValue = value
+      }
+    }
+  }
 }
 
 enum class BottomSheetValueState {
@@ -234,18 +256,38 @@ fun rememberBottomSheetState(
   }
 }
 
+/**
+ * 显示可拖拽的底部抽屉。
+ *
+ * @param bottomSheetState 抽屉状态，可用于展开、折叠和隐藏。
+ * @param modifier 应用于抽屉外层容器；其中位于本组件之前的 Insets 消费会参与剩余高度计算。
+ * @param peekHeight 业务折叠高度，不需要手动包含 navBar 高度。
+ * @param navigationBarContent 父级剩余 navBar 区域的占位内容，会在折叠和展开状态时进行 navBar 的占位。
+ * 默认使用 `LocalAppColors.topBg`，传入 {} 可保留高度但保持透明，传 null 则关闭导航栏适配，由调用方自行兼容。
+ * @param navigationBarPaddingInContent 是否对展开的内容应用 `navigationBarsPadding()`，
+ * 默认在 [navigationBarContent] 非 null 时开启；业务已自行处理时传 false。
+ */
 @Composable
 fun BottomSheetCompose(
   bottomSheetState: BottomSheetState = rememberBottomSheetState(),
   modifier: Modifier = Modifier,
   peekHeight: Dp = 0.dp,
+  navigationBarContent: (@Composable BoxScope.() -> Unit)? = { DefaultBottomSheetNavigationBarContent() },
+  navigationBarPaddingInContent: Boolean = navigationBarContent != null,
   dismissOnBackPress: Boolean = true,
   dismissOnClickOutside: Boolean = false,
   scrimColor: Color = Color.Transparent.copy(alpha = 0.6F),
   content: @Composable BottomSheetScope.() -> Unit
 ) {
+  val density = LocalDensity.current
+  val navigationBarBottomPx = WindowInsets.navigationBars.getBottom(density)
+  val peekHeightUpdater = bottomSheetState.peekHeightUpdater
+  val navigationBarEnabled = navigationBarContent != null
   BottomSheetBackgroundCompose(
-    modifier = modifier,
+    // 回调位于调用方 modifier 之后，可以拿到祖先和调用方已经消费的 Insets 总量。
+    modifier = modifier.onConsumedWindowInsetsChanged { consumedInsets ->
+      peekHeightUpdater.updateConsumedInsets(consumedInsets)
+    },
     scrimColor = scrimColor,
     bottomSheetState = bottomSheetState,
     dismissOnBackPress = dismissOnBackPress,
@@ -254,12 +296,24 @@ fun BottomSheetCompose(
     BottomSheetContent(
       modifier = Modifier.align(Alignment.BottomCenter),
       bottomSheetState = bottomSheetState,
+      navigationBarContent = navigationBarContent,
+      navigationBarPaddingInContent = navigationBarPaddingInContent,
       content = content
     )
   }
-  val density = LocalDensity.current
-  DisposableEffect(bottomSheetState, peekHeight, density) {
-    bottomSheetState.peekHeight = with(density) { peekHeight.toPx() }
+  DisposableEffect(
+    peekHeightUpdater,
+    peekHeight,
+    density,
+    navigationBarBottomPx,
+    navigationBarEnabled,
+  ) {
+    peekHeightUpdater.updateConfiguration(
+      basePeekHeightPx = with(density) { peekHeight.toPx() },
+      navigationBarBottomPx = navigationBarBottomPx,
+      includeNavigationBar = navigationBarEnabled,
+      density = density,
+    )
     onDispose { }
   }
   LaunchedEffect(bottomSheetState) {
@@ -279,6 +333,93 @@ fun BottomSheetCompose(
   }
 }
 
+/**
+ * 汇总业务 peekHeight、系统导航栏和父级 Insets 消费量，并维护最终有效折叠高度。
+ *
+ * Insets 消费回调发生在布局阶段，因此这里直接保存最近配置并同步计算结果，避免调用方再维护
+ * 一套高度状态。配置或消费量任一变化时都会重新计算，旋转屏幕和动态安全区也能生效。
+ * 调用方可通过 [BottomSheetState.peekHeightUpdater] 取得本对象，并读取 [peekHeightPx]；更新入口
+ * 仅供 [BottomSheetCompose] 使用，以保证业务高度和 Insets 始终经过同一条计算链。
+ */
+@Stable
+class BottomSheetPeekHeightUpdater internal constructor(
+  private val bottomSheetState: BottomSheetState,
+) {
+  /** 当前最终有效折叠高度，单位为 px；包含配置允许时父级尚未消费的导航栏底部高度。 */
+  var peekHeightPx by mutableFloatStateOf(0F)
+    private set
+
+  /** 业务传入的原始折叠高度，单位为 px，不包含导航栏。 */
+  var basePeekHeightPx by mutableFloatStateOf(0F)
+    private set
+
+  /** 父级尚未消费的导航栏底部高度，单位为 px；即使业务 peekHeight 为 0 也会保留用于绘制占位。 */
+  var remainingNavigationBarHeightPx by mutableFloatStateOf(0F)
+    private set
+
+  private var navigationBarBottomPx = 0
+  private var includeNavigationBar = true
+  private var density: Density? = null
+  private var consumedInsets: WindowInsets? = null
+
+  /** 更新组合阶段可得的业务高度与系统配置。 */
+  internal fun updateConfiguration(
+    basePeekHeightPx: Float,
+    navigationBarBottomPx: Int,
+    includeNavigationBar: Boolean,
+    density: Density,
+  ) {
+    this.basePeekHeightPx = basePeekHeightPx
+    this.navigationBarBottomPx = navigationBarBottomPx
+    this.includeNavigationBar = includeNavigationBar
+    this.density = density
+    updatePeekHeight()
+  }
+
+  /** 更新当前节点之前已经消费的 Insets；其底部值会从导航栏总高度中扣除。 */
+  internal fun updateConsumedInsets(consumedInsets: WindowInsets) {
+    this.consumedInsets = consumedInsets
+    updatePeekHeight()
+  }
+
+  /**
+   * 计算导航栏剩余高度与最终折叠高度。
+   *
+   * 导航栏占位在 peekHeight 为 0 的模态 Sheet 中也需要绘制，但不能因此改变其完全隐藏的目标；
+   * 所以剩余高度始终计算，仅在业务传入正数 peekHeight 时才加入最终折叠高度。
+   */
+  private fun updatePeekHeight() {
+    val density = density ?: return
+    val remainingNavigationBarPx = if (includeNavigationBar) {
+      val consumedBottomPx = consumedInsets?.getBottom(density) ?: 0
+      (navigationBarBottomPx - consumedBottomPx).coerceAtLeast(0)
+    } else {
+      0
+    }
+    remainingNavigationBarHeightPx = remainingNavigationBarPx.toFloat()
+    val navigationBarPeekHeightPx = if (basePeekHeightPx > 0F) {
+      remainingNavigationBarHeightPx
+    } else {
+      0F
+    }
+    val value = basePeekHeightPx + navigationBarPeekHeightPx
+    if (peekHeightPx != value) {
+      peekHeightPx = value
+      bottomSheetState.onPeekHeightChanged(value)
+    }
+  }
+}
+
+/** 默认导航栏占位，跟随主题使用与课表、校车和地图 Sheet 一致的顶部背景色。 */
+@Composable
+internal fun DefaultBottomSheetNavigationBarContent() {
+  Spacer(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(LocalAppColors.current.topBg)
+  )
+}
+
 @Composable
 private fun BottomSheetBackgroundCompose(
   modifier: Modifier,
@@ -294,8 +435,6 @@ private fun BottomSheetBackgroundCompose(
   Box(
     modifier = modifier
       .fillMaxSize()
-      // 外层可能包含 navigationBarsPadding，隐藏时禁止 sheet 越界绘制残片。
-      .clipToBounds()
       .focusRequester(focusRequester)
       .focusable()
       .plusDsl {
@@ -340,7 +479,7 @@ private class BottomSheetSnapLayoutInfoProvider(
   override fun calculateApproachOffset(velocity: Float, decayOffset: Float): Float {
     if (velocity == 0F) return 0F
     // 返回衰减动画应该需要执行的偏移量，decayOffset 是根据衰减动画计算出来可以执行的最大偏移量
-    val min = if (bottomSheetState.hideable) 0F else bottomSheetState.peekHeight
+    val min = if (bottomSheetState.hideable) 0F else bottomSheetState.peekHeightUpdater.peekHeightPx
     val max = bottomSheetState.showMaxHeight.floatValue
     val now = bottomSheetState.showHeight.floatValue
     val new = now - decayOffset
@@ -352,7 +491,7 @@ private class BottomSheetSnapLayoutInfoProvider(
   override fun calculateSnapOffset(velocity: Float): Float {
     // 衰减动画执行完 calculateApproachOffset 返回的偏移后，开启新动画需要偏移的量
     // 如果衰减动画的起始速度为 0，则就相当于松手后执行动画回到起点或终点
-    val min = bottomSheetState.peekHeight
+    val min = bottomSheetState.peekHeightUpdater.peekHeightPx
     val max = bottomSheetState.showMaxHeight.floatValue
     val now = bottomSheetState.showHeight.floatValue
     if (bottomSheetState.hideable && now <= min) {
@@ -369,6 +508,8 @@ private class BottomSheetSnapLayoutInfoProvider(
 private fun BottomSheetContent(
   modifier: Modifier,
   bottomSheetState: BottomSheetState,
+  navigationBarContent: (@Composable BoxScope.() -> Unit)?,
+  navigationBarPaddingInContent: Boolean,
   content: @Composable BottomSheetScope.() -> Unit,
 ) {
   val coroutineScope = rememberCoroutineScope()
@@ -381,13 +522,20 @@ private fun BottomSheetContent(
       snapAnimationSpec = bottomSheetState.bottomSheetSpring,
     )
   }
+  val scope = remember(bottomSheetState) {
+    BottomSheetScopeImpl(
+      coroutineScope = coroutineScope,
+      bottomSheetState = bottomSheetState,
+      flingBehavior = flingBehavior,
+    )
+  }
   Box(
     modifier = modifier.fillMaxWidth()
       .onSizeChanged {
         if (bottomSheetState.showMaxHeight.floatValue != it.height.toFloat()) {
           bottomSheetState.showMaxHeight.floatValue = it.height.toFloat()
           if (bottomSheetState.stateFlow.value == BottomSheetValueState.Collapsed) {
-            bottomSheetState.showHeight.floatValue = bottomSheetState.peekHeight
+            bottomSheetState.showHeight.floatValue = bottomSheetState.peekHeightUpdater.peekHeightPx
           } else if (bottomSheetState.stateFlow.value == BottomSheetValueState.Expanded) {
             bottomSheetState.showHeight.floatValue = it.height.toFloat()
           } else if (bottomSheetState.stateFlow.value == BottomSheetValueState.Hide) {
@@ -405,14 +553,19 @@ private fun BottomSheetContent(
         )
       })
   ) {
-    val scope = remember(bottomSheetState) {
-      BottomSheetScopeImpl(
-        coroutineScope = coroutineScope,
-        bottomSheetState = bottomSheetState,
-        flingBehavior = flingBehavior,
-      )
+    val contentWrapperModifier = if (navigationBarPaddingInContent) {
+      Modifier.navigationBarsPadding()
+    } else {
+      Modifier
     }
-    content(scope)
+    Box(modifier = contentWrapperModifier) {
+      content(scope)
+    }
+    if (navigationBarContent != null) {
+      with(scope) {
+        NavigationBarContent(navigationBarContent)
+      }
+    }
   }
 }
 
@@ -446,7 +599,7 @@ private class BottomSheetScopeImpl(
       enabled = bottomSheetState.userScrollEnabled.value,
       orientation = Orientation.Vertical,
       state = rememberDraggableState {
-        val min = bottomSheetState.peekHeight
+        val min = bottomSheetState.peekHeightUpdater.peekHeightPx
         val max = bottomSheetState.showMaxHeight.floatValue
         val now = bottomSheetState.showHeight.floatValue
         val new = (now - it).coerceIn(if (bottomSheetState.hideable) 0f else min, max)
@@ -483,6 +636,46 @@ private class BottomSheetScopeImpl(
       }
     )
   }
+
+  /**
+   * 在尚未消费的导航栏区域上叠加业务内容。
+   *
+   * peekHeight 为 0 时，占位直接跟随整个 Sheet 的显示和隐藏动画；peekHeight 大于 0 时，占位在
+   * 展开到折叠区间固定覆盖屏幕底部，从折叠继续进入 Hide 区间后再锁定于业务 peekHeight 下方，
+   * 随整个 Sheet 一起下移。默认铺满 BottomSheet；地图横屏等特殊宽度由业务通过传入的 [content]
+   * 自行约束。
+   */
+  @Composable
+  fun BoxScope.NavigationBarContent(content: @Composable BoxScope.() -> Unit) {
+    val density = LocalDensity.current
+    val remainingHeightPx = bottomSheetState.peekHeightUpdater.remainingNavigationBarHeightPx
+    if (remainingHeightPx <= 0F) return
+    Box(
+      modifier = Modifier
+        .align(Alignment.BottomStart)
+        .offset {
+          val showHeightPx = bottomSheetState.showHeight.floatValue
+          val showMaxHeightPx = bottomSheetState.showMaxHeight.floatValue
+          val basePeekHeightPx = bottomSheetState.peekHeightUpdater.basePeekHeightPx
+          val offsetYPx = if (basePeekHeightPx <= 0F) {
+            // 模态 Sheet 没有常驻折叠区，导航栏占位直接留在内容底部并随整个 Sheet 下移。
+            0F
+          } else {
+            // 折叠以上抵消 Sheet 位移并固定在屏幕底部；折叠以下固定到业务 peek 底部一起下移。
+            val topPx = maxOf(basePeekHeightPx, showHeightPx - remainingHeightPx)
+            val bottomAlignedTopPx = showMaxHeightPx - remainingHeightPx
+            topPx - bottomAlignedTopPx
+          }
+          IntOffset(
+            x = 0,
+            y = offsetYPx.roundToInt(),
+          )
+        }
+        .fillMaxWidth()
+        .height(with(density) { (remainingHeightPx + 2).toDp() }), // 添加 2px 防止衔接处出现虚线
+      content = content,
+    )
+  }
 }
 
 private class BottomSheetNestedScrollConnection(
@@ -492,7 +685,7 @@ private class BottomSheetNestedScrollConnection(
 
   override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
     if (!bottomSheetState.userScrollEnabled.value) return super.onPreScroll(available, source)
-    val min = bottomSheetState.peekHeight
+    val min = bottomSheetState.peekHeightUpdater.peekHeightPx
     val max = bottomSheetState.showMaxHeight.floatValue
     val old = bottomSheetState.showHeight.floatValue
     // 先消耗手指向上的滑动
@@ -512,7 +705,7 @@ private class BottomSheetNestedScrollConnection(
     source: NestedScrollSource
   ): Offset {
     if (!bottomSheetState.userScrollEnabled.value) return super.onPostScroll(consumed, available, source)
-    val min = bottomSheetState.peekHeight
+    val min = bottomSheetState.peekHeightUpdater.peekHeightPx
     val max = bottomSheetState.showMaxHeight.floatValue
     val old = bottomSheetState.showHeight.floatValue
     // 再消耗手指向下的滑动，只有 手指拖动 或者 惯性滑动但已经不是完全展开时 才能消耗

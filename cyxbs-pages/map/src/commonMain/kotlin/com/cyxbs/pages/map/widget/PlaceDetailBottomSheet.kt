@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import com.cyxbs.components.config.Platform
-import com.cyxbs.components.config.appPlatform
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -100,11 +97,7 @@ fun PlaceDetailBottomSheetContent() {
         )
         .background(LocalAppColors.current.topBg)
         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-        .padding(
-          horizontal = if (appPlatform == Platform.IOS) 20.dp else 16.dp,
-        )
-        .padding(bottom = if (appPlatform == Platform.IOS) 12.dp else 0.dp)
-        .then(if (appPlatform == Platform.Android) Modifier.navigationBarsPadding() else Modifier),
+        .padding(start = 16.dp, end = 16.dp),
       animateChangesSpec = spring(
         stiffness = Spring.StiffnessMediumLow
       )

@@ -94,14 +94,14 @@ private fun MobileHomeCourseFrameContent(
     LocalCourseItemBottomSheetDialog provides itemBottomSheetDialog
   ) {
     MobileHomeBottomSheet(
-      // 与首页底导消费相同的剩余安全区，避免 iOS 的原始 inset 再次计入折叠高度。
-      modifier = modifier.statusBarsPadding().navigationBarsPadding(),
+      modifier = modifier.statusBarsPadding(),
       frame = frame,
+      // 这里只传业务底导高度，父级未消费的系统导航栏由 BottomSheetCompose 自动补入。
       peekHeightExtra = frame.bottomBarHeightState.value,
       header = { MobileHomeCourseHeader(modifier = Modifier, frame = frame) },
     ) {
       HorizontalPager(
-        modifier = Modifier.fillMaxSize().graphicsLayer {
+        modifier = Modifier.navigationBarsPadding().fillMaxSize().graphicsLayer {
           alpha = frame.bottomSheetState.fraction
         },
         state = frame.pagerState,

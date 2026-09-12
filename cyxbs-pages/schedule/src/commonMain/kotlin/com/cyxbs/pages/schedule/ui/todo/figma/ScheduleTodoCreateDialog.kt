@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -112,7 +111,6 @@ internal fun ScheduleTodoCreateDialog(
       modifier = Modifier
         .fillMaxWidth()
         .height(668.dp)
-        .navigationBarsPadding()
         .then(bottomSheetDraggable()),
     ) {
       // Figma 中取消按钮位于主体异形轮廓后方，主体背景会遮住按钮下半段。
