@@ -1,12 +1,3 @@
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeUIViewController
 import com.cyxbs.components.account.api.AccountState
 import com.cyxbs.components.account.api.IAccountEditService
@@ -14,6 +5,7 @@ import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.account.provider.TokenProvider
 import com.cyxbs.components.config.ConfigApplicationInfo
 import com.cyxbs.components.config.compose.theme.AppTheme
+import com.cyxbs.components.config.compose.theme.IOSNavigationBarInsets
 import com.cyxbs.components.config.init.InitialManager
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.time.toMinuteTimeDate
@@ -85,7 +77,7 @@ fun doInitApp(impl: IOSKmpInterface) {
 
 fun MainViewController(): UIViewController {
   return ComposeUIViewController {
-    IOSNavigationBarPadding {
+    IOSNavigationBarInsets {
       AppTheme {
         AppNavDisplay()
         if (!IOSKmpInterfaceLink.enableUsePlatformToast()) {
@@ -93,28 +85,6 @@ fun MainViewController(): UIViewController {
         }
       }
     }
-  }
-}
-
-/**
- * 统一限制 iOS CMP 页面消费的底部导航栏安全区高度。
- *
- * 消费超出 12dp 的部分，让后代 `navigationBarsPadding()` 最多再补 12dp。系统原始
- * [WindowInsets.navigationBars] 保持不变，页面不能再把完整 inset 手动累加到内容高度。
- * 该包装位于主题外层，因此页面重复嵌套 [AppTheme] 时不会重复消费。
- */
-@Composable
-private fun IOSNavigationBarPadding(content: @Composable () -> Unit) {
-  val navigationBarBottom = WindowInsets.navigationBars
-    .asPaddingValues()
-    .calculateBottomPadding()
-  val consumedBottom = (navigationBarBottom - 12.dp).coerceAtLeast(0.dp)
-  Box(
-    modifier = Modifier.consumeWindowInsets(
-      PaddingValues(bottom = consumedBottom),
-    ),
-  ) {
-    content()
   }
 }
 
