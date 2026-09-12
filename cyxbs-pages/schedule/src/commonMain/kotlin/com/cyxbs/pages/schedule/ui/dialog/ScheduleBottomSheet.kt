@@ -18,11 +18,10 @@ import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.utils.compose.LocalImePaddingTargetState
 import com.cyxbs.components.utils.compose.imePaddingWithTarget
 import com.cyxbs.components.utils.compose.rememberImePaddingTargetState
-import com.cyxbs.components.view.ui.BottomSheetCompose
-import com.cyxbs.components.view.ui.BottomSheetState
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetCompose
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 
 /**
  * todo 模块内部复用的底部弹窗包装。
@@ -59,7 +58,7 @@ internal fun ScheduleBottomSheet(
   val imePaddingTargetState = rememberImePaddingTargetState()
   val bottomSheetState = remember { BottomSheetState() }
   val requestDismiss = remember(bottomSheetState) {
-    // 业务内容只发起关闭请求；外层内容要等 Hide 状态到达后才会被移除。
+    // 业务内容只发起关闭请求；外层内容要等 Hidden 锚点真正到达后才会被移除。
     { bottomSheetState.hideAsync() }
   }
   bottomSheetState.onDismissRequest = {
@@ -75,7 +74,7 @@ internal fun ScheduleBottomSheet(
 
   // hide 动画结束后通知外层移除组合。
   LaunchedEffect(bottomSheetState) {
-    bottomSheetState.stateFlow.first { it == BottomSheetValueState.Hide }
+    bottomSheetState.awaitSettledAnchor(BottomSheetAnchor.Hidden)
     onDismiss()
   }
 

@@ -31,7 +31,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.utils.compose.dark
 import com.cyxbs.components.utils.compose.getWindowScreenSize
-import com.cyxbs.components.view.ui.BottomSheetCompose
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetCompose
 import com.cyxbs.pages.schoolcar.bean.CarLine
 import com.cyxbs.pages.schoolcar.viewmodel.CommonSchoolCarViewModel
 import com.cyxbs.pages.schoolcar.widget.CarInfoBtsDisplayMode.Empty
@@ -161,7 +161,7 @@ fun CarInfoButtonSheet(
 	// 监听当用户处于Empty模式的时候上滑选择最近的站点
 	LaunchedEffect(Unit) {
 		var lastFraction = 0f
-		snapshotFlow { state.bottomSheetState.fraction }
+		snapshotFlow { state.bottomSheetState.expansionFraction }
 			.collect { currentFraction ->
 				val isPullingUp = currentFraction > lastFraction
 				if (state.displayMode.value is Empty) {

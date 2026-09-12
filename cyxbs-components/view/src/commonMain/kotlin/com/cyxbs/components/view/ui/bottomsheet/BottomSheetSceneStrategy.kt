@@ -1,4 +1,4 @@
-package com.cyxbs.components.view.ui
+package com.cyxbs.components.view.ui.bottomsheet
 
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
@@ -29,7 +29,7 @@ import com.cyxbs.components.navigation.AppNavArgument
  * - **复用外部 [BottomSheetState]**：通过 [Properties.stateProvider] 注入由业务持有的 state，
  *   而非在 Scene 内部新建。这样地图等场景里 controller 对同一个 state 的 collapse/expand/hide
  *   联动逻辑无需改动。
- * - **出栈语义**：只有当 state 进入 [BottomSheetValueState.Hide]（彻底隐藏 / 拖到底）时才调用
+ * - **出栈语义**：只有当 state 稳定到达 [BottomSheetAnchor.Hidden]（彻底隐藏 / 拖到底）时才调用
  *   [SceneStrategyScope.onBack] 出栈；collapse / 露出 peek 不出栈。
  * - **退场动画**：出栈时 [OverlayScene.onRemove] 会先 `hide()` 播放收起动画，再离开组合。
  *
@@ -87,7 +87,7 @@ class BottomSheetSceneStrategy<T : AppNavArgument> : SceneStrategy<T> {
       val scrimColor: Color = Color.Transparent, // 背景遮罩颜色
       val modifier: Modifier = Modifier,
       /**
-       * 是否在 state 进入 [BottomSheetValueState.Hide] 时自动出栈。
+       * 是否在 state 稳定到达 [BottomSheetAnchor.Hidden] 时自动出栈。
        * 默认 true
        * 若由业务自行管理 entry 的进出栈（如需要稳定 z-order 的多 sheet 叠加场景），可设为 false。
        */
@@ -171,8 +171,8 @@ private class BottomSheetScene<T : AppNavArgument>(
       if (properties.popOnHide) {
         LaunchedEffect(state) {
           var hasShown = false
-          state.stateFlow.collect { value ->
-            if (value != BottomSheetValueState.Hide) {
+          state.settledAnchorFlow.collect { value ->
+            if (value != BottomSheetAnchor.Hidden) {
               hasShown = true
             } else if (hasShown) {
               onBack()

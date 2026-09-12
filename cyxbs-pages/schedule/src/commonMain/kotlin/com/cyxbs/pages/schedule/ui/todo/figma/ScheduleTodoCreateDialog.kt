@@ -50,10 +50,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.utils.compose.clickableNoIndicator
-import com.cyxbs.components.view.ui.BottomSheetCompose
-import com.cyxbs.components.view.ui.BottomSheetScope
-import com.cyxbs.components.view.ui.BottomSheetState
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetCompose
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetMotionState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetScope
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 import com.cyxbs.pages.schedule.domain.model.ScheduleCategory
 import com.cyxbs.pages.schedule.ui.edit.EditScheduleModelState
 import com.cyxbs.pages.schedule.ui.edit.RecurrenceDraft
@@ -272,9 +273,11 @@ private fun ScheduleTodoCreateBottomSheet(
     state.expandAsync()
   }
   LaunchedEffect(state) {
-    state.stateFlow.first { it == BottomSheetValueState.Expanded }
-    state.stateFlow.first {
-      it == BottomSheetValueState.Hide || it == BottomSheetValueState.Collapsed
+    state.awaitSettledAnchor(BottomSheetAnchor.Expanded)
+    state.motionStateFlow.first { motion ->
+      motion is BottomSheetMotionState.Idle &&
+          (motion.anchor == BottomSheetAnchor.Hidden ||
+              motion.anchor == BottomSheetAnchor.Collapsed)
     }
     latestOnDismiss.value()
   }

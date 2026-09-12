@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.compose.dark
-import com.cyxbs.components.view.ui.BottomSheetCompose
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetCompose
 import com.cyxbs.pages.course.home.HomeCourseFrame
 
 /**
@@ -56,7 +56,7 @@ fun MobileHomeBottomSheet(
         Box(
           modifier = Modifier.fillMaxWidth().height(frame.peekHeightState.value)
             .then(bottomSheetDraggable()).clickableNoIndicator {
-              if (frame.bottomSheetState.state == BottomSheetValueState.Collapsed) {
+              if (frame.bottomSheetState.isSettledAt(BottomSheetAnchor.Collapsed)) {
                 frame.bottomSheetState.expandAsync()
               }
             }

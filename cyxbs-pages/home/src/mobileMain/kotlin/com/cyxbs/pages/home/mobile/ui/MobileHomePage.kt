@@ -41,7 +41,7 @@ import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.service.implOrNull
 import com.cyxbs.components.utils.compose.dark
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
 import com.cyxbs.pages.home.api.HomeNavArgument
 import com.cyxbs.pages.home.api.IHomeDiscoverTab
 import com.cyxbs.pages.home.api.IHomeFairgroundTab
@@ -168,7 +168,7 @@ private fun HomeCourseCompose(modifier: Modifier = Modifier) {
   LaunchedEffect(Unit) {
     val bottomSheetState = courseFrameViewModel.frame.bottomSheetState
     snapshotFlow {
-      bottomSheetState.fraction.coerceIn(0F, 1F)
+      bottomSheetState.expansionFraction.coerceIn(0F, 1F)
     }.onEach {
       // 底部按钮跟随课表展开而变化
       bottomNavViewModel.offsetYRadio.floatValue = it
@@ -194,24 +194,23 @@ private fun HomeCourseCompose(modifier: Modifier = Modifier) {
     }
   }
   LaunchedEffect(Unit) {
-    courseFrameViewModel.frame.bottomSheetState.stateFlow.collect {
+    courseFrameViewModel.frame.bottomSheetState.settledAnchorFlow.collect {
       when (it) {
-        BottomSheetValueState.Hide -> {
+        BottomSheetAnchor.Hidden -> {
           if (courseBottomSheetViewModel.state.value != null) {
             courseBottomSheetViewModel.state.value = null
           }
         }
-        BottomSheetValueState.Collapsed -> {
+        BottomSheetAnchor.Collapsed -> {
           if (courseBottomSheetViewModel.state.value != false) {
             courseBottomSheetViewModel.state.value = false
           }
         }
-        BottomSheetValueState.Expanded -> {
+        BottomSheetAnchor.Expanded -> {
           if (courseBottomSheetViewModel.state.value != true) {
             courseBottomSheetViewModel.state.value = true
           }
         }
-        BottomSheetValueState.Scrolling -> {}
       }
     }
   }
@@ -226,8 +225,8 @@ private fun HomeCourseCompose(modifier: Modifier = Modifier) {
 private fun HomeNavCompose(modifier: Modifier = Modifier) {
   val bottomNavViewModel = viewModel(BottomNavViewModel::class)
   val courseFrameViewModel = viewModel(MobileCourseFrameViewModel::class)
-  val shadowElevation by courseFrameViewModel.frame.bottomSheetState.stateFlow.map {
-    if (it == BottomSheetValueState.Hide) 4.dp else 0.dp // 如果课表不展示了则添加阴影
+  val shadowElevation by courseFrameViewModel.frame.bottomSheetState.settledAnchorFlow.map {
+    if (it == BottomSheetAnchor.Hidden) 4.dp else 0.dp // 如果课表不展示了则添加阴影
   }.collectAsState(0.dp)
   Row(
     modifier = modifier

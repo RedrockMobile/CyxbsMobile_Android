@@ -20,8 +20,8 @@ import com.cyxbs.components.navigation.NAV_MAP_PLACE_DETAIL
 import com.cyxbs.components.navigation.NAV_MAP_SEARCH
 import com.cyxbs.components.navigation.appNavBackStack
 import com.cyxbs.components.utils.compose.getWindowScreenSize
-import com.cyxbs.components.view.ui.BottomSheetSceneStrategy
-import com.cyxbs.components.view.ui.BottomSheetSceneStrategy.Companion.Properties
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetSceneStrategy
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetSceneStrategy.Companion.Properties
 import com.cyxbs.pages.map.widget.PlaceDetailBottomSheetContent
 import com.cyxbs.pages.map.widget.SearchBottomSheetContent
 import kotlinx.serialization.Serializable

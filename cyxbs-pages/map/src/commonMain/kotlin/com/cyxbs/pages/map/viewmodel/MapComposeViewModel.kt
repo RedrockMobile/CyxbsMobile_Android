@@ -8,8 +8,8 @@ import androidx.compose.ui.unit.IntSize
 import com.cyxbs.components.account.api.IAccountService
 import com.cyxbs.components.base.ui.BaseViewModel
 import com.cyxbs.components.config.service.impl
-import com.cyxbs.components.view.ui.BottomSheetState
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 import com.cyxbs.pages.map.model.MapDataRepository
 import com.cyxbs.pages.map.model.MapRepository
 import com.cyxbs.pages.map.model.bean.ButtonInfoItem
@@ -205,7 +205,7 @@ abstract class CommonMapComposeViewModel : BaseViewModel() {
     if (hasInitializedFocus) return
     hasInitializedFocus = true
     // 如果初始化时bottomSheet展开的，说明当前是从image页pop回来的，不需要重新focus
-    if (bottomSheetState.state == BottomSheetValueState.Expanded) return
+    if (bottomSheetState.isSettledAt(BottomSheetAnchor.Expanded)) return
     mapInfo.value?.let { mapInfo ->
       mapInfo.placeList.find {
         it.placeId == placeId

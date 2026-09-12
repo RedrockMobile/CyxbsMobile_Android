@@ -44,7 +44,7 @@ import com.cyxbs.components.utils.compose.clickableSingle
 import com.cyxbs.components.utils.compose.dark
 import com.cyxbs.components.utils.compose.getWindowScreenSize
 import com.cyxbs.components.utils.extensions.ImageFromUrlCompose
-import com.cyxbs.components.view.ui.LocalBottomSheetScope
+import com.cyxbs.components.view.ui.bottomsheet.LocalBottomSheetScope
 import com.cyxbs.pages.map.model.bean.PlaceDetails
 import com.cyxbs.pages.map.ui.UploadPhotoDialog
 import com.cyxbs.pages.map.ui.UploadPhotoResult

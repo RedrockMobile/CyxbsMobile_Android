@@ -15,7 +15,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.cyxbs.components.config.login.rememberLoginDialogState
 import com.cyxbs.components.config.time.MinuteTime
 import com.cyxbs.components.config.time.Today
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetMotionState
 import com.cyxbs.pages.course.home.HomeCourseFrame
 import com.cyxbs.pages.course.view.decoration.CoursePageDecorationManager
 import com.cyxbs.pages.course.view.item.CourseItemState
@@ -44,14 +45,17 @@ fun MobileHomeCourseHeader(
 ) {
   Box(modifier = modifier) {
     val headerVisibility by remember(frame) {
-      frame.bottomSheetState.stateFlow.filter {
-        it != BottomSheetValueState.Hide
+      frame.bottomSheetState.motionStateFlow.filter {
+        it !is BottomSheetMotionState.Idle || it.anchor != BottomSheetAnchor.Hidden
       }.map {
         when (it) {
-          BottomSheetValueState.Hide -> error("")
-          BottomSheetValueState.Expanded -> true
-          BottomSheetValueState.Scrolling -> null
-          BottomSheetValueState.Collapsed -> false
+          is BottomSheetMotionState.Idle -> when (it.anchor) {
+            BottomSheetAnchor.Hidden -> error("")
+            BottomSheetAnchor.Collapsed -> false
+            BottomSheetAnchor.Expanded -> true
+          }
+          is BottomSheetMotionState.Dragging,
+          is BottomSheetMotionState.Settling -> null
         }
       }
     }.collectAsState(false)
@@ -59,7 +63,7 @@ fun MobileHomeCourseHeader(
     MobileHomeCourseOuterHeader(
       frame = frame,
       modifier = Modifier.graphicsLayer {
-        alpha = max(1 - frame.bottomSheetState.fraction * 2, 0F)
+        alpha = max(1 - frame.bottomSheetState.expansionFraction * 2, 0F)
       },
     )
     if (headerVisibility != false) { // 展开和滚动时才显示，折叠时需要移除掉，把触摸事件透给 MobileHomeCourseOuterHeader
@@ -69,7 +73,7 @@ fun MobileHomeCourseHeader(
         linkBtnVisibility = true,
         modifier = Modifier.pointerInput(Unit) {/*拦截 MobileHomeCourseOuterHeader 点击事件*/}
           .graphicsLayer {
-            alpha = max(frame.bottomSheetState.fraction * 2 - 1, 0F)
+            alpha = max(frame.bottomSheetState.expansionFraction * 2 - 1, 0F)
           }
       )
     }
@@ -82,7 +86,7 @@ fun MobileHomeCourseHeader(
         frame.pagerState.scrollToPage(frame.initialPage) // beginDate 初始化后跳到 initialPage
       }
       launch {
-        frame.bottomSheetState.stateFlow.first { it == BottomSheetValueState.Expanded }
+        frame.bottomSheetState.awaitSettledAnchor(BottomSheetAnchor.Expanded)
         selectPageJon.cancel() // 如果触发一次展开，则取消回到 initialPage
       }
     }

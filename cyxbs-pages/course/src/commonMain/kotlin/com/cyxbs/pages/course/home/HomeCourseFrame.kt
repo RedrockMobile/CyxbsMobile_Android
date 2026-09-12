@@ -15,13 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.cyxbs.components.view.ui.BottomSheetState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 import com.cyxbs.pages.course.api.IMobileHomeCourseFrame
 import com.cyxbs.pages.course.frame.header.MobileHomeCourseHeader
 import com.cyxbs.pages.course.home.bottomsheet.MobileHomeBottomSheet
 import com.cyxbs.pages.course.home.item.MobileCourseCreateItemFactory
-import com.cyxbs.pages.course.home.item.MobileCourseLinkLessonItemFactory
 import com.cyxbs.pages.course.home.item.MobileCourseLessonItemFactory
+import com.cyxbs.pages.course.home.item.MobileCourseLinkLessonItemFactory
 import com.cyxbs.pages.course.home.item.MobileScheduleItemFactory
 import com.cyxbs.pages.course.view.AbstractCourseFrame
 import com.cyxbs.pages.course.view.HomeCoursePageContent
@@ -102,7 +102,7 @@ private fun MobileHomeCourseFrameContent(
     ) {
       HorizontalPager(
         modifier = Modifier.navigationBarsPadding().fillMaxSize().graphicsLayer {
-          alpha = frame.bottomSheetState.fraction
+          alpha = frame.bottomSheetState.expansionFraction
         },
         state = frame.pagerState,
         pageContent = { page ->

@@ -39,10 +39,10 @@ description: >
 ### `BottomSheetCompose` + `BottomSheetState` — 持久 peek 抽屉
 
 - **触发场景**：需要常驻底部 peek 高度、可拖拽展开的抽屉（如校车线路信息、地图地点详情）
-- **源码位置**：`cyxbs-components/view/src/commonMain/kotlin/com/cyxbs/components/view/ui/BottomSheet.kt`
-- **配套 scene strategy**：`cyxbs-components/view/src/commonMain/.../ui/BottomSheetSceneStrategy.kt`（用于 navigation3 overlay）
+- **源码位置**：`cyxbs-components/view/src/commonMain/kotlin/com/cyxbs/components/view/ui/bottomsheet/BottomSheet.kt`
+- **配套 scene strategy**：`cyxbs-components/view/src/commonMain/.../ui/bottomsheet/BottomSheetSceneStrategy.kt`（用于 navigation3 overlay）
 - **项目内使用示例**：`cyxbs-pages/schoolcar/src/commonMain/.../widget/CarInfoButtonSheet.kt`
-- **说明**：`peekHeight` 控制常驻高度；`expand()` / `collapse()` / `hide()` 三个状态；`bottomSheetDraggable()` 必须挂在 content 内子组件上才能响应拖拽。
+- **说明**：`peekHeight` 控制常驻高度，稳定锚点与拖动/吸附状态分别对外暴露；具体状态 API、等待方式和中途改向语义查看 `BottomSheetState.kt` 的 KDoc。`bottomSheetDraggable()` 必须挂在 content 内子组件上才能响应拖拽。
 - **导航栏适配**：组件支持根据父级剩余 Insets 自动补齐折叠高度、绘制底部占位并避让展开态内容；相关参数为 `navigationBarContent` 和 `navigationBarPaddingInContent`，具体默认值、自定义方式与行为边界请直接查看 `BottomSheet.kt` 中的 KDoc 和源码逻辑。
 
 ### `TodoBottomSheet` — 临时对话框用法（包装模式）
