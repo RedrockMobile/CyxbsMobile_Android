@@ -68,7 +68,7 @@ private fun LoginConstraintSet.loginAnimConstrain() {
 private fun LoginConstraintSet.wh100vInfinity() {
   scope.constrain(title) {
     linkTo(parent.top, parent.bottom)
-    verticalBias = 0.17F
+    verticalBias = 0.19F
     start.linkTo(parent.start, 16.dp)
   }
   scope.constrain(subTitle) {
@@ -76,7 +76,7 @@ private fun LoginConstraintSet.wh100vInfinity() {
     start.linkTo(parent.start, 16.dp)
   }
   scope.constrain(stuNumPassword) {
-    top.linkTo(subTitle.bottom, 8.dp)
+    top.linkTo(subTitle.bottom, 16.dp)
     linkTo(parent.start, parent.end, 16.dp)
     width = Dimension.fillToConstraints
   }
@@ -91,7 +91,7 @@ private fun LoginConstraintSet.wh100vInfinity() {
   scope.constrain(loginBtn) {
     linkTo(parent.start, parent.end, 16.dp, 16.dp)
     linkTo(userAgreement.bottom, parent.bottom, 16.dp, 16.dp)
-    verticalBias = 0.1F
+    verticalBias = 0.2F
     width = Dimension.preferredValue(300.dp)
   }
   scope.constrain(touristMode) {
