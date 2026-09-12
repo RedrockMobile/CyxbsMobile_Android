@@ -38,6 +38,7 @@ class KmpInterfaceImpl: IOSKmpInterface {
         }
     }
 
+    // todo 待移除，已经迁移到了 cmp 页面
     func jumpSportDetail() {
         guard let nav = Self.topNavigationController() else { return }
         let vc = SportAttendanceViewController()

@@ -28,7 +28,6 @@ import com.cyxbs.pages.schedule.api.ScheduleExternalCreateResult
 import com.cyxbs.pages.schedule.api.ScheduleExternalSource
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceKind
 import com.cyxbs.pages.schedule.api.ScheduleOccurrenceTiming
-import com.cyxbs.pages.sport.service.SportIosPlatform
 import com.cyxbs.pages.ufield.fairground.FairgroundIosPlatform
 import com.cyxbs.pages.course.service.CourseIosPlatform
 import com.g985892345.provider.api.annotation.ImplProvider
@@ -152,9 +151,6 @@ interface IOSKmpInterface {
   fun enableUsePlatformToast(): Boolean
   fun toast(s: String, isLong: Boolean)
 
-  /** push 体育打卡详情页（iOS 原生 SportAttendanceViewController） */
-  fun jumpSportDetail()
-
   /** push 没课约（iOS 原生 WeDateVC） */
   fun jumpWeDate()
 
@@ -234,7 +230,6 @@ interface IOSKmpInterface {
 @ImplProvider(IOSHomeViewPager::class)
 @ImplProvider(IOSToast::class)
 @ImplProvider(ConfigApplicationInfo::class)
-@ImplProvider(SportIosPlatform::class)
 @ImplProvider(DiscoverFunctionsIosPlatform::class)
 @ImplProvider(DiscoverIosPlatform::class)
 @ImplProvider(FairgroundIosPlatform::class)
@@ -245,7 +240,6 @@ internal object IOSKmpInterfaceLink :
   IOSHomeViewPager,
   IOSToast,
   ConfigApplicationInfo,
-  SportIosPlatform,
   DiscoverFunctionsIosPlatform,
   DiscoverIosPlatform,
   FairgroundIosPlatform,
@@ -269,10 +263,6 @@ internal object IOSKmpInterfaceLink :
 
   override fun toast(s: String, isLong: Boolean) {
     impl.toast(s, isLong)
-  }
-
-  override fun jumpSportDetail() {
-    impl.jumpSportDetail()
   }
 
   override fun jumpWeDate() {

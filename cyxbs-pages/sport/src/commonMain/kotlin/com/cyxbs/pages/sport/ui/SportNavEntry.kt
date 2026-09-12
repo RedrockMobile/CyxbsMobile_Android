@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -106,7 +108,7 @@ fun SportPage(argument: SportNavArgument) {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
             .background(LocalAppColors.current.bottomBg)
-            .systemBarsPadding(),
+            .statusBarsPadding(),
         constraintSet = createConstraintSet()
     ) {
         val viewModel: SportViewModel = viewModel()
@@ -387,6 +389,7 @@ private fun SportRecord(
             .fillMaxSize()
             .clip(RoundedCornerShape(24.dp))
             .background(0xFFFBFCFF.dark(0xFF1D1D1D))
+            .navigationBarsPadding()
     ) {
         PullToRefresh(
             state = refreshState,
