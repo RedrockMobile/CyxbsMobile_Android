@@ -20,14 +20,6 @@ actual object PlatformDiscoverFunctions : DiscoverFunctions() {
     DiscoverFunctionsIosPlatform::class.implOrNull()?.jumpWeDate() ?: super.clickNoClass()
   }
 
-  override fun clickTodo() {
-    ScheduleMainNavArgument().navigate()
-  }
-
-  override fun clickSport() {
-    DiscoverFunctionsIosPlatform::class.implOrNull()?.jumpSportDetail() ?: super.clickSport()
-  }
-
   override fun clickExam() {
     DiscoverFunctionsIosPlatform::class.implOrNull()?.jumpTestArrange() ?: super.clickExam()
   }

@@ -11,6 +11,8 @@ import com.cyxbs.pages.emptyroom.api.EmptyRoomNavArgument
 import com.cyxbs.pages.map.api.MapNavArgument
 import com.cyxbs.pages.schoolcar.api.SchoolCarNavArgument
 import com.cyxbs.pages.discover.pages.calendar.SchoolCalendarNavArgument
+import com.cyxbs.pages.schedule.api.ScheduleMainNavArgument
+import com.cyxbs.pages.sport.api.SportNavArgument
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover_ic_bus_track
 import cyxbsmobile.cyxbs_pages.discover.generated.resources.discover_ic_empty_classroom
@@ -143,11 +145,11 @@ abstract class DiscoverFunctions {
   }
 
   open fun clickTodo() {
-    toast("该平台未实现")
+    ScheduleMainNavArgument().navigate()
   }
 
   open fun clickSport() {
-    AppScheme.jump("cyxbs://${NAV_SPORT}")
+    SportNavArgument.navigate()
   }
 
   open fun clickExam() {

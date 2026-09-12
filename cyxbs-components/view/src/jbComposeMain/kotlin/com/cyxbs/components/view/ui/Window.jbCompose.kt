@@ -28,6 +28,7 @@ actual fun Window(
       usePlatformInsets = false,
       useSoftwareKeyboardInset = false,
       scrimColor = Color.Transparent,
+      animateTransition = false,
     ),
     content = content
   )

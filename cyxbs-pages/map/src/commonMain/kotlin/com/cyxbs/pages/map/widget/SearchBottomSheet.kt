@@ -8,9 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import com.cyxbs.components.config.Platform
-import com.cyxbs.components.config.appPlatform
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +17,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,14 +32,13 @@ import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.compose.dark
 import com.cyxbs.components.utils.compose.getWindowScreenSize
-import com.cyxbs.components.view.ui.LocalBottomSheetScope
+import com.cyxbs.components.view.ui.bottomsheet.LocalBottomSheetScope
 import com.cyxbs.pages.map.ui.SearchCompose
 import com.cyxbs.pages.map.viewmodel.MapComposeViewModel
 import cyxbsmobile.cyxbs_pages.map.generated.resources.Res
 import cyxbsmobile.cyxbs_pages.map.generated.resources.map_ic_search_clear
 import cyxbsmobile.cyxbs_pages.map.generated.resources.map_ic_search_edit_text_icon
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.vectorResource
 
@@ -83,11 +78,7 @@ fun SearchBottomSheetContent() {
       )
       .background(LocalAppColors.current.topBg)
       .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-      .padding(
-        horizontal = if (appPlatform == Platform.IOS) 20.dp else 16.dp,
-      )
-      .padding(bottom = if (appPlatform == Platform.IOS) 12.dp else 0.dp)
-      .then(if (appPlatform == Platform.Android) Modifier.navigationBarsPadding() else Modifier)
+      .padding(start = 16.dp, end = 16.dp)
   ) {
     Box(
       modifier = Modifier
@@ -117,7 +108,6 @@ fun SearchBottomSheetContent() {
 
 @Composable
 private fun BottomSearchBar(modifier: Modifier = Modifier) {
-  val scope = rememberCoroutineScope()
   val viewmodel = viewModel(MapComposeViewModel::class)
   BasicTextField(
     modifier = modifier

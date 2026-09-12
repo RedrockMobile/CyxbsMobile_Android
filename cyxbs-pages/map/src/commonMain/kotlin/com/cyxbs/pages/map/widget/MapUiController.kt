@@ -7,8 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
-import com.cyxbs.components.view.ui.BottomSheetState
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 import com.cyxbs.pages.map.model.bean.MapInfo
 import com.cyxbs.pages.map.util.calculatePlaceInMap
 import kotlinx.coroutines.CoroutineScope
@@ -249,7 +249,7 @@ class MapUiController(
               launch {
                 updateMainAnchorState(realOffset, true)
               }
-              if (bottomSheetState.state == BottomSheetValueState.Hide) {
+              if (bottomSheetState.isSettledAt(BottomSheetAnchor.Hidden)) {
                 bottomSheetState.collapseAsync()
               }
             } else {

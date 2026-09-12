@@ -1,6 +1,6 @@
-package com.cyxbs.components.view.ui
+package com.cyxbs.components.view.ui.bottomsheet
 
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -29,7 +29,7 @@ import com.cyxbs.components.navigation.AppNavArgument
  * - **复用外部 [BottomSheetState]**：通过 [Properties.stateProvider] 注入由业务持有的 state，
  *   而非在 Scene 内部新建。这样地图等场景里 controller 对同一个 state 的 collapse/expand/hide
  *   联动逻辑无需改动。
- * - **出栈语义**：只有当 state 进入 [BottomSheetValueState.Hide]（彻底隐藏 / 拖到底）时才调用
+ * - **出栈语义**：只有当 state 稳定到达 [BottomSheetAnchor.Hidden]（彻底隐藏 / 拖到底）时才调用
  *   [SceneStrategyScope.onBack] 出栈；collapse / 露出 peek 不出栈。
  * - **退场动画**：出栈时 [OverlayScene.onRemove] 会先 `hide()` 播放收起动画，再离开组合。
  *
@@ -69,13 +69,25 @@ class BottomSheetSceneStrategy<T : AppNavArgument> : SceneStrategy<T> {
        */
       val stateProvider: @Composable () -> BottomSheetState?,
       val peekHeight: Dp = 0.dp,
+      /**
+       * 父级剩余 navBar 区域的占位内容，会在折叠和展开状态时进行 navBar 的占位。
+       * 默认使用 `LocalAppColors.topBg`，传入 {} 可保留高度但保持透明，传 null 则关闭导航栏适配，由调用方自行兼容。
+       */
+      val navigationBarContent: (@Composable BoxScope.() -> Unit)? = {
+        DefaultBottomSheetNavigationBarContent()
+      },
+      /**
+       * 是否对展开的内容应用 `navigationBarsPadding()`，
+       * 默认在 [navigationBarContent] 非 null 时开启；业务已自行处理时传 false。
+       */
+      val navigationBarPaddingInContent: Boolean = navigationBarContent != null,
       val expandOnShow: Boolean = false, // 出现时是否展开到最大高度
       val dismissOnBackPress: Boolean = true, // 是否让 BottomSheetCompose 自己处理返回键
       val dismissOnClickOutside: Boolean = false, // 点击 sheet 外部区域是否 dismiss
       val scrimColor: Color = Color.Transparent, // 背景遮罩颜色
-      val modifier: Modifier = Modifier.navigationBarsPadding(),
+      val modifier: Modifier = Modifier,
       /**
-       * 是否在 state 进入 [BottomSheetValueState.Hide] 时自动出栈。
+       * 是否在 state 稳定到达 [BottomSheetAnchor.Hidden] 时自动出栈。
        * 默认 true
        * 若由业务自行管理 entry 的进出栈（如需要稳定 z-order 的多 sheet 叠加场景），可设为 false。
        */
@@ -135,6 +147,8 @@ private class BottomSheetScene<T : AppNavArgument>(
         bottomSheetState = state,
         modifier = properties.modifier,
         peekHeight = properties.peekHeight,
+        navigationBarContent = properties.navigationBarContent,
+        navigationBarPaddingInContent = properties.navigationBarPaddingInContent,
         dismissOnBackPress = properties.dismissOnBackPress,
         dismissOnClickOutside = properties.dismissOnClickOutside,
         scrimColor = properties.scrimColor
@@ -157,8 +171,8 @@ private class BottomSheetScene<T : AppNavArgument>(
       if (properties.popOnHide) {
         LaunchedEffect(state) {
           var hasShown = false
-          state.stateFlow.collect { value ->
-            if (value != BottomSheetValueState.Hide) {
+          state.settledAnchorFlow.collect { value ->
+            if (value != BottomSheetAnchor.Hidden) {
               hasShown = true
             } else if (hasShown) {
               onBack()

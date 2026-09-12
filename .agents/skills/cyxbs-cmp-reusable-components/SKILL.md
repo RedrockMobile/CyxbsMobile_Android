@@ -14,9 +14,12 @@ description: >
 
 # CyxbsMobile CMP 迁移 - 可复用组件与模式库
 
-> **维护原则**：每次做完一个 CMP 迁移任务、发现项目里有可复用组件时，应在对应分类下追加，
-> 让下一个做迁移的 AI 直接复用，而不是重复造轮子或引入第三方库。
-> 追加时按「触发场景 / 源码位置 / 简要说明」三段式。
+## 维护指引
+
+- 完成 CMP 迁移、发现项目内可复用的组件或踩到值得复用的关键坑时，应及时追加，让后续 AI 优先复用已有实现。
+- 本 skill 只作为能力索引：记录组件能解决的问题、源码位置和无法从命名推断的关键坑；参数默认值、完整 API、实现步骤与边界行为统一查看源码 KDoc。单项说明原则上不超过 1～2 句，避免复制源码文档。
+- 只有复杂且常用的能力才单独建立编号分类，并按「触发场景 / 源码位置 / 简要说明」组织；其余内容放入文末「其他待补充」，使用一行说明「名称 + 全限定名或路径 + 用途 + 关键坑或示例」。
+- 修改本文档时使用 `Edit` 工具，不要通过新建项目内 skill 拆散内容；只有经验能够跨项目通用时，才在 `~/.claude/skills/` 新建独立 skill。
 
 ---
 
@@ -36,11 +39,11 @@ description: >
 ### `BottomSheetCompose` + `BottomSheetState` — 持久 peek 抽屉
 
 - **触发场景**：需要常驻底部 peek 高度、可拖拽展开的抽屉（如校车线路信息、地图地点详情）
-- **源码位置**：`cyxbs-components/view/src/commonMain/kotlin/com/cyxbs/components/view/ui/BottomSheet.kt`
-- **配套 scene strategy**：`cyxbs-components/view/src/commonMain/.../ui/BottomSheetSceneStrategy.kt`（用于 navigation3 overlay）
+- **源码位置**：`cyxbs-components/view/src/commonMain/kotlin/com/cyxbs/components/view/ui/bottomsheet/BottomSheet.kt`
+- **配套 scene strategy**：`cyxbs-components/view/src/commonMain/.../ui/bottomsheet/BottomSheetSceneStrategy.kt`（用于 navigation3 overlay）
 - **项目内使用示例**：`cyxbs-pages/schoolcar/src/commonMain/.../widget/CarInfoButtonSheet.kt`
-- **说明**：`peekHeight` 控制常驻高度；`expand()` / `collapse()` / `hide()` 三个状态；`bottomSheetDraggable()` 必须挂在 content 内子组件上才能响应拖拽。
-- **安全区**：`BottomSheetSceneStrategy.Properties` 默认在外壳应用 `navigationBarsPadding()`，折叠态也会避开系统导航栏。不要仅在整张可滑动内容底部加 padding 后将外壳设为 `Modifier`：折叠只露出顶部 `peekHeight`，内容末尾的 padding 会随其滑到屏幕外，无法保护 peek 区域。
+- **说明**：`peekHeight` 控制常驻高度，稳定锚点与拖动/吸附状态分别对外暴露；具体状态 API、等待方式和中途改向语义查看 `BottomSheetState.kt` 的 KDoc。`bottomSheetDraggable()` 必须挂在 content 内子组件上才能响应拖拽。
+- **导航栏适配**：组件支持根据父级剩余 Insets 自动补齐折叠高度、绘制底部占位并避让展开态内容；相关参数为 `navigationBarContent` 和 `navigationBarPaddingInContent`，具体默认值、自定义方式与行为边界请直接查看 `BottomSheet.kt` 中的 KDoc 和源码逻辑。
 
 ### `TodoBottomSheet` — 临时对话框用法（包装模式）
 
@@ -103,7 +106,7 @@ description: >
   - **`defaultSettings`**（`SpTable.kt`）：设备维度的通用 KV。通用 key 放这里，命名规范 `SP_模块名_作用名`（如果跨模块使用 key 常量需写在 `SpTable.kt` 中，模块内使用则命名不要太简单以防止重复）。
   - **`accountSettings` / `AccountSettings.get(stuNum)`**：按**当前登录人/指定学号**区分的 KV（未登录 stuNum 为 null）。需要随账号隔离的数据用它。
   - **业务独用命名空间**：用 `PreferencesSettings.get(key)` 拿一块独立命名空间；`AccountSettings` 就是继承 `PreferencesSettings` 按学号区分的范例。
-  - **坑（务必注意）**：**桌面端 JDK `Preferences` 单个 value 有 8192 字节长度上限**，超长会抛异常。长数据（大 JSON、列表）必须**分段保存**——范例 `SplitSettingsTodoLocalDataSource.kt` + `TodoSettingsKeys.kt`（按 chunk index 分片存 + 索引分片）。
+  - **坑（务必注意）**：**桌面端 JDK `Preferences` 单个 value 有 8192 字节长度上限**，超长会抛异常。长数据（大 JSON、列表）建议使用 FileKit 保存到本地文件，或者按字段分段存储。
 
 ---
 
@@ -121,22 +124,3 @@ description: >
 - **点击无涟漪**：`com.cyxbs.components.utils.compose.clickableNoIndicator { ... }`。
 - **对勾动画**：`cyxbs-pages/todo/src/commonMain/.../ui/main/CheckLineCompose.kt`（Canvas + Animatable 复刻老端 `CheckLineView`）。
 - **教学周 / 学期日期**：`com.cyxbs.components.config.time.SchoolCalendar`（commonMain object）—— `getWeekOfTerm()` 当前教学周、`getFirstMonDay()` 开学第一天；配 `Num2CN.number2ChineseNumber()` 转中文。示例 `TodoWeekHeader.kt`。
-
----
-
-## 维护指引（给未来 AI 的）
-
-### 何时追加
-- 做完一个 CMP 迁移任务
-- 发现项目里已有可复用的 Composable / Modifier 扩展 / 工具函数
-- 或者踩过某个坑（依赖、参数类型、动画时序）下次不想再踩
-
-### 如何追加
-1. **判断放哪**：只有**复杂且常用**的东西（不限 UI 组件——对话框 / 底部弹窗 / 日历 / 滚轮等组件，也包括 KV 存储这类常用基础设施）才单独列编号标题分类；其余一律放进文末「其他待补充」，一行 bullet 即可，细节让后续 AI 自己看类方法，别在文档里堆全量 API。
-2. 单独分类按三段式写：**触发场景 / 源码位置 / 简要说明**；「其他待补充」里只写「名称：全限定名 + 一句话作用 + 关键坑 + 示例路径」。
-3. 用 `Edit` 工具在本文件对应位置追加
-4. **不要新建 skill**，避免 skill 泛滥
-
-### 何时新建 skill
-- 只有当经验**跨项目通用**（不限于 CyxbsMobile）时，才在 `~/.claude/skills/` 新建
-- 项目内特定经验永远放在本文件

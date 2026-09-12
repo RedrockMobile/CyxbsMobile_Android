@@ -12,9 +12,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import com.cyxbs.components.config.login.rememberLoginDialogState
 import com.cyxbs.components.config.time.MinuteTime
 import com.cyxbs.components.config.time.Today
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetMotionState
 import com.cyxbs.pages.course.home.HomeCourseFrame
 import com.cyxbs.pages.course.view.decoration.CoursePageDecorationManager
 import com.cyxbs.pages.course.view.item.CourseItemState
@@ -28,6 +30,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.math.max
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * 主页课表头，分为折叠时的外课表头与展开时的内课表头
@@ -42,14 +45,17 @@ fun MobileHomeCourseHeader(
 ) {
   Box(modifier = modifier) {
     val headerVisibility by remember(frame) {
-      frame.bottomSheetState.stateFlow.filter {
-        it != BottomSheetValueState.Hide
+      frame.bottomSheetState.motionStateFlow.filter {
+        it !is BottomSheetMotionState.Idle || it.anchor != BottomSheetAnchor.Hidden
       }.map {
         when (it) {
-          BottomSheetValueState.Hide -> error("")
-          BottomSheetValueState.Expanded -> true
-          BottomSheetValueState.Scrolling -> null
-          BottomSheetValueState.Collapsed -> false
+          is BottomSheetMotionState.Idle -> when (it.anchor) {
+            BottomSheetAnchor.Hidden -> error("")
+            BottomSheetAnchor.Collapsed -> false
+            BottomSheetAnchor.Expanded -> true
+          }
+          is BottomSheetMotionState.Dragging,
+          is BottomSheetMotionState.Settling -> null
         }
       }
     }.collectAsState(false)
@@ -57,7 +63,7 @@ fun MobileHomeCourseHeader(
     MobileHomeCourseOuterHeader(
       frame = frame,
       modifier = Modifier.graphicsLayer {
-        alpha = max(1 - frame.bottomSheetState.fraction * 2, 0F)
+        alpha = max(1 - frame.bottomSheetState.expansionFraction * 2, 0F)
       },
     )
     if (headerVisibility != false) { // 展开和滚动时才显示，折叠时需要移除掉，把触摸事件透给 MobileHomeCourseOuterHeader
@@ -67,7 +73,7 @@ fun MobileHomeCourseHeader(
         linkBtnVisibility = true,
         modifier = Modifier.pointerInput(Unit) {/*拦截 MobileHomeCourseOuterHeader 点击事件*/}
           .graphicsLayer {
-            alpha = max(frame.bottomSheetState.fraction * 2 - 1, 0F)
+            alpha = max(frame.bottomSheetState.expansionFraction * 2 - 1, 0F)
           }
       )
     }
@@ -80,7 +86,7 @@ fun MobileHomeCourseHeader(
         frame.pagerState.scrollToPage(frame.initialPage) // beginDate 初始化后跳到 initialPage
       }
       launch {
-        frame.bottomSheetState.stateFlow.first { it == BottomSheetValueState.Expanded }
+        frame.bottomSheetState.awaitSettledAnchor(BottomSheetAnchor.Expanded)
         selectPageJon.cancel() // 如果触发一次展开，则取消回到 initialPage
       }
     }
@@ -96,32 +102,42 @@ private fun MobileHomeCourseOuterHeader(
   modifier: Modifier,
   frame: HomeCourseFrame,
 ) {
-  val headerState = remember(frame) { mutableStateOf<CourseBottomSheetHeaderExtension>(EmptyHeader) }
-  key(headerState.value) {
-    headerState.value.CourseBottomSheetHeaderContent(modifier)
-  }
-  val decorationManager = CoursePageDecorationManager.current
-  LaunchedEffect(frame) {
-    frame.beginDate.filterNotNull().collectLatest { beginDate ->
-      snapshotFlow { Today }.collectLatest { today ->
-        if (today < beginDate) {
-          headerState.value = HolidayHeader
-        } else {
-          val page = frame.getPage(today)
-          if (page == null) {
+  val login = rememberLoginDialogState()
+  login.doIfLoginNotShowDialog {
+    val headerState = remember(frame) {
+      mutableStateOf<CourseBottomSheetHeaderExtension>(EmptyHeader)
+    }
+    key(headerState.value) {
+      headerState.value.CourseBottomSheetHeaderContent(modifier)
+    }
+    val decorationManager = CoursePageDecorationManager.current
+    LaunchedEffect(frame) {
+      frame.beginDate.filterNotNull().collectLatest { beginDate ->
+        snapshotFlow { Today }.collectLatest { today ->
+          if (today < beginDate) {
             headerState.value = HolidayHeader
           } else {
-            delay(500) // 防止上游数据因为首次加载的抖动
-            decorationManager.nextItemFlow.collectLatest {
-              headerState.value = if (it == null) NoLessonHeader else {
-                // MobileCourseNextSearch 保证返回的一定是 CourseBottomSheetHeaderExtension 类型
-                it.item.extensions.get(CourseBottomSheetHeaderExtension::class)!!
+            val page = frame.getPage(today)
+            if (page == null) {
+              headerState.value = HolidayHeader
+            } else {
+              delay(500.milliseconds) // 防止上游数据因为首次加载的抖动
+              decorationManager.nextItemFlow.collectLatest {
+                headerState.value = if (it == null) NoLessonHeader else {
+                  // MobileCourseNextSearch 保证返回的一定是 CourseBottomSheetHeaderExtension 类型
+                  it.item.extensions.get(CourseBottomSheetHeaderExtension::class)!!
+                }
               }
             }
           }
         }
       }
     }
+  }.doIfNotLogin {
+    HintCourseBottomSheetHeader("登录后才可查看课表") {
+      // 点击事件
+      showDialog("课表")
+    }.CourseBottomSheetHeaderContent(modifier)
   }
 }
 

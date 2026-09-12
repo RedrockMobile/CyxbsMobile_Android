@@ -4,7 +4,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import com.cyxbs.components.view.ui.BottomSheetState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 
 /**
  * 主页课表框架

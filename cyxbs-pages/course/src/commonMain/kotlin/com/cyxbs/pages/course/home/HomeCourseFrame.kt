@@ -15,13 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.cyxbs.components.view.ui.BottomSheetState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 import com.cyxbs.pages.course.api.IMobileHomeCourseFrame
 import com.cyxbs.pages.course.frame.header.MobileHomeCourseHeader
 import com.cyxbs.pages.course.home.bottomsheet.MobileHomeBottomSheet
 import com.cyxbs.pages.course.home.item.MobileCourseCreateItemFactory
-import com.cyxbs.pages.course.home.item.MobileCourseLinkLessonItemFactory
 import com.cyxbs.pages.course.home.item.MobileCourseLessonItemFactory
+import com.cyxbs.pages.course.home.item.MobileCourseLinkLessonItemFactory
 import com.cyxbs.pages.course.home.item.MobileScheduleItemFactory
 import com.cyxbs.pages.course.view.AbstractCourseFrame
 import com.cyxbs.pages.course.view.HomeCoursePageContent
@@ -94,15 +94,15 @@ private fun MobileHomeCourseFrameContent(
     LocalCourseItemBottomSheetDialog provides itemBottomSheetDialog
   ) {
     MobileHomeBottomSheet(
-      // 与首页底导消费相同的剩余安全区，避免 iOS 的原始 inset 再次计入折叠高度。
-      modifier = modifier.statusBarsPadding().navigationBarsPadding(),
+      modifier = modifier.statusBarsPadding(),
       frame = frame,
+      // 这里只传业务底导高度，父级未消费的系统导航栏由 BottomSheetCompose 自动补入。
       peekHeightExtra = frame.bottomBarHeightState.value,
       header = { MobileHomeCourseHeader(modifier = Modifier, frame = frame) },
     ) {
       HorizontalPager(
-        modifier = Modifier.fillMaxSize().graphicsLayer {
-          alpha = frame.bottomSheetState.fraction
+        modifier = Modifier.navigationBarsPadding().fillMaxSize().graphicsLayer {
+          alpha = frame.bottomSheetState.expansionFraction
         },
         state = frame.pagerState,
         pageContent = { page ->

@@ -33,9 +33,6 @@ class KmpInterfaceImpl: IOSKmpInterface {
     // 以下跳转方法是 multiplatform 独立测试 stub 的空实现，与 pro/iosApp 的 KmpInterfaceImpl
     // 不同：这里不接 bridging-header / 业务 VC，只满足 IOSKmpInterface 协议。
 
-    func jumpSportDetail() {
-    }
-
     func jumpWeDate() {
     }
 

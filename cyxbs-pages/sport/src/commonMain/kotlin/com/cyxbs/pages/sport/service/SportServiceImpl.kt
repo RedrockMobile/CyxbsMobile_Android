@@ -20,11 +20,7 @@ object SportServiceImpl : ISportService {
     override fun SportFeed(modifier: Modifier) {
         SportFeedComposable(
             modifier = modifier,
-            onJumpDetail = { jumpSportDetail() },
+            onJumpDetail = { SportNavArgument.navigate() },
         )
     }
-}
-
-internal fun jumpSportDetail() {
-    SportNavArgument.navigate()
 }

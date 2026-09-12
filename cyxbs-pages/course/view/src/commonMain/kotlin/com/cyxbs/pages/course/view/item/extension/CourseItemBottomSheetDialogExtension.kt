@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -55,9 +55,10 @@ import com.cyxbs.components.utils.compose.LocalImePaddingTargetState
 import com.cyxbs.components.utils.compose.imePaddingWithTarget
 import com.cyxbs.components.utils.compose.plusDsl
 import com.cyxbs.components.utils.compose.rememberImePaddingTargetState
-import com.cyxbs.components.view.ui.BottomSheetCompose
-import com.cyxbs.components.view.ui.BottomSheetState
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetCompose
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetMotionState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetState
 import com.cyxbs.components.view.ui.Window
 import com.cyxbs.pages.course.view.item.CourseItemState
 import com.cyxbs.pages.course.view.item.modifier.BeginFinalTimeShowModifier
@@ -269,7 +270,6 @@ private fun OffsetScroll(
     val initScrollValue = scrollContext.scrollState.value
     var settledBaseScrollValue = initScrollValue
     var hasSettledBaseScroll = false
-    var lastSettledState = state.bottomSheetState.state
 
     /**
      * 返回未施加弹窗避让时的课表滚动位置。
@@ -394,70 +394,77 @@ private fun OffsetScroll(
       }
     }
 
-    state.bottomSheetState.stateFlow.collectLatest { bottomSheetState ->
-      when (bottomSheetState) {
-        BottomSheetValueState.Scrolling -> {
-          if (lastSettledState == BottomSheetValueState.Expanded) {
-            // 关闭时不再读取 Item；仅按照 BottomSheet 收起进度还原已经施加的偏移。
-            val startFraction = state.bottomSheetState.fraction.coerceAtLeast(0F)
-            val startOffset = currentOffset()
-            if (startFraction == 0F) {
-              applyOffset(0F)
-            } else {
-              snapshotFlow { state.bottomSheetState.fraction }.collect { fraction ->
-                applyOffset(startOffset * (fraction / startFraction).coerceIn(0F, 1F))
-              }
+    /** 按当前运动方向同步课程 Item 避让，改向时由 collectLatest 取消上一方向的观察。 */
+    suspend fun observeMotion(closing: Boolean) {
+      if (closing) {
+        // 关闭时不再读取 Item；仅按照 BottomSheet 收起进度还原已经施加的偏移。
+        val startFraction = state.bottomSheetState.expansionFraction.coerceAtLeast(0F)
+        val startOffset = currentOffset()
+        if (startFraction == 0F) {
+          applyOffset(0F)
+        } else {
+          snapshotFlow { state.bottomSheetState.expansionFraction }.collect { fraction ->
+            applyOffset(startOffset * (fraction / startFraction).coerceIn(0F, 1F))
+          }
+        }
+      } else {
+        // 打开期间同时跟随 BottomSheet 与时间轴动画，动画结束后立即停止观察。
+        layoutTopOnScreenFlow.combine(
+          state.currentPageItemFlow.filterNotNull()
+            .flatMapLatest { extension ->
+              extension.itemState.observeItemRectOnScreen(forceCalculate = true)
+                .map { rect ->
+                  // 排除本逻辑自身施加的滚动与 margin，防止坐标反馈造成上下闪动；
+                  // 时间轴展开改变的真实布局坐标仍会保留。
+                  rect.translate(
+                    translateX = 0F,
+                    translateY = (
+                      marginBottomState.getOrElse(marginBottomKey) { 0 } +
+                          scrollContext.scrollState.value - baseScrollValue()
+                      ).toFloat(),
+                  )
+                }
             }
-          } else {
-            // 打开期间同时跟随 BottomSheet 与时间轴动画，动画结束后立即停止观察。
+        ) { layoutTopOnScreen, itemRectOnScreen ->
+          calculateTargetOffset(itemRectOnScreen, layoutTopOnScreen)
+        }.collect { applyOffset(it) }
+      }
+    }
+
+    state.bottomSheetState.motionStateFlow.collectLatest { motionState ->
+      when (motionState) {
+        is BottomSheetMotionState.Dragging -> {
+          observeMotion(closing = motionState.originAnchor == BottomSheetAnchor.Expanded)
+        }
+        is BottomSheetMotionState.Settling -> {
+          // 改向时以新目标为准，而不是继续沿用整条运动链的初始锚点。
+          observeMotion(closing = motionState.targetAnchor != BottomSheetAnchor.Expanded)
+        }
+        is BottomSheetMotionState.Idle -> when (motionState.anchor) {
+          BottomSheetAnchor.Expanded -> {
+            trySettleBaselineAfterOpening()
+            var currentItem = state.currentPageItemFlow.value
+            // 弹窗内容高度变化时直接逐帧同步偏移；只有 Pager 切换 Item 时才使用独立动画。
+            // combine 会在切换动画期间合并最新的弹窗坐标，动画完成后再按最终高度立即校准。
             layoutTopOnScreenFlow.combine(
               state.currentPageItemFlow.filterNotNull()
-                .flatMapLatest { extension ->
-                  extension.itemState.observeItemRectOnScreen(forceCalculate = true)
-                    .map { rect ->
-                      // 排除本逻辑自身施加的滚动与 margin，防止坐标反馈造成上下闪动；
-                      // 时间轴展开改变的真实布局坐标仍会保留。
-                      rect.translate(
-                        translateX = 0F,
-                        translateY = (
-                          marginBottomState.getOrElse(marginBottomKey) { 0 } +
-                              scrollContext.scrollState.value - baseScrollValue()
-                          ).toFloat(),
-                      )
-                    }
-                }
-            ) { layoutTopOnScreen, itemRectOnScreen ->
-              calculateTargetOffset(itemRectOnScreen, layoutTopOnScreen)
-            }.collect { applyOffset(it) }
-          }
-        }
-
-        BottomSheetValueState.Expanded -> {
-          lastSettledState = BottomSheetValueState.Expanded
-          trySettleBaselineAfterOpening()
-          var currentItem = state.currentPageItemFlow.value
-          // 弹窗内容高度变化时直接逐帧同步偏移；只有 Pager 切换 Item 时才使用独立动画。
-          // combine 会在切换动画期间合并最新的弹窗坐标，动画完成后再按最终高度立即校准。
-          layoutTopOnScreenFlow.combine(
-            state.currentPageItemFlow.filterNotNull()
-          ) { layoutTopOnScreen, item ->
-            layoutTopOnScreen to item
-          }.collect { (layoutTopOnScreen, item) ->
-            val targetOffset = item.calculateTargetOffsetOnce(layoutTopOnScreen)
-            if (item === currentItem) {
-              applyOffset(targetOffset)
-            } else {
-              currentItem = item
-              animateOffset(targetOffset)
+            ) { layoutTopOnScreen, item ->
+              layoutTopOnScreen to item
+            }.collect { (layoutTopOnScreen, item) ->
+              val targetOffset = item.calculateTargetOffsetOnce(layoutTopOnScreen)
+              if (item === currentItem) {
+                applyOffset(targetOffset)
+              } else {
+                currentItem = item
+                animateOffset(targetOffset)
+              }
             }
           }
-        }
-
-        BottomSheetValueState.Collapsed,
-        BottomSheetValueState.Hide -> {
-          lastSettledState = bottomSheetState
-          if (currentOffset() != 0F) {
-            applyOffset(0F)
+          BottomSheetAnchor.Collapsed,
+          BottomSheetAnchor.Hidden -> {
+            if (currentOffset() != 0F) {
+              applyOffset(0F)
+            }
           }
         }
       }
@@ -475,10 +482,12 @@ private fun OffsetScroll(
 private fun BottomSheet(
   state: CourseItemBottomSheetDialogState,
 ) {
+  val bottomSheetBackgroundColor = LocalAppColors.current.whiteBlack
   BottomSheetCompose(
     bottomSheetState = state.bottomSheetState,
     dismissOnClickOutside = true,
     scrimColor = Color.Transparent,
+    navigationBarContent = { Spacer(Modifier.fillMaxSize().background(bottomSheetBackgroundColor)) }
   ) {
     val currentPageLocked by state.currentPageLockedFlow.collectAsState()
     val layoutTopOnScreenFlow = remember {
@@ -488,7 +497,6 @@ private fun BottomSheet(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
       )
     }
-    val bottomSheetBackgroundColor = LocalAppColors.current.whiteBlack
     val shadowHeightPx = with(LocalDensity.current) { 36.dp.toPx() }
     val shadowBrush = remember(shadowHeightPx) {
       // 阴影高度固定，仅在 density 变化时重建 Brush，内容尺寸动画不会产生重复分配。
@@ -517,7 +525,7 @@ private fun BottomSheet(
             size = Size(size.width, fillHeight),
             cornerRadius = CornerRadius(radius),
           )
-          // 只保留顶部圆角，底部继续铺满导航栏区域。
+          // 只保留顶部圆角；导航栏区域由 navigationBarContent 使用相同颜色补齐。
           if (fillHeight > radius) {
             drawRect(
               color = bottomSheetBackgroundColor,
@@ -526,7 +534,6 @@ private fun BottomSheet(
             )
           }
         }
-        .navigationBarsPadding()
         .fillMaxWidth()
         .then(
           if (currentPageLocked) Modifier.heightIn(min = DefaultCourseBottomSheetHeight)
@@ -553,10 +560,10 @@ private fun BottomSheet(
   LaunchedEffect(Unit) {
     try {
       state.bottomSheetState.expandSuspend()
-    } catch (e: CancellationException) {
+    } catch (_: CancellationException) {
       // 在展开动画时用户可能快速点击空白区域触发 collapse()，这里就会抛出 CancellationException
     }
-    state.bottomSheetState.stateFlow.first { it == BottomSheetValueState.Collapsed }
+    state.bottomSheetState.awaitSettledAnchor(BottomSheetAnchor.Collapsed)
     state.dismissDialog()
   }
 }
@@ -588,7 +595,7 @@ private fun ShowBeginFinalTime(
       if (!isLockWhenBegin) {
         // 如果最开始已经锁定，说明已经在展示开始结束时间了，那就不主动关联上透明度变化
         BeginFinalTimeShowModifier.alphaState.get(itemState).floatValue = 0F
-        snapshotFlow { state.bottomSheetState.fraction.coerceIn(0F, 1F) }.collect {
+        snapshotFlow { state.bottomSheetState.expansionFraction.coerceIn(0F, 1F) }.collect {
           BeginFinalTimeShowModifier.alphaState.get(itemState).floatValue = it
         }
       }
@@ -636,7 +643,7 @@ private fun CurrentItemShowTop(
       // 因为底部弹窗关闭时存在动画，导致需要一定时间才会触发 onCompletion 的 reset
       // 所以单独监听滚动距离来检测是否需要 reset
       // todo 后续想办法修下这个弹窗关闭动画过长的问题
-      snapshotFlow { state.bottomSheetState.fraction.coerceIn(0F, 1F) }.collect {
+      snapshotFlow { state.bottomSheetState.expansionFraction.coerceIn(0F, 1F) }.collect {
         if (it < 0.2F) reset() else setItem()
       }
     }

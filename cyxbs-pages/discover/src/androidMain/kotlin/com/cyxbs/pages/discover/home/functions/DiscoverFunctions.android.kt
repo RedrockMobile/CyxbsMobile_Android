@@ -40,7 +40,7 @@ actual object PlatformDiscoverFunctions : DiscoverFunctions() {
   }
 
   override fun clickTodo() {
-    ScheduleMainNavArgument().navigate()
+    super.clickTodo()
     TrackingUtils.trackClickEvent2(ClickEvent.CLICK_YZQD_ENTRY)
   }
 

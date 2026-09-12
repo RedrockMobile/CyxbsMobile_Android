@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.cyxbs.components.config.compose.theme.LocalAppColors
 import com.cyxbs.components.utils.compose.clickableNoIndicator
 import com.cyxbs.components.utils.compose.dark
-import com.cyxbs.components.view.ui.BottomSheetCompose
-import com.cyxbs.components.view.ui.BottomSheetValueState
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetAnchor
+import com.cyxbs.components.view.ui.bottomsheet.BottomSheetCompose
 import com.cyxbs.pages.course.home.HomeCourseFrame
 
 /**
@@ -44,6 +44,10 @@ fun MobileHomeBottomSheet(
     bottomSheetState = frame.bottomSheetState,
     scrimColor = Color.Transparent,
     peekHeight = frame.peekHeightState.value + peekHeightExtra,
+    navigationBarContent = {
+      // 课表底部导航栏由底导遮挡，这里只保留折叠高度，不额外绘制背景。
+    },
+    navigationBarPaddingInContent = false, // 课表内部处理展开态导航栏避让。
   ) {
     CourseBottomSheetBackground(
       headerHeight = frame.peekHeightState.value
@@ -52,7 +56,7 @@ fun MobileHomeBottomSheet(
         Box(
           modifier = Modifier.fillMaxWidth().height(frame.peekHeightState.value)
             .then(bottomSheetDraggable()).clickableNoIndicator {
-              if (frame.bottomSheetState.state == BottomSheetValueState.Collapsed) {
+              if (frame.bottomSheetState.isSettledAt(BottomSheetAnchor.Collapsed)) {
                 frame.bottomSheetState.expandAsync()
               }
             }
