@@ -3,6 +3,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.launchApplication
 import androidx.compose.ui.window.rememberWindowState
+import com.cyxbs.components.base.webview.DesktopApplicationExit
+import com.cyxbs.components.base.webview.bindDesktopWebViewApplicationExit
+import com.cyxbs.components.base.webview.initializeDesktopWebViewRuntime
+import com.cyxbs.components.base.webview.prepareDesktopWebViewComposeInterop
 import com.cyxbs.components.config.ConfigApplicationInfo
 import com.cyxbs.components.config.compose.theme.AppTheme
 import com.cyxbs.components.config.init.InitialManager
@@ -24,21 +28,20 @@ import org.jetbrains.compose.resources.painterResource
  */
 
 fun main() {
-//  prepareDesktopWebViewComposeInterop() // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+  prepareDesktopWebViewComposeInterop()
   runApp {
     MultiplatformKtProviderInitializer.tryInitKtProvider()
     InitialManager.init(isMainProcess = true)
     FileKit.init(appId = "com.mredrock.cyxbs")
-//    initializeDesktopWebViewRuntime() // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
+    initializeDesktopWebViewRuntime()
     launchApplication {
-//      remember { // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
-//        bindDesktopWebViewApplicationExit(::exitApplication)
-//      }
+      remember {
+        bindDesktopWebViewApplicationExit(::exitApplication)
+      }
       val width = 900
       val height = 600
       Window(
-//        onCloseRequest = ::requestDesktopWebViewApplicationExit, // todo @zengzhaoxing 后续修护 desktop 上的 webView 接入问题
-        onCloseRequest = ::exitApplication,
+        onCloseRequest = DesktopApplicationExit::requestExit,
         title = "桌上重邮",
         state = rememberWindowState(width = width.dp, height = height.dp),
         icon = painterResource(ConfigRes.configIcAppLogo())

@@ -2,6 +2,8 @@ package com.cyxbs.components.base.webview
 
 import io.github.multiweb.compose.DesktopWebViewRuntime
 import me.friwi.jcefmaven.CefAppBuilder
+import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
+import javax.swing.SwingUtilities
 import java.io.File
 
 /** 在创建 Compose Desktop 应用前准备 macOS windowed JCEF 所需的 Swing 互操作层。 */
@@ -15,7 +17,7 @@ fun initializeDesktopWebViewRuntime() {
     setInstallDir(File(System.getProperty("user.home"), ".cyxbs/jcef"))
     configureCefUserDataDirectory()
     addJcefArgs("--autoplay-policy=no-user-gesture-required")
-    setAppHandler(DesktopWebViewRuntime.createMacOsTerminationHandler())
+    setAppHandler(createDesktopApplicationTerminationHandler())
   }.build()
   DesktopWebViewRuntime.initialize(cefApp)
 }
@@ -25,9 +27,21 @@ fun bindDesktopWebViewApplicationExit(onApplicationExit: () -> Unit) {
   DesktopWebViewRuntime.bindApplicationExit(onApplicationExit)
 }
 
-/** 请求退出 Desktop 应用；MultiWeb 会等待所有浏览器和 CEF 正常终止。 */
+/** 请求退出 Desktop 应用；业务检查通过后，MultiWeb 等待浏览器和 CEF 正常终止。 */
 fun requestDesktopWebViewApplicationExit() {
-  DesktopWebViewRuntime.requestApplicationExit()
+  DesktopApplicationExit.requestExit()
+}
+
+internal fun createDesktopApplicationTerminationHandler(
+  operatingSystemName: String = System.getProperty("os.name"),
+  scheduleOnEdt: (() -> Unit) -> Unit = { SwingUtilities.invokeLater(it) },
+  requestExit: () -> Unit = ::requestDesktopWebViewApplicationExit,
+): MavenCefAppHandlerAdapter = object : MavenCefAppHandlerAdapter() {
+  override fun onBeforeTerminate(): Boolean {
+    if (!operatingSystemName.startsWith("Mac")) return false
+    scheduleOnEdt(requestExit)
+    return true
+  }
 }
 
 /** 将 Chromium 的运行时和 Profile 固定在用户目录，避免污染工程目录或复用其他应用的默认 Profile。 */

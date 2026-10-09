@@ -18,6 +18,10 @@ kotlin {
       implementation(projects.cyxbsPages.login.api)
       implementation(libs.multiweb.compose)
     }
+    desktopTest.dependencies {
+      implementation(kotlin("test"))
+      implementation(libs.kotlinx.coroutines.test)
+    }
     androidMain.dependencies {
       implementation(libs.bundles.projectBase)
       implementation(libs.bundles.views)
