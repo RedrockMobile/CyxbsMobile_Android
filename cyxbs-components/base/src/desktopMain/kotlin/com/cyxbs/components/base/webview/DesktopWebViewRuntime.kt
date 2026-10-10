@@ -3,13 +3,16 @@ package com.cyxbs.components.base.webview
 import io.github.multiweb.compose.DesktopWebViewRuntime
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
-import javax.swing.SwingUtilities
 import java.io.File
+import java.util.concurrent.atomic.AtomicReference
+import javax.swing.SwingUtilities
 
 /** 在创建 Compose Desktop 应用前准备 macOS windowed JCEF 所需的 Swing 互操作层。 */
 fun prepareDesktopWebViewComposeInterop() {
   DesktopWebViewRuntime.prepareComposeInterop()
 }
+
+private val applicationExitHandoff = DesktopApplicationExitHandoff()
 
 /** 在创建任意 Desktop WebView 前初始化当前进程唯一的 JCEF 运行时。 */
 fun initializeDesktopWebViewRuntime() {
@@ -20,11 +23,46 @@ fun initializeDesktopWebViewRuntime() {
     setAppHandler(createDesktopApplicationTerminationHandler())
   }.build()
   DesktopWebViewRuntime.initialize(cefApp)
+  // MultiWeb 只允许绑定一次；handoff 自己负责承接启动期和 Hot Reload 回调变化。
+  DesktopWebViewRuntime.bindApplicationExit(applicationExitHandoff::onApplicationExit)
 }
 
-/** 绑定 Desktop 应用退出回调；CEF 完全终止后才会调用。 */
+/** 更新当前 Compose 内容的退出回调；Hot Reload 重建 Composition 时可重复调用。 */
 fun bindDesktopWebViewApplicationExit(onApplicationExit: () -> Unit) {
-  DesktopWebViewRuntime.bindApplicationExit(onApplicationExit)
+  applicationExitHandoff.bind(onApplicationExit)
+}
+
+internal class DesktopApplicationExitHandoff {
+  private val callback = AtomicReference<(() -> Unit)?>(null)
+  private var pendingExit = false
+  private var delivered = false
+  private val lock = Any()
+
+  fun bind(onApplicationExit: () -> Unit) {
+    val deliverNow = synchronized(lock) {
+      callback.set(onApplicationExit)
+      pendingExit && !delivered
+    }
+    if (deliverNow) deliver()
+  }
+
+  fun onApplicationExit() {
+    synchronized(lock) {
+      pendingExit = true
+    }
+    deliver()
+  }
+
+  private fun deliver() {
+    val exit = synchronized(lock) {
+      val current = callback.get() ?: return
+      if (!pendingExit || delivered) return
+      delivered = true
+      pendingExit = false
+      current
+    }
+    exit()
+  }
 }
 
 /** 请求退出 Desktop 应用；业务检查通过后，MultiWeb 等待浏览器和 CEF 正常终止。 */

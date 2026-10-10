@@ -1,4 +1,5 @@
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.launchApplication
@@ -18,7 +19,6 @@ import com.cyxbs.components.utils.extensions.PlatformToastCompose
 import com.g985892345.provider.api.annotation.ImplProvider
 import com.g985892345.provider.cyxbsmobile.cyxbsapplications.multiplatform.MultiplatformKtProviderInitializer
 import io.github.vinceglb.filekit.FileKit
-import java.util.concurrent.atomic.AtomicReference
 import org.jetbrains.compose.resources.painterResource
 
 /**
@@ -35,14 +35,7 @@ fun main() {
     InitialManager.init(isMainProcess = true)
     FileKit.init(appId = "com.mredrock.cyxbs")
     initializeDesktopWebViewRuntime()
-    val exitApplicationCallback = AtomicReference<(() -> Unit)?>(null)
-    bindDesktopWebViewApplicationExit {
-      checkNotNull(exitApplicationCallback.get()) {
-        "Compose Desktop 退出回调尚未初始化。"
-      }.invoke()
-    }
     launchApplication {
-      exitApplicationCallback.set(::exitApplication)
       val width = 900
       val height = 600
       Window(
@@ -52,6 +45,7 @@ fun main() {
         icon = painterResource(ConfigRes.configIcAppLogo())
 //        resizable = false,
       ) {
+        SideEffect { bindDesktopWebViewApplicationExit(::exitApplication) }
         remember {
           this.window.minimumSize = java.awt.Dimension(300, 600)
         }
