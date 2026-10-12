@@ -6,6 +6,7 @@ plugins {
 useNetwork() // 网络请求
 useKtProvider() // api 模块服务提供
 useNavigation() // navigation 跳转
+useUnitTest(androidReturnDefaultValues = true) // Host Test 中 Compose 的 Android Trace 使用空实现
 
 kotlin {
   sourceSets {
