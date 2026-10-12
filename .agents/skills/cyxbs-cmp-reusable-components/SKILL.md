@@ -2,13 +2,13 @@
 name: cyxbs-cmp-reusable-components
 description: >
   掌邮 (Cyxbs) 项目内 CMP 迁移的可复用组件与模式库。当用户在做 CMP 迁移、写到 Compose UI、
-  遇到对话框 / 返回键拦截 / 日期选择 / 列表 / 图片 / 主题色等场景时使用。
+  遇到对话框 / 返回键拦截 / 日期选择 / 列表 / 图片 / 主题色 / 键盘收起等场景时使用。
   触发关键词（命中任一即应加载本 skill）：
   "CMP 迁移"、"迁移到 Compose"、"复用已有组件"、"项目里有现成的吗"、
   "BottomSheetCompose"、"底部弹窗"、"临时对话框"、"TodoBottomSheet"、
   "返回键拦截"、"NavigationBackHandler"、"backHandler 废弃"、
   "日历选择器"、"日期选择器"、"WheelSelectCompose"、"CalendarCompose"、
-  "滚轮选择"、"时分选择"、"ChooseDialogCompose"、"确认弹窗"。
+  "滚轮选择"、"时分选择"、"ChooseDialogCompose"、"确认弹窗"、"键盘收起"、"iOS 无法关闭键盘"。
   本 skill 是「活文档」——后续 AI 在迁移过程中发现新可复用组件时应在对应分类下追加。
 ---
 
@@ -123,6 +123,7 @@ description: >
 - **自定义下拉刷新与 iOS 回弹**：列表通过 `NestedScrollConnection` 驱动刷新头时，应设置 `LazyColumn(overscrollEffect = null)`，避免 iOS 默认回弹消费后续拖动；判断顶部的 `LazyListState` 必须绑定到该列表。参考 `SportNavEntry.kt` 的 `SportRecord`。
 - **登录弹窗**：`com.cyxbs.components.config.login.rememberLoginDialogState` + `doIfLogin(function="签到") { ... }`。
 - **主题色 / 暗黑模式**：`com.cyxbs.components.config.compose.theme.LocalAppColors.current.xxx`（如 `.bottomBg` / `.tvLv2` / `.whiteBlack`）。
+- **输入框键盘收起（iOS）**：外部点击与键盘 action 都应主动清除焦点并隐藏键盘（`clearFocus(force = true)` + `hide()`），仅设置 `ImeAction.Search` 不会自动收起。子控件消费点击时需在其回调中补上；参考 `FindCourseScreen.kt`、`LoginNavEntry.kt`。
 - **点击无涟漪**：`com.cyxbs.components.utils.compose.clickableNoIndicator { ... }`。
 - **对勾动画**：`cyxbs-pages/todo/src/commonMain/.../ui/main/CheckLineCompose.kt`（Canvas + Animatable 复刻老端 `CheckLineView`）。
 - **教学周 / 学期日期**：`com.cyxbs.components.config.time.SchoolCalendar`（commonMain object）—— `getWeekOfTerm()` 当前教学周、`getFirstMonDay()` 开学第一天；配 `Num2CN.number2ChineseNumber()` 转中文。示例 `TodoWeekHeader.kt`。
