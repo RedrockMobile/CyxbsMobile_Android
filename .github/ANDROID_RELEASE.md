@@ -7,7 +7,10 @@
 3. 内部测试通过后审批并合入 PR；CI 会自动修改版本、发布 GitHub Release，并将下一版版本号同步回 `develop`。
 4. 将 GitHub Release 上传的 `.Apk` 发到**掌上重邮交流群**，并删除群文件中的旧版本。
 
-> 版本号 `X.Y.Z` 规则：`X` 是大版本，仅在涉及较大 UI 改动时加 1；`Y` 在新需求合入时加 1；`Z` 在对应 `Y` 版本的 bugfix 发版时加 1。
+> 版本号 `X.Y.Z` 规则：
+> `X` 是大版本，仅在涉及较大功能性或 UI 改动时加 1  
+> `Y` 在中需求合入后的一般性发版时加 1  
+> `Z` 在对应 `Y` 版本的 bugfix 或者小需求合入发版时加 1
 
 ## 流程图
 
@@ -24,16 +27,17 @@ flowchart TD
     E["3. 测试通过后审批并合入 PR"]
     F["release 提交发布版本号与更新文案<br/>复用已测试的 .Apk 上传掌邮官网并发布 GitHub Release"]
     G["release 再提交下一版 -alpha 和递增的 versionCode<br/>同步回 develop"]
+    G2["最后补传正式版 mapping 到 Bugly<br/>失败仅警告，不影响发版"]
     H["4. 将 GitHub Release 的 .Apk 发掌上重邮交流群<br/>删除群文件中的旧版本"]
     A --> B
     B --> C --> C4
     B --> C2 --> C4
     C4 --> C3 --> D
     C4 --> C5 --> D
-    D --> E --> F --> G --> H
+    D --> E --> F --> G --> G2 --> H
 ```
 
-PR 检查失败时不会提交版本文件。合并后的任一步失败都会停止后续步骤，并保留已经成功的提交或外部发布结果；按下文的重跑规则处理。
+PR 检查失败时不会提交版本文件。合并后的核心步骤失败会停止后续步骤，并保留已经成功的提交或外部发布结果；按下文的重跑规则处理。最后的 Bugly mapping 补传属于可选步骤，失败只警告，发布结果保持成功。
 
 ## PR 阶段：候选版本与七项检查
 
@@ -90,6 +94,7 @@ GitHub Actions 会把每个下载项分别包装成 ZIP，下载后解压即可�
 4. **创建 GitHub Release。**tag 为 `vX.Y.Z-versionCode`，目标固定为**第一次正式版本提交**，正文取 PR 文案，附件为同一份 arm64 `.Apk` 和 mapping。若同名 Release 已存在，`release_verify.py github-release` 会核对 tag、目标提交、标题、正文、附件名称和 SHA256；全部一致才复用。应用内的 GitHub Release 更新兜底也识别 `.Apk` 附件。
 5. **第二次提交：下一开发版本。**官网和 GitHub Release 均成功后，`release_version.py bump` 要求当前仍是本次正式版，再将 code 加 1、版本名的 z 位加 1 并追加 `-alpha`，仅提交 `gradle.properties`，更新文案保持已发布内容。例如 `:bookmark: 预备7.1.2-alpha版本（versionCode 96）`。重跑时 `release_verify.py next` 核对它是正式版提交的直接子节点、标题和版本值正确、没有夹带其他配置修改。
 6. **同步 develop。**先确认 `release` 仍在第二次提交。若 `develop` 已经包含该提交，检查下一版号后结束；若它仍是 `release` 的祖先，直接快进，不产生第三次 CI 提交；若已有新开发提交，尝试正常合并并核对下一版号，遇到冲突或版本不一致即停止。同步使用专用 GitHub App，`develop` 已允许该 App 绕过普通 PR 要求。
+7. **最后补传 Bugly mapping（可选）。**前六步全部成功后，`publish_bugly_mapping.py` 从 [Bugly 官网](https://bugly.qq.com/v2/sdk?id=d796e9d7-0423-422f-9eb9-63b6e16ef4f9) 下载 3.3.5 上传工具，校验固定 SHA256。再次核对候选产物的来源和哈希，将 GitHub Release 中的同一份 ARM64 mapping 上传到 `com.mredrock.cyxbs`，版本名取候选元数据中的正式版，例如 `7.1.1`，不读取此时工作区内的 `7.1.2-alpha`。SDK 未设置构建号，因此上传不传 `buildNo`。Java 环境准备和上传均设置 `continue-on-error: true`；缺少密钥、工具下载或哈希异常、上传失败、超时均只产生中文警告，不影响官网、GitHub Release、版本提交和 develop 同步。工具退出码为 0 时还必须含最终成功提示，才能判定上传成功；日志中的 App ID、App Key 会脱敏。
 
 ## 失败时怎么处理
 
@@ -101,10 +106,12 @@ GitHub Actions 会把每个下载项分别包装成 ZIP，下载后解压即可�
 | GitHub Release 已存在，但 tag、目标提交、正文、`.Apk` 附件或哈希不符 | `verify_github_release` 报错停止；**不会自动覆盖、删除或替换**已存在的 Release，也不会继续下一版提交与同步。 | 先核对该 Release 是否已经对外发布及差异来源；由维护者处理冲突后重跑原合并提交。不要直接用同一 code 新开 PR 覆盖。 |
 | 官网已是同一 code | 仅当 name、文案和从官网重新下载的 APK 哈希都一致时安全复用；否则报错。 | 核对线上记录和候选产物；差异未查明前不要覆盖线上信息。 |
 | 第二次提交或 develop 同步失败 | 已成功的官网、GitHub Release 和正式版本提交保留；重跑会校验并复用已有提交。 | 查看分支是否出现新提交或合并冲突，处理后重跑原合并提交。 |
+| 最后的 Bugly mapping 补传失败 | Actions 日志和摘要显示中文警告，`publish` 仍成功；不回滚已完成的发版。 | 检查上传密钥、工具下载及上传日志，可从本次 GitHub Release 下载 mapping 后手动补传，无需重新打包或再次发布 APK。 |
 
 ## 配置与维护
 
 - GitHub Actions Variable `RELEASE_APP_CLIENT_ID` 和 Secret `RELEASE_APP_PRIVATE_KEY` 用于签发组织专用 App 的短期令牌；无需个人 `RELEASE_GITHUB_TOKEN`。`RELEASE_TOKEN` 只供掌邮官网写入。正式包构建还依赖仓库现有的签名、第三方服务相关 Secrets，以及 `KEY_CYXBS_URL`。公开版本 JSON 的读取不需要 token。
+- Bugly 补传复用 Secret `BUGLY_APP_ID`，需新增同一 Bugly 应用的 Secret `BUGLY_APP_KEY`（Bugly 应用设置中的 App Key）。密钥仅用于合并后最后的上传步骤；不影响 PR 检查，未配置时也不阻碍核心发布。工具使用已核实的官方 3.3.5 JAR，SHA256 为 `351273b825254d2c2a83bcb5761ef908b1a1b278f54ee018d9555b5381e15f68`；升级工具时需同步核对命令参数、哈希和成功日志。
 - 模拟器每次运行时通过 `sdkmanager --list --channel=0` 查询稳定通道，自动选择最新正式 Android API，并使用对应的 **Google APIs、x86_64** 镜像；排除 Runner 已安装的预览包、命名预览和扩展 SDK。SDK 查询失败或最新 API 尚无对应镜像时，以中文错误停止检查，不降级到旧版。实际 API 会记录到 Actions 日志和摘要中，新版安装、启动或弹窗不兼容也会阻止检查通过。稳定通道参数见 [SDK 官方文档](https://developer.android.com/tools/sdkmanager)。
 - 本地脚本测试：`PYTHONPATH=.github/scripts python3 -m unittest discover -s .github/scripts/tests -p 'test_*.py'`。有本地签名配置时，可用 `./gradlew :cyxbs-applications:pro:assembleRelease -Pcyxbs.ciReleaseX86_64=true` 复现模拟器测试包构建。
 - 本地可以复用同一弹窗检测脚本。先启动模拟器，通过 `adb devices` 确认序列号，再执行下方命令；Apple Silicon 使用 CI 的 arm64 正式 `.Apk`，Intel/x86_64 模拟器使用临时测试包并省略 `--abi`。本地 ARM 检测与 CI 的 x86_64 检测共用 Intent 和断言，CI 默认 ABI 约束仍为 x86_64。
@@ -115,4 +122,4 @@ GitHub Actions 会把每个下载项分别包装成 ZIP，下载后解压即可�
     --apk /path/to/CyxbsMobile-vX.Y.Z-code.Apk --abi arm64-v8a
   ```
 
-- 正式候选 APK 和 mapping 按仓库的 GitHub Actions artifact 保留策略保存，供合并后的工作流复用。`release_version.py` 负责版本状态转换，`release_verify.py` 负责候选产物和提交核验，`publish_update_service.py` 负责官网上传，`verify_release_update_dialog.py` 负责模拟器检测。
+- 正式候选 APK 和 mapping 按仓库的 GitHub Actions artifact 保留策略保存，供合并后的工作流复用。`release_version.py` 负责版本状态转换，`release_verify.py` 负责候选产物和提交核验，`publish_update_service.py` 负责官网上传，`publish_bugly_mapping.py` 负责最后的可选 Bugly 补传，`verify_release_update_dialog.py` 负责模拟器检测。
