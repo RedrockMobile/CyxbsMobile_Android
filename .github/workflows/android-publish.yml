@@ -313,3 +313,29 @@ jobs:
       - name: 提示合并后发布失败原因
         if: failure()
         run: echo '::error::合并后发布失败：请查看上方失败步骤，确认候选产物、掌邮服务端、GitHub Release 或 develop 同步状态后重跑。'
+      # 最后才补传 Bugly，不让工具准备或上传失败影响前面已完成的发版和 develop 同步。
+      - name: 准备 Bugly 上传 Java 环境（可选）
+        id: bugly_java
+        uses: actions/setup-java@v4
+        continue-on-error: true
+        timeout-minutes: 5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: 上传正式 ARM64 mapping 到 Bugly（可选）
+        id: bugly_mapping
+        if: ${{ success() && steps.bugly_java.outcome == 'success' }}
+        continue-on-error: true
+        timeout-minutes: 20
+        env:
+          BUGLY_APP_ID: ${{ secrets.BUGLY_APP_ID }}
+          BUGLY_APP_KEY: ${{ secrets.BUGLY_APP_KEY }}
+        run: |
+          python .github/scripts/publish_bugly_mapping.py \
+            --artifacts release-artifacts --head "$(cat "$RUNNER_TEMP/head.sha")"
+      - name: 提示 Bugly mapping 补传失败（不影响发版）
+        if: ${{ !cancelled() && (steps.bugly_java.outcome == 'failure' || steps.bugly_mapping.outcome == 'failure') }}
+        continue-on-error: true
+        run: |
+          echo '::warning::Bugly mapping 补传失败，官网、GitHub Release 和 develop 同步已完成；请检查 BUGLY_APP_KEY、工具下载或上传日志，后续补传即可。'
+          printf '\n### Bugly mapping\n\n⚠️ 补传失败，发版已完成；请检查密钥、下载及上传日志后补传。\n' >> "$GITHUB_STEP_SUMMARY"
