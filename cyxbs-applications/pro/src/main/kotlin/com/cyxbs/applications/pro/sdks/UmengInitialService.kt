@@ -76,7 +76,8 @@ object UmengInitialService : InitialService {
         agent.register(
             object : UPushRegisterCallback {
                 override fun onSuccess(deviceId: String?) {
-                    LogUtils.i(msg = "Umeng 注册成功")
+                    // 注册成功会返回 deviceId，是推送消息的唯一标志
+                    LogUtils.e(msg = "Umeng 注册成功 deviceToken:$deviceId")
                     Umeng.deviceId = deviceId
                 }
 

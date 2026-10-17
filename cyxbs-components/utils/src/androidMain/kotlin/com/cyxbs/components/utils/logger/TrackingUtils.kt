@@ -62,7 +62,7 @@ object TrackingUtils {
     }.onFailure {
       // 异常
       // 需求千万条，稳定第一条。错误catch住，debug模式下 toast弹窗 + 堆栈输出
-      CyxbsLog.e(TAG, "tracking event request failed", it)
+      CyxbsLog.e(TAG, "", it)
       toastLoggerWhenDebug(null)
       return Result.failure(it)
     }

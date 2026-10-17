@@ -72,9 +72,9 @@ internal object UserInfoProvider {
           requireAccountSession(session)
         }.body<ApiWrapper<UserInfo>>().data
       }.onFailure {
-        CyxbsLog.w(TAG, "用户信息请求失败 type=${it::class.simpleName}")
         if (isDebug()) {
           toast("用户信息请求失败")
+          CyxbsLog.d(TAG, "用户信息请求失败: " + it.stackTraceToString())
         }
       }.onSuccess { info ->
         // 被后续刷新取消或账户已切换时，旧请求不能覆盖当前资料。

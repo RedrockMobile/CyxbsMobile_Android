@@ -1,7 +1,6 @@
 package com.cyxbs.pages.schedule.data.local.room3
 
 import com.cyxbs.components.log.CyxbsLog
-import com.cyxbs.components.log.LogLevel
 import com.cyxbs.pages.schedule.data.remote.SCHEDULE_DETAIL_LOG_TAG
 import com.cyxbs.pages.schedule.data.remote.diagnosticSummary
 import com.cyxbs.pages.schedule.data.repository.toWire
@@ -17,7 +16,6 @@ internal fun ScheduleCommonAccountState.logScheduleState(
   timeZone: TimeZone,
   scheduleIds: Set<String>? = null,
 ) {
-  if (!CyxbsLog.isEnabled(LogLevel.Debug)) return
   val categoryByLocalId = categories
     .mapNotNull { it.effectiveResource() ?: it.remoteSnapshot?.resource }
     .associateBy { it.identity.id }

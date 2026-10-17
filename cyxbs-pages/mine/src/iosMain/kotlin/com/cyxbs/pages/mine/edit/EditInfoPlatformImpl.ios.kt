@@ -64,7 +64,7 @@ object EditInfoPlatformImpl : EditInfoPlatform {
         )
       }.onFailure {
         "无法打开或读取相册，请重试".toast()
-        CyxbsLog.w(AVATAR_UPLOAD_LOG_TAG, "头像操作失败 type=${it::class.simpleName}")
+        CyxbsLog.d(AVATAR_UPLOAD_LOG_TAG, it.message.toString())
       }.getOrNull() ?: return@launch
 
       "正在上传头像...".toast()
@@ -89,7 +89,7 @@ object EditInfoPlatformImpl : EditInfoPlatform {
         "头像更新成功".toast()
       }.onFailure {
         (if (it is IllegalArgumentException) it.message ?: "图片处理失败" else "上传头像失败，请重试").toast()
-        CyxbsLog.w(AVATAR_UPLOAD_LOG_TAG, "头像操作失败 type=${it::class.simpleName}")
+        CyxbsLog.d(AVATAR_UPLOAD_LOG_TAG, it.message.toString())
       }
     }.invokeOnCompletion { busy = false }
   }

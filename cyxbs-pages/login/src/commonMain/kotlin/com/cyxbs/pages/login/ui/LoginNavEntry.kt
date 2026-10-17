@@ -117,7 +117,7 @@ class LoginNavEntry : AppNavEntry<LoginNavArgument>() {
     }
     LoginPage()
     LaunchedEffect(Unit) {
-      CyxbsLog.d(LOGIN_LOG_TAG, "登录页进入 backStackSize=${appNavBackStack.size}")
+      CyxbsLog.d(LOGIN_LOG_TAG, "backStack = $appNavBackStack")
     }
   }
 }

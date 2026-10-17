@@ -39,6 +39,7 @@ import kotlin.time.Duration.Companion.seconds
 
 internal const val LOGIN_LOG_TAG = "AccountLogin"
 
+
 /**
  * .
  *
@@ -101,7 +102,7 @@ abstract class CommonLoginViewModel(argument: LoginNavArgument) : BaseViewModel(
             completeLogin()
           }
         } catch (e: Exception) {
-          CyxbsLog.w(LOGIN_LOG_TAG, "登录流程未完成 type=${e::class.simpleName}")
+          CyxbsLog.d(LOGIN_LOG_TAG, "login error: ${e.stackTraceToString()}")
         } finally {
           isLoginAnim.value = false
         }
@@ -124,7 +125,7 @@ abstract class CommonLoginViewModel(argument: LoginNavArgument) : BaseViewModel(
     } else if (appNavBackStack.isEmpty()) {
       HomeNavArgument().navigate()
     }
-    CyxbsLog.i(LOGIN_LOG_TAG, "登录导航完成 backStackSize=${appNavBackStack.size}, hasTarget=${targetUrl != null}")
+    CyxbsLog.d(LOGIN_LOG_TAG, "clickLogin: $appNavBackStack, targetUrl = $targetUrl")
   }
 
   // 触发网络请求
@@ -145,12 +146,12 @@ abstract class CommonLoginViewModel(argument: LoginNavArgument) : BaseViewModel(
       wrapper.throwApiExceptionIfFail() // 如果网络请求返回了异常，则直接抛出
       wrapper.data
     }.onFailure { throwable ->
-      CyxbsLog.w(LOGIN_LOG_TAG, "登录请求失败 type=${throwable::class.simpleName}")
+      CyxbsLog.d(LOGIN_LOG_TAG, "requestLogin, onLoginFailure: $throwable")
       runCatchingCoroutine { onLoginFailure(throwable) }.onFailure {
         // TODO 打开 CrashDialog
       }.getOrThrow()
     }.onSuccess {
-      CyxbsLog.i(LOGIN_LOG_TAG, "登录请求成功")
+      CyxbsLog.d(LOGIN_LOG_TAG, "requestLogin, onLoginSuccess")
       runCatchingCoroutine { onLoginSuccess(stuNum, it) }.onFailure {
         // TODO 打开 CrashDialog
       }.getOrThrow()

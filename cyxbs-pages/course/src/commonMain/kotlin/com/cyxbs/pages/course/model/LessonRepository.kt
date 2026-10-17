@@ -163,9 +163,9 @@ object LessonRepository {
         mLessonObserveFlowMap[dataStuNum]?.tryEmit(it)
       }
     }.onFailure {
-      CyxbsLog.w(TAG, "请求课表失败 type=${it::class.simpleName}")
       if (isDebug()) {
         toast("请求课表数据异常, ${it.message}")
+        CyxbsLog.d(TAG, "请求课表数据异常: ${it.stackTraceToString()}")
       }
     }
   }

@@ -162,7 +162,7 @@ internal class AvatarPickerActivity : BaseActivity() {
       val fileBytes = try {
         destinationFile.readBytes()
       } catch (e: IOException) {
-        CyxbsLog.e(AVATAR_UPLOAD_LOG_TAG, "读取裁剪图片失败", e)
+        CyxbsLog.e(AVATAR_UPLOAD_LOG_TAG, "", e)
         toast("图片加载失败")
         finishWithCancel()
         return@launch
@@ -189,7 +189,7 @@ internal class AvatarPickerActivity : BaseActivity() {
         finish()
       }.onFailure {
         toast("上传头像失败")
-        CyxbsLog.w(AVATAR_UPLOAD_LOG_TAG, "头像上传失败 type=${it::class.simpleName}")
+        CyxbsLog.d(AVATAR_UPLOAD_LOG_TAG, it.message.toString())
         finishWithCancel()
       }
     }

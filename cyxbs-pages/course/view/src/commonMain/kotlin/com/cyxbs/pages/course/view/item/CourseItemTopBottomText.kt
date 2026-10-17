@@ -237,11 +237,7 @@ private class CourseItemTextMeasurePolicy(
       measureBottomText = false,
     )
     if (topText.startsWith("时间点")) {
-      CyxbsLog.d(
-        TAG,
-        "estimatedCandidate = ${estimatedCandidate.topResult.size}, " +
-          "containerHeight = $containerHeight, lineCount = ${estimatedCandidate.topResult.lineCount}",
-      )
+      CyxbsLog.d(TAG, "estimatedCandidate = ${estimatedCandidate.topResult.size}, containerHeight = $containerHeight, lineCount = ${estimatedCandidate.topResult.lineCount}")
     }
     val estimatedFits = estimatedCandidate.titleFitsWithoutVerticalPadding(containerHeight)
     if (estimatedFits) {
@@ -258,10 +254,7 @@ private class CourseItemTextMeasurePolicy(
           measureBottomText = false,
         )
         if (topText.startsWith("时间点")) {
-          CyxbsLog.d(
-            TAG,
-            "nearbyCandidate = ${nearbyCandidate.topResult.size}, lineCount = ${nearbyCandidate.topResult.lineCount}",
-          )
+          CyxbsLog.d(TAG, "111 topResult = ${nearbyCandidate.topResult.size}, lineCount = ${nearbyCandidate.topResult.lineCount}")
         }
         if (!nearbyCandidate.titleFitsWithoutVerticalPadding(containerHeight)) break
         bestCandidate = nearbyCandidate
@@ -281,10 +274,7 @@ private class CourseItemTextMeasurePolicy(
         measureBottomText = false,
       )
       if (topText.startsWith("时间点")) {
-        CyxbsLog.d(
-          TAG,
-          "nearbyCandidate = ${nearbyCandidate.topResult.size}, lineCount = ${nearbyCandidate.topResult.lineCount}",
-        )
+        CyxbsLog.d(TAG, "111 topResult = ${nearbyCandidate.topResult.size}, lineCount = ${nearbyCandidate.topResult.lineCount}")
       }
       if (nearbyCandidate.titleFitsWithoutVerticalPadding(containerHeight)) {
         return nearbyCandidate

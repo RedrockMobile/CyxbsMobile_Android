@@ -94,7 +94,7 @@ object LinkLessonRepository {
         }
         _state.emit(EMPTY_LINK_STU)
       }.onFailure {
-        CyxbsLog.w(TAG, "取消课表关联失败 type=${it::class.simpleName}")
+        CyxbsLog.d(TAG, it.stackTraceToString())
       }
     }
   }
@@ -157,7 +157,7 @@ object LinkLessonRepository {
         defaultJson.encodeToString(it)
       )
     }.onFailure {
-      CyxbsLog.w(TAG, "读取课表关联失败 type=${it::class.simpleName}")
+      CyxbsLog.d(TAG, it.stackTraceToString())
     }
   }
 }

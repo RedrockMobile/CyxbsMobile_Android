@@ -82,10 +82,11 @@ class MainActivity : BaseActivity() {
     runCatching { AppScheme.jump(url.toString()) }
       .onSuccess { handled ->
         if (!handled) {
-          CyxbsLog.w(TAG, "未识别页面协议")
+          // 仅记录 route，避免把 query 中的业务标识带入日志。
+          CyxbsLog.d(TAG, "未识别页面协议：${url.scheme}://${url.authority}${url.path.orEmpty()}")
         }
       }.onFailure {
-        CyxbsLog.e(TAG, "页面协议跳转失败", it)
+        CyxbsLog.d(TAG, it.stackTraceToString())
       }
   }
 

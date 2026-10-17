@@ -114,7 +114,7 @@ open class ApiExceptionResult<Emitter>(
       try {
         action.invoke(emitter, defaultJson.decodeFromString(it))
       } catch (e: Exception) {
-        CyxbsLog.w(API_EXCEPTION_LOG_TAG, "错误响应解析或处理失败 type=${e::class.simpleName}")
+        CyxbsLog.e(API_EXCEPTION_LOG_TAG, "", e)
       }
     }
     return this

@@ -1,8 +1,8 @@
 package com.cyxbs.pages.notification.api
 
 import androidx.compose.ui.graphics.Color
-import com.cyxbs.components.navigation.AppNavArgument
 import com.cyxbs.components.log.CyxbsLog
+import com.cyxbs.components.navigation.AppNavArgument
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -62,7 +62,7 @@ class NoticeNavArgument(
       runCatching {
         Color(it.substringAfter("#").substringBefore("-").toLong(16))
       }.onFailure {
-        CyxbsLog.w(TAG, "通知文本颜色解析失败，使用默认颜色 type=${it::class.simpleName}")
+        CyxbsLog.e(TAG, "", it)
       }.getOrNull()
     }
 

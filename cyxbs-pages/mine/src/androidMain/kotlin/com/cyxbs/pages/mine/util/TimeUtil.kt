@@ -20,7 +20,7 @@ object TimeUtil {
             val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(time)
             return wrapTime(date)
         }catch (e: ParseException){
-            CyxbsLog.e("TimeUtil", "failed to parse time", e)
+            CyxbsLog.e("Mine -- TimeUtil",e.toString())
             return "null"
         }
     }

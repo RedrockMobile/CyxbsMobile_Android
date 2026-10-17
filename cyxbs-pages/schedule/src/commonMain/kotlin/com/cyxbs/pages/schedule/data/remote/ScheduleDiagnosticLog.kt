@@ -1,23 +1,21 @@
 package com.cyxbs.pages.schedule.data.remote
 
 import com.cyxbs.components.log.CyxbsLog
-import com.cyxbs.components.log.LogLevel
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
 /**
- * Schedule 结构诊断日志。
+ * Schedule 详细业务日志。
  *
- * 仅记录资源 identity、版本、时间结构、Patch 模式和操作结果；不记录分类名、日程标题、描述、
- * 提醒文案、服务端 info、token、header 或完整请求体。
+ * 该日志会包含用户填写的分类名与日程标题，仅用于联调增删改查与服务端合并结果；不记录描述、提醒文案、
+ * token、header 或完整请求体。分类配色是受控的业务配置 JSON，可以逐字段往返核对。
  */
 internal const val SCHEDULE_DETAIL_LOG_TAG = "ScheduleDetail"
 
 /** 输出完整 Sync 中客户端已持有的 identity，以及三类资源的待提交操作。 */
 internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
-  if (!CyxbsLog.isEnabled(LogLevel.Debug)) return
   CyxbsLog.d(SCHEDULE_DETAIL_LOG_TAG, "REQUEST SYNC")
   logItems(
     label = "REQUEST SYNC category confirmed",
@@ -59,7 +57,6 @@ internal fun SyncRequest.logScheduleRequest(timeZone: TimeZone) {
 
 /** 输出日常请求中三类资源实际新增、修改及删除的内容。 */
 internal fun MutationRequest.logScheduleRequest(operation: String, timeZone: TimeZone) {
-  if (!CyxbsLog.isEnabled(LogLevel.Debug)) return
   CyxbsLog.d(SCHEDULE_DETAIL_LOG_TAG, operation)
   logItems(
     label = "$operation category upsert",
@@ -89,7 +86,6 @@ internal fun MutationRequest.logScheduleRequest(operation: String, timeZone: Tim
 
 /** 输出完整 Sync 返回的 inventory 核对、发现资源和 mutation 结果。 */
 internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
-  if (!CyxbsLog.isEnabled(LogLevel.Debug)) return
   CyxbsLog.d(SCHEDULE_DETAIL_LOG_TAG, "RESPONSE SYNC")
   logItems(
     label = "RESPONSE SYNC category confirmedResult",
@@ -104,14 +100,14 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
   logItems(
     label = "RESPONSE SYNC category upsertResult",
     items = categories.upsertResults.map {
-      "result=${it.result}, reason=${it.reason}, " +
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
   logItems(
     label = "RESPONSE SYNC category deleteResult",
     items = categories.deleteResults.map {
-      "id=${it.id}, result=${it.result}, reason=${it.reason}, " +
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
@@ -129,14 +125,14 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
   logItems(
     label = "RESPONSE SYNC upsertResult",
     items = schedules.upsertResults.map { result ->
-      "result=${result.result}, reason=${result.reason}, " +
+      "result=${result.result}, reason=${result.reason}, info=${result.info}, " +
         "resource=${result.resource?.diagnosticSummary(timeZone)}"
     },
   )
   logItems(
     label = "RESPONSE SYNC deleteResult",
     items = schedules.deleteResults.map { result ->
-      "id=${result.id}, result=${result.result}, reason=${result.reason}, " +
+      "id=${result.id}, result=${result.result}, reason=${result.reason}, info=${result.info}, " +
         "resource=${result.resource?.diagnosticSummary(timeZone)}"
     },
   )
@@ -153,14 +149,14 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
   logItems(
     label = "RESPONSE SYNC adjustment upsertResult",
     items = occurrenceAdjustments.upsertResults.map {
-      "result=${it.result}, reason=${it.reason}, " +
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
   logItems(
     label = "RESPONSE SYNC adjustment deleteResult",
     items = occurrenceAdjustments.deleteResults.map {
-      "id=${it.id}, result=${it.result}, reason=${it.reason}, " +
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
@@ -168,60 +164,59 @@ internal fun SyncResponse.logScheduleResponse(timeZone: TimeZone) {
 
 /** 输出日常逐资源结果和服务端合并后的 canonical 日程。 */
 internal fun MutationResponse.logScheduleResponse(timeZone: TimeZone) {
-  if (!CyxbsLog.isEnabled(LogLevel.Debug)) return
   CyxbsLog.d(SCHEDULE_DETAIL_LOG_TAG, "RESPONSE MUTATION")
   logItems(
     label = "RESPONSE MUTATION category upsertResult",
     items = categories.upsertResults.map {
-      "result=${it.result}, reason=${it.reason}, " +
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
   logItems(
     label = "RESPONSE MUTATION category deleteResult",
     items = categories.deleteResults.map {
-      "id=${it.id}, result=${it.result}, reason=${it.reason}, " +
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
   logItems(
     label = "RESPONSE MUTATION upsertResult",
     items = schedules.upsertResults.map {
-      "result=${it.result}, reason=${it.reason}, " +
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary(timeZone)}"
     },
   )
   logItems(
     label = "RESPONSE MUTATION deleteResult",
     items = schedules.deleteResults.map {
-      "id=${it.id}, result=${it.result}, reason=${it.reason}, " +
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary(timeZone)}"
     },
   )
   logItems(
     label = "RESPONSE MUTATION adjustment upsertResult",
     items = occurrenceAdjustments.upsertResults.map {
-      "result=${it.result}, reason=${it.reason}, " +
+      "result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
   logItems(
     label = "RESPONSE MUTATION adjustment deleteResult",
     items = occurrenceAdjustments.deleteResults.map {
-      "id=${it.id}, result=${it.result}, reason=${it.reason}, " +
+      "id=${it.id}, result=${it.result}, reason=${it.reason}, info=${it.info}, " +
         "resource=${it.resource?.diagnosticSummary()}"
     },
   )
 }
 
-/** 将分类压缩为 identity、版本、排序与受控配色，不记录用户填写的名称。 */
+/** 将分类压缩为 identity、名称、排序与受控配色，便于核对本地到远端的完整往返。 */
 private fun CategoryInput.diagnosticSummary(): String =
-  "localId=$localId, id=$id, version=$version, " +
+  "localId=$localId, id=$id, version=$version, name=${name.data.singleLine()}, " +
     "sortOrder=${sortOrder.data}, color=${color.data?.singleLine()}"
 
-/** 将 wire 日程压缩为 identity、日期时间与周期，不记录标题或描述。 */
+/** 将 wire 日程压缩为标题、日期时间与周期，不包含描述等额外用户内容。 */
 internal fun ScheduleInput.diagnosticSummary(timeZone: TimeZone): String =
-  "id=$id, version=$version, " +
+  "id=$id, version=$version, title=${title.data.singleLine()}, " +
     "timing=${timing.data.diagnosticSummary(timeZone)}, " +
     "recurrence=${recurrence.data.diagnosticSummary(timeZone)}"
 

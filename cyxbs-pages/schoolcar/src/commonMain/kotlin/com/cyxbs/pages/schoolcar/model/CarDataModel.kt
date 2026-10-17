@@ -7,8 +7,6 @@ import com.cyxbs.components.log.CyxbsLog
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.pages.schoolcar.bean.CarLineJson
 
-private const val TAG = "CarDataModel"
-
 /**
  * description ： 路线信息存储与管理
  * author : HI-IR
@@ -39,7 +37,7 @@ object CarDataModel {
 			}.onFailure {
 				carData.remove(DATA_KEY_LINE_INFO)
 				if (isDebug()) toast("线路转换异常, ${it.message}")
-				CyxbsLog.w(TAG, "线路缓存解析失败，已清除缓存 type=${it::class.simpleName}")
+				CyxbsLog.d("HIIR", it.message.toString())
 			}.getOrNull()
 		}
 	}

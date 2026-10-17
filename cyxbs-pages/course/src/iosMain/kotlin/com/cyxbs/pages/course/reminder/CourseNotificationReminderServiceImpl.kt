@@ -166,13 +166,13 @@ object CourseNotificationReminderServiceImpl : ICourseNotificationReminderServic
                   }
                 } catch (throwable: Throwable) {
                   if (throwable is CancellationException) throw throwable
-                  CyxbsLog.e(TAG, "同步 iOS 课前通知失败", throwable)
+                  CyxbsLog.e(TAG, "同步 iOS 课前通知失败：${throwable.message}")
                 }
               }
           } catch (throwable: Throwable) {
             if (throwable is CancellationException) throw throwable
             // 下一次课程/设置或前台变化会重新订阅，不让通知错误影响课表和应用启动。
-            CyxbsLog.e(TAG, "恢复 iOS 课前通知失败", throwable)
+            CyxbsLog.e(TAG, "恢复 iOS 课前通知失败：${throwable.message}")
           }
         }
     }
@@ -187,7 +187,7 @@ object CourseNotificationReminderServiceImpl : ICourseNotificationReminderServic
         }
       } catch (throwable: Throwable) {
         if (throwable is CancellationException) throw throwable
-        CyxbsLog.e(TAG, "清理 iOS 课前通知失败", throwable)
+        CyxbsLog.e(TAG, "清理 iOS 课前通知失败：${throwable.message}")
       }
     }
   }
