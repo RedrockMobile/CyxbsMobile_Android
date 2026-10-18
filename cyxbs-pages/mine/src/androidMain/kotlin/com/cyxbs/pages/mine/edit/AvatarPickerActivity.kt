@@ -18,6 +18,7 @@ import com.cyxbs.components.base.ui.BaseActivity
 import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.utils.extensions.doPermissionAction
 import com.cyxbs.components.utils.extensions.launchPickImages
+import com.cyxbs.components.utils.extensions.logg
 import com.cyxbs.components.log.CyxbsLog
 import com.cyxbs.components.utils.extensions.registerForPickSingleImage
 import com.cyxbs.components.utils.extensions.runCatchingCoroutine
@@ -189,7 +190,7 @@ internal class AvatarPickerActivity : BaseActivity() {
         finish()
       }.onFailure {
         toast("上传头像失败")
-        CyxbsLog.d(AVATAR_UPLOAD_LOG_TAG, it.message.toString())
+        logg(it.message)
         finishWithCancel()
       }
     }

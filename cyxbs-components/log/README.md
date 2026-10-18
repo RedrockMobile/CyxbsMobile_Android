@@ -43,6 +43,19 @@ TAG 由调用方自定义，同一文件或类保持一致；跨文件业务链�
 
 字符串在调用前构造。普通短文本直接传入即可；若需要序列化大对象等昂贵诊断工作，先判断 `CyxbsLog.isEnabled(level)`。诊断内容不得包含业务副作用。
 
+### 使用 utils 日志快捷方法
+
+已有业务代码可以继续使用 `com.cyxbs.components.utils.extensions` 中的 `log` / `logg`，底层统一转发到 CyxbsLog，无需逐个替换调用点：
+
+```kotlin
+logg("请求课表数据异常")         // Debug，固定 TAG 为 ggg；也接受 Any?。
+log("调试信息")                 // Debug，固定 TAG 为 ggg。
+log("Schedule", "开始同步")     // Debug，使用指定 TAG。
+log(LogLevel.Warn, "Schedule", "同步失败，使用缓存")
+```
+
+`log` 的等级重载参数顺序为 `level, tag, msg`；这些快捷方法保留旧日志展示调用文件和行号的行为，由 CyxbsLog 统一采集位置，不在调用方重复拼接。
+
 ### 选择日志等级
 
 | 方法 | 适用场景 | 示例 |

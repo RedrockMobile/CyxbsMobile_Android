@@ -2,7 +2,7 @@ package com.cyxbs.pages.schedule.data.remote
 
 import com.cyxbs.components.account.api.AccountSession
 import com.cyxbs.components.account.api.AccountState
-import com.cyxbs.components.log.CyxbsLog
+import com.cyxbs.components.utils.extensions.log
 import com.cyxbs.components.utils.network.ApiWrapper
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestTimeoutException
@@ -92,14 +92,14 @@ internal class KtorScheduleGateway(
     request: suspend () -> ApiWrapper<T>,
   ): ScheduleCallResult<T> {
     require(accountId == boundAccountId) { "accountId must match the gateway's bound AccountSession" }
-    CyxbsLog.d(NETWORK_LOG_TAG, "$operation started")
+    log(NETWORK_LOG_TAG, "$operation started")
     val wrapper = try {
       request()
     } catch (cancelled: CancellationException) {
-      CyxbsLog.d(NETWORK_LOG_TAG, "$operation cancelled")
+      log(NETWORK_LOG_TAG, "$operation cancelled")
       throw cancelled
     } catch (timeout: HttpRequestTimeoutException) {
-      CyxbsLog.d(NETWORK_LOG_TAG, "$operation timeout")
+      log(NETWORK_LOG_TAG, "$operation timeout")
       return ScheduleCallResult.TransportFailure(status = null, cause = timeout)
     } catch (invalid: ClientRequestException) {
       val body = try {
@@ -109,7 +109,7 @@ internal class KtorScheduleGateway(
       } catch (_: Throwable) {
         "HTTP 400"
       }
-      CyxbsLog.d(
+      log(
         NETWORK_LOG_TAG,
         httpFailureLogText(
           operation = operation,
@@ -123,18 +123,18 @@ internal class KtorScheduleGateway(
         ScheduleCallResult.TransportFailure(invalid.response.status.value, invalid)
       }
     } catch (response: ResponseException) {
-      CyxbsLog.d(NETWORK_LOG_TAG, "$operation HTTP ${response.response.status.value}")
+      log(NETWORK_LOG_TAG, "$operation HTTP ${response.response.status.value}")
       return ScheduleCallResult.TransportFailure(response.response.status.value, response)
     } catch (invalidJson: JsonConvertException) {
-      CyxbsLog.d(NETWORK_LOG_TAG, "$operation decodeFailure type=${invalidJson::class.simpleName}")
+      log(NETWORK_LOG_TAG, "$operation decodeFailure type=${invalidJson::class.simpleName}")
       return ScheduleCallResult.TransportFailure(status = 200, cause = invalidJson)
     } catch (failure: Throwable) {
       // 只记录异常类型；异常 message 可能包含 URL、响应片段等，不写入长期诊断日志。
-      CyxbsLog.d(NETWORK_LOG_TAG, "$operation transportFailure type=${failure::class.simpleName}")
+      log(NETWORK_LOG_TAG, "$operation transportFailure type=${failure::class.simpleName}")
       return ScheduleCallResult.TransportFailure(status = null, cause = failure)
     }
 
-    CyxbsLog.d(NETWORK_LOG_TAG, "$operation completed businessStatus=${wrapper.status}")
+    log(NETWORK_LOG_TAG, "$operation completed businessStatus=${wrapper.status}")
     return when (wrapper.status) {
       NORMAL_STATUS -> {
         if (wrapper.rawData == null) {
@@ -147,7 +147,7 @@ internal class KtorScheduleGateway(
         }
       }
       else -> {
-        CyxbsLog.d(
+        log(
           NETWORK_LOG_TAG,
           "$operation businessFailure status=${wrapper.status} " +
               "info=${wrapper.info.toDiagnosticLogText()}",

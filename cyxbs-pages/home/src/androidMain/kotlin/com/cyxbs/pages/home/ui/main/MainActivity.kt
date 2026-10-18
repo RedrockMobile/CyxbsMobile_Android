@@ -15,12 +15,10 @@ import com.cyxbs.components.navigation.AppNavDisplay
 import com.cyxbs.components.navigation.AppSnackbarCompose
 import com.cyxbs.components.navigation.AppScheme
 import com.cyxbs.components.utils.extensions.launchByLifecycleScope
-import com.cyxbs.components.log.CyxbsLog
+import com.cyxbs.components.utils.extensions.logg
 import com.cyxbs.components.utils.utils.judge.RedrockNetwork
 import com.cyxbs.functions.update.api.IAppUpdateService
 import com.g985892345.provider.api.annotation.KClassProvider
-
-private const val TAG = "MainActivity"
 
 /**
  * MainActivity 作为 Compose 容器，有以下约定：
@@ -83,10 +81,10 @@ class MainActivity : BaseActivity() {
       .onSuccess { handled ->
         if (!handled) {
           // 仅记录 route，避免把 query 中的业务标识带入日志。
-          CyxbsLog.d(TAG, "未识别页面协议：${url.scheme}://${url.authority}${url.path.orEmpty()}")
+          logg("未识别页面协议：${url.scheme}://${url.authority}${url.path.orEmpty()}")
         }
       }.onFailure {
-        CyxbsLog.d(TAG, it.stackTraceToString())
+        logg(it.stackTraceToString())
       }
   }
 

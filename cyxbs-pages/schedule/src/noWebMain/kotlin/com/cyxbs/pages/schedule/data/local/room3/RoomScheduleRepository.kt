@@ -1,7 +1,7 @@
 package com.cyxbs.pages.schedule.data.local.room3
 
 import com.cyxbs.components.account.api.AccountSession
-import com.cyxbs.components.log.CyxbsLog
+import com.cyxbs.components.utils.extensions.log
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureOperation
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecordSink
 import com.cyxbs.pages.schedule.data.failure.ScheduleFailureRecords
@@ -244,12 +244,12 @@ internal class RoomScheduleRepository(
         )
       ) {
         ScheduleLocalCommandResult.NoOp -> {
-          CyxbsLog.d(REPOSITORY_LOG_TAG, "LOCAL noOp ${command.diagnosticLabel()}")
+          log(REPOSITORY_LOG_TAG, "LOCAL noOp ${command.diagnosticLabel()}")
           ScheduleSyncResult.Success(attempted = false)
         }
 
         is ScheduleLocalCommandResult.Rejected -> {
-          CyxbsLog.d(REPOSITORY_LOG_TAG, "LOCAL rejected ${command.diagnosticLabel()}")
+          log(REPOSITORY_LOG_TAG, "LOCAL rejected ${command.diagnosticLabel()}")
           ScheduleSyncResult.Failure(
             ScheduleRemoteError.MutationRejected(ScheduleMutationBusinessRejectionReason.INVALID_REQUEST),
             attempted = false,
@@ -277,7 +277,7 @@ internal class RoomScheduleRepository(
             timeZone,
             changedIdValues,
           )
-          CyxbsLog.d(
+          log(
             REPOSITORY_LOG_TAG,
             "LOCAL persisted ${command.diagnosticLabel()} revision=$revision pendingCount=${after.pendingMutationCount()}",
           )
@@ -294,14 +294,14 @@ internal class RoomScheduleRepository(
           when (captured) {
             is ScheduleDailyMutationCapture.Ready -> {
               safelyRefreshFailureSource(captured)
-              CyxbsLog.d(
+              log(
                 REPOSITORY_LOG_TAG,
                 "LOCAL captured method=${captured.method} " +
                   "operationCount=${captured.request.operationCount()}",
               )
             }
 
-            is ScheduleDailyMutationCapture.Failure -> CyxbsLog.d(
+            is ScheduleDailyMutationCapture.Failure -> log(
               REPOSITORY_LOG_TAG,
               "LOCAL captureFailure ${command.diagnosticLabel()} reason=${captured.message}",
             )
@@ -360,7 +360,7 @@ internal class RoomScheduleRepository(
         true
       )
     }
-    CyxbsLog.d(
+    log(
       REPOSITORY_LOG_TAG,
       "REMOTE syncFinished result=${result::class.simpleName} " +
         "pendingCount=${mutableSnapshot.value.status.pendingCountForLog()}",
@@ -403,7 +403,7 @@ internal class RoomScheduleRepository(
 
       is ScheduleDailyMutationCapture.Failure -> ScheduleSyncResult.Success(attempted = false)
     }
-    CyxbsLog.d(
+    log(
       REPOSITORY_LOG_TAG,
       "REMOTE dailyFinished method=${capture.methodForLog()} result=${result::class.simpleName} " +
           "pendingCount=${mutableSnapshot.value.status.pendingCountForLog()}",
@@ -438,7 +438,7 @@ internal class RoomScheduleRepository(
         before.occurrenceAdjustments
       )) {
         is ScheduleApplyResult.Failure -> {
-          CyxbsLog.d(
+          log(
             REPOSITORY_LOG_TAG,
             "REMOTE responseApplyFailed reason=${applied.reason} detail=${applied.message}",
           )
@@ -500,7 +500,7 @@ internal class RoomScheduleRepository(
         )
       ) {
         is ScheduleApplyResult.Failure -> {
-          CyxbsLog.d(
+          log(
             REPOSITORY_LOG_TAG,
             "REMOTE responseApplyFailed reason=${applied.reason} detail=${applied.message}",
           )
@@ -575,7 +575,7 @@ internal class RoomScheduleRepository(
       )
     }
       .onFailure {
-        CyxbsLog.d(
+        log(
           REPOSITORY_LOG_TAG,
           "LOCAL failureRecordRefreshFailed type=${it::class.simpleName}"
         )
@@ -587,7 +587,7 @@ internal class RoomScheduleRepository(
     if (records.isEmpty()) return
     runCatching { failureRecords.record(accountId, records) }
       .onFailure {
-        CyxbsLog.d(
+        log(
           REPOSITORY_LOG_TAG,
           "LOCAL failureRecordWriteFailed type=${it::class.simpleName}"
         )
@@ -598,7 +598,7 @@ internal class RoomScheduleRepository(
   private fun safelyRemoveFailureRecords(scheduleIds: Set<String>) {
     runCatching { failureRecords.remove(accountId, scheduleIds) }
       .onFailure {
-        CyxbsLog.d(
+        log(
           REPOSITORY_LOG_TAG,
           "LOCAL failureRecordRemoveFailed type=${it::class.simpleName}"
         )
@@ -701,7 +701,7 @@ internal class RoomScheduleRepository(
       val state = readCurrentState()
       publishUnavailable(state, error)
       state.logScheduleState("LOCAL retained after REMOTE failure", timeZone)
-      CyxbsLog.d(
+      log(
         REPOSITORY_LOG_TAG,
         "REMOTE unavailable type=${error::class.simpleName} pendingCount=${state.pendingMutationCount()}",
       )

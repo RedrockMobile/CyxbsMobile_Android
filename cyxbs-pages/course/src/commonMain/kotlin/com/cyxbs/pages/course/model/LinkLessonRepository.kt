@@ -6,7 +6,7 @@ import com.cyxbs.components.config.service.impl
 import com.cyxbs.components.config.sp.AccountSettings
 import com.cyxbs.components.config.sp.accountSettings
 import com.cyxbs.components.init.appCoroutineScope
-import com.cyxbs.components.log.CyxbsLog
+import com.cyxbs.components.utils.extensions.logg
 import com.cyxbs.components.utils.extensions.runCatchingCoroutine
 import com.cyxbs.components.utils.extensions.toast
 import com.cyxbs.pages.course.api.ILinkService2
@@ -21,8 +21,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-
-private const val TAG = "LinkLessonRepository"
 
 /**
  * .
@@ -94,7 +92,7 @@ object LinkLessonRepository {
         }
         _state.emit(EMPTY_LINK_STU)
       }.onFailure {
-        CyxbsLog.d(TAG, it.stackTraceToString())
+        logg(it.stackTraceToString())
       }
     }
   }
@@ -157,7 +155,7 @@ object LinkLessonRepository {
         defaultJson.encodeToString(it)
       )
     }.onFailure {
-      CyxbsLog.d(TAG, it.stackTraceToString())
+      logg(it.stackTraceToString())
     }
   }
 }

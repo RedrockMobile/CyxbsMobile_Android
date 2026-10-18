@@ -1,6 +1,6 @@
 package com.cyxbs.pages.schedule.data.local.room3
 
-import com.cyxbs.components.log.CyxbsLog
+import com.cyxbs.components.utils.extensions.log
 import com.cyxbs.pages.schedule.data.remote.SCHEDULE_DETAIL_LOG_TAG
 import com.cyxbs.pages.schedule.data.remote.diagnosticSummary
 import com.cyxbs.pages.schedule.data.repository.toWire
@@ -21,13 +21,13 @@ internal fun ScheduleCommonAccountState.logScheduleState(
     .associateBy { it.identity.id }
   val selectedSchedules = schedules.filter { scheduleIds == null || it.identity.id in scheduleIds }
   if (selectedSchedules.isEmpty()) {
-    CyxbsLog.d(SCHEDULE_DETAIL_LOG_TAG, "$label: EMPTY")
+    log(SCHEDULE_DETAIL_LOG_TAG, "$label: EMPTY")
     return
   }
   selectedSchedules.forEachIndexed { index, state ->
     val resource = state.effectiveResource() ?: state.remoteSnapshot?.resource
     val pending = state.pending?.let { it::class.simpleName } ?: "NONE"
-    CyxbsLog.d(
+    log(
       SCHEDULE_DETAIL_LOG_TAG,
       "$label[$index]: pending=$pending, " +
         (resource?.toWire(categoryByLocalId::get)?.diagnosticSummary(timeZone)

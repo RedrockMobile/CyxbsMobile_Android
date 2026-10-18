@@ -11,7 +11,6 @@ useRoom(rxjava = true)
 kotlin {
 	sourceSets {
 		commonMain.dependencies {
-			implementation(projects.cyxbsComponents.log)
 			subprojects.forEach { implementation(it) }
 			implementation(projects.cyxbsComponents.view)
 			implementation(projects.cyxbsComponents.base)
