@@ -25,10 +25,8 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 /**
- * Applies application policy to the platform-agnostic log engine.
- *
- * Persistent logging is conservative by default: only the main process, after privacy consent,
- * and after an explicit user opt-in. Console logging remains available independently.
+ * 文件日志在主进程、隐私已同意后默认开启，用户显式关闭时保持关闭。
+ * 控制台日志策略独立于文件采集开关。
  */
 object AppLogManager {
   private val initialized = atomic(false)
@@ -60,7 +58,7 @@ object AppLogManager {
   }
 
   fun isDiagnosticLoggingEnabled(): Boolean =
-    defaultSettings.getBoolean(SP_DIAGNOSTIC_LOG_ENABLED, false)
+    defaultSettings.getBoolean(SP_DIAGNOSTIC_LOG_ENABLED, true)
 
   fun isDiagnosticLoggingSupported(): Boolean = platformFileLogConfig() != null
 

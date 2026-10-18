@@ -158,7 +158,7 @@ val closed = CyxbsLog.closeFileStorage()
 | iOS | 使用排除备份的 Application Support 和 Caches，在后台准备目录并验证 `CompleteUntilFirstUserAuthentication`；失败则回滚启动。MetricKit 仅记录 crash/hang/cpu/disk 四类诊断数量，关闭采集时退订 |
 | Desktop | 使用 `~/.cyxbs` |
 
-文件采集仅在用户已同意隐私政策且主动开启“记录诊断日志”后启动。设置页提供开启、清理和导出，应用层负责系统分享或保存；导出本身不会上传，也无法撤回已经分享的副本。
+“记录诊断日志”默认开启，文件采集仅在主进程且用户已同意隐私政策后启动；用户手动关闭后保留关闭状态，重启或再次登录不会自动覆盖。设置页提供开启、清理和导出，应用层负责系统分享或保存；导出本身不会上传，也无法撤回已经分享的副本。
 
 ## 设计框架与理念
 

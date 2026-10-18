@@ -8,7 +8,7 @@ Part of: [LOCAL-LOG-MAP](./map.md)
 
 ## 需求
 
-应用主动注入初始化政策和生命周期；旧 utils 单向兼容；用户可以开启诊断、清理和主动导出脱敏日志。默认状态、诊断时长和文案需先从地图 Fog 定稿，不能默认为全部生产内容采集。
+应用主动注入初始化政策和生命周期；旧 utils 单向兼容；用户可以开启诊断、清理和主动导出脱敏日志。记录诊断日志默认开启，只有主进程且隐私已同意后才采集；用户显式关闭后保留选择，不自动上传。
 
 ## 范围
 
@@ -27,7 +27,7 @@ Part of: [LOCAL-LOG-MAP](./map.md)
 
 已完成代码接入：
 
-- `InitialManager` 在各平台启动时配置控制台策略；文件层仅主进程、隐私已同意且用户主动开启时运行，撤回隐私后停止写入。
+- `InitialManager` 在各平台启动时配置控制台策略；文件层默认开启，仅主进程、隐私已同意且用户未关闭时运行，撤回隐私后停止写入。
 - Android 使用 `noBackupFilesDir/cyxbs-log` 与 `cacheDir/cyxbs-log-export`，后台 `onStop` flush；iOS 使用 Application Support/Caches，启动后标记日志目录排除备份，并监听进入后台；Desktop 使用 `~/.cyxbs`；Web 明确 Unsupported。
 - 旧 `log`/`logg`/`LogUtils` 单向转发 `CyxbsLog`，旧 `LogLocal` writer 已删除；网络 BODY 仍只在 Debug Logcat，不进入可导出文件。
 - 设置页提供“记录诊断日志”开关、清理和导出；Android FileProvider 临时读授权、iOS Share Sheet、Desktop 打开目录。分享面板弹出仅提示文件已生成，不宣称分享成功。

@@ -113,7 +113,7 @@ private fun LogSettingPage(argument: LogSettingNavArgument) {
       )
       Text(
         text = if (supported) {
-          "开启后仅在本机有界保存 Info 及以上的诊断上下文，用于定位问题；不会自动上传。"
+          "默认开启，可随时关闭。仅在本机有界保存 Info 及以上的诊断上下文，用于定位问题；不会自动上传。"
         } else {
           "当前平台不支持本地诊断日志。"
         },
